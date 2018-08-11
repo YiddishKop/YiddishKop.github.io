@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:06 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 05</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 05</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#cat-5.1-coproducts-sum-types">Cat 5.1 Coproducts, sum types</a>
+<ul>
+<li><a href="#projection-vs.injection">projection vs. injection</a></li>
+<li><a href="#tagged-union-in-coproduct">tagged union in Coproduct</a>
+<ul>
+<li><a href="#tagged-union-and-ordinay-union">tagged union and ordinay union</a></li>
+</ul>
+</li>
+<li><a href="#product-type-and-sum-type">product-type and sum-type</a>
+<ul>
+<li><a href="#sum-type">sum-type</a></li>
+<li><a href="#product-type">product-type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org31c614b">Array: <code>Array(Boolean, Boolean)</code> * List, Seq etc.</a>
+<ul>
+<li><a href="#summarization">summarization</a></li>
+</ul>
+</li>
+<li><a href="#cat-5.2-algebraic-data-types">Cat 5.2 Algebraic data types</a>
+<ul>
+<li><a href="#for-product-type">for product-type</a>
+<ul>
+<li><a href="#production-similar-with-monoid-in-3-similar-ways">production similar with monoid in 3 similar ways</a></li>
+<li><a href="#orgce799da">symmetric up to isomorphism vs. symmetric(not related to monoid,</a></li>
+<li><a href="#associative-up-to-isomorphism-vs.associative">associative up to isomorphism vs. associative</a></li>
+<li><a href="#unit-up-to-isomorphism-vs.unit">Unit up to isomorphism vs. Unit</a></li>
+<li><a href="#production-different-with-monoid-in-the-way-of-many-sets-to-one-set">production different with monoid in the way of many sets to one set</a></li>
+</ul>
+</li>
+<li><a href="#for-sum-type">for sum-type</a></li>
+<li><a href="#why-not-void-in-product-type-or-why-not-unit-in-sum-type"><b>why not 'void' in product-type?</b> or <b>why not 'unit' in sum-type?</b></a></li>
+<li><a href="#why-named-algebraic-datatype">why named Algebraic datatype?</a></li>
+<li><a href="#we-now-have-two-monoid-like-things-how-to-combine-them.">we now have two monoid-like things, how to combine them.</a>
+<ul>
+<li><a href="#ring">Ring</a></li>
+<li><a href="#algebraic-equation">algebraic equation</a></li>
+<li><a href="#haskell-to-algebraic-equation">haskell to algebraic equation</a></li>
+<li><a href="#algebraic-equation-to-haskell">algebraic equation to haskell</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgec6ab0b" class="outline-2">
+<h2 id="cat-5.1-coproducts-sum-types"><a id="orgec6ab0b"></a>Cat 5.1 Coproducts, sum types</h2>
+<div class="outline-text-2" id="text-cat-5.1-coproducts-sum-types">
+<ul class="org-ul">
+<li>today's lecture is dual work of previous lecture &#x2014; coprodcut.</li>
+<li>Opposite Category, <b>reversing the arrow</b>, get coproduct</li>
+<li>similarly, monad-comonad, monoid-comonoid.</li>
+</ul>
+
+<p>
+[lecture] • fix 2 object, find what it will produce. • 2 injections •
+like product, a very Category way: find all other objects. • then unique
+morphsim.
+</p>
+
+<p>
+also have 2 commute triangle, differently from production, which is from
+fake ones to true one, this time is from the true one to fake ones
+</p>
+</div>
+
+<div id="org8db8920" class="outline-3">
+<h3 id="projection-vs.injection"><a id="org8db8920"></a>projection vs. injection</h3>
+<div class="outline-text-3" id="text-projection-vs.injection">
+<p>
+because in right diagram, the &lt;a,b,c,i,j&gt; is the universal construction,
+he is the best, the best fit for this pattern. we want this injection,
+will inject the whole set, witout shrinking, without collapse anything.
+</p>
+
+<p>
+we just take the whole set 'a' into the set 'c', and we do the same way
+with 'b'. It's the ideal match, no more, no less, just kick the edge.
+</p>
+</div>
+</div>
+
+<div id="org01f41e4" class="outline-3">
+<h3 id="tagged-union-in-coproduct"><a id="org01f41e4"></a>tagged union in Coproduct</h3>
+<div class="outline-text-3" id="text-tagged-union-in-coproduct">
+</div>
+
+<div id="org84cd49c" class="outline-4">
+<h4 id="tagged-union-and-ordinay-union"><a id="org84cd49c"></a>tagged union and ordinay union</h4>
+<div class="outline-text-4" id="text-tagged-union-and-ordinay-union">
+<p>
+what if the 'a' and 'b' are same set? what if 'a' and 'b' have
+intersection? 1. the union of a set with itself, is this set itself 2. I
+can tag the repeated elements, and say that, although they are same
+elemetns, but with different tags, this is from 'a', another is from
+'b'. this is called discriminated union:
+<a href="https://www.wikiwand.com/en/Tagged%5C_union">https://www.wikiwand.com/en/Tagged\_union</a>
+</p>
+
+<p>
+we can make c as a disjoint union, and c' as a ordinary union, but we
+can not reverse this, you CANNOT make c as a union and c' as a disjoint
+union.
+</p>
+
+<p>
+<b>why</b>?
+</p>
+
+<p>
+ONE element in c will map to TWO elements in c', this is NOT allowed as a
+function.
+</p>
+
+<p>
+this is point view of Set Theory, when your union 2 sets who have
+duplicated elements, and these elements will keep in union result with
+different tags.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org33d578a" class="outline-3">
+<h3 id="product-type-and-sum-type"><a id="org33d578a"></a>product-type and sum-type</h3>
+<div class="outline-text-3" id="text-product-type-and-sum-type">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">product-type</th>
+<th scope="col" class="org-left">sum-type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Tuple(and other collection type) in scala</td>
+<td class="org-left">tagged union can only have one of the types, and with a tag</td>
+</tr>
+
+<tr>
+<td class="org-left">can contain many types, like (Int,Bool)</td>
+<td class="org-left">to specify which type of the current value stored in the tagged union datatype.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="org6b97333" class="outline-4">
+<h4 id="sum-type"><a id="org6b97333"></a>sum-type</h4>
+<div class="outline-text-4" id="text-sum-type">
+<pre class="example">
+data Either a b = Left a | Right b
+</pre>
+
+<pre class="example">
+val x: Either[Int, String] = Right("good")
+</pre>
+
+<p>
+These constructor directly correspond to injections, like all "<b>may or</b>"
+types in scala: * Either: may this or that * Option: may value or None *
+Try: may value or Exception * Future: may value(avaiable at sometime) or
+Exception
+</p>
+</div>
+</div>
+
+<div id="org7657c8f" class="outline-4">
+<h4 id="product-type"><a id="org7657c8f"></a>product-type</h4>
+<div class="outline-text-4" id="text-product-type">
+<p>
+many collection type in scala is product-type: * Tuple: <code>(Int, Boolean)</code>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="org31c614b" class="outline-2">
+<h2 id="org31c614b">Array: <code>Array(Boolean, Boolean)</code> * List, Seq etc.</h2>
+<div class="outline-text-2" id="text-org31c614b">
+</div>
+
+<div id="org031d5e4" class="outline-3">
+<h3 id="summarization"><a id="org031d5e4"></a>summarization</h3>
+<div class="outline-text-3" id="text-summarization">
+<p>
+So, now I know that, match pattern in scala comes from Categorical
+Production ; and "may or" types( and you can define your own "may or"
+type by algebraic datatype which is pratical use of tagged union)in
+scala comes from the opposite thing Categorical Coprodcution. And I also
+know that, why "may or" types all can do pattern matching &#x2014; using
+match case clause.
+</p>
+
+<p>
+Category: product type, sum type, unit, void product-type, sum-type,
+unity, void are fundation of the type system. Many people said that:
+</p>
+
+<blockquote>
+<p>
+In Haskell type system, half is product-type, half is sum-type, and if
+there is a third half, it must be the combination of them.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="orgd0b9081" class="outline-2">
+<h2 id="cat-5.2-algebraic-data-types"><a id="orgd0b9081"></a>Cat 5.2 Algebraic data types</h2>
+<div class="outline-text-2" id="text-cat-5.2-algebraic-data-types">
+</div>
+
+<div id="orgdab00dd" class="outline-3">
+<h3 id="for-product-type"><a id="orgdab00dd"></a>for product-type</h3>
+<div class="outline-text-3" id="text-for-product-type">
+</div>
+
+<div id="orga6973dc" class="outline-4">
+<h4 id="production-similar-with-monoid-in-3-similar-ways"><a id="orga6973dc"></a>production similar with monoid in 3 similar ways</h4>
+<div class="outline-text-4" id="text-production-similar-with-monoid-in-3-similar-ways">
+<p>
+we have a multiplication ,the product is similar to multiplicaiton, what
+does it mean that such a multiplication? It means we have a <b>monoid</b>, at
+least. <b>Monoid</b> is something <b>associative</b>, something <b>multiplication</b>,
+something <b>unit</b>. But, what we want to talk about is <b>types</b>, <b>algebraic
+data types</b>. Is product in the algebraic datatype has same way as
+<b>monoid</b>.
+</p>
+
+<blockquote>
+<p>
+<b>remeber monoid?</b> 1. <b>Integer</b> form a monoid under <b>production</b>, with
+<b>unity</b> 1; 2. <b>Integer</b> form a monoid under <b>addition</b>, with <b>unity</b>
+0; 3. <b>String</b> form a monoid under <b>concatenation</b>, with <b>unity</b> empty
+string 4. <b>List</b> form a monoid, under <b>append</b>, with <b>unity</b> empty
+list. tips ： this is why in Haskell string is list, because they are
+both monoid.
+</p>
+</blockquote>
+
+<p>
+you can see that, all the operator who makes a set a monoid is something
+like a <b>multiplication</b>, a <b>combination</b>, not a union.
+</p>
+
+<p>
+so we can say a monoid have 3 attributes: 1. <b>unit</b> in set 2.
+<b>associative</b> on operator 3. <b>combination</b> on view
+</p>
+</div>
+</div>
+
+<div id="orgce799da" class="outline-4">
+<h4 id="orgce799da">symmetric up to isomorphism vs. symmetric(not related to monoid,</h4>
+<div class="outline-text-4" id="text-orgce799da">
+<p>
+just show trait of isomorphism)
+</p>
+<p>
+:CUSTOM_ID: symmetric-up-to-isomorphism-vs.symmetricnot-related-to-monoid-just-show-trait-of-isomorphism
+</p>
+
+<p>
+product produce some pairs: (a,b) = (b,a) . This 2 pairs are not same,
+but they have same information, the only difference is just the way of
+encoding &#x2014; Not Same, but isomorphic. We can define a function like
+"swap", which is a isomorphism between (a,b) and (b,a), in other words:
+They are not same, but same up to isomorphism.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> (a,b)<span class="org-haskell-operator">!=</span>(b,a)
+swap<span class="org-haskell-operator">::</span> (a,b)<span class="org-haskell-operator">-&gt;</span>(b,a)
+<span class="org-haskell-definition">swap</span> p <span class="org-haskell-operator">=</span> (snd p, fst p)
+<span class="org-haskell-definition">swap_reverse</span> q <span class="org-haskell-operator">=</span> (snd q, fst q)
+</pre>
+</div>
+
+<p>
+it's obvious that swap is a isomorphism between (a,b) and (b,a), so we
+can say (a,b) and (b,a) is <i>isomorphic</i>
+</p>
+</div>
+</div>
+
+<div id="orgf395a90" class="outline-4">
+<h4 id="associative-up-to-isomorphism-vs.associative"><a id="orgf395a90"></a>associative up to isomorphism vs. associative</h4>
+<div class="outline-text-4" id="text-associative-up-to-isomorphism-vs.associative">
+<p>
+If the production as an binary operator which under which build up a
+monoid, must statisfy associative rule: ((a,b),c) = (a,(b,c)). no, it's
+not satisfied. But they have the same information, but rearrange them,
+similarly we can find a function like "assoc", which is isomorphism
+between ((a,b),c) and (a,(b,c)), in other words: The production is not
+associative, but associative up to isomorphism.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> ((a,b),c) <span class="org-haskell-operator">!=</span> (a,(b,c))
+<span class="org-haskell-definition">assoc</span> <span class="org-haskell-operator">::</span> ((a,b),c) <span class="org-haskell-operator">-&gt;</span> (a,(b,c))
+<span class="org-haskell-definition">assoc</span> p <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">&lt;</span>some <span class="org-haskell-keyword">pattern</span> match clause<span class="org-haskell-operator">&gt;</span>
+<span class="org-haskell-definition">assoc_reverse</span> q <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">&lt;</span>some <span class="org-haskell-keyword">pattern</span> match clause<span class="org-haskell-operator">&gt;</span>
+</pre>
+</div>
+
+<p>
+vs. monid-associative for Integer under multiplication: 3/(4/5) =
+(3/4)/5
+</p>
+
+<ul class="org-ul">
+<li>production: an <b>similar</b>-associativity on <b>type*(*set</b>)</li>
+<li>monoid: an <b>true</b>-associativity on <b>element</b></li>
+</ul>
+</div>
+</div>
+
+<div id="org6792ca8" class="outline-4">
+<h4 id="unit-up-to-isomorphism-vs.unit"><a id="org6792ca8"></a>Unit up to isomorphism vs. Unit</h4>
+<div class="outline-text-4" id="text-unit-up-to-isomorphism-vs.unit">
+<p>
+the same thing can apply to the unit: production dose not satisfy
+<code>(a,()) = a</code>, but they have the same information. we also can find a
+function like "munit", which is a isomorphism between (a,()) and a.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> (a,<span class="org-haskell-constructor">()</span>) <span class="org-haskell-operator">!=</span> a
+<span class="org-haskell-definition">munit</span> <span class="org-haskell-operator">::</span> (a,<span class="org-haskell-constructor">()</span>) <span class="org-haskell-operator">-&gt;</span> a
+<span class="org-haskell-definition">munit</span> p <span class="org-haskell-operator">=</span> fst p
+<span class="org-haskell-definition">munit_reverse</span> q <span class="org-haskell-operator">=</span> (q,<span class="org-haskell-constructor">()</span>)
+</pre>
+</div>
+
+<p>
+vs. monid-unit for Integer under multiplication: 3*1 = 3
+</p>
+
+<ul class="org-ul">
+<li>production: an <b>similar</b>-unit on <b>type*(*set</b>)</li>
+<li>monoid: an <b>true</b>-unit on <b>element</b></li>
+</ul>
+</div>
+</div>
+
+<div id="org32f9ddb" class="outline-4">
+<h4 id="production-different-with-monoid-in-the-way-of-many-sets-to-one-set"><a id="org32f9ddb"></a>production different with monoid in the way of many sets to one set</h4>
+<div class="outline-text-4" id="text-production-different-with-monoid-in-the-way-of-many-sets-to-one-set">
+<blockquote>
+<p>
+<b>remeber monoid?</b> 1. Integer form a monoid under production, with
+unity 1; 2. Integer form a monoid under addition, with unity 0; 3.
+String form a monoid under concatenation, with unity empty string 4.
+List form a monoid, under append, with unity empty list. tips ： this
+is why in Haskell string is list, because they are both monoid.
+</p>
+</blockquote>
+
+<p>
+So you can find that, monoid is just <b>a special set</b> (for unit), with
+some *special operator on set*(for binary operator).
+</p>
+
+<p>
+what about the product?
+</p>
+
+<p>
+It's something related to many types( or we can say many sets)
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">product</th>
+<th scope="col" class="org-left">monoid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">type of type operate on type</td>
+<td class="org-left">a set and operat on element</td>
+</tr>
+
+<tr>
+<td class="org-left">similar assoc(if isomor exist)</td>
+<td class="org-left">true assoc</td>
+</tr>
+
+<tr>
+<td class="org-left">similar unit(if isomor exist)</td>
+<td class="org-left">true unit</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="org4df85ef" class="outline-3">
+<h3 id="for-sum-type"><a id="org4df85ef"></a>for sum-type</h3>
+<div class="outline-text-3" id="text-for-sum-type">
+<ol class="org-ol">
+<li>symmetric up to isomorphism</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> <span class="org-haskell-constructor">Either</span> a b <span class="org-haskell-operator">~</span> <span class="org-haskell-constructor">Either</span> b a
+<span class="org-haskell-operator">//</span> easy to find a functin to <span class="org-haskell-keyword">do</span> that
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>associative up to isomorphism</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Triple</span> a b c <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Left</span> a
+                  <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Right</span> c 
+                  <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Middle</span> b        
+<span class="org-haskell-operator">//</span> also easy to define a <span class="org-haskell-keyword">type</span> to <span class="org-haskell-keyword">do</span> that                  
+</pre>
+</div>
+
+<ol class="org-ol">
+<li>unit up to isomorphism</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-constructor">Either</span> a void <span class="org-haskell-operator">~</span> a
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgc40d76c" class="outline-3">
+<h3 id="why-not-void-in-product-type-or-why-not-unit-in-sum-type"><a id="orgc40d76c"></a><b>why not 'void' in product-type?</b> or <b>why not 'unit' in sum-type?</b></h3>
+<div class="outline-text-3" id="text-why-not-void-in-product-type-or-why-not-unit-in-sum-type">
+<pre class="example">
+def f(e: Either[Int,Unit]): Int = {
+  e match {
+    case Left(x) =&gt; x
+    case Right(x) =&gt; 0
+  }
+}
+</pre>
+
+<pre class="example">
+// g: a =&gt; Either(a,b)
+// you only can get a "left" value
+def g(a: Int): Either[Int,Unit] = {Left(a)}
+// or a "right" value
+def g(a: Int): Either[Int,Unit] = {Right(println("0"))}
+// you can not get both at same time
+</pre>
+
+<p>
+you can see that, because the <code>Either</code> is a <b>sum-type</b>, a "may or"
+type,it's essentially a tagged union. you can never get all the value at
+one time. So for <b>f</b> you can not get a <b>g</b> to make a <b>idendity</b> function
+by composing them.
+</p>
+
+<p>
+From another point of view, <code>object a &lt;---&gt; object Either a or unit</code> *
+<code>a=(see as a set) has *num(a)* elements; * =Either a or unit</code> has
+<b>num(a) + 1</b> elements;
+</p>
+
+<p>
+the similar situtation for void of product-type. * <code>a=(see as a set) has
+*num(a)* elements; * =Tuple(a, void)</code> has <b>0</b> elements;
+</p>
+
+<p>
+<b>the number of values they can represet is not equall, they MUST NOT
+isomorphic.</b>
+</p>
+
+<p>
+So,*unit in product-type* and <b>void in sum-type</b>, which is just similar
+to algebraic computation: * n/1=n; / n+0=n;
+</p>
+</div>
+</div>
+
+<div id="org29566b6" class="outline-3">
+<h3 id="why-named-algebraic-datatype"><a id="org29566b6"></a>why named Algebraic datatype?</h3>
+<div class="outline-text-3" id="text-why-named-algebraic-datatype">
+<p>
+By what showed in last 2 sections above, we can generalize the
+isomorphisms to a symbol *, whick some like the muplitply:
+</p>
+
+<ul class="org-ul">
+<li>a * 1 = a ; a munit () = a</li>
+<li>(a * b) * c = a * (b * c) ; (a,b) assoc c = a assoc (b,c)</li>
+</ul>
+
+<p>
+this is why we called it that.
+</p>
+</div>
+</div>
+
+<div id="orgae188b0" class="outline-3">
+<h3 id="we-now-have-two-monoid-like-things-how-to-combine-them."><a id="orgae188b0"></a>we now have two monoid-like things, how to combine them.</h3>
+<div class="outline-text-3" id="text-we-now-have-two-monoid-like-things-how-to-combine-them.">
+<p>
+we can now infer some formulas(which also should append with "<b>up to
+isomorphism</b>", and just use symbol <b>~</b> which means <b>isomorphic</b>)
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">algebric computation</th>
+<th scope="col" class="org-left">algebraic data types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">a * 0 = 0</td>
+<td class="org-left">(a,void) ~ void</td>
+</tr>
+
+<tr>
+<td class="org-left">a/(b+c) = a/b+a*c</td>
+<td class="org-left">(a,Either b c) ~ Either (a,b) (a,c)</td>
+</tr>
+
+<tr>
+<td class="org-left">2 = 1 + 1</td>
+<td class="org-left">Boolean ~ Either True False</td>
+</tr>
+
+<tr>
+<td class="org-left">a + 0</td>
+<td class="org-left">Option a or None</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="org4743d46" class="outline-4">
+<h4 id="ring"><a id="org4743d46"></a>Ring</h4>
+<div class="outline-text-4" id="text-ring">
+<p>
+What is this structure called, both multiplication and addition in the
+same thing &#x2014; <b>ring</b>
+</p>
+
+<p>
+A really Ring has some other things, like inversement of addition,
+inversement of multiplication.
+</p>
+
+<p>
+If a Ring don't have all these inverse elements, it's called <b>semiring</b>
+or <b>rig*(no spell mistake) = *Ring without negative</b>.
+</p>
+</div>
+</div>
+
+<div id="orgb97f8ea" class="outline-4">
+<h4 id="algebraic-equation"><a id="orgb97f8ea"></a>algebraic equation</h4>
+<div class="outline-text-4" id="text-algebraic-equation">
+<p>
+sleight of hand
+</p>
+</div>
+</div>
+
+<div id="org02d1b00" class="outline-4">
+<h4 id="haskell-to-algebraic-equation"><a id="org02d1b00"></a>haskell to algebraic equation</h4>
+<div class="outline-text-4" id="text-haskell-to-algebraic-equation">
+<p>
+<code>data List a = Nil | cons a (List a)</code> It is so <b>self-explanatory</b> , and
+give a <b>recursive</b> definition of <code>List</code> &gt; - "what is a List" &gt; - "it's
+empty or concate a value with a List"
+</p>
+
+<p>
+<code>data List a = Nil | cons a (List a)</code>
+</p>
+
+<p>
+In algebraic datatypes, we can find the algebraic equation:
+</p>
+
+<pre class="example">
+l(a) = 1 + a * l(a)
+     = 1 + a * (1 + a * l(a))
+     = ...
+     = 1 + a + a*a + a*a*a + ...
+</pre>
+</div>
+</div>
+
+<div id="org97d1b91" class="outline-4">
+<h4 id="algebraic-equation-to-haskell"><a id="org97d1b91"></a>algebraic equation to haskell</h4>
+<div class="outline-text-4" id="text-algebraic-equation-to-haskell">
+<p>
+then, what is this <code>1+a+a^2+a^3+...</code>, this is just what we say in
+haskell
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-constructor">List</span>(<span class="org-haskell-constructor">Nothing</span>) <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> a <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> a a <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> a a a <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> a <span class="org-haskell-operator">...</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">List</span> a_infinite 
+</pre>
+</div>
+
+<p>
+which means *all kinds of List*(has 0~infinite elements) who has the
+type of element <code>a</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Cons</span> a (<span class="org-haskell-constructor">List</span> a)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 23 Summary</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 23 Summary</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcc17446">lec 23 Summary</a>
+<ul>
+<li><a href="#org321ae37">Clustering w/Multiple Eigenvectors</a></li>
+<li><a href="#orgafcc822">LATENT FACTOR ANALYSIS [aka latent semantic indexing]</a></li>
+<li><a href="#orgd380f04">NEAREST NEIGHBOR CLASSIFICATION</a>
+<ul>
+<li><a href="#org3d96533">The Geometry of High-Dimensional Spaces</a></li>
+<li><a href="#orgeb47623">Exhaustive k-NN alg.</a></li>
+<li><a href="#org87d701f">Speeding Up NN</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="orgcc17446" class="outline-2">
+<h2 id="orgcc17446">lec 23 Summary</h2>
+<div class="outline-text-2" id="text-orgcc17446">
+</div>
+<div id="org321ae37" class="outline-3">
+<h3 id="org321ae37">Clustering w/Multiple Eigenvectors</h3>
+<div class="outline-text-3" id="text-org321ae37">
+<hr />
+<p>
+For k clusters, compute first k eigenvectors v_1 = 1, v_2, ..., v_k of
+generalized eigensystem Lv = lambda Mv.
+</p>
+
+<pre class="example">
+       -----------     -----------
+       |1 ^     ^|     |&lt;-- V --&gt;|   [V's columns are the eigenvectors with
+       |1 .     .|     |     1   |    the k largest eigenvalues.]
+       |1 .     .|     |         |
+  V =  |1 v     v|  =  |         |
+       |1 .2    .k     |         |   [Yes, we do include the all-1's vector v
+       |1 .     .|     |         |    as one of the columns of V.]           1
+       |1 v     v|     |&lt;-- V --&gt;|
+       -----------     ------n----
+          n x k
+
+Row V_i is _spectral_vector_ [my name] for vertex i.
+
+</pre>
+<p>
+[These are vectors in a k-dimensional space I'll call the "spectral space".
+ When we were using just one eigenvector, it made sense to cluster vertices
+ together if their components were close together.  When we use more than one
+ eigenvector, it turns out that it makes sense to cluster vertices together if
+ their spectral vectors point in similar directions.]
+Normalize each row V_i to unit length.
+[Now you can think of the spectral vectors as points on a unit sphere centered
+ at the origin.]
+[Draw 2D example showing two clusters on a circle.  If the input graph has
+ k components, the points in each cluster will have spectral vectors that are
+ exactly orthogonal to all the other components' spectral vectors.]
+k-means cluster these vectors.
+[Because all the spectral vectors lie on the sphere, k-means clustering will
+ cluster together vectors that are separated by small angles.]
+</p>
+
+<p>
+[Show comparison of k-means vs. spectral (compkmeans.png, compspectral.png).
+ These examples use an exponentially decaying function to assign weights to
+ pairs of points, like we used for image segmentation but without the
+ brightnesses.]
+</p>
+
+<p>
+Invented by [our own] Prof. Michael Jordan, Stanford Prof. Andrew Ng [when he
+was still a student at Berkeley], Yair Weiss.
+[This wasn't the first algorithm that uses multiple eigenvectors for spectral
+ clustering, but it has become one of the most popular.]
+</p>
+</div>
+</div>
+
+<div id="orgafcc822" class="outline-3">
+<h3 id="orgafcc822">LATENT FACTOR ANALYSIS [aka latent semantic indexing]</h3>
+<div class="outline-text-3" id="text-orgafcc822">
+<p>
+<code>====================</code>
+[You can think of this as dimensionality reduction for matrices.]
+Suppose X is a <span class="underline">term-document_matrix</span>:  [aka _bag-of-words_model_]
+row i represents document i; column j represents term j.  [Term = word.]
+[Term-document matrices are usually <span class="underline">sparse</span>, meaning most entries are zero.]
+</p>
+
+<pre class="example">
+X_ij = occurrences of term j in doc i?
+       better:  log (1 + occurrences)  [So frequent words don't dominate.]
+[Better still is to weight the entries so rare words give big entries and
+ common words like "the" give small entries.  I'll omit the details.]
+
+</pre>
+
+<pre class="example">
+                  T    d             T
+Recall SVD X = UDV  = sum delta  u  v .  Suppose delta  &lt;= delta  for i &gt;= j.
+                      i=1      i  i  i                i         j
+
+(Unlike PCA, we usually don't center X.)
+For greatest delta_i, each v_i lists terms in a genre/cluster of documents
+                      each u_i   "
+
+
+E.g. u_1 might have large components for the romance novels,
+     v_1   "    "     "       "      for terms "passion", "ravish", "bodice"...
+
+</pre>
+<p>
+[...and delta_1 would give us an idea how much bigger the romance novel market
+ is than the markets for every other genre of books.]
+[v_1 and u_1 tell us that there is a large subset of books that tend to use the
+ same large subset of words.  We can read off the words by looking at the
+ larger components of v_1, and we can read off the books by looking at the
+ larger components of u_1.]
+[The property of being a romance novel is an example of a <span class="underline">latent_factor</span>.
+ So is the property of being the sort of word used in romance novels.
+ There's nothing in X that tells you explicitly that romance novels exist,
+ but the genre is a hidden connection between them that gives them a large
+ singular value.  The vector u_1 reveals which books have that genre, and
+ v_1 reveals which words are emphasized in that genre.]
+</p>
+
+<p>
+Like clustering, but clusters overlap:  if u_1 picks out romances &amp;
+u_2 picks out histories, they both pick out historical romances.
+[So latent factor analysis is a sort of clustering that permits clusters to
+ overlap.  Another way in which it differs from traditional clustering is that
+ the u-vectors contain real numbers, and so some points have stronger cluster
+ membership than others.  One book might be just a bit romance, another more.]
+</p>
+
+<p>
+Application in market research:
+identifying consumer types (hipster, soccer mom) &amp; items bought together.
+[For applications like this, the first few singular vectors are the most
+ useful.  Most of the singular vectors are mostly noise, and they have small
+ singular values to tell you so.]
+</p>
+
+<pre class="example">
+                    r             T
+Truncated sum X' = sum delta  u  v  is _low-rank_approximation_ (rank r) of X.
+                   i=1      i  i  i
+</pre>
+<p>
+[We choose the singular vectors with the largest singular values, because they
+ carry the most/best information.]
+</p>
+
+<pre class="example">
+
+  -----------     ------     -------     -----------
+  |         |     |^  ^|     |d_1 0|     |&lt;-- v --&gt;|
+  |         |     ||  ||     |  .. |     |     1   |
+  |         |  =  ||  ||     |0 d_r|     |&lt;-- v --&gt;|
+  |    X'   |     |u  u|     -------     ------r----
+  |         |     ||1 |r      r x r          r x d
+  |         |     ||  ||
+  |         |     |v  v|
+  -----------     ------
+     n x d         n x r
+-------------------------------------------------------------------
+| X' is the rank-r matrix that minimizes [squared] Frobenius norm |
+|             2                   2                               |
+|   ||X - X'||  = sum (X   - X'  )                                |
+|             F   i,j   ij     ij                                 |
+-------------------------------------------------------------------
+
+</pre>
+<p>
+Applications:
+</p>
+<ul class="org-ul">
+<li>Fuzzy search.  [Suppose you want to find a document about gasoline prices,
+but the document you want doesn't have the word "gasoline"; it has the word
+"petrol".  One cool thing about the reduced-rank matrix X' is that it will
+probably associate that document with "gasoline", because the SVD tends to
+group synonyms together.]</li>
+<li>Denoising.  [The idea is to assume that X is a noisy measurement of some
+unknown matrix which probably has low rank.  If that assumption is partly
+true, then the reduced-rank matrix X' might be better than the input X.]</li>
+<li>Collaborative filtering:  fills in unknown values, e.g. user ratings.
+[Suppose the rows of X repesents Netflix users and the columns represent
+ movies.  The entry X_ij is the review score that user i gave to movie j.
+ But most users haven't reviewed most movies.  Just as the rank reduction
+ will associate "petrol" with "gasoline", it will tend to associate users
+ with similar tastes in movies, so the reduced-rank matrix X' can predict
+ ratings for users who didn't supply any.  You'll try this out in the last
+ homework.]</li>
+</ul>
+<p>
+
+</p>
+</div>
+</div>
+<div id="orgd380f04" class="outline-3">
+<h3 id="orgd380f04">NEAREST NEIGHBOR CLASSIFICATION</h3>
+<div class="outline-text-3" id="text-orgd380f04">
+<p>
+<code>=============================</code>
+[We're done with unsupervised learning.  Now I'm going back to classifiers, and
+ I saved one of the simplest for the end of the semester.]
+</p>
+
+<p>
+Idea:  Given query point v, find the k input points nearest v.
+       Distance metric of your choice.
+       Regression:  Return average value of the k points.
+       Classification:  Return class with the most votes from the k points OR
+                        return histogram of class probabilities.
+[Obviously, the histogram of class probabilities has limited precision.  If
+ k = 3, then the only probabilities you'll ever return are 0, 1/3, 2/3, or 1.
+ You can improve the precision by making k larger, but you might underfit.
+ It works best when you have a huge amount of data.]
+</p>
+
+<p>
+[Show examples of 1-NN, 10-NN, and 100-NN (ISL, Figures 2.15, 2.16)
+ (allnn.pdf).  You see that a larger k smooths out the boundary.  In this
+ example, the 1-NN classifier is badly overfitting the data, and the 100-NN
+ classifier is badly underfitting.  The 10-NN classifier does well:  it's
+ reasonably close to the Bayes decision boundary.  Generally, the ideal k
+ depends on how dense your data is.  As your data gets denser, the optimal k
+ increases.]
+</p>
+
+<p>
+[There are theorems showing that if you have a lot of data, nearest neighbors
+ can work quite well.]
+</p>
+<pre class="example">
+Theorem (Cover &amp; Hart, 1967):
+As n -&gt; infinity, the 1-NN error rate is &lt; B (2 - B)      where B = Bayes risk.
+  if only 2 classes, &lt;= 2B (1 - B)
+</pre>
+<p>
+[There are a few technical requirements of this theorem.  The most important
+ is that the training points and the test points all have to be drawn
+ independently from the same probability distribution.  The theorem applies to
+ any separable metric space, so it's not just for the Euclidean metric.]
+</p>
+
+<pre class="example">
+Theorem (Fix &amp; Hodges, 1951):
+As n -&gt; infinity, k -&gt; infinity, k/n -&gt; 0,
+k-NN error rate converges to B.  [Which means optimal.]
+</pre>
+</div>
+
+<div id="org3d96533" class="outline-4">
+<h4 id="org3d96533">The Geometry of High-Dimensional Spaces</h4>
+<div class="outline-text-4" id="text-org3d96533">
+<hr />
+<pre class="example">
+Consider unit ball B = { p in R^d : |p| &lt;= 1 }
+       &amp; hypercube H = { p in R^d : |p_i| &lt;= 1 }
+</pre>
+<p>
+[Draw 2D circle in square, 3D ball in cube.]
+[In two dimensions, it looks like the circle fills most of the square.  But in
+ 100 dimensions, the ball takes almost no volume compared to the hypercube, and
+ the corners of the cube are a distance of 10 away from the center.  And since
+ there are 2^100 corners, there's a lot of volume out toward the corners.]
+Consider a shell of the sphere.
+[Draw ball of radius r, and concentric ball of radius r - epsilon inside.]
+</p>
+
+<pre class="example">
+Volume of outer ball \propto r^d
+Volume of inner ball \propto (r - epsilon)^d
+Ratio of inner ball volume to outer =
+  (r - epsilon)^d        epsilon             epsilon d
+  --------------- = (1 - -------)^d ~ exp (- ---------) for large d -&gt; small!
+        r^d                 r                    r
+
+         epsilon
+E.g.  if ------- = 0.1 &amp; d = 100, inner ball has 0.0027% of volume.
+            r
+
+Random points from uniform distribution in ball: nearly all are in outer shell.
+  "      "     "   Gaussian     "       "   "      "     "   "  "  some    "
+
+</pre>
+<p>
+[A multivariate Gaussian distribution is weighted to put points closer to the
+ center, but if the dimension is very high, you'll still find that the vast
+ majority of points lie in a thin shell.  As the dimension grows, the
+ <b>standard*deviation</b> of a random point's distance to the center gets smaller
+ and smaller compared to the distance itself.]
+</p>
+
+<p>
+[This is one of the things that makes machine learning hard in high dimensions.
+ Sometimes the farthest points aren't much farther away than the nearest ones.]
+</p>
+</div>
+</div>
+
+<div id="orgeb47623" class="outline-4">
+<h4 id="orgeb47623">Exhaustive k-NN alg.</h4>
+<div class="outline-text-4" id="text-orgeb47623">
+<hr />
+<p>
+Given query point v:
+</p>
+<ul class="org-ul">
+<li>Scan through all n input points, computing (squared) distances to v.</li>
+<li><p>
+Maintain max-heap with the k shortest distances seen so far.
+[Whenever you encounter an input point closer to v than the point at the top
+ of the heap, you remove the heap-top point and insert the better point.
+ Obviously you don't need a heap if k = 1 or even 3, but if k = 100 a heap
+ will speed up keeping track of the distance to beat.]
+</p>
+
+<pre class="example">
+Time to construct the classifier:  0
+[This is the only O(0)-time algorithm we'll learn this semester.]
+Query time:  O(nd + n log k)
+             expected O(nd + k log^2 k) if random point order
+[Though in practice I don't recommend randomizing the point order; you'll
+ probably lose more from the cache than you'll gain from randomization.]
+</pre></li>
+</ul>
+</div>
+</div>
+
+<div id="org87d701f" class="outline-4">
+<h4 id="org87d701f">Speeding Up NN</h4>
+<div class="outline-text-4" id="text-org87d701f">
+<p>
+Can we preprocess the training points to obtain sublinear query time?
+</p>
+
+<p>
+Very low dimensions:  Voronoi diagrams
+Medium dim (up to ~30):  k-d trees
+Larger dim:  locality sensitive hashing [still researchy, not widely adopted]
+Largest dim:  no [stick with exhaustive k-NN.]
+Can use PCA or other dimensionality reduction as preprocess
+[Most fast nearest-neighbor algorithms in more than a few dimensions are
+ <b>approximate</b> nearest neighbor algorithms; we don't necessarily expect to find
+ the exact nearest neighbors any more.  That's usually okay, as machine
+ learning classifiers are rarely perfect.  If we use PCA as a preprocess, then
+ it's even more approximate, but it's much faster.]
+</p>
+
+<p>
+PCA:  Row i of UD gives the coordinates of sample point X_i in principal
+components space (i.e. X_i . v_j for each j).  So we don't need to project the
+input points onto that space; the SVD does it for us.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 05:52</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

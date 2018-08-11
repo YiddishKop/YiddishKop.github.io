@@ -1,0 +1,1146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:36 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>优化器八仙过海</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">优化器八仙过海</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdb3e4fb">导言</a></li>
+<li><a href="#orgd3226fe">相关文献及研究</a>
+<ul>
+<li><a href="#orgf19d7ae">2.1 用于自然语言处理的CNN和RNN的比较研究</a></li>
+<li><a href="#org5ef9d1e">2.2 俄语推文情感分析的神经网络架构比较</a></li>
+<li><a href="#org09c0f06">2.3 其他文献</a></li>
+</ul>
+</li>
+<li><a href="#orgaa35242">实验设计</a>
+<ul>
+<li><a href="#org758dfbd">3.1数据集</a></li>
+<li><a href="#org426a884">3.2测试流程</a></li>
+<li><a href="#orga73700a">3.3模型结构</a></li>
+</ul>
+</li>
+<li><a href="#org73cb076">实验结果</a></li>
+<li><a href="#org78a266c">讨论</a>
+<ul>
+<li><a href="#org507ce95">RNN vs CNN vs RCNN</a></li>
+<li><a href="#orgbe1fce3">Differernt Optimizaer</a></li>
+<li><a href="#org9bb5a8c">为什么RNN中选择的Adagrad?</a></li>
+<li><a href="#orgf72d814">为何选择CNN的RMSprop?</a></li>
+<li><a href="#org2b43346">为什么CNN在这项任务中表现更好?</a></li>
+<li><a href="#org81cfa0f">关于破除谣言的部分</a></li>
+<li><a href="#org54fde3d">RNN vs CNN 何者能更好地表示training sentence的意思呢?</a></li>
+<li><a href="#org9033039">哪个更适合文本分类：CNN或RNN?</a></li>
+</ul>
+</li>
+<li><a href="#orga526168">结论</a></li>
+</ul>
+</div>
+</div>
+<p>
+本文灵感源自于 MLDS 课程第二个练习 &#x2014; Sentiment Analysis, 参见这里.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据集</th>
+<th scope="col" class="org-right">数据量</th>
+<th scope="col" class="org-left">模型</th>
+<th scope="col" class="org-left">优化器</th>
+<th scope="col" class="org-left">CPU</th>
+<th scope="col" class="org-left">GPU</th>
+<th scope="col" class="org-left">用时</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">IMDB review</td>
+<td class="org-right">50000+</td>
+<td class="org-left">3 GRU layers</td>
+<td class="org-left">Adam</td>
+<td class="org-left">i7-6700 @ 3.40GHz*8</td>
+<td class="org-left">1060 4G</td>
+<td class="org-left">5min+</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+我的疑问是:
+</p>
+<ol class="org-ol">
+<li>Adam是不是过誉了?  Adam很常是训练类神经网路的预设方法, 但这篇文章说<a href="https://www.inference.vc/an-alternative-update-rule-for-generative-adversarial-networks/">在训练
+generative adversarial network时Adam表现不佳</a>. Adam收敛快, 但Adam所能达到的准确率上限, 跟其他几个optimizer (SGD, AdaGrad, RMSProp, NAdam&#x2026;..)比起来, 到底孰高孰低? 还是能到达的上限其实相同, 只差在训练时间? 原本使用RMSprop, 或是Adam
+的地方, 改用Nadam 是否可以得到更好的结果?</li>
+
+<li>在train GRU的时候, 可用多种不同的optimizer, 其中RMSProp、Adam常被使用. 作业二我 原本使用的是 Adam, 如果换成 SGD 或者 RMSProp 会变更好或更差? 为什么?</li>
+
+<li>RNN vs CNN的抽出的sentence representation高低若何? 在做句子分类上两种model都能有效的去模拟出句子的表示向量, 但使用哪种model所做出的向量能更好的表示这句话的意思呢?</li>
+
+<li>哪个更适合文本分类：CNN或RNN?</li>
+</ol>
+
+<div id="orgdb3e4fb" class="outline-2">
+<h2 id="orgdb3e4fb">导言</h2>
+<div class="outline-text-2" id="text-orgdb3e4fb">
+<p>
+在Natural Language Processing（NLP）的分类问题上, CNN/RNN model 究竟孰优孰劣? 除此之外, 针对不同model选择optimizer时, Adam始终都是是最合适的吗? 在本篇讨论中, 我试图以IMDB Movie Review Sentiment Task作为评估的标准, 并使用不同的模型架构与
+optimizer, 比较彼此间的差异（loss / accuracy）与收敛时间的不同.
+</p>
+
+<p>
+因为自然语言是序列表示且具有前后相依性, 过去在NLP上的task通常都是使用RNN做为主要的modeling模型. 且RNN在各个NLP的task上（POS tagging, NER, sentiment analysis…
+etcs. ）, 对于performance都有着高度且显著的提升效果. 但根据<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>的结果显示, CNN
+在某些task上(Question Answer Selecting)的结果可以打败RNN中的GRU/LSTM model. 在文献 <sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup> 中, 当改进CNN的Embedding方式后, 在Sentiment analysis的task下, 其
+performance也高过传统RNN的方式.
+</p>
+
+<p>
+因此我想针对Sentiment Analysis的这个作业, 探讨其在使用CNN/RNN/CRNN三种不同架构之下, 哪种架构抽出来的feature, 最能使后续fully-connected layer做出较佳的分类结果.
+</p>
+
+<p>
+除此之外, 因为在CNN/RNN/CRNN三种架构下最适合的optimzer也不尽相同, 因此我也尝试
+(SGD with/without momentum, RMSProp, Adagrad, Adam)在三个架构中的performance以及收敛速度/收敛曲线.
+</p>
+</div>
+</div>
+
+<div id="orgd3226fe" class="outline-2">
+<h2 id="orgd3226fe">相关文献及研究</h2>
+<div class="outline-text-2" id="text-orgd3226fe">
+</div>
+<div id="orgf19d7ae" class="outline-3">
+<h3 id="orgf19d7ae">2.1 用于自然语言处理的CNN和RNN的比较研究</h3>
+<div class="outline-text-3" id="text-orgf19d7ae">
+<p>
+在这篇paper中<sup><a id="fnr.1.100" class="footref" href="#fn.1">1</a></sup>, 与我的work相关的主要是对于Sentiment Classification (SentiC)
+on Stanford Sentiment Treebank (SST) dataset的分类, 然而在本篇paper的比较中, 并没有固定整体参数量, 也未对不同的optimizer进行比较. 从<a href="#orgf03a77d">图一</a>中可以看到, 以
+CNN/GRU/LSTM针对SentiC dataset做分类时, GRU达到的效果最佳. 然而因hidden-layer与
+batch-size的部分也并未固定, 因此难以评断GRU即为最佳的预测模型.
+</p>
+
+
+<div id="orgf03a77d" class="figure">
+<p><img src="相关工作/screenshot_2018-08-09_05-34-46.png" alt="screenshot_2018-08-09_05-34-46.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>不同模型中针对SentiC的准确度比较</p>
+</div>
+
+<p>
+从<a href="#orgb0e07c2">图二</a>中可得知, CNN与GRU对于语意的分析各有其优缺点. 对CNN来说, 对于讽刺性话语
+(eg:These are names to remember , in order to avoid them in the future)、以反义字表示肯定的评论(eg:You won't want to miss)判别力较差, 而对于较为直接的叙述则能够判断得较好, 对于GRU而言则是较能判断较长语句的句义, 不会在看到won't或miss时视为负面评论.
+</p>
+
+
+<div id="orgb0e07c2" class="figure">
+<p><img src="相关工作/screenshot_2018-08-09_05-37-19.png" alt="screenshot_2018-08-09_05-37-19.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>CNN与GRU对于Sentiment Classification的比较结果</p>
+</div>
+</div>
+</div>
+
+
+<div id="org5ef9d1e" class="outline-3">
+<h3 id="org5ef9d1e">2.2 俄语推文情感分析的神经网络架构比较</h3>
+<div class="outline-text-3" id="text-org5ef9d1e">
+<p>
+在这篇文献<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>中, 比较了RNN(paper中采用GRU架构)、CNN和较为简易的SVM模型, 在所收集的Twitter dataset上的语意分析, 分为负面(negative), 中性(neutral)与正面
+(positive)三种分类. Training datasets包含大约9,000则Twitter消息,而testing
+datasets包含大约19,000则消息), preprocessing的部分则是使用word2vec转换出的
+vectors作为training features.
+</p>
+
+
+<div id="orgd8a29d1" class="figure">
+<p><img src="相关工作/screenshot_2018-08-09_05-40-47.png" alt="screenshot_2018-08-09_05-40-47.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>paper中针对2016 SentiRuEval比赛中dataset的F1-score与排名</p>
+</div>
+
+<p>
+针对2016 SentiRuEval的dataset分析结果如<a href="#orgd8a29d1">图三</a>所示, 参与的十队中设计了58种training
+model与方法, 而将语句倒序后, 再使用two-layer GRU训练的模型有最佳的performance.
+</p>
+
+<p>
+除此之外也可从<a href="#orge0e7ef3">图四</a>中看出, 将语句倒序后再使用two-layer GRU训练的RNN架构之
+performance优于LSTM、GRU、bidirectional GRU的结果. 若不使用word2vec单纯只用
+one-hot encoding vector训练的话准确度仅有0.45(for Banks domain)和0.47(for
+telecommunication companies domain).
+</p>
+
+
+<div id="orge0e7ef3" class="figure">
+<p><img src="相关工作/screenshot_2018-08-09_05-41-47.png" alt="screenshot_2018-08-09_05-41-47.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>paper中针对2016 SentiRuEval比赛中dataset的Macro-averaged F1-score</p>
+</div>
+</div>
+</div>
+
+<div id="org09c0f06" class="outline-3">
+<h3 id="org09c0f06">2.3 其他文献</h3>
+<div class="outline-text-3" id="text-org09c0f06">
+<p>
+<b>以RNN做sentence classification</b>
+</p>
+<ol class="org-ol">
+<li><p>
+Opinion Mining with Deep Recurrent Neural Networks Irsoy &amp; Cardie,
+2014 <sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>
+</p>
+
+<p>
+本研究中用实验证明使用Deep RNN(more layers)在opinion mining的问题上比Wide
+RNN(more neurons)以及以往的state-of-the-art的semiCRF模型表现更佳.
+</p></li>
+
+<li><p>
+Opinion Tagging Using Deep Recurrent Nets with GRUs Adamson &amp; Turan,
+2015 <sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>
+</p>
+
+<p>
+本研究以实验结果检验Vanilla Relu RNN以及GRUs在各种sentence classification
+problems上的performance, 实验结果证明两者在各有擅长的classification problems,
+但 GRUs的平均表现比较优良.
+</p></li>
+</ol>
+
+
+<p>
+<b>以CNN做sentence classification和sentence modeling</b>
+</p>
+<ol class="org-ol">
+<li><p>
+A Convolutional Neural Network for Modelling Sentences Kalchbrenner et al., 2014 <sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup>
+</p>
+
+<p>
+本研究针对研究句子的语义模型, 提出一个新的模型Dynamic Convolutional Neural
+Network (DCNN). 在模型网路中的的不同层(layers)中, 同时采用一维的convolutional
+layer和dynamic k-max pooling layers. 也因为这样可自由调整网路结构(network
+structure)的特色, 本模型可以处理不同长度的语句序列, 并在该研究中所选用的三个
+dataset上皆有突出的表现(Sentiment Prediction in Movie Reviews, Question Type
+Classification, Twitter Sentiment Prediction with Distant Supervision).
+</p></li>
+
+<li><p>
+Convolutional Neural Networks for Sentence Classification Kim, 2014 <sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup>
+</p>
+
+<p>
+这篇paper中主要以CNN model, 对pre-trained word vector做句子(sentence-level)的分类问题, 而其中会透过grid search , 并针对SST-2 dev dataset选取以下的CNN model参数：
+rectified linear units , filter windows, dropout rate, l2 constraint, 和
+mini-batch size.
+</p>
+
+<p>
+上述提及之先前研究, 较未有同时比较model与optimizer交互关系的讨论, 故后续的实验计中将针对这部份多所著墨.
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orgaa35242" class="outline-2">
+<h2 id="orgaa35242">实验设计</h2>
+<div class="outline-text-2" id="text-orgaa35242">
+<p>
+由于在上述提及之Sentiment Analysis上RNN与CNN的结果并未差异许多<sup><a id="fnr.1.100" class="footref" href="#fn.1">1</a></sup><sup>, </sup><sup><a id="fnr.2.100" class="footref" href="#fn.2">2</a></sup>, 且并没有考虑选择不同optimizer之比较, 故我选择IMDB Movie Review Sentiment Analysis做为比较CNN/RNN表现的task.
+</p>
+
+<p>
+由于参数量的多寡会直接影响模型的complexity, 我固定RNN/CNN/RCNN后所接的
+fully-connected layers, 并限制RNN/CNN/RCNN的参数, 使整体参数量固定, 以做为
+performance时的准则, 除model/optimizer外, 尽可能固定会影响training结果的其他变因.
+</p>
+</div>
+
+<div id="org758dfbd" class="outline-3">
+<h3 id="org758dfbd">3.1数据集</h3>
+<div class="outline-text-3" id="text-org758dfbd">
+<p>
+<a href="http://ai.stanford.edu/~amaas/data/sentiment/">IMDB Movie Review Sentiment Dataset</a>
+</p>
+
+<p>
+资料中包含一段句子, 以及该句子的正负面情绪. (positive : 1/ negative: 0) 其中以
+25000笔热门电影评论作为training set,10000笔作为validation set, 而15000笔则作为
+testing set.
+</p>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">训练集</td>
+<td class="org-right">25000</td>
+</tr>
+
+<tr>
+<td class="org-left">验证集</td>
+<td class="org-right">10000</td>
+</tr>
+
+<tr>
+<td class="org-left">测试集</td>
+<td class="org-right">15000</td>
+</tr>
+
+<tr>
+<td class="org-left">平均训练数据长度</td>
+<td class="org-right">238.71364</td>
+</tr>
+
+<tr>
+<td class="org-left">平均测试数据长度</td>
+<td class="org-right">230.8042</td>
+</tr>
+
+<tr>
+<td class="org-left">词汇量</td>
+<td class="org-right">88585</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+在这样的dataset上RNN based的模型是否能记住较为遥远的历史讯息CNN在看到文章中的某句强力语意的句子后是否能根据该句子抽出对应的features. 除此之外, 在Keras上有已经做过pre-processing 的data, 故在研究后续model和optimizer间的关联时, 能够省略前置步骤, 在研究final project的有限时间中较为便利.
+</p>
+</div>
+</div>
+
+<div id="org426a884" class="outline-3">
+<h3 id="org426a884">3.2测试流程</h3>
+<div class="outline-text-3" id="text-org426a884">
+<p>
+将Sentences做完Embedding后(我使用Keras内建的embedding layers, 使用方式参阅
+<a href="https://keras.io/layers/embeddings/">https://keras.io/layers/embeddings/</a>), 输入各个参数量一样的模型后, 用不同的
+Optimizers做training, 记录下各个training flow的 <code>conv.epoch</code> (到哪个 <code>epoch</code> 时
+<code>loss</code> 会收敛), <code>training loss/accuracy</code>, <code>validation loss/accuracy</code> 与 <code>testing
+accuracy</code> , 最后比较不同参数设定下的收敛时间及收敛后的预测结果, 整体实验流程如<a href="#orgb1132bb">图五</a>所示.
+</p>
+
+
+<div id="orgb1132bb" class="figure">
+<p><img src="实验设计/screenshot_2018-08-09_05-52-36.png" alt="screenshot_2018-08-09_05-52-36.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>实验整体流程</p>
+</div>
+</div>
+</div>
+
+<div id="orga73700a" class="outline-3">
+<h3 id="orga73700a">3.3模型结构</h3>
+<div class="outline-text-3" id="text-orga73700a">
+<ol class="org-ol">
+<li>RNN(LSTM)</li>
+<li>CNN(MaxPooling)</li>
+<li>RCNN(LSTM)</li>
+</ol>
+
+<p>
+不同的model structure如下面<a href="#org8f29845">图六-图八</a>所示：
+</p>
+
+<table id="org8f29845" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">RNN (LSTM) Model Structure</th>
+<th scope="col" class="org-left">CNN Model Structure</th>
+<th scope="col" class="org-left">RCNN (CNN+LSTM) Model Structure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><img src="实验设计/screenshot_2018-08-09_05-53-37.png" alt="screenshot_2018-08-09_05-53-37.png" /></td>
+<td class="org-left"><img src="实验设计/screenshot_2018-08-09_05-54-03.png" alt="screenshot_2018-08-09_05-54-03.png" /></td>
+<td class="org-left"><img src="实验设计/screenshot_2018-08-09_05-54-52.png" alt="screenshot_2018-08-09_05-54-52.png" /></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+使用上述模型抽完feature后, 最后通过一个(n, 1)的full connected layers, 并通过
+<code>softmax activation function</code> 来预测结果.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org73cb076" class="outline-2">
+<h2 id="org73cb076">实验结果</h2>
+<div class="outline-text-2" id="text-org73cb076">
+<p>
+使用CNN/RNN/RCNN中不同模型架构, 并搭配不同optimizer的实验结果如下述表一所示. 因有设定early-stopping, 因此training过程在无法继续收敛时会自己停下来, 此时的epoch
+数记为<a href="#org970ae21">表一</a>中的convergence epoch(Conv. epoch), 因此若
+convergence epoch数字越小代表越早收敛, 数字越大代表越难收敛. 我的code放在github
+上, 如<sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup>.
+</p>
+
+<p>
+EarlyStopping 设置：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">EarlyStopping(monitor=<span class="org-string">'val_loss'</span>, min_delta=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">01</span>, patience=<span class="org-highlight-numbers-number">5</span>, verbose=<span class="org-highlight-numbers-number">0</span>, mode=<span class="org-string">'auto'</span>)
+</pre>
+</div>
+
+
+<table id="org970ae21" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> \({不同model搭配不同optimizer的实验结果\\ RNN所选用的架构为LSTM (整体架构如图六所示)\\ RCNN所选用的架构为CNN+LSTM(整体架构如图八所示)}\)</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Model</th>
+<th scope="col" class="org-left">Optimizer</th>
+<th scope="col" class="org-right">Conv.Epoch</th>
+<th scope="col" class="org-right">Loss</th>
+<th scope="col" class="org-right">Train_acc</th>
+<th scope="col" class="org-right">Val_loss</th>
+<th scope="col" class="org-right">Val_acc.</th>
+<th scope="col" class="org-right">Test acc.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">Adam</td>
+<td class="org-right">15</td>
+<td class="org-right">0.0087</td>
+<td class="org-right">0.9974</td>
+<td class="org-right">1.1576</td>
+<td class="org-right">0.8128</td>
+<td class="org-right">0.8042</td>
+</tr>
+
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">RMSprop</td>
+<td class="org-right">13</td>
+<td class="org-right">0.0729</td>
+<td class="org-right">0.9744</td>
+<td class="org-right">0.6674</td>
+<td class="org-right">0.8227</td>
+<td class="org-right">0.8176</td>
+</tr>
+
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">SGD + no momentum</td>
+<td class="org-right">48</td>
+<td class="org-right">0.1076</td>
+<td class="org-right">0.9346</td>
+<td class="org-right">0.9816</td>
+<td class="org-right">0.8003</td>
+<td class="org-right">0.7964</td>
+</tr>
+
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">SGD+ momentum=0.1</td>
+<td class="org-right">25</td>
+<td class="org-right">0.4170</td>
+<td class="org-right">0.8125</td>
+<td class="org-right">0.4030</td>
+<td class="org-right">0.8156</td>
+<td class="org-right">0.8067</td>
+</tr>
+
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">SGD+ momentum=0.2</td>
+<td class="org-right">24</td>
+<td class="org-right">0.4170</td>
+<td class="org-right">0.8225</td>
+<td class="org-right">0.4030</td>
+<td class="org-right">0.8256</td>
+<td class="org-right">0.8234</td>
+</tr>
+
+<tr>
+<td class="org-left">RNN</td>
+<td class="org-left">Adagrad</td>
+<td class="org-right">11</td>
+<td class="org-right">0.1009</td>
+<td class="org-right">0.9672</td>
+<td class="org-right">0.5751</td>
+<td class="org-right">0.8251</td>
+<td class="org-right">0.8286</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">Adam</td>
+<td class="org-right">7</td>
+<td class="org-right">0.0216</td>
+<td class="org-right">0.9924</td>
+<td class="org-right">0.6787</td>
+<td class="org-right">0.8572</td>
+<td class="org-right">0.8630</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">RMSprop</td>
+<td class="org-right">8</td>
+<td class="org-right">0.0315</td>
+<td class="org-right">0.9902</td>
+<td class="org-right">0.4744</td>
+<td class="org-right">0.8865</td>
+<td class="org-right">0.8871</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">SGD + no momentum</td>
+<td class="org-right">35</td>
+<td class="org-right">0.6915</td>
+<td class="org-right">0.6705</td>
+<td class="org-right">0.6922</td>
+<td class="org-right">0.6788</td>
+<td class="org-right">0.6729</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">SGD+ momentum=0.1</td>
+<td class="org-right">37</td>
+<td class="org-right">0.1556</td>
+<td class="org-right">0.9416</td>
+<td class="org-right">0.3292</td>
+<td class="org-right">0.8664</td>
+<td class="org-right">0.8782</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">SGD+ momentum=0.2</td>
+<td class="org-right">36</td>
+<td class="org-right">0.1665</td>
+<td class="org-right">0.9373</td>
+<td class="org-right">0.3125</td>
+<td class="org-right">0.8740</td>
+<td class="org-right">0.8823</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">SGD+ momentum=0.3</td>
+<td class="org-right">28</td>
+<td class="org-right">0.1866</td>
+<td class="org-right">0.9287</td>
+<td class="org-right">0.3863</td>
+<td class="org-right">0.8481</td>
+<td class="org-right">0.8537</td>
+</tr>
+
+<tr>
+<td class="org-left">CNN</td>
+<td class="org-left">Adagrad</td>
+<td class="org-right">8</td>
+<td class="org-right">0.0246</td>
+<td class="org-right">0.9968</td>
+<td class="org-right">0.4000</td>
+<td class="org-right">0.8796</td>
+<td class="org-right">0.8825</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">Adam</td>
+<td class="org-right">12</td>
+<td class="org-right">0.0089</td>
+<td class="org-right">0.9973</td>
+<td class="org-right">0.9724</td>
+<td class="org-right">0.8291</td>
+<td class="org-right">0.8361</td>
+</tr>
+
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">RMSprop</td>
+<td class="org-right">14</td>
+<td class="org-right">0.0063</td>
+<td class="org-right">0.9981</td>
+<td class="org-right">0.9749</td>
+<td class="org-right">0.8347</td>
+<td class="org-right">0.8384</td>
+</tr>
+
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">SGD+ no momentum</td>
+<td class="org-right">23</td>
+<td class="org-right">0.6928</td>
+<td class="org-right">0.5143</td>
+<td class="org-right">0.6927</td>
+<td class="org-right">0.4978</td>
+<td class="org-right">0.6896</td>
+</tr>
+
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">SGD+ momentum=0.1</td>
+<td class="org-right">37</td>
+<td class="org-right">0.1793</td>
+<td class="org-right">0.9317</td>
+<td class="org-right">0.5428</td>
+<td class="org-right">0.8109</td>
+<td class="org-right">0.8202</td>
+</tr>
+
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">SGD+ momentum=0.2</td>
+<td class="org-right">29</td>
+<td class="org-right">0.2211</td>
+<td class="org-right">0.9123</td>
+<td class="org-right">0.3616</td>
+<td class="org-right">0.8470</td>
+<td class="org-right">0.8542</td>
+</tr>
+
+<tr>
+<td class="org-left">RCNN</td>
+<td class="org-left">Adagrad</td>
+<td class="org-right">12</td>
+<td class="org-right">0.0041</td>
+<td class="org-right">0.9995</td>
+<td class="org-right">0.8607</td>
+<td class="org-right">0.8359</td>
+<td class="org-right">0.8347</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+目前针对此dataset, 能够呈现最佳预测结果的选项为 <code>CNN+RMSprop</code> .
+</p>
+</div>
+</div>
+
+<div id="org78a266c" class="outline-2">
+<h2 id="org78a266c">讨论</h2>
+<div class="outline-text-2" id="text-org78a266c">
+<p>
+对于上述实验结果的讨论与分析如下：
+</p>
+</div>
+
+<div id="org507ce95" class="outline-3">
+<h3 id="org507ce95">RNN vs CNN vs RCNN</h3>
+<div class="outline-text-3" id="text-org507ce95">
+<p>
+在Convergence Epoch的 column 中, 比较数值后可以发现CNN是当中收敛最快速的, 其次是
+RCNN, 最后是RNN. 我认为这是因为CNN在各个Convolution层的gradient计算是平行的, 因此从label传递通过的layer数量会比RNN、RCNN少, gradient对前面的conv. layer影响力较大, 因此收敛最快. 其次在RCNN中RNN的部分虽然会通过较多layer, 然而有CNN的layer抽取
+feature的情况下, 收敛速度还是比RNN快.
+</p>
+
+<p>
+而在Train/Validate/Test accuracy的 column 里, CNN/RCNN的Train accuracy在除了SGD
+的其他optimizer下都能达到 <code>0.99</code> 的 <code>acc.</code> , 但是在 <code>Val.</code> 和 <code>Test acc.</code> 下CNN
+的表现都胜过RCNN . 我认为这是因为RCNN的复杂度对于IMDB这个task下过高, 且在这个
+task下我猜测在看见某些有强力sentiment的句子后抽出的feature能dominate prediction
+的好坏(例如： <code>this movie is 'fresh'</code> ), 在CNN的架构下可以在抽出这个语句的
+feature后传递给full-connected层, 然而在RCNN的架构下, 抽出来的feature在经过
+recurrent的传递时有可能会丢失了这样的资讯(如Gradient Vanishing), 又因为RCNN本身模型的complexity较高, 才会有RCNN在 <code>train acc.</code> 很高但是在 <code>test acc.</code> 比CNN差的结果. 另外在RNN的架构下, 因为有可能遗忘较长远以前的资讯, 在 <code>test acc.</code> 表现又比
+CNN、RCNN差.
+</p>
+</div>
+</div>
+
+<div id="orgbe1fce3" class="outline-3">
+<h3 id="orgbe1fce3">Differernt Optimizaer</h3>
+<div class="outline-text-3" id="text-orgbe1fce3">
+
+<div class="figure">
+<p><img src="五 讨论/screenshot_2018-08-09_06-15-56.png" alt="screenshot_2018-08-09_06-15-56.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>课件截图: Adagrad</p>
+</div>
+
+
+<p>
+从上图中的Adagrad式子中可以得知, Adagrad对Learning rate项基于过去所有gradient项的总和做了平方项和后开根号的调整. 直觉上的想像就如同图中右上的error space视觉化,
+在某段时间的gradient会考虑过去所有该项的gradient(须注意此处过去的gradient权重都相等).
+</p>
+
+
+<div class="figure">
+<p><img src="五 讨论/screenshot_2018-08-09_06-17-04.png" alt="screenshot_2018-08-09_06-17-04.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>课件截图: RMSProp</p>
+</div>
+
+
+<p>
+另外, 从上图的RMSprop式子中, 可以看出RMSprop以及Adagrad的差异在于, RMSprop对于
+learning rate的修正项, 对于较久以前的gradient项因为多次的alpha乘积后, 对于某处
+learning rate的影响力会比较接近的gradient小. 直觉上的想像是跟Adagrad一样是根据历史中的gradient修正learning rate大小, 然而在RMSprop中比较新的gradient对修正项影响力会比旧的gradient大.
+</p>
+
+
+
+<div class="figure">
+<p><img src="五 讨论/screenshot_2018-08-09_06-17-41.png" alt="screenshot_2018-08-09_06-17-41.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>课件截图: Adam 算法</p>
+</div>
+
+<p>
+最后是Adam的algorithm, 是RMSprop加上momentum的演算法. 因为考量了历史的gradient以及momentum, 通常Adam都能给予较好的收敛曲线.
+</p>
+</div>
+</div>
+
+<div id="org9bb5a8c" class="outline-3">
+<h3 id="org9bb5a8c">为什么RNN中选择的Adagrad?</h3>
+<div class="outline-text-3" id="text-org9bb5a8c">
+<p>
+在实验结果中,  <code>RNN@Adagrad &gt; RNN@RMSprop &gt; RNN@Adam</code> . 我认为这是由于RNN的
+<a href="#orga674bed">error surface</a> <b>非平即陡</b> 造成的:
+</p>
+
+
+<div id="orga674bed" class="figure">
+<p><img src="五 讨论/screenshot_2018-08-09_06-57-52.png" alt="screenshot_2018-08-09_06-57-52.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>error surface of RNN</p>
+</div>
+
+
+<p>
+在更新gradient时若采用momentum based的optimizer时, 有可能因为突然加大的gradient
+造成往后的更新都被这次的更新方向影响(<b>飞出去了</b>), 因此Adam在RNN的结果表现最差.
+而Adagrad因为对历史纪录中的gradient L2 regularization权重相同, 尽管在遇到极大的
+gradient, 也会因为参考了历史中所有的gradient而不过度修正learning rate, 因此表现比有可能被极大gradient dominate的RMSprop来得好.
+</p>
+</div>
+</div>
+
+<div id="orgf72d814" class="outline-3">
+<h3 id="orgf72d814">为何选择CNN的RMSprop?</h3>
+<div class="outline-text-3" id="text-orgf72d814">
+<p>
+在CNN的实验中,  <code>CNN@RMSprop &gt; CNN@Adam &gt; CNN@Adagrad ≈ CNN@SGD</code> 我分析后认为这样的结果应该是来自SGD本身更新时虽然每次根据一笔data更新很有效率, 加上momentum后等同参考了以往的历史讯息, 而能得到好的结果. 但在CNN的情况下RMSprop为最佳的
+optimizer, 我认为是同时使用了RMS + momentum在这个task下会过度fit CNN的model(如果看Adam的train acc.和test acc.话, 可以发现有比其他optimizer更大的overfitting的状况)；另外因为CNN的error space应不如RNN的error space颠簸, 故RMSprop结果比Adagrad
+好.
+</p>
+</div>
+</div>
+
+<div id="org2b43346" class="outline-3">
+<h3 id="org2b43346">为什么CNN在这项任务中表现更好?</h3>
+<div class="outline-text-3" id="text-org2b43346">
+<p>
+在IMDB的这个task下,  <code>CNN &gt; RNN &gt; RCNN</code> 的表现比RNN以及RCNN好. 而这样的结果我认为应该和我的推测相同：对于一则280字数的评论, 能够判断这则评论是正向/负向的特征可能只需要几句话. 因此, 在CNN <b>平行抽取特征</b> 的结构下, 可以有效的辨识出正负向的句子；相对的, 在RNN/RCNN的结构下擅长的是从头到尾阅读完文章后再抽特征, 若一篇评论在开头给予了强烈的正/负向特征, 但是文章后半部都是在补充说明的话, RNN/RCNN有可能丢失了开头的特征, 因此CNN在这个task下会是比较适合的模型.
+</p>
+</div>
+</div>
+
+<div id="org81cfa0f" class="outline-3">
+<h3 id="org81cfa0f">关于破除谣言的部分</h3>
+<div class="outline-text-3" id="text-org81cfa0f">
+<p>
+如我在前面的讨论提到, 在这个问题下LSTM最适合的是 <code>Adagrad</code> 而不是常见的Adam或
+GradientDescent. 因为Error space颠簸的问题, 在training RNN时应该要慎重的选择像
+Adam 这样有 momentum 或 RMSprop 这种会根据不同gradient大小调整的optimizer.
+</p>
+</div>
+</div>
+
+<div id="org54fde3d" class="outline-3">
+<h3 id="org54fde3d">RNN vs CNN 何者能更好地表示training sentence的意思呢?</h3>
+<div class="outline-text-3" id="text-org54fde3d">
+<p>
+但就本讨论中实验之sentiment task而言, 选用CNN的结果能够提供较好的分类结果, 如同<sup><a id="fnr.3.100" class="footref" href="#fn.3">3</a></sup>中的讨论而言, 可能因为corpus中的movie review呈现反讽、反义字表示肯定的评论出现次数较少, 因此CNN能够避免掉误判句义正/负面的情况, 因此呈现较佳的预测结果.
+</p>
+</div>
+</div>
+
+<div id="org9033039" class="outline-3">
+<h3 id="org9033039">哪个更适合文本分类：CNN或RNN?</h3>
+<div class="outline-text-3" id="text-org9033039">
+<p>
+根据本讨论中选用的task而言是CNN的成效较佳. 但由于本次的任务在于单纯只是将句义分为正面/负面, 是binary text classification的问题, 因此如果当实际应用到将更多元的
+text分类、分出多个标签等相关应用而言, 相较之下问题对各个模型的适合度不同, 也许在短一点的sentence classfication问题上,  RCNN/RNN这样sequence based的模型效果就会胜过CNN. 因此我认为在接触一个不知道哪个模型适合的task状况下, 将optimizer以及参数量固定各使用三个模型得到一个初步的结果再决定fine-tune最后决定的模型会是比较好的决定方式.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orga526168" class="outline-2">
+<h2 id="orga526168">结论</h2>
+<div class="outline-text-2" id="text-orga526168">
+<p>
+据以上分析,可以发现在optimizer的整体表现中, SGD的表现最为不佳, 对于选用其他
+optimizer的CNN / RCNN model而言, 选用SGD作为optimizer的performance下降非常多. 除此之外, 选用SGD作为optimizer的model收敛的时间也比较长, 如RNN(LSTM)的结果所示, 需要48个epoch才会收敛, 对于RCNN model来说也需要23个epoch才会收敛, 相较于使用其他
+optimizer的model来说有显著的差异.
+</p>
+
+<p>
+从评估如何选取model structure方面而言, RNN(LSTM)即使在选用SGD作为optimizer的状况下, 于testing set上的accuracy仍未大幅度下降, 可能是因为LSTM本身模型相对稳定且复杂, 故optimizer的选取并不会对整体训练过程造成很大的波动. 然而不管是对于CNN本身,
+或是有用到CNN+LSTM的RCNN架构而言, optimizer的选取则会对于训练的过程是否收敛造成很大的影响. 故若想选用较为稳定的model structure, RNN(LSTM)将是首选.
+</p>
+
+<p>
+就本task而言, 选择CNN搭配rmsprop作为optimizer的训练架构在testing set上得到了最佳的accuracy, 然而选用CNN搭配Adam、rmsprop、Adagrad作为optimizer的架构皆能得到不错的表现.
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Comparative Study of CNN and RNN for Natural Language Processing <a href="https://arxiv.org/pdf/1702.01923.pdf">https://arxiv.org/pdf/1702.01923.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+Semi-supervised Convolutional Neural Networks for Text Categorization via Region Embedding <a href="https://arxiv.org/pdf/1504.01255.pdf">https://arxiv.org/pdf/1504.01255.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+Comparison of Neural Network Architectures for Sentiment Analysis of Russian Tweets <a href="http://www.dialog-21.ru/media/3380/arkhipenkoetal.pdf">http://www.dialog-21.ru/media/3380/arkhipenkoetal.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+Opinion Mining with Deep Recurrent Neural Networks <a href="https://www.cs.cornell.edu/~oirsoy/files/emnlp14drnt.pdf">https://www.cs.cornell.edu/~oirsoy/files/emnlp14drnt.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+Opinion Tagging Using Deep Recurrent Nets with GRUs <a href="http://cs224d.stanford.edu/reports/AdamsonAlex.pdf">http://cs224d.stanford.edu/reports/AdamsonAlex.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.6" class="footnum" href="#fnr.6">6</a></sup> <div class="footpara"><p class="footpara">
+A Convolutional Neural Network for Modelling Sentences <a href="https://arxiv.org/pdf/1404.2188.pdf">https://arxiv.org/pdf/1404.2188.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.7" class="footnum" href="#fnr.7">7</a></sup> <div class="footpara"><p class="footpara">
+Convolutional Neural Networks for Sentence Classification <a href="https://arxiv.org/pdf/1408.5882.pdf">https://arxiv.org/pdf/1408.5882.pdf</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.8" class="footnum" href="#fnr.8">8</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://github.com/YiddishKop/ml_src_optimizer_compare.git">https://github.com/YiddishKop/ml_src_optimizer_compare.git</a>
+</p></div></div>
+
+
+</div>
+</div></div>
+</body>
+</html>

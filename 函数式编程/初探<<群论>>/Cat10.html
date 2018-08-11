@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:06 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 10</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 10</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#cat-10.1-monads">Cat 10.1 Monads</a>
+<ul>
+<li><a href="#intuition-and-definition-of-monads">Intuition and Definition of monads</a>
+<ul>
+<li><a href="#signiture-of">Signiture of &gt;=&gt;</a></li>
+<li><a href="#why-we-using-these-monads-what-problem-they-solve">why we using these monads, what problem they solve</a></li>
+</ul>
+</li>
+<li><a href="#examples-of-monad">Examples of Monad</a>
+<ul>
+<li><a href="#maybe-monad">Maybe Monad</a></li>
+<li><a href="#state-related-monad">State related Monad</a></li>
+</ul>
+</li>
+<li><a href="#laws-have-to-be-satisfied">3 laws have to be satisfied</a>
+<ul>
+<li><a href="#remake-the-symbol-of-functor-and-2-functions">remake the symbol of functor and 2 functions</a></li>
+<li><a href="#nt-in-category-theory-vs.nt-in-haskell">NT in Category theory vs. NT in Haskell</a></li>
+<li><a href="#redefine-monad-by-new-symbol">redefine monad by new symbol</a></li>
+<li><a href="#d-diagram-composing-two-nts-in-2-direction">2-D diagram: composing two NTs in 2 direction</a></li>
+<li><a href="#proving-law-1-monad-associativity-by-mu-and-eta">proving law 1: Monad associativity by mu and eta</a></li>
+<li><a href="#proving-law-23-monad-rightleft-id-by-mu-and-eta">proving law 2,3: Monad right/left id by mu and eta</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cat-10.2-monoid-in-the-category-of-endofunctors">Cat 10.2 Monoid in the category of endofunctors</a>
+<ul>
+<li><a href="#org35093f8">how to get away from set in Monoid &#x2014; a more general definition of</a>
+<ul>
+<li><a href="#strict-and-lacks-monoid">strict and lacks monoid</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org3fee8da" class="outline-2">
+<h2 id="cat-10.1-monads"><a id="org3fee8da"></a>Cat 10.1 Monads</h2>
+<div class="outline-text-2" id="text-cat-10.1-monads">
+</div>
+
+<div id="org3a1d062" class="outline-3">
+<h3 id="intuition-and-definition-of-monads"><a id="org3a1d062"></a>Intuition and Definition of monads</h3>
+<div class="outline-text-3" id="text-intuition-and-definition-of-monads">
+<p>
+Think a basic an important question, why we need function in
+programming?
+</p>
+
+<p>
+we really need functions, because we can <b>structure</b> our program.
+</p>
+
+<p>
+we really need functions, because we can <b>decompose and recompose</b> our
+program.
+</p>
+
+<p>
+and both these terms, are the basic concept of our category theory, and
+is the most important concept in category.
+</p>
+
+<p>
+Monad is all about the composing stuff.
+</p>
+
+<p>
+<code>.</code> in haskell is used to composint simple function, whose output match
+the latter one's input. <code>&gt;=&gt;</code> in hasekll is used to composing function
+whose output type is embellished &#x2014; like logging, with string
+embellished inside , the logging are Kleisli arrow.
+</p>
+
+<p>
+so we should <b>unpack</b> the return type before we can send it to the next
+function.
+</p>
+
+<p>
+One more step, when we use "&gt;=&gt;" to compose, we can make some decision
+before composing, maybe we dont want call the next functions at all.
+</p>
+
+<p class="verse">
+. | &gt;=&gt; |<br />
+id | return |<br />
+</p>
+
+<p>
+we have a <code>return</code> because we may want some intuision from imperative
+programming.
+</p>
+
+<p>
+<code>. and id</code> &#x2014; means identity and composition , can build a <b>category of
+functions</b>. <code>&gt;=&gt; and return</code> &#x2014; means identity and composition , can
+build a <b>category of Kleisli</b>.
+</p>
+</div>
+
+<div id="org961ae60" class="outline-4">
+<h4 id="signiture-of"><a id="org961ae60"></a>Signiture of &gt;=&gt;</h4>
+<div class="outline-text-4" id="text-signiture-of">
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Monad</span> m <span class="org-haskell-keyword">where</span> <span class="org-haskell-operator">//</span> m is a <span class="org-haskell-keyword">type</span> constructor
+  (<span class="org-haskell-operator">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> m a <span class="org-haskell-operator">-&gt;</span> (a<span class="org-haskell-operator">-&gt;</span>mb) <span class="org-haskell-operator">-&gt;</span> mb
+  return <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> ma <span class="org-haskell-operator">//</span> identity <span class="org-haskell-type">Kleisli</span> arrow
+<span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> m <span class="org-haskell-operator">=&gt;</span> <span class="org-haskell-type">Monda</span> m <span class="org-haskell-keyword">where</span>
+  join <span class="org-haskell-operator">::</span> m(ma) <span class="org-haskell-operator">-&gt;</span> ma
+  return <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> ma <span class="org-haskell-operator">//</span> lifting a value
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span>          f       g
+(<span class="org-haskell-definition">&gt;=&gt;</span>) <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>mb)<span class="org-haskell-operator">-&gt;</span>(b<span class="org-haskell-operator">-&gt;</span>mc) <span class="org-haskell-operator">-&gt;</span> (a<span class="org-haskell-operator">-&gt;</span>mc) <span class="org-haskell-operator">//</span> m is a functor
+f <span class="org-haskell-definition">&gt;=&gt;</span> g <span class="org-haskell-operator">=</span> &#955; a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-keyword">let</span> mb <span class="org-haskell-operator">=</span> f a
+                 <span class="org-haskell-operator">//</span> <span class="org-haskell-keyword">in</span> <span class="org-haskell-operator">...</span> 
+                 <span class="org-haskell-operator">//</span> <span class="org-haskell-keyword">in</span> mb <span class="org-haskell-operator">&gt;&gt;=</span> g
+
+<span class="org-haskell-operator">//</span> <span class="org-haskell-keyword">in</span> <span class="org-haskell-operator">...</span> we must define a function like below
+<span class="org-haskell-operator">//</span>               f
+(<span class="org-haskell-definition">&gt;&gt;=</span>)<span class="org-haskell-operator">::</span> m a <span class="org-haskell-operator">-&gt;</span> (a<span class="org-haskell-operator">-&gt;</span>mb) <span class="org-haskell-operator">-&gt;</span> mb
+  ma <span class="org-haskell-operator">&gt;&gt;=</span> f <span class="org-haskell-operator">=</span> join (fmap f ma) 
+<span class="org-haskell-operator">//</span> m is a functor, it <span class="org-haskell-keyword">let</span> f unboxing to modify inside and boxing to give back without changing the shape <span class="org-haskell-keyword">of</span> container<span class="org-haskell-operator">.</span>
+
+<span class="org-haskell-definition">join</span> <span class="org-haskell-operator">::</span> m(ma) <span class="org-haskell-operator">-&gt;</span> ma <span class="org-haskell-operator">//</span> like <span class="org-haskell-type">List</span>[<span class="org-haskell-type">List</span>] <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">List</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s9.postimg.cc/z3hgtumz3/screenshot_69.png" alt="screenshot_69.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>&gt;=&gt; and &gt;&gt;=</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s9.postimg.cc/qb0i6c9lr/screenshot_70.png" alt="screenshot_70.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>fmap applied to get m(mb)</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/bjksx9ptb/screenshot_72.png" alt="screenshot_72.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>3 important functions in Monad</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/cng7xd1kp/screenshot_73.png" alt="screenshot_73.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>3 important functions in Monad</p>
+</div>
+
+<p>
+note that: type name and variable name are in different name space of
+Haskell, so we have type name "a" "mb"and a variable in λ function also
+named "a" "mb", that's OK, no error trigged
+</p>
+
+<p>
+<code>&gt;&gt;=</code> is called bind <code>&gt;=&gt;</code> called fish symbol
+</p>
+
+<p>
+notice that there is some type-mismatch, and this is where our
+<b>embellishment</b> come from.
+</p>
+
+<p>
+note that: we should not modify the content inside of the container
+directly, because it's a type variable, we have nothing information
+about what exactly type it is , so if we want to modify it, we should
+define extra function to do that.
+</p>
+
+<p>
+note that: if you have a monad, you can use <code>join</code> and <code>Kleisli arrow</code>,
+they are defined default inside a monad
+</p>
+</div>
+</div>
+
+<div id="org2f406a4" class="outline-4">
+<h4 id="why-we-using-these-monads-what-problem-they-solve"><a id="org2f406a4"></a>why we using these monads, what problem they solve</h4>
+<div class="outline-text-4" id="text-why-we-using-these-monads-what-problem-they-solve">
+<p>
+provide composition for Kleisli arrows, but why Kleisli arrows? we have
+see an example of creating logging things using Kleisli arrows. so
+really the magical of the monad is not in what monad is &#x2014; monad is
+just composition, the magic is why Kleisli arrows is so useful? what
+kind of problems that they solve?
+</p>
+
+<p>
+so it turns out and that was like a big discovery, one paper, and one
+implemention in Haskell.
+</p>
+
+<p>
+In functional programming language, everything is pure function, as a
+programmer we know that pure functions CANNOT express everything &#x2014;: *
+no side effect,but basic input and output is 'side effect', they are not
+pure * same input must return same output, but when you get a char from
+stdin, everytime what you get might different. * global state * function
+with exception * &#x2026;
+</p>
+
+<p>
+these are important.
+</p>
+
+<p>
+But, luckyly verything above can be turned into pure calculations *as
+long as you replace regular functions with functions that return
+embellished results*. So all the side effects can be translated into
+some kinds of embellishment of the result of a function and the function
+remains the pure function. But it produces more than the result, it
+produces a result that's hidden embellished encapsulated in some way.
+</p>
+
+<p>
+The most interesting things is that, when a imperative programmer
+implement something using impure function ,and a functional programmer
+comes and says I can do it in pure function &#x2014; only with output type a
+little different.*But Monad is still not coming by now.*
+</p>
+
+<p>
+If I have a huge nubmer of this kind of functions(from imperative impure
+to functional pure just with a embellishment of return type), how can I
+do composing?
+</p>
+
+<p>
+or
+</p>
+
+<p>
+If I have a biiiiiiiiiiig function of this kind, how can I split them
+into little pieces.
+</p>
+
+<p>
+<b>Then, Monad comes!</b>
+</p>
+
+<p>
+Monad says that, you can take this gigantic computations and split into
+small pieces, do them separately, and compose this stuff. This is Monad.
+</p>
+
+<p>
+So, one example of somthing that's usually not done using impure
+functions is functions that are not defined for all arguments &#x2014;
+partial functins. eg, square root is defined ONLY for positive integers,
+</p>
+<ol class="org-ol">
+<li>you can blow up whole program 2. throw an exception &#x2014; this is not</li>
+</ol>
+<p>
+functional way, <code>sqroot:: int -&gt; double</code>, but you give an exception type
+</p>
+<ol class="org-ol">
+<li>return a Maybe &#x2014; functional way</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="org9a59464" class="outline-3">
+<h3 id="examples-of-monad"><a id="org9a59464"></a>Examples of Monad</h3>
+<div class="outline-text-3" id="text-examples-of-monad">
+</div>
+
+<div id="orge501dae" class="outline-4">
+<h4 id="maybe-monad"><a id="orge501dae"></a>Maybe Monad</h4>
+<div class="outline-text-4" id="text-maybe-monad">
+<div class="org-src-container">
+<pre class="src src-haskell">a <span class="org-haskell-operator">-&gt;</span> b
+a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">Maybe</span> b
+</pre>
+</div>
+
+<p>
+If we have many function of this kind, we can compose them.Let's define
+join for them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell">join<span class="org-haskell-operator">::</span> <span class="org-haskell-type">Maybe</span>(<span class="org-haskell-type">Maybe</span> a) <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> a
+<span class="org-haskell-definition">join</span> ( <span class="org-haskell-constructor">Just</span> (<span class="org-haskell-constructor">Just</span> a)) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> a
+<span class="org-haskell-definition">join</span> <span class="org-haskell-keyword">_</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> a<span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b
+(<span class="org-haskell-definition">&gt;&gt;=</span>) <span class="org-haskell-operator">::</span> ma <span class="org-haskell-operator">-&gt;</span> (a <span class="org-haskell-operator">-&gt;</span> mb) <span class="org-haskell-operator">-&gt;</span> mb
+<span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-definition">&gt;&gt;=</span> f <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-constructor">Just</span> a <span class="org-haskell-operator">&gt;&gt;=</span> f <span class="org-haskell-operator">=</span> f a
+<span class="org-haskell-definition">return</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> a
+</pre>
+</div>
+
+<p>
+<code>Nothing &gt;&gt;</code> f = Nothing= acts like a short circuit, if the first f
+failed, it will return nothing directly. This is same as a exception.
+</p>
+</div>
+</div>
+
+<div id="org1628738" class="outline-4">
+<h4 id="state-related-monad"><a id="org1628738"></a>State related Monad</h4>
+<div class="outline-text-4" id="text-state-related-monad">
+<pre class="example">
+extenal state: x // global variable
+a-&gt;b
+(a, s) -&gt; (b, s)
+// equal with curry
+a -&gt; (s -&gt; (b,s))
+newtype State s a = State (s-&gt;(a,s))
+</pre>
+
+<p>
+[TODO: Need review]
+</p>
+</div>
+</div>
+</div>
+
+<div id="org94415f3" class="outline-3">
+<h3 id="laws-have-to-be-satisfied"><a id="org94415f3"></a>3 laws have to be satisfied</h3>
+<div class="outline-text-3" id="text-laws-have-to-be-satisfied">
+<p>
+from introduction above, we know that a Monad must has 3 parts: 1.
+Functor 2. join 3. return
+</p>
+
+<p>
+fish symbol <code>&gt;=&gt;</code> : 1. associative 2. identity(right/left)
+</p>
+
+<p>
+<b>3 laws</b> &#x2014; assoc + right id + left id. have to be satisfied in order
+to make <b>Kleisli composition</b>.
+</p>
+
+<p>
+all these 3 definitions are using category theory, but really everybody
+uses the one with join, except things they don't call it with
+<code>join</code>,they don't call it with <code>return</code>, they don't call it <code>functor</code>,
+or M. They call it T.
+</p>
+</div>
+
+<div id="org7ceb2a5" class="outline-4">
+<h4 id="remake-the-symbol-of-functor-and-2-functions"><a id="org7ceb2a5"></a>remake the symbol of functor and 2 functions</h4>
+<div class="outline-text-4" id="text-remake-the-symbol-of-functor-and-2-functions">
+<p>
+Translation <code>m - T</code> <code>join - μ</code> <code>return - η</code>
+</p>
+
+<p>
+These Greek leters &#x2014; 'μ','η'. are Natural Transformation.
+</p>
+
+<ul class="org-ul">
+<li>return is a polymorphic function, <code>a -&gt; ma</code> <code>a -&gt; ma</code> is a natural
+transformation
+
+<ul class="org-ul">
+<li>a &#x2014; identity functor</li>
+<li>ma &#x2014; functor too</li>
+</ul></li>
+</ul>
+
+<p>
+<code>return</code> function is just a component of Natural transformation:
+<code>Id -&gt; T</code>
+</p>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/an8if3stl/screenshot_82.png" alt="screenshot_82.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>prove <code>return</code> is component of a NT(Functor:Id -&gt; Functor:m)</p>
+</div>
+
+<blockquote>
+<p>
+notation that, picture above has a flaw, T is must be endofunctor
+means that from C to C, not C to D, because mm:
+</p>
+
+<p>
+if m: C-&gt;D; then mm:?
+</p>
+
+<p>
+so T is endofunctor
+</p>
+</blockquote>
+
+<p>
+<code>join</code> function is just double application of a functor, this is just
+the composition of a functor with itself.
+</p>
+
+<p>
+<img src="https://s18.postimg.cc/63w9tnntl/screenshot_84.png" alt="screenshot_84.png" /> &gt; notation that,
+picture above has a flaw, T is must be endofunctor means that from C to
+C, not C to D, because mm: &gt; &gt; if m: C-&gt;D; &gt; then mm:? &gt; &gt; so T is
+endofunctor
+</p>
+</div>
+</div>
+
+<div id="org70c68c1" class="outline-4">
+<h4 id="nt-in-category-theory-vs.nt-in-haskell"><a id="org70c68c1"></a>NT in Category theory vs. NT in Haskell</h4>
+<div class="outline-text-4" id="text-nt-in-category-theory-vs.nt-in-haskell">
+<p>
+we dosen't explicitly say something is NT because of polymorphic
+function, specific NT will automatically decided by the invocatot, which
+is called "free theory" in haskell.
+</p>
+</div>
+</div>
+
+<div id="orgb7a12b5" class="outline-4">
+<h4 id="redefine-monad-by-new-symbol"><a id="orgb7a12b5"></a>redefine monad by new symbol</h4>
+<div class="outline-text-4" id="text-redefine-monad-by-new-symbol">
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/ei2ppquih/screenshot_74.png" alt="screenshot_74.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>symbol of natural transformation</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/kyg9ttsih/screenshot_75.png" alt="screenshot_75.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Natural transformation laws</p>
+</div>
+
+<p>
+So monad T, is a functor <code>T</code> and <b>2</b> natural transformations <code>eta</code> and
+<code>mu</code>, <b>PLUS</b> the <b>3</b> laws for these things, else we can not build a
+Kleisli category(guarantee the associativity, identity, composibility.)
+</p>
+
+<p>
+<b>Monad = T + 2 + 3</b> <b>Monad = T23</b>
+</p>
+
+<p>
+[Notice that] First of all, <b>T is endofunctor</b>, it has to be a
+endofuncto,if T want from C to D, then we could not apply to T again &#x2014;
+join function: T ◦ T -&gt; T.
+</p>
+</div>
+</div>
+
+<div id="org7231a91" class="outline-4">
+<h4 id="d-diagram-composing-two-nts-in-2-direction"><a id="org7231a91"></a>2-D diagram: composing two NTs in 2 direction</h4>
+<div class="outline-text-4" id="text-d-diagram-composing-two-nts-in-2-direction">
+<p>
+[Notice that] * • in natural transformation is <b>vertical</b> compose * ◦ in
+natural transformation is <b>horizontal</b> compose
+</p>
+</div>
+</div>
+
+<div id="orgeb1c0b1" class="outline-4">
+<h4 id="proving-law-1-monad-associativity-by-mu-and-eta"><a id="orgeb1c0b1"></a>proving law 1: Monad associativity by mu and eta</h4>
+<div class="outline-text-4" id="text-proving-law-1-monad-associativity-by-mu-and-eta">
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/4bypkrmq1/screenshot_76.png" alt="screenshot_76.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>composition of NT -1</p>
+</div>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/hg49xk1y1/screenshot_77.png" alt="screenshot_77.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>composition of NT -2</p>
+</div>
+
+<p>
+<code>μ • (μ ◦ I) = μ • (I ◦ μ)</code>
+</p>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/plmbvu0ih/screenshot_78.png" alt="screenshot_78.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>In a Short diagram</p>
+</div>
+</div>
+</div>
+
+<div id="orgf8407e0" class="outline-4">
+<h4 id="proving-law-23-monad-rightleft-id-by-mu-and-eta"><a id="orgf8407e0"></a>proving law 2,3: Monad right/left id by mu and eta</h4>
+<div class="outline-text-4" id="text-proving-law-23-monad-rightleft-id-by-mu-and-eta">
+<p>
+[Notice that] Usually we use <code>T</code> directly short for <code>I</code>. So, if you see
+somewhere using this <code>T ◦ μ</code> instead of <code>I ◦ μ</code>, you should know that
+they are the same meaning.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/40h97zj4p/screenshot_80.png" alt="screenshot_80.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>eta is identity (right and left)</p>
+</div>
+
+<p>
+this gives us that, eta is Id
+</p>
+
+<p>
+we prove these 3 laws of Monad &#x2014; assoc + r id + l id, in terms of /mu
+and /eta.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org20b92b9" class="outline-2">
+<h2 id="cat-10.2-monoid-in-the-category-of-endofunctors"><a id="org20b92b9"></a>Cat 10.2 Monoid in the category of endofunctors</h2>
+<div class="outline-text-2" id="text-cat-10.2-monoid-in-the-category-of-endofunctors">
+<p>
+So, now you can say:
+</p>
+
+<blockquote>
+<p>
+Monad is the monoid in the category of endofunctors
+</p>
+</blockquote>
+
+<p>
+recall all these 3 concept: 1. Monad = T23 - T : a enfofunctor - 2 : eta
+and mu are Natural trans - eta: Id -&gt;. T - mu : T\^2 -&gt;. T - 3 : laws of
+Monad: 1. assoc : mu • (mu ◦ I) = mu • (I ◦ mu) 2. L id: Id ◦ T = T 3. R
+id: T ◦ Id = T 2. monoid - every monoid is a single object category - 2
+laws of Monoid: - identity: a append id = a - assoc: a append ( b append
+c) = (a append b) append c - eg. "<b>List</b> forms a <b>monoid</b> under <b>append</b>
+with <b>identity</b> empty list" 3. Category of endofunctors - endofunctor:
+from Category C to C - every objects of Category is a endofunctors -
+every morphism of Category is a natural transformations
+</p>
+</div>
+
+<div id="org35093f8" class="outline-3">
+<h3 id="org35093f8">how to get away from set in Monoid &#x2014; a more general definition of</h3>
+<div class="outline-text-3" id="text-org35093f8">
+<p>
+Monoid
+</p>
+<p>
+:CUSTOM_ID: how-to-get-away-from-set-in-monoid-a-more-general-definition-of-monoid
+</p>
+
+<p>
+lifting the abstraction of set to a category.
+</p>
+
+<p>
+mu :: (a, a) -&gt; a <i>/ def(int,int):int eta :: () -&gt; a /</i> def(unit):int
+</p>
+
+<p>
+mu and eta are morphism of Cartesian product category, input type of mu
+is product, input type of eta is terminal object.
+</p>
+
+<p>
+take Monoid laws into account: assoc laws: mu( mu(x,y), z) = mu( x,
+mu(y,z)) identity laws: mu( eta(), x) = x mu( x, eta()) = x
+</p>
+
+<p>
+you should remember that:
+</p>
+
+<p>
+product category has pair as object, has also pair functions as
+morphism, some like a bifunctor.
+</p>
+
+<p>
+Taking a pair type &#x2014; the product in haskell, is monoidal up to 3
+isomorphism: 1. α(can be implemented by case match clause) 2. λ(just
+name of function,not λ terms in haskell) 3. ρ
+</p>
+
+<p>
+<b>Monoidal category</b> is just a straightforward generalization of
+this.It's a category in which we have categorical product and terminal
+object. But we can do more, why product, why not coproduct, it could be
+also a <b>monoidal</b> thing &#x2014; it was associative up to isomorphism and it
+had a unit which is a void empty set.
+</p>
+
+<p>
+So ,in general we can have a <b>monoidal category</b> and the only
+requirement for it is that it has a tensor product and identity object.
+<b>Monoidal</b> <b>category</b> has a bifunctor and this object I &#x2014; identity
+object.
+</p>
+
+<p>
+So, If we have a <b>monoidal category</b> we have a more <b>general</b>
+<b>definition</b> of a <b>monoid</b>.
+</p>
+
+<p>
+we can define a monoid to be an object of Monoidal category with 2
+morphism: * object m in Monoidal category * mu :: m ⊗ m -&gt; m * eta :: I
+-&gt; m
+</p>
+
+<p class="verse">
+pair | product | tensor product |<br />
+set category | catesian category | monoid category |<br />
+</p>
+
+<p>
+everytime lifting abstraction up a little bit, everytime more general.
+</p>
+</div>
+
+<div id="orgda29a82" class="outline-4">
+<h4 id="strict-and-lacks-monoid"><a id="orgda29a82"></a>strict and lacks monoid</h4>
+<div class="outline-text-4" id="text-strict-and-lacks-monoid">
+<p>
+In general, there are 2 kinds of monid, strict and slacks.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/5c2sll3fd/screenshot_86.png" alt="screenshot_86.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>lacks monoid, with 3 isomorphism</p>
+</div>
+
+<p>
+relation between (a/a)/a and a/(a/a) is weak, and have 3 isomorphism on
+top of everything.
+</p>
+
+<p>
+natural isomorphism(skipped)
+</p>
+
+
+<div class="figure">
+<p><img src="https://s18.postimg.cc/5ou6s0lrt/screenshot_87.png" alt="screenshot_87.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>strict monoid</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

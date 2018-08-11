@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 21 The Singular Value Decomposition (SVD)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 21 The Singular Value Decomposition (SVD)</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7629690">lec 21 The Singular Value Decomposition (SVD) [and its application to PCA]</a></li>
+<li><a href="#org9564257">lec 21.2 CLUSTERING</a>
+<ul>
+<li><a href="#org11b7d50">k-Means Clustering aka Lloyd's Algorithm (Stuart Lloyd, 1957)</a></li>
+<li><a href="#orgf356791">k-Medoids Clustering</a></li>
+<li><a href="#orgae105e3">Hierarchical Clustering</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org7629690" class="outline-2">
+<h2 id="org7629690">lec 21 The Singular Value Decomposition (SVD) [and its application to PCA]</h2>
+<div class="outline-text-2" id="text-org7629690">
+<hr />
+<pre class="example">
+Problems:  Computing X^T X takes Theta(n d^2) time.
+           X^T X is poorly conditioned -&gt; numerically inaccurate eigenvectors.
+           [The SVD improves both these problems.]
+</pre>
+
+<p>
+[Earlier this semester, we learned about the eigendecomposition of a square,
+ symmetric matrix.  Unfortunately, nonsymmetric matrices don't decompose nearly
+ as nicely, and non-square matrices don't have eigenvectors at all.  Happily,
+ there is a similar decomposition that works for all matrices, even if they're
+ not symmetric and not square.]
+</p>
+
+<pre class="example">
+Fact:  If n &gt;= d, we can find a _singular_value_decomposition_
+
+                                                          T     d             T
+         X       =       U               D               V   = sum delta  u  v
+                                      diagonal                 i=1      i  i  i
+    -----------     -----------     -----------     -----------    \__________/
+    |         |     |^       ^|     |d_1     0|     |&lt;-- v --&gt;|       rank 1
+    |         |     ||       ||     |  d_2    |     |     1   |   outer product
+    |         |  =  ||       ||     |    ..   |     |         |       matrix
+    |         |     |u       u|     |     ..  |     |         |
+    |         |     ||1      |d     |0     d_d|     |&lt;-- v --&gt;|
+    |         |     ||       ||     -----------     ------d----
+    |         |     |v       v|        d x d           d x d
+    -----------     -----------                        T
+       n x d           n x d                          V  V = I
+                                               orthonormal v_i's are
+                       T                       _right_singular_vectors_ of X
+                      U  U = I
+               orthonormal u 's are _left_singular_vectors_ of X
+                            i
+</pre>
+
+<p>
+Diagonal entries delta_1, ..., delta_d of D are nonnegative <span class="underline">singular_values</span>
+of X.
+</p>
+
+<p>
+[Some of the singular values might be zero.  The number of nonzero singular
+ values is equal to the rank of the centered design matrix X.  If all the
+ sample points lie on a line, there is only one nonzero singular value.  If the
+ points span a subspace of dimension r, there are r nonzero singular values.]
+[If n &lt; d, an SVD still exists, but now U is square and V is not.]
+</p>
+
+<pre class="example">
+Fact:  v_i is an eigenvector of X^T X w/eigenvalue delta_i^2.
+Proof:  X^T X = V D U^T U D V^T = V D^2 V^T
+        which is an eigendecomposition of X^T X.
+</pre>
+
+<p>
+[The columns of V are the eigenvectors of X^T X, which is what we need for PCA.
+ If n &lt; d, V will omit some of the eigenvectors that have eigenvalues zero, but
+ those are useless for PCA.  The SVD also tells us the eigenvalues, which are
+ the squares of the singular values.  By the way, that's related to why the SVD
+ is more numerically stable:   because the ratios between singular values are
+ smaller than the ratios between eigenvalues.]
+</p>
+
+<pre class="example">
+Fact:  We can find the k greatest singular values &amp; corresponding vectors
+       in O(n d k) time.
+       [So we can save time by computing some of the singular vectors without
+        computing all of them.]
+       [There are approximate, randomized algorithms that are even faster,
+        producing an approximate SVD in O(n d log k) time.  These are starting
+        to become popular in algorithms for very big data.]
+        https://code.google.com/archive/p/redsvd/ ]
+
+</pre>
+
+<p>
+Row i of UD gives the coordinates of sample point X_i in principal components
+space (i.e. X_i . v_j for each j).  So we don't need to project the input
+points onto that space; the SVD has already done it for us.
+
+</p>
+</div>
+</div>
+<div id="org9564257" class="outline-2">
+<h2 id="org9564257">lec 21.2 CLUSTERING</h2>
+<div class="outline-text-2" id="text-org9564257">
+<p>
+<code>========</code>
+Partition data into clusters so points within a cluster are more similar than
+across clusters.
+Why?
+</p>
+<ul class="org-ul">
+<li>Discovery:  Find songs similar to songs you like; determine market segments</li>
+<li>Hierarchy:  Find good taxonomy of species from genes</li>
+<li><span class="underline">Quantization</span>:  Compress a data set by reducing choices</li>
+<li>Graph partitioning:  Image segmentation; find groups in social networks</li>
+</ul>
+<p>
+[Show clusters that classify Barry Zito's baseball pitches (zito.pdf).
+ Here we discover that there really are distinct classes of baseball pitches.]
+</p>
+</div>
+
+<div id="org11b7d50" class="outline-3">
+<h3 id="org11b7d50">k-Means Clustering aka Lloyd's Algorithm (Stuart Lloyd, 1957)</h3>
+<div class="outline-text-3" id="text-org11b7d50">
+<hr />
+<pre class="example">
+Goal:  Partition n points into k disjoint clusters.
+       Assign each input point X_i a cluster label y_i in [1, k].
+                                   1
+       Cluster i's _mean_ is mu  = --  sum  X , given n  points in cluster i.
+                               i   n   y =i  j         i
+                                    i   j
+
+  ----------------------------------------------
+  |                        k       |        |2 |  [Sum of the squared distances
+  | Find y that minimizes sum sum  |X  - mu |  |   from points to their cluster
+  |                       i=1 y =i | j     i|  |   means.]
+  |                            j               |
+  ----------------------------------------------
+
+NP-hard.  Solvable in O(n k^n) time.  [Try every partition.]
+k-means heuristic:  Alternate between
+                      (1)  y_j's are fixed; update mu_i's
+                      (2)  mu_i's are fixed; update y_j's
+                    Halt when step (2) changes no assignments.
+
+</pre>
+<p>
+[So, we have an assignment of points to clusters.  We update the cluster means.
+ Then we reconsider the assignment.  A point might change clusters if some
+ other's cluster's mean is closer than its own cluster's mean.  Then repeat.]
+</p>
+
+<pre class="example">
+Step (1):  One can show (calculus) the optimal mu_i is the mean of the points
+           in cluster i.
+           [This is really easy calculus, so I leave it as a short exercise.]
+Step (2):  The optimal y assigns each point X_j to the closest center mu_i.
+           [This should be even more obvious than step (1).]
+           [If there's a tie, and one of the choices is for X_j to stay in the
+            same cluster as the previous iteration, always take that choice.]
+</pre>
+
+<p>
+[Show example of 2-means (2means.png).]
+[Show animation of 4-means with many points (4meansanimation.gif).]
+Both steps decrease objective fn <b>unless</b> they change nothing.
+[Therefore, the algorithm never returns to a previous assignment.]
+Hence alg. must terminate.  [As there are only finitely many assignments.]
+[This argument doesn't say anything optimistic about the running time, because
+ we might see O(k^n) different assignments before we halt.  In theory, one can
+ actually construct point sets in the plane that take an exponential number of
+ iterations, but those never happen in practice.]
+Usually very fast in practice.  Finds a local minimum, often not global.
+[...which is not surprising, as this problem is NP-hard.]
+[Show example where 4-means clustering fails (4meansbad.png).]
+</p>
+
+<p>
+Getting started:
+</p>
+<ul class="org-ul">
+<li>Forgy method:  choose k random sample points to be initial mu_i's; go to (2).</li>
+<li>Random partition:  randomly assign each sample point to a cluster; go to (1).</li>
+</ul>
+
+<p>
+[Forgy seems to be better, but Wikipedia mentions some variants of k-means for
+ which random partition is better.]
+</p>
+
+<p>
+For best results, run k-means multiple times with random starts.
+[Show clusters found by running 3-means 6 times on the same sample points
+ (ISL, Figure 10.7) (kmeans6times.pdf).]
+</p>
+
+<p>
+[Why did we choose that particular objective function to minimize?  Partly
+ because it is equivalent to minimizing the following function.]
+</p>
+
+<p>
+Equivalent objective fn:  the <span class="underline">within-cluster_variation</span>
+</p>
+
+<pre class="example">
+-----------------------------------------------------
+|                        k  1            |       |2 |
+| Find y that minimizes sum -- sum  sum  |X  - X |  |
+|                       i=1 n  y =i y =i | j    m|  |
+|                            i  j    m              |
+-----------------------------------------------------
+</pre>
+<p>
+[This objective function is equal to twice the previous one.  It's a worthwhile
+ exercise to show that.  The nice thing about this expression is that it
+ doesn't include the means; it's a direct function of the input points and
+ the clusters we assign them to.]
+</p>
+
+<p>
+Normalize the data?  Same advice as for PCA.  Sometimes yes, sometimes no.
+[If some features are much larger than others, they will tend to dominate the
+ Euclidean distance.  So if you have features in different units of
+ measurement, you probably should normalize them.  If you have features in the
+ same unit of measurement, you probably shouldn't, but it depends on context.]
+</p>
+</div>
+</div>
+
+<div id="orgf356791" class="outline-3">
+<h3 id="orgf356791">k-Medoids Clustering</h3>
+<div class="outline-text-3" id="text-orgf356791">
+<hr />
+<p>
+Generalizes k-means beyond Euclidean distance.
+Specify a <span class="underline">distance_fn</span> d(x, y) between points x, y, aka <span class="underline">dissimilarity</span>.
+Can be arbitrary; ideally satisfies
+  triangle inequality d(x, y) &lt;= d(x, z) + d(z, y).
+[Sometime people use the l_1 norm or the l_infinity norm.  Sometimes people
+ specify a matrix of pairwise distances between the input points.]
+[Suppose you have a database that tells you how many of each product each
+ customer bought.  You'd like to cluster together customers who buy similar
+ products for market analysis.  But if you cluster customers by distance,
+ you'll get one big cluster of all the customers who have only ever bought one
+ thing.  So distance is not a good measure of dissimilarity.  Instead, it makes
+ more sense to treat each customer as a vector and measure the <b>angle</b> between
+ two customers.  If there's a large angle between customers, they're
+ dissimilar.]
+Replace mean computation with <span class="underline">medoid</span>, the sample point that minimizes total
+  distance to other points in same cluster.
+[So the medoid of a cluster is always one of the input points.]
+</p>
+
+<p>
+[One difficulty with k-means is that you have to choose the number k of
+ clusters before you start, and there isn't any reliable way to guess how many
+ clusters will best fit the data.  The next method, hierarchical clustering,
+ has the advantage in that respect.  By the way, there is a whole Wikipedia
+ article on "Determining the number of clusters in a data set".]
+</p>
+</div>
+</div>
+
+<div id="orgae105e3" class="outline-3">
+<h3 id="orgae105e3">Hierarchical Clustering</h3>
+<div class="outline-text-3" id="text-orgae105e3">
+<hr />
+<p>
+Creates a tree; every subtree is a cluster.
+[So some clusters contain smaller clusters.]
+</p>
+
+<p>
+Bottom-up, aka <span class="underline">agglomerative_clustering</span>:
+start with each point a cluster; repeatedly fuse pairs.
+[Draw figure of points in the plane; pair clusters together until all points
+ are in one top-level cluster.]
+
+Top-down, aka <span class="underline">divisive_clustering</span>:
+start with all pts in one cluster; repeatedly split it.
+[Draw figure of points in the plane; divide points into subsets hierarchicially
+ until each point is in its own subset.]
+</p>
+
+<p>
+[When the input is a point set, agglomerative clustering is used much more in
+ practice than divisive clustering.  But when the input is a graph, it's the
+ other way around:  divisive clustering is more common.]
+</p>
+
+<pre class="example">
+We need a distance fn for clusters A, B:
+
+_complete_linkage_:  d(A, B) = max { d(w, x) : w in A, x in B }
+_single_linkage_:    d(A, B) = min { d(w, x) : w in A, x in B }
+                                  1
+_average_linkage_:   d(A, B) = -------  sum     sum   d(w, x)
+                               |A| |B| w in A  x in B
+_centroid_linkage_:  d(A, B) = d(mu_A, mu_B)            where mu_S is mean of S
+
+</pre>
+<p>
+[The first three of these methods work for any distance function, even if the
+ input is just a matrix of distances between all pairs of points.  The centroid
+ linkage only really makes sense if we're using the Euclidean distance.  But
+ there's a variation of the centroid linkage that uses the medoids instead of
+ the means, and medoids are defined for any distance function.  Moreover,
+ medoids are more robust to outliers than means.]
+</p>
+
+<p>
+Greedy agglomerative alg.:
+</p>
+
+<pre class="example">
+Repeatedly _fuse_ the two clusters that minimize d(A, B)
+Naively takes O(n^3) time.
+[But for complete and single linkage, there are more sophisticated algorithms
+ called CLINK and SLINK, which run in O(n^2) time.]
+
+_Dendrogram_:  Illustration of the cluster hierarchy (tree) in which the
+vertical axis encodes all the linkage distances.
+[Show example of dendogram (ISL, Figure 10.9) (dendrogram.pdf).]
+Cut dendrogram into clusters by horizontal line according to your choice of
+# of clusters OR intercluster distance.
+</pre>
+<p>
+[It's important to be aware that the horizontal axis of a dendrogram has no
+ meaning.  You could swap some node's left children and right children and it
+ would still be the same dendrogram.  It doesn't always mean anything that two
+ leaves happen to be next to each other.]
+</p>
+
+<p>
+[Show comparison of average/complete/single linkages (ISL, Figure 10.12)
+ (linkages.pdf).]
+[Probably the worst of these is the single linkage, because it's very sensitive
+ to outliers.  Notice that if you cut it into three clusters, two of them have
+ only one node.  It also tends to give you a very unbalanced tree.]
+[The complete linkage tends to be the best balanced, because when a cluster
+ gets large, the furthest point in the cluster is always far away.  So large
+ clusters are more resistant to growth than small ones.  If balanced clusters
+ are your goal, this is your best choice.]
+[In most cases you probably want the average or complete linkage.]
+</p>
+
+<pre class="example">
+Warning:  centroid linkage can cause _inversions_ where a parent cluster is
+          fused at a lower height than its children.
+</pre>
+<p>
+[So statisticians don't like it, but nevertheless, centroid linkage is popular
+ in genomics.]
+</p>
+
+<p>
+[As a final note, all the clustering algorithms we've studied so far are
+ unstable, in the sense that deleting a few input points can sometimes give you
+ very different results.  But these unstable heuristics are still the most
+ commonly used clustering algorithms.  And it's not clear to me whether a truly
+ stable clustering algorithm is even possible.]
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 05:52</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 18 NEURONS</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 18 NEURONS</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7fecb60">lec 18 NEURONS</a></li>
+<li><a href="#orga6a22fa">lec 18.2 NEURAL NET VARIATIONS</a>
+<ul>
+<li><a href="#org35e2dca">Unit Saturation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org7fecb60" class="outline-2">
+<h2 id="org7fecb60">lec 18 NEURONS</h2>
+<div class="outline-text-2" id="text-org7fecb60">
+<p>
+<code>=====</code>
+[The field of artificial intelligence started with some wrong premises.
+ The early AI researchers attacked problems like chess and theory proving,
+ because they thought those exemplified the essence of intelligence.  They
+ didn't pay much attention at first to problems like vision and speech
+ understanding.  Any four-year-old can do those things, and so researchers
+ underestimated their difficulty.  Today, we know better.  Computers can
+ effortlessly beat four-year-olds at chess, but they still can't play with toys
+ nearly as well.  We've come to realize that rule-based symbol manipulation is
+ not the sole defining mark of intelligence.  Even rats do computations that
+ we're hard pressed to match with our computers.  We've also come to realize
+ that these are different classes of problems that require very different
+ styles of computation.  Brains and computers have very different strengths and
+ weaknesses, which reflect these different computing styles.]
+[Neural networks are partly inspired by the workings of actual brains.  Let's
+ take a look at a few things we know about biological neurons, and contrast
+ them with both neural nets and traditional computation.]
+</p>
+
+<ul class="org-ul">
+<li>CPUs:  largely sequential, nanosecond gates, fragile if gate fails
+superior for 234 x 718, logical rules, perfect key-based memory</li>
+<li>Brains:  very parallel, millisecond neurons, fault-tolerant
+[Neurons are continually dying.  You've probably lost a few since this
+ lecture started.  But you probably didn't notice.  And that's interesting,
+ because it points out that our memories are stored in our brains in
+ a diffuse representation.  There is no one neuron whose death will make you
+ forget that 2 + 2 = 4.  Artificial neural nets often share that resilience.
+ Brains and neural nets seem to superpose memories on top of each other, all
+ stored together in the same weights, sort of like a hologram.]
+superior for vision, speech, associative memory
+[By "associative memory", I mean noticing connections between things.
+ One thing our brains are very good at is retrieving a pattern if we specify
+ only a portion of the pattern.]</li>
+</ul>
+
+<p>
+[It's impressive that even though a neuron needs a few milliseconds to transmit
+ information to the next neurons downstream, we can perform very complex tasks
+ like interpreting a visual scene in a tenth of a second.  This is possible
+ because neurons are parallel, but also because of their computation style.]
+[Neural nets try to emulate the parallel, associative thinking style of brains,
+ and they are among the best techniques we have for many fuzzy problems,
+ including some problems in vision and speech.  Not coincidentally, neural nets
+ are also inferior at many traditional computer tasks such as multiplying
+ numbers with lots of digits or compiling source code.]
+</p>
+
+<p>
+[Show figure of neurons (neurons.pdf).]
+</p>
+
+<ul class="org-ul">
+<li><span class="underline">Neuron</span>:  A cell in brain/nervous system for thinking/communication</li>
+<li><span class="underline">Action_potential</span> or <span class="underline">spike</span>:  An electrochemical impulse <span class="underline">fired</span> by
+a neuron to communicate w/other neurons</li>
+<li><span class="underline">Axon</span>:  The limb(s) along which the action potential propagates; "output"
+[Most axons branch out eventually, sometimes profusely near their ends.]
+[It turns out that giant squids have a very large axon they use for fast
+ water jet propulsion.  The mathematics of action potentials was first
+ characterized in these giant squid axons, and that work won a Nobel Prize
+ in 1963.]</li>
+<li><span class="underline">Dendrite</span>:  Smaller limbs by which neuron receives info; "input"</li>
+<li><span class="underline">Synapse</span>:  Connection from one neuron's axon to another's dendrite
+[Some synapses connect axons to muscles or glands.]</li>
+<li><span class="underline">Neurotransmitter</span>:  Chemical released by axon terminal to stimulate dendrite</li>
+</ul>
+<p>
+
+[When an action potential reaches an axon terminal, it causes tiny containers
+ of neurotransmitter, called <span class="underline">vesicles</span>, to empty their contents into the space
+ where the axon terminal meets another neuron's dendrite.  That space is called
+ the <span class="underline">synaptic_cleft</span>.  The neurotransmitters bind to receptors on the dendrite
+ and influence the next neuron's body voltage.  This sounds incredibly slow,
+ but it all happens in 1 to 5 milliseconds.]
+</p>
+
+<p>
+You have about 10^11 neurons, each with about 10^4 synapses.
+[Maybe 10^5 synapses after you pass CS 189.]
+</p>
+
+<p>
+Analogies:  [between artificial neural networks and brains]
+</p>
+<ul class="org-ul">
+<li>Output of unit &lt;-&gt; firing rate of neuron
+[An action potential is "all or nothing"--they all have the same shape and
+ size.  The output of a neuron is not a fixed voltage like the output of
+ a transistor.  The output of a neuron is the frequency at which it fires.
+ Some neurons can fire at nearly 1,000 times a second, which you might think
+ of as a strong "1" output.  Conversely, some types of neurons can go for
+ minutes without firing.  But some types of neurons never stop firing, and
+ for those you might interpret a firing rate of 10 times per second as "0".]</li>
+<li>Weight of connection &lt;-&gt; synapse strength</li>
+<li>Positive weight &lt;-&gt; excitatory neurotransmitter (e.g. glutamine)</li>
+<li>Negative weight &lt;-&gt; inhibitory neurotransmitter (e.g. GABA, glycine)
+[Gamma aminobutyric acid.]
+[A typical neuron is either excitatory at all its axon terminals, or
+ inhibitory at all its terminals.  It can't switch from one to the other.
+ Artificial neural nets have an advantage here.]</li>
+<li>Linear combo of inputs &lt;-&gt; <span class="underline">summation</span>
+[A neuron fires when the sum of its inputs, integrated over time, reaches
+ a high enough voltage.  However, the neuron body voltage also decays
+ slowly with time, so if the action potentials coming in are slow enough, the
+ neuron might not fire at all.]</li>
+<li>Logistic/sigmoid fn &lt;-&gt; firing rate saturation
+[A neuron can't fire more than 1,000 times a second, nor less than zero times
+ a second.  This limits its ability to be the sole determinant of whether
+ downstream neurons fire.  We accomplish the same thing with the sigmoid fn.]</li>
+<li>Weight change/learning &lt;-&gt; <span class="underline">synaptic_plasticity</span>
+Hebb's rule (1949):  "Cells that fire together, wire together."
+[This doesn't mean that the cells have to fire at exactly the same time.
+ But if one cell's firing tends to make another cell fire more often, their
+ excitatory synaptic connection tends to grow stronger.  There's a reverse
+ rule for inhibitory connections.  And there are ways for neurons that aren't
+ even connected to grow connections.]
+[There are simple computer learning algorithms based on Hebb's rule.
+ It can work, but it's generally not nearly as fast or effective as
+ backpropagation.]</li>
+</ul>
+<p>
+[Backpropagation is one part of artificial neural networks for which there is
+ no analogy in the brain.  Brains definitely do not do backpropagation.]
+</p>
+
+<p>
+[Show Geoff Hinton Hebbian learning slides (hebbian.pdf).]
+</p>
+
+<p>
+[But this two-layer network is not flexible enough to do digit recognition
+ well, especially when you have multiple writers with different handwriting.
+ You can do much better with a three-layer network and backpropagation.]
+</p>
+
+<p>
+[The brain is very modular.]  [Show figure of brain lobes (brain.png).
+</p>
+<ul class="org-ul">
+<li>The part of our brain we think of as most characteristically human is the
+cerebral cortex, the seat of self-awareness, language, and abstract thinking.</li>
+</ul>
+<p>
+But the brain has a lot of other parts that take the load off the cortex.
+</p>
+<ul class="org-ul">
+<li>Our brain stem regulates functions like heartbeat, breathing, and sleep.</li>
+<li>Our cerebellum governs fine coordination of motor skills.  When we talk about
+"muscle memory", much of that is in the cerebellum, and it saves us from
+having to consciously think about how to walk or talk or brush our teeth, so
+the cortex can focus on where to walk and what to say and checking our phone.</li>
+<li>Our limbic system is the center of emotion and motivation, and as such, it
+makes a lot of the big decisions.  I sometimes think that 90% of the job of
+our cerebral cortex is to rationalize decisions that have alread been made by
+the limbic system.  "Oh yeah, I made a careful, reasoned, logical decision to
+eat that fourth pint of ice cream."</li>
+<li>Our visual cortex performs a lot of processing on the input from your eyes
+to change it into a more useful form.  Neuroscientists and computer
+scientists are particularly interested in the visual cortex for several
+reasons.  Vision is an important problem for computers.  The visual cortex is
+one of the easier parts of the brain to study in lab animals.  The visual
+cortex is largely a feedforward network with few neurons going backward, so
+it's easier for us to train computers to behave like the visual cortex.]</li>
+</ul>
+
+<p>
+[Although the brain has lots of specialized modules, one thing that's
+ interesting about the cerebral cortex is that it seems to be made of
+ general-purpose neural tissue that looks more or less the same everywhere, at
+ least before it's trained.  If you experience damage to part of the cortex
+ early enough in life, while your brain is still growing, the functions will
+ just relocate to a different part of the cortex, and you'll probably never
+ notice the difference.]
+</p>
+
+<p>
+[As computer scientists, our primary motivation for studying neurology is to
+ try to get clues about how we can get computers to do tasks that humans are
+ good at.  But neurologists and psychologists have also been part of the study
+ of neural nets from the very beginning.  Their motivations are scientific:
+ they're curious how humans think, and why we can do what we can do.]
+</p>
+</div>
+</div>
+
+<div id="orga6a22fa" class="outline-2">
+<h2 id="orga6a22fa">lec 18.2 NEURAL NET VARIATIONS</h2>
+<div class="outline-text-2" id="text-orga6a22fa">
+<p>
+<code>===================</code>
+[I want to show you a few basic variations on the standard neural network
+ I showed you last class, and how some of them change backpropagation.]
+</p>
+
+<p>
+Regression:  usually omit sigmoid fn from output unit(s).
+[If you make that change, the gradient changes too, and you have to derive it
+ for backprop.  The gradient gets simpler, so I'll leave it as an exercise.]
+</p>
+
+<pre class="example">
+Classification:
+- Logistic loss fn (aka _cross-entropy_) often preferred to squared error.
+  L(z, y) = - sum (y  ln z  + (1 - y ) ln (1 - z ))
+    ^  ^       i    i     i         i           i
+    |  |
+    |  true values  \ vectors
+   prediction       /
+- For 2 classes, use one sigmoid output; for k &gt;= 3 classes, use _softmax_fn_.
+  Let t = Wh be k-vector of linear combos in final layer.
+
+                                t_j        d z                   d z
+                               e              j                     j
+  Softmax output is z (t) = --------- .    ---- = z  (1 - z )    ---- = - z  z
+                     j       k    t_i      d t     j       j     d t       i  j
+                            sum  e            j                     i
+                            i=1                                       i != j
+
+  [Each z_j is in the range (0, 1), and their sum is 1.]
+
+</pre>
+
+<p>
+[See my hand-drawn derivation of the backprop equations for the softmax output
+ and logistic loss function.]
+</p>
+
+<p>
+[Next I'm going to talk about a bunch of heuristics that make gradient descent
+ faster, or make it find better local minima, or prevent it from overfitting.
+ I suggest implementing vanilla stochastic backprop first, and experimenting
+ with the other heuristics only after you get that working.]
+</p>
+</div>
+
+
+<div id="org35e2dca" class="outline-3">
+<h3 id="org35e2dca">Unit Saturation</h3>
+<div class="outline-text-3" id="text-org35e2dca">
+<hr />
+<p>
+Problem:  When unit output s is close to 0 or 1 for all training points,
+s' = s (1 - s) ~ 0, so gradient descent changes s very slowly.  Unit is
+"stuck".  Slow training &amp; bad network.
+[Show sigmoid function (logistic.pdf); show flat spots &amp; linear region.]
+[Wikipedia calls this the "vanishing gradient problem."]
+[The more layers your network has, the more problematic this problem becomes.
+ Most of the early attempts to train deep, many-layered neural nets failed.]
+</p>
+
+<p>
+Mitigation:                                 [None of these are complete cures.]
+(1)  Set target values to 0.15 &amp; 0.85 instead of 0 &amp; 1.
+     [Recall that the sigmoid function can never be 0 or 1; it can only come
+      close.  Relaxing the target values helps prevent the output units from
+      getting saturated.  The numbers 0.15 and 0.85 are reasonable because
+      the sigmoid function achieves its greatest curvature when its output is
+      near 0.21 or 0.79.  But experiment to find the best values.]
+     [This helps to avoid stuck output units, but not stuck hidden units.]
+</p>
+
+<p>
+(2)  Modify backprop to add small constant (typically ~0.1) to s'.
+     [This hacks the gradient so a unit can't get stuck.  We're not doing
+      <b>steepest</b> descent any more, because we're not using the real gradient.
+      But often we're finding a better descent direction that will get us to
+      a minimum faster.]
+</p>
+
+<p>
+(3)  Initial weight of edge into unit with fan-in eta:
+     random with mean zero, std. dev. sqrt(eta).
+     [The bigger the fan-in of a unit, the easier it is to saturate it.  So we
+      choose smaller random initial weights for gates with bigger fan-in.]
+</p>
+
+<p>
+(4)  Replace sigmoid with ReLUs:  <span class="underline">rectified_linear_units</span>.
+     <span class="underline">ramp_fn</span> aka <span class="underline">hinge_fn</span>:  s(gamma) = max { 0, gamma }
+                                             /   1     gamma &gt;= 0,
+                                s'(gamma) = &lt;
+                                             \   0     gamma &lt; 0.
+     [The derivative is not defined at zero, but we can just make one up.]
+     [Obviously, the gradient can be zero, so you might wonder if ReLUs can get
+      stuck too.  Fortunately, it's rare for a ReLU's gradient to be zero for
+      <b>all</b> the training data; it's usually zero for just some sample points.
+      But yes, ReLUs sometimes get stuck too; just not as often as sigmoids.]
+     Popular for many-layer networks with large training sets.
+     [One nice thing about ramp functions is that they and their gradients are
+      very fast to compute.  Computers compute exponentials slowly.]
+     [Even though ReLUs are linear in half their range, they're still nonlinear
+      enough to easily compute functions like XOR.]
+</p>
+
+<p>
+[Note that option (4) makes the first three options irrelevant.]
+</p>
+
+<p>
+Heuristics for Avoiding Bad Local Minima
+</p>
+<hr />
+<ul class="org-ul">
+<li>(1) or (4) above.</li>
+
+<li>Stochastic gradient descent.  A local minimum for batch descent is not
+a minimum for one typical training point.
+[The idea is that instead of trying to optimize one risk function, we descend
+ on one example's loss function and then we descend on another example's loss
+ function, and every loss function has different local minima.  It looks like
+ a random walk or Brownian motion, and that random noise gets you out of
+ shallow local minima.]
+[Show example of stochastic gradient descent (stochasticnnet.pdf).]</li>
+</ul>
+<p>
+
+</p>
+<ul class="org-ul">
+<li><p>
+Momentum.  Gradient descent changes "velocity" slowly.
+Carries us right through shallow local minima to deeper ones.
+</p>
+
+<p>
+Delta w &lt;- - epsilon grad w
+repeat
+  w &lt;- w + Delta w
+  Delta w &lt;- - epsilon grad w + beta Delta w
+</p>
+
+<p>
+Good for both stochastic &amp; batch descent.  Choose hyperparameter beta &lt; 1.
+[Think of Delta w as the velocity.  The hyperparameter beta specifies how
+ strongly momentum persists from iteration to iteration.]
+[I've seen conflicting advice on beta.  Some researchers set it to 0.9;
+ some set it close to zero.]
+[If beta is large, epsilon tends to be smaller to compensate, in which case
+ you might want to change the first line so the initial velocity is larger.]
+</p></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 05:52</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

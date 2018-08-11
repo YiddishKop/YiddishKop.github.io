@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 05:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 15 DECISION TREES</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 15 DECISION TREES</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org769499f">lec 15 DECISION TREES</a></li>
+</ul>
+</div>
+</div>
+<div id="org769499f" class="outline-2">
+<h2 id="org769499f">lec 15 DECISION TREES</h2>
+<div class="outline-text-2" id="text-org769499f">
+<p>
+<code>============</code>
+Nonlinear method for classification and regression.
+</p>
+
+<pre class="example">
+Uses tree w/two node types:
+- internal nodes test feature values (usually just one) &amp; branch accordingly
+- leaf nodes specify class h(x)
+
+                     -----------------
+                     | Outlook (x_1) |                   sunny overc  rain
+                     -----------------                  ------------------- 100
+                      /      |      \                   |     |     |     | x
+                     /       |       \                  | no  |     |     |  2
+                 sunny   overcast    rain               |-----|     |     | 75
+                   /         |         \                |     |     |     |
+                  /          |          \               |     |     |check|
+      ------------------     v      --------------      |     | yes | x   | 50
+      | Humidity (x_2) |    yes     | Wind (x_3) |      | yes |     |  3  |
+      ------------------     v      --------------      |     |     |     |
+       /              \              /          \       |     |     |     | 25
+      /                \            /            \      |     |     |     |
+   &gt; 75%             &lt;= 75%      &gt; 20           &lt;= 20   |     |     |     |
+    /                    \        /                \    ------------------- 0
+   v                      v      v                  v             x
+  no                     yes    no                 yes             1
+
+</pre>
+
+<ul class="org-ul">
+<li>Cuts x-space into rectangular cells</li>
+<li>Works well with both categorical and quantitative features</li>
+<li>Interpretable result (inference)</li>
+<li>Decision boundary can be arbitrarily complicated</li>
+</ul>
+
+<p>
+[Show comparison of SVM vs. dec. tree on 2 examples (treelinearcompare.pdf)]
+</p>
+
+<p>
+Consider classification first.  Greedy, top-down learning heuristic:
+[This algorithm is more or less obvious, and has been rediscovered many times.
+ It's naturally recursive.  I'll show how it works for classification first;
+ later I'll talk about how it works for regression.]
+</p>
+
+<p>
+Let S subseteq {1, 2, ..., n} be list of sample indices.
+Top-level call:  S = {1, 2, ..., n}.
+</p>
+
+<pre class="example">
+GrowTree(S)
+if (y_i = C for all i in S and some class C) then {
+  return new leaf(C)                             [We say the leaves are "pure"]
+} else {
+  choose best splitting feature j and splitting point beta (*)
+  S_l = {i : X_ij &lt; beta}                           [Or you could use &lt;= and &gt;]
+  S_r = {i : X_ij &gt;= beta}
+  return new node(j, beta, GrowTree(S_l), GrowTree(S_r))
+}
+
+</pre>
+
+<pre class="example">
+(*) How to choose best split?
+- Try all splits.              [All features, and all splits within a feature.]
+- For a set S, let J(S) be the _cost_ of S.
+- Choose the split that minimizes J(S_l) + J(S_r); or,
+                                                   |S_l| J(S_l) + |S_r| J(S_r)
+         the split that minimizes weighted average ---------------------------.
+                                                          |S_l| + |S_r|
+
+[Here, I'm using the vertical brackets |.| to denote set cardinality.]
+
+</pre>
+<p>
+
+</p>
+<pre class="example">
+How to choose cost J(S)?
+[I'm going to start by suggesting a mediocre cost function, so you can see why
+ it's mediocre.]
+Idea 1 (bad):  Label S with the class C that labels the most samples in S.
+               J(S) &lt;- # of samples in S not in class C.
+
+                           -----------------
+                           | 6 C       5 D |  J(S) = 5
+                           -----------------
+                            /      x      \
+                           /        1      \
+                          /                 \
+                         /                   \
+                        /                     \
+             -----------------           -----------------
+  J(S ) = 1  | 4 C       1 D |           | 2 C       4 D |  J(S ) = 2
+     l       -----------------           -----------------     r
+
+Problem:  Sometimes we make "progress", yet J(S ) + J(S ) = J(S).
+                                               l       r
+                           -----------------
+                           | 20 C     10 D |  J(S) = 10
+                           -----------------
+                            /      x      \
+                           /        1      \
+                          /                 \
+                         /                   \
+                        /                     \
+             -----------------           -----------------
+  J(S ) = 8  | 12 C      8 D |           | 8 C       2 D |  J(S ) = 2
+     l       -----------------           -----------------     r
+              /     x       \              /    x      \
+             /       2       \            /      3      \
+            /                 \          /               \
+           /                   \        /                 \
+          /                     \      /                   \
+      --------              -------  -------            -------
+      | 12 C |              | 8 D |  | 8 C |            | 2 D |
+      --------              -------  -------            -------
+
+</pre>
+
+<p>
+[Notice that even though the first split doesn't reduce the total cost at all,
+ we're still making progress, because after one more level of splits, we're
+ done!]
+</p>
+
+<p>
+Idea 2 (good):  Measure the <span class="underline">entropy</span>.       [An idea from information theory.]
+Let Y be a random class variable, and suppose P(Y = C) = p_C.
+The <span class="underline">surprise</span> of Y being class C is S(Y = C) = - log_2 p_C.     [Nonnegative.]
+</p>
+<ul class="org-ul">
+<li>event w/prob. 1 gives us zero surprise.</li>
+<li>event w/prob. 0 gives us infinite surprise!</li>
+</ul>
+<p>
+[In information theory, the surprise is equal to the expected number of bits of
+ information we need to transmit which events happened to a recipient who knows
+ the probabilities of the events.  Often this mean using fractional bits, which
+ only makes sense when you're compiling lots of events into a single message;
+ e.g. a sequence of biased coin flips.]
+</p>
+
+<pre class="example">
+The _entropy_ of an index set S is the average surprise
+                                     |{i in S : y_i = C}|    [The proportion of
+ H(S) = - sum p  log  p , where p  = --------------------.    samples in S that
+           C   C    2  C         C           |S|              are in class C.]
+
+If all samples in S belong to same class?  H(S) = -1 log_2 1 = 0.
+Half class C, half class D?  H(S) = -0.5 log_2 0.5 - 0.5 log_2 0.5 = 1.
+n samples, all different classes?  H(S) = - log_2 (1/n) = log_2 n.
+</pre>
+
+<p>
+[Show graph of entropy for 2-class case (entropy.pdf)]
+</p>
+
+<pre class="example">
+                                             |S_l| H(S_l) + |S_r| H(S_r)
+Weighted avg entropy after split is H      = ---------------------------.
+                                     after          |S_l| + |S_r|
+
+Choose split that maximizes _information_gain_ H(S) - H_after.
+
+                       -----------------           14    14   16    16
+                       | 14 C     16 D |  H(S) = - -- lg -- - -- lg -- = 0.997
+                       -----------------           30    30   30    30
+                        /      x      \
+                       /        1      \
+                      /                 \
+                     /                   \
+                    /                     \
+         -----------------           -----------------
+         | 13 C      4 D |           | 1 C      12 D |
+         -----------------           -----------------
+            13    13   4     4                      1     1    12    12
+  H(S ) = - -- lg -- - -- lg -- = 0.787   H(S ) = - -- lg -- - -- lg -- = 0.391
+     l      17    17   17    17              r      13    13   13    13
+
+H_after = 0.615;    info gain = 0.382
+
+</pre>
+
+<p>
+Info gain always positive <b>except</b> when one child is empty or
+for all C, P(y_i = C | i in S_l) = P(y_i = C | i in S_r):
+</p>
+
+<p>
+[Recall graph of entropy.]
+</p>
+
+<pre class="example">
+    entropy                        % misclassified
+  ^                                 ^
+1 |   ---                       0.5 |    ^
+  |  -   -                          |   / \
+  | /     \                         |  /   \
+  |/       \                        | /     \
+  |         |                       |/       \
+  +----+----+&gt; P                    +----+----+&gt; P
+  0   0.5   1                       0   0.5   1
+
+strictly concave                concave, not strict
+</pre>
+
+
+<p>
+[Suppose we pick two points on the entropy curve, then draw a line segment
+ connecting them.  Because the entropy curve is strictly concave, the interior
+ of the line segment is strictly below the curve.  Any point on that segment
+ represents a weighted average of the two entropies for suitable weights.
+ Whereas the point directly above that point represents the entropy if you
+ unite the two sets into one.  So the union of two nonempty sets has greater
+ entropy than the weighted average of the entropies of the two sets, unless the
+ two sets both have exactly the same p.]
+[For the graph on the right, on the other hand, if we draw a line segment
+ connecting two points on the curve, the segment might lie entirely on the
+ curve.  In that case, uniting the two sets into one, or splitting one into
+ two, changes neither the total misclassified samples nor the % misclassified.]
+[By the way, the entropy is not the only function that works well.  Many
+ concave functions work fine, including the simple polynomial p(1-p).]
+
+More on choosing a split:
+</p>
+<ul class="org-ul">
+<li>For binary feature x_i, children are x_i = 0 &amp; x_i = 1.</li>
+<li>If x_i has 3+ discrete values, split depends on application.
+[Sometimes it makes sense to use multiway splits; sometimes binary splits.]</li>
+<li>If x_i is quantitative, sort samples in S by feature x_i; remove duplicates;
+try splitting between each pair of consecutive samples.
+[We can radix sort the samples in linear time, and if n is huge we should.]
+Clever Bit:  As you scan sorted list from left to right, you can update
+             entropy in O(1) time per sample!</li>
+</ul>
+<p>
+[This is important for obtaining a fast tree-building time.]
+[Draw a row of X's and O's; show how we update the # of X's and # of O's in
+ each of S_l and S_r as we scan from left to right.]
+</p>
+
+<pre class="example">
+Algs &amp; running times:
+- Test point:  Walk down tree until leaf.  Return its label.
+  Worst-case time is O(tree depth).
+  For binary features, that's &lt;= d.      [Quantitative features may go deeper.]
+  Usually (not always) &lt;= O(log n).
+- Training:  For binary features, try O(d) splits at each node.
+  For quantitative features,      try O(n'd) splits; n' = samples in node
+  Either way                       =&gt; O(n'd) time at this node
+  [Quantitative features are asymptotically just as fast as binary features
+   because of our clever way of computing the entropy for each split.]
+  Each sample participates in O(depth) nodes, costs O(d) time in each node.
+  Running time &lt;= O(nd depth).
+  [As nd is the size of the design matrix X, and the depth is often
+   logarithmic, this is a surprisingly reasonable running time.]
+
+</pre>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 05:52</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
