@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-08-13 一 08:45 -->
+<!-- 2018-08-13 一 09:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Yiddishkop's tech blog</title>
@@ -257,24 +257,24 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgdda9c0c">1. Xavier初心不负?</a></li>
-<li><a href="#org5d3dd97">2. Xavier简介</a></li>
-<li><a href="#org8813846">3. 其他initialization方法</a></li>
-<li><a href="#orgd98e07d">4. 实验设计与结果</a>
+<li><a href="#orgeb8e516">1. Xavier初心不负?</a></li>
+<li><a href="#orga8833cc">2. Xavier简介</a></li>
+<li><a href="#org8a524e2">3. 其他initialization方法</a></li>
+<li><a href="#org12e0efa">4. 实验设计与结果</a>
 <ul>
-<li><a href="#org23d3372">4.1. 5层全连接层</a></li>
-<li><a href="#org12ea000">4.2. 2层卷积层+2层全连接层</a></li>
-<li><a href="#org4e2b195">4.3. 5层卷积层+3层全连接层</a></li>
+<li><a href="#org54c82fd">4.1. 5层全连接层</a></li>
+<li><a href="#org154d2f2">4.2. 2层卷积层+2层全连接层</a></li>
+<li><a href="#org82f59b8">4.3. 5层卷积层+3层全连接层</a></li>
 </ul>
 </li>
-<li><a href="#org5bc5a64">5. 源码及使用说明</a></li>
-<li><a href="#org55e5d87">6. 结论</a>
+<li><a href="#org92718ae">5. 源码及使用说明</a></li>
+<li><a href="#org74b332e">6. 结论</a>
 <ul>
-<li><a href="#org94f4abd">6.1. xavier initialization vs random initialization</a></li>
-<li><a href="#org5891c9a">6.2. xavier initialization vs orthogonal initialization</a></li>
+<li><a href="#orgbb479af">6.1. xavier initialization vs random initialization</a></li>
+<li><a href="#org4004e5d">6.2. xavier initialization vs orthogonal initialization</a></li>
 </ul>
 </li>
-<li><a href="#org9649089">7. 参考文献</a></li>
+<li><a href="#orgc134517">7. 参考文献</a></li>
 </ul>
 </div>
 </div>
@@ -283,7 +283,7 @@ for the JavaScript code in this tag.
 <ul>
 <li><a href='https://yiddishkop.github.io/'>Home</a></li>
 <li><a href='https://yiddishkop.github.io/DataScience.html'>DataScience</a></li>
-<li><a href='https://yiddishkop.github.io/DataScience.html'>Math</a></li>
+<li><a href='https://yiddishkop.github.io/Math.html'>Math</a></li>
 <li><a href='https://yiddishkop.github.io/Life.html'>Life</a></li>
 <li><a href='https://yiddishkop.github.io/PaperWriting.html'>PaperWriting</a></li>
 <li><a href='https://yiddishkop.github.io/Other.html'>Archive</a></li>
@@ -309,8 +309,8 @@ for the JavaScript code in this tag.
 
 
 
-<div id="orgdda9c0c" class="outline-2">
-<h2 id="orgdda9c0c"><span class="section-number-2">1</span> Xavier初心不负?</h2>
+<div id="orgeb8e516" class="outline-2">
+<h2 id="orgeb8e516"><span class="section-number-2">1</span> Xavier初心不负?</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 训练神经网络会经常遇到 <code>inf</code> or <code>nan</code> (by tensorflow)问题, 如果能排除值计算的原因, 那么出现这一错误大多是由于 vanishing/exploding gradient, 本文重点探讨
@@ -331,8 +331,8 @@ exploding 问题上的原理和优势, 并进行一部分实验佐证结论.
 </div>
 </div>
 
-<div id="org5d3dd97" class="outline-2">
-<h2 id="org5d3dd97"><span class="section-number-2">2</span> Xavier简介</h2>
+<div id="orga8833cc" class="outline-2">
+<h2 id="orga8833cc"><span class="section-number-2">2</span> Xavier简介</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Xavier initialization是将neural network中的weight做normalization，这个做法是由
@@ -416,8 +416,8 @@ variance相同，则可以得到：
 </div>
 </div>
 
-<div id="org8813846" class="outline-2">
-<h2 id="org8813846"><span class="section-number-2">3</span> 其他initialization方法</h2>
+<div id="org8a524e2" class="outline-2">
+<h2 id="org8a524e2"><span class="section-number-2">3</span> 其他initialization方法</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 我的实验将Xavier initialization与以下两种initialization方法做比较：
@@ -453,8 +453,8 @@ orthogonal matrix, 取其一做为weight的初始值。
 </div>
 </div>
 
-<div id="orgd98e07d" class="outline-2">
-<h2 id="orgd98e07d"><span class="section-number-2">4</span> 实验设计与结果</h2>
+<div id="org12e0efa" class="outline-2">
+<h2 id="org12e0efa"><span class="section-number-2">4</span> 实验设计与结果</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 我的实验是做在CIFAR-10这个dataset上。我试了三种model, 分别是:
@@ -475,8 +475,8 @@ Xavier、orthogonal</b> 三种initialization方式, 测试其loss和accuracy随t
 
 
 
-<div id="org23d3372" class="outline-3">
-<h3 id="org23d3372"><span class="section-number-3">4.1</span> 5层全连接层</h3>
+<div id="org54c82fd" class="outline-3">
+<h3 id="org54c82fd"><span class="section-number-3">4.1</span> 5层全连接层</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 每层有1000个hidden units。结果如下图：
@@ -507,8 +507,8 @@ loss一开始比较小, 但到最后收敛到差不多的结果。三者的accur
 </div>
 </div>
 
-<div id="org12ea000" class="outline-3">
-<h3 id="org12ea000"><span class="section-number-3">4.2</span> 2层卷积层+2层全连接层</h3>
+<div id="org154d2f2" class="outline-3">
+<h3 id="org154d2f2"><span class="section-number-3">4.2</span> 2层卷积层+2层全连接层</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 两层convolutional layer的kernel size都是(5, 5, 64), 两层fully-connected layer的
@@ -542,8 +542,8 @@ accuracy。
 </div>
 </div>
 
-<div id="org4e2b195" class="outline-3">
-<h3 id="org4e2b195"><span class="section-number-3">4.3</span> 5层卷积层+3层全连接层</h3>
+<div id="org82f59b8" class="outline-3">
+<h3 id="org82f59b8"><span class="section-number-3">4.3</span> 5层卷积层+3层全连接层</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 五层convolutional layer的kernel size都是(5, 5, 64), 三层fully-connected layer的
@@ -580,8 +580,8 @@ accuracy。
 </div>
 </div>
 
-<div id="org5bc5a64" class="outline-2">
-<h2 id="org5bc5a64"><span class="section-number-2">5</span> 源码及使用说明</h2>
+<div id="org92718ae" class="outline-2">
+<h2 id="org92718ae"><span class="section-number-2">5</span> 源码及使用说明</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 source code: <a href="https://github.com/YiddishKop/ml_src_initializer_compare.git">https://github.com/YiddishKop/ml_src_initializer_compare.git</a>
@@ -645,12 +645,12 @@ Testing
 </div>
 </div>
 
-<div id="org55e5d87" class="outline-2">
-<h2 id="org55e5d87"><span class="section-number-2">6</span> 结论</h2>
+<div id="org74b332e" class="outline-2">
+<h2 id="org74b332e"><span class="section-number-2">6</span> 结论</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="org94f4abd" class="outline-3">
-<h3 id="org94f4abd"><span class="section-number-3">6.1</span> xavier initialization vs random initialization</h3>
+<div id="orgbb479af" class="outline-3">
+<h3 id="orgbb479af"><span class="section-number-3">6.1</span> xavier initialization vs random initialization</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 由实验结果可以知道,
@@ -666,8 +666,8 @@ initialization做training时, 就 <b>可能无法提升model的accuracy</b>, 而
 </div>
 </div>
 
-<div id="org5891c9a" class="outline-3">
-<h3 id="org5891c9a"><span class="section-number-3">6.2</span> xavier initialization vs orthogonal initialization</h3>
+<div id="org4004e5d" class="outline-3">
+<h3 id="org4004e5d"><span class="section-number-3">6.2</span> xavier initialization vs orthogonal initialization</h3>
 <div class="outline-text-3" id="text-6-2">
 <p>
 在实验中, orthogonal initialization能达到和Xavier initialization <b>差不多的结果</b>,
@@ -678,8 +678,8 @@ initialization方法, 并不一定具有绝对的优势。
 </div>
 </div>
 
-<div id="org9649089" class="outline-2">
-<h2 id="org9649089"><span class="section-number-2">7</span> 参考文献</h2>
+<div id="orgc134517" class="outline-2">
+<h2 id="orgc134517"><span class="section-number-2">7</span> 参考文献</h2>
 <div class="outline-text-2" id="text-7">
 </div>
 </div>
