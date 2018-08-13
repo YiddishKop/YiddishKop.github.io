@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记18:特征选择</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记18:特征选择</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc1d2d83">1. Automatic Feature Selection</a>
+<ul>
+<li><a href="#orgdd09472">1.1. Univariate statistics</a>
+<ul>
+<li><a href="#orgce0933a">1.1.1. add noise feature to each sample</a></li>
+<li><a href="#org890b6a8">1.1.2. do feature selection directly by <code>SelectPercentile</code></a></li>
+<li><a href="#orgacd6095">1.1.3. find best features: do F-test to see informativeness of each feature by <code>f_classif</code></a></li>
+<li><a href="#org04f654e">1.1.4. find best features: using <code>select_percentile_obj.get_support()</code></a></li>
+<li><a href="#org52faebc">1.1.5. keep only the best features: by <code>select_percentile_obj.transform(test_data)</code></a></li>
+</ul>
+</li>
+<li><a href="#orgeaa3b3d">1.2. Model-based Feature Selection by tree-based model and linear model</a>
+<ul>
+<li><a href="#orgc0beede">1.2.1. feature selection by tree-based model as <code>SelectFromModel</code></a>
+<ul>
+<li><a href="#org53e2707">1.2.1.1. fit and transform</a></li>
+<li><a href="#orgb7252e9">1.2.1.2. see the selected status by <code>get_support()</code></a></li>
+<li><a href="#org5d584f9">1.2.1.3. only use selected features of test dataset and check the score</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org0fcd0f9">1.3. Recursive Feature Elimination</a></li>
+<li><a href="#org58f4a29">1.4. The general steps of feature selection for model based and RFE</a>
+<ul>
+<li><a href="#org1fdd90b">1.4.1. build a RFE model and visualize selected features</a></li>
+<li><a href="#orgca93219">1.4.2. build selected_feature dataset and use it to train ml_model</a></li>
+<li><a href="#org7ff759b">1.4.3. evaluate score</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org07d5716">2. Exericse</a></li>
+<li><a href="#org22f15ab">3. Misc tools</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org63197f7">3.0.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+</pre>
+</div>
+
+<div id="orgc1d2d83" class="outline-2">
+<h2 id="orgc1d2d83"><span class="section-number-2">1</span> Automatic Feature Selection</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Often we collected many features that might be related to a supervised
+prediction task, but we don't know which of them are actually predictive.
+</p>
+
+<p>
+To improve interpretability, and sometimes also generalization performance, we
+can use <b>automatic feature selection</b> to select a subset of the original
+features.
+</p>
+
+<p>
+There are several types of feature selection methods available, which we'll
+explain in order of increasing complexity.
+</p>
+
+<p>
+For a given supervised model, the best feature selection strategy would be to
+<b>try out each possible subset of the features</b>, and <b>evaluate generalization
+performance using this subset</b>. However, there are <b>exponentially</b> many subsets
+of features, so this exhaustive search is generally infeasible. The strategies
+discussed below can be thought of as proxies for this infeasible computation.
+</p>
+</div>
+
+<div id="orgdd09472" class="outline-3">
+<h3 id="orgdd09472"><span class="section-number-3">1.1</span> Univariate statistics</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The simplest method to select features is using <b>univariate statistics</b>, that is
+by looking at each feature individually and running a statistical test to see
+whether it is related to the target. This kind of test is also known as
+<b>analysis of variance (ANOVA)</b>.
+</p>
+</div>
+
+<div id="orgce0933a" class="outline-4">
+<h4 id="orgce0933a"><span class="section-number-4">1.1.1</span> add noise feature to each sample</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+We create a synthetic dataset that consists of the breast cancer data with an
+additional 50 completely random features.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_breast_cancer, load_digits
+<span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-variable-name">cancer</span> = load_breast_cancer()
+<span class="org-comment-delimiter"># </span><span class="org-comment">get deterministic random numbers</span>
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">noise</span> = rng.normal(size=(<span class="org-builtin">len</span>(cancer.data), <span class="org-highlight-numbers-number">50</span>))
+<span class="org-comment-delimiter"># </span><span class="org-comment">add noise features to the data</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">the first 30 features are from the dataset, the next 50 are noise</span>
+<span class="org-variable-name">X_w_noise</span> = np.hstack([cancer.data, noise]) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- add feature to each sample</span>
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X_w_noise, cancer.target,
+                                                    random_state=<span class="org-highlight-numbers-number">0</span>, test_size=.<span class="org-highlight-numbers-number">5</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org890b6a8" class="outline-4">
+<h4 id="org890b6a8"><span class="section-number-4">1.1.2</span> do feature selection directly by <code>SelectPercentile</code></h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+We have to define a <b>threshold</b> on the p-value of the statistical test to decide
+how many features to keep. There are several strategies implemented in
+scikit-learn, a straight-forward one being <code>SelectPercentile</code>, which selects a
+<code>percentile of the original features</code> (we select 50% below):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_selection <span class="org-keyword">import</span> SelectPercentile
+<span class="org-comment-delimiter"># </span><span class="org-comment">use f_classif (the default) and SelectPercentile to select 50% of features:</span>
+<span class="org-variable-name">select</span> = SelectPercentile(percentile=<span class="org-highlight-numbers-number">50</span>)
+select.fit(X_train, y_train)
+<span class="org-comment-delimiter"># </span><span class="org-comment">transform training set:</span>
+<span class="org-variable-name">X_train_selected</span> = select.transform(X_train)
+<span class="org-keyword">print</span>(X_train.shape)
+<span class="org-keyword">print</span>(X_train_selected.shape)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgacd6095" class="outline-4">
+<h4 id="orgacd6095"><span class="section-number-4">1.1.3</span> find best features: do F-test to see informativeness of each feature by <code>f_classif</code></h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+We can also use the test statistic directly to see how relevant each feature is.
+As the breast cancer dataset is a classification task, we use <code>f_classif</code>, the
+<b>F-test</b> for classification. Below we plot the p-values associated with each of
+the 80 features (30 original features + 50 noise features). Low p-values
+indicate informative features.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_selection <span class="org-keyword">import</span> f_classif, f_regression, chi2
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">F</span>, <span class="org-variable-name">p</span> = f_classif(X_train, y_train)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.figure()
+plt.plot(p, <span class="org-string">'o'</span>)
+</pre>
+</div>
+
+<pre class="example">
+[&lt;matplotlib.lines.Line2D at 0x7ff4f6c39a90&gt;]
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/31993eW.png" alt="31993eW.png" />
+</p>
+</div>
+
+<p>
+Clearly most of the first 30 features have very small p-values.
+</p>
+</div>
+</div>
+
+<div id="org04f654e" class="outline-4">
+<h4 id="org04f654e"><span class="section-number-4">1.1.4</span> find best features: using <code>select_percentile_obj.get_support()</code></h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+Going back to the <code>SelectPercentile</code> transformer, we can obtain the features that
+are selected using the get_support method:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">mask</span> = select.get_support()
+<span class="org-keyword">print</span>(mask)
+<span class="org-comment-delimiter"># </span><span class="org-comment">visualize the mask. black is True, white is False</span>
+plt.matshow(mask.reshape(<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>), cmap=<span class="org-string">'gray_r'</span>)
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.image.AxesImage at 0x7ff4f6b40710&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Epc.png" alt="3199Epc.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org52faebc" class="outline-4">
+<h4 id="org52faebc"><span class="section-number-4">1.1.5</span> keep only the best features: by <code>select_percentile_obj.transform(test_data)</code></h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Nearly all of the original 30 features were recovered. We can also analize the
+utility of the feature selection by training a supervised model on the data.
+<b>It's important to learn the feature selection only on the training set</b>!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> LogisticRegression
+<span class="org-comment-delimiter"># </span><span class="org-comment">transform test data:</span>
+<span class="org-variable-name">X_test_selected</span> = select.transform(X_test)
+<span class="org-variable-name">lr</span> = LogisticRegression()
+lr.fit(X_train, y_train)
+<span class="org-keyword">print</span>(<span class="org-string">"Score with all features: %f"</span> % lr.score(X_test, y_test))
+lr.fit(X_train_selected, y_train)
+<span class="org-keyword">print</span>(<span class="org-string">"Score with only selected features: %f"</span> % lr.score(X_test_selected, y_test))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgeaa3b3d" class="outline-3">
+<h3 id="orgeaa3b3d"><span class="section-number-3">1.2</span> Model-based Feature Selection by tree-based model and linear model</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+A somewhat more sophisticated method for feature selection is using a
+<b>supervised machine learning model</b> and <b>selecting features based on how
+important they were deemed by the model</b>.
+</p>
+
+<p>
+This requires the model to provide some way to <b>rank the features by
+importance</b>. This can be done for :
+</p>
+
+<ol class="org-ol">
+<li>all <b>tree-based models</b> (which implement <code>get_feature_importances</code>)</li>
+<li>all <b>linear models</b>, for which the <b>coefficients</b> can be used to determine
+how much influence a feature has on the outcome.</li>
+</ol>
+
+<p>
+Any of these models can be made into a <code>transformer</code> that does feature selection
+by wrapping it with the <code>SelectFromModel</code> class:
+</p>
+</div>
+
+<div id="orgc0beede" class="outline-4">
+<h4 id="orgc0beede"><span class="section-number-4">1.2.1</span> feature selection by tree-based model as <code>SelectFromModel</code></h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_selection <span class="org-keyword">import</span> SelectFromModel
+<span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> RandomForestClassifier
+<span class="org-variable-name">select</span> = SelectFromModel(RandomForestClassifier(n_estimators=<span class="org-highlight-numbers-number">100</span>, random_state=<span class="org-highlight-numbers-number">42</span>), threshold=<span class="org-string">"median"</span>)
+</pre>
+</div>
+</div>
+
+<div id="org53e2707" class="outline-5">
+<h5 id="org53e2707"><span class="section-number-5">1.2.1.1</span> fit and transform</h5>
+<div class="outline-text-5" id="text-1-2-1-1">
+<ul class="org-ul">
+<li>do fit(train_data) to convert obj to model</li>
+<li>do transform(train_data) to keep only important features and return a new feature_selected dataset</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython">select.fit(X_train, y_train) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- this select is not the SelectPercentile obj,</span>
+                             <span class="org-comment-delimiter">#</span><span class="org-comment">but the SelectFromModel obj</span>
+<span class="org-variable-name">X_train_rf</span> = select.transform(X_train) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- feature selection</span>
+                                       <span class="org-comment-delimiter"># </span><span class="org-comment">only keep the important features</span>
+<span class="org-keyword">print</span>(X_train.shape)
+<span class="org-keyword">print</span>(X_train_rf.shape)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgb7252e9" class="outline-5">
+<h5 id="orgb7252e9"><span class="section-number-5">1.2.1.2</span> see the selected status by <code>get_support()</code></h5>
+<div class="outline-text-5" id="text-1-2-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">mask</span> = select.get_support() <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- return a boolean ndarray same shape with</span>
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">original data sample visualize the mask. black is</span>
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">True, white is False</span>
+plt.matshow(mask.reshape(<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>), cmap=<span class="org-string">'gray_r'</span>)
+
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.image.AxesImage at 0x7ff4f6c25898&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/3199e9o.png" alt="3199e9o.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org5d584f9" class="outline-5">
+<h5 id="org5d584f9"><span class="section-number-5">1.2.1.3</span> only use selected features of test dataset and check the score</h5>
+<div class="outline-text-5" id="text-1-2-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_test_rf</span> = select.transform(X_test)
+LogisticRegression().fit(X_train_rf, y_train).score(X_test_rf, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.9508771929824561
+
+</pre>
+
+<p>
+This method builds a single model (in this case a random forest) and uses the
+<b>feature importances</b> from this model. We can do a somewhat more elaborate
+search by training multiple models on subsets of the data. One particular
+strategy is recursive feature elimination.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org0fcd0f9" class="outline-3">
+<h3 id="org0fcd0f9"><span class="section-number-3">1.3</span> Recursive Feature Elimination</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Recursive feature elimination builds a model on the full set of features, and
+similar to the method above selects a subset of features that are deemed most
+important by the model.
+</p>
+
+<p>
+However, usually only <b>a single feature is dropped from the dataset, and a new
+model is built with the remaining features</b>. The process of dropping features
+and model building is repeated until there are only a <b>pre-specified number</b> of
+features left:
+</p>
+
+<p>
+TODO
+</p>
+<ul class="org-ul">
+<li>30 feature -&gt; drop 1 -&gt; 29 feature -&gt; build a new model</li>
+<li>30 feature -&gt; drop 1 -&gt; 29 feature -&gt; build a new model</li>
+</ul>
+</div>
+</div>
+
+<div id="org58f4a29" class="outline-3">
+<h3 id="org58f4a29"><span class="section-number-3">1.4</span> The general steps of feature selection for model based and RFE</h3>
+<div class="outline-text-3" id="text-1-4">
+<blockquote>
+<p>
+<span class="underline">Hint</span>:
+</p>
+<ol class="org-ol">
+<li>here a 'model' means somthing after fitting, 'obj' means somthing before
+fitting;</li>
+<li>use RFE as example, replace with SelectFromModel freely.</li>
+<li>you can refine the train_data</li>
+</ol>
+
+<p>
+STEPS:
+</p>
+<ol class="org-ol">
+<li>build RFE obj:
+<ol class="org-ol">
+<li>Same with using <code>SelectFromModel</code>, you must pass a model obj(before
+fitting) as parameter. Here you must pass a model obj to <code>RFE</code>.</li>
+<li>And specify the number of feature left by setting
+<code>n_features_to_select</code>.</li>
+</ol></li>
+<li>build RFE model:
+<ol class="org-ol">
+<li>RFE_obj.fit(train_data, train_label)</li>
+</ol></li>
+<li>visualize the selected features:
+<ol class="org-ol">
+<li>RFE_model.get_support() # return you a boolean matrix</li>
+<li>matshow this reshaped(if needed) matrix</li>
+</ol></li>
+<li>build selected_feature dataset &#x2014; keep only important features:
+<ol class="org-ol">
+<li>RFE_model.transform(train_data or test_data) ==&gt; return refined dataset</li>
+</ol></li>
+<li>use selected features to train and test:
+<ol class="org-ol">
+<li>ml_model.fit(refined train_data or test_data)</li>
+</ol></li>
+<li>evaluate the score of ml model using selected features
+<ol class="org-ol">
+<li>RFE_model.score(refined train_data or test_data, train_label or test_label)</li>
+</ol></li>
+</ol>
+</blockquote>
+</div>
+<div id="org1fdd90b" class="outline-4">
+<h4 id="org1fdd90b"><span class="section-number-4">1.4.1</span> build a RFE model and visualize selected features</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_selection <span class="org-keyword">import</span> RFE
+<span class="org-variable-name">select</span> = RFE(RandomForestClassifier(n_estimators=<span class="org-highlight-numbers-number">100</span>, random_state=<span class="org-highlight-numbers-number">42</span>), n_features_to_select=<span class="org-highlight-numbers-number">40</span>)
+select.fit(X_train, y_train)
+<span class="org-comment-delimiter"># </span><span class="org-comment">visualize the selected features:</span>
+<span class="org-variable-name">mask</span> = select.get_support()
+plt.matshow(mask.reshape(<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>), cmap=<span class="org-string">'gray_r'</span>)
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.image.AxesImage at 0x7f1ae8c36828&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/8573Hty.png" alt="8573Hty.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgca93219" class="outline-4">
+<h4 id="orgca93219"><span class="section-number-4">1.4.2</span> build selected_feature dataset and use it to train ml_model</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_train_rfe</span> = select.transform(X_train)
+<span class="org-variable-name">X_test_rfe</span> = select.transform(X_test)
+LogisticRegression().fit(X_train_rfe, y_train).score(X_test_rfe, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.9508771929824561
+
+</pre>
+</div>
+</div>
+
+<div id="org7ff759b" class="outline-4">
+<h4 id="org7ff759b"><span class="section-number-4">1.4.3</span> evaluate score</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<div class="org-src-container">
+<pre class="src src-ipython">select.score(X_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.9508771929824561
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org07d5716" class="outline-2">
+<h2 id="org07d5716"><span class="section-number-2">2</span> Exericse</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EXERCISE: Create the "XOR" dataset as in the first cell below: Add random
+features to it and compare how univariate selection compares to model based
+selection using a Random Forest in recovering the original features.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">1</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">Generate 400 random integers in the range [0, 1]</span>
+<span class="org-variable-name">X</span> = rng.randint(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>, (<span class="org-highlight-numbers-number">200</span>, <span class="org-highlight-numbers-number">2</span>))
+<span class="org-variable-name">y</span> = np.logical_xor(X[:, <span class="org-highlight-numbers-number">0</span>] &gt; <span class="org-highlight-numbers-number">0</span>, X[:, <span class="org-highlight-numbers-number">1</span>] &gt; <span class="org-highlight-numbers-number">0</span>)  <span class="org-comment-delimiter"># </span><span class="org-comment">XOR creation</span>
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=plt.cm.spectral(y.astype(<span class="org-builtin">float</span>)))
+
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.collections.PathCollection at 0x7ff4f6b91630&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/3199rHv.png" alt="3199rHv.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org22f15ab" class="outline-2">
+<h2 id="org22f15ab"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org63197f7" class="outline-4">
+<h4 id="org63197f7"><span class="section-number-4">3.0.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-0-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import make_regression</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits</li>
+<li>from sklearn.datasets import load_breast_cancer  *</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.model_selection import learning_curve</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.feature_selection import SelectPercentile *</li>
+<li>from sklearn.feature_selection import f_classif *</li>
+<li>from sklearn.feature_selection import f_regression *</li>
+<li>from sklearn.feature_selection import chi2 *</li>
+<li>from sklearn.feature_selection import SelectFromModel *</li>
+<li>from sklearn.feature_selection import RFE *</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.linear_model import Ridge</li>
+<li>from sklearn.linear_model import Lasso</li>
+<li>from sklearn.linear_model import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.tree import DecisionTreeRegressor</li>
+<li>from sklearn.ensemble import RandomForestClassifier</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

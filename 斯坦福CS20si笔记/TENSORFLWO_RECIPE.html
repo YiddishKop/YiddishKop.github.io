@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>tensorflow 实用技巧汇编</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">tensorflow 实用技巧汇编</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9c398aa">1. saver must follow after variables</a></li>
+<li><a href="#org2243a1d">2. ckpt</a></li>
+<li><a href="#orga2b5f83">3. summary</a></li>
+<li><a href="#orge85b293">4. download pretrained model, load to current session</a></li>
+<li><a href="#org413c226">5. hub</a></li>
+<li><a href="#org86bcf2d">6. tf.stop_gradients(loss, embed)</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="org9c398aa" class="outline-2">
+<h2 id="org9c398aa"><span class="section-number-2">1</span> saver must follow after variables</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The <code>tf.train.Saver</code> must be created <b>after</b> the <b>variables</b> that you want to
+restore (or save). Additionally it must be created in the <b>same graph</b> as
+those variables.
+</p>
+
+
+<pre class="example">
+
++--------------------------------+
+|    Variable()                  |
+|    tf.train.Saver([var1, var2])|
+|    with tf.Session() as sess:  |
+|         sess.save()            |
+|                                |
++--------------------------------+
+
+
+</pre>
+
+<p>
+my_test_model-1000.index
+my_test_model-1000.meta
+my_test_model-1000.data-00000-of-00001
+checkpoint
+</p>
+</div>
+</div>
+
+
+<div id="org2243a1d" class="outline-2">
+<h2 id="org2243a1d"><span class="section-number-2">2</span> ckpt</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+ckpt 存储的是快照, 你指定快照时间我给你照相, 是拍照那一刻Variable的值;
+</p>
+<pre class="example">
+     +-----&gt; saver.restore(sess, 'dir/my_net.ckpt')
+     |                                -----------
+     ^
+     +-----&gt; saver.restore(sess, tf.train.latest_checkpoint('dir'))
+     |
+     ^
+     +-&lt;---- a saver obj &lt;== tf.train.import_meta_graph(             )
+                                                             ^
+                  saver.restore(sess, 'net/my_net.ckpt')     |
+                            ^                                +--------------------------------------------|
+                            |                                                                             |
+                            |                                                                             |
+                            |                         | my_net.ckpt.index                                 |
+                                                        -----------                                       |
+                                                      | my_net.ckpt.meta     =&gt; architechture of graphs --+
+                                              include   -----------
+TensorBoard    ---&lt;-----   ckpt =&gt; checkpoint --------| my_net.ckpt.data     =&gt; variable values
+                                                        -----------
+                                                      | checkpoint           =&gt; record of latest checkpoint
+                            ^
+                            |
+                            |
+                            |
+                          saver.save(sess, save_path)
+                               - replace sess with some variables not all.
+                               - ~write_meta_graph~ or not
+                               - max number of ~max_to_keep~
+                               - ~keep_checkpoint_every_n_hours~
+                               - ~global_step~ save at how many global interaion steps
+
+</pre>
+</div>
+</div>
+
+<div id="orga2b5f83" class="outline-2">
+<h2 id="orga2b5f83"><span class="section-number-2">3</span> summary</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+summary 存储的是视频, 是这一段时间内所有的Variable的值.
+</p>
+
+<pre class="example">
+
+graph building
+==============
+tf.summary.scalar           \
+          .histogram         |  store values of
+          .image             |&gt; variables in       --+
+                             |  continuous steps     |
+                             |                       |
+tf.summary.merged_all()     /                        |
+                                                     +---&gt; events.out.tfevents.1533011911.yiddiEdge
+                                                     |                    ||
+graph computing                                      |                    ||
+===============                                      |                    ||
+tf.summary.FileWriter('dir')  &gt; store view of graph -+                    ||
+                                                                          \/
+
+                                                                      TensorBoard
+</pre>
+</div>
+</div>
+
+
+<div id="orge85b293" class="outline-2">
+<h2 id="orge85b293"><span class="section-number-2">4</span> download pretrained model, load to current session</h2>
+<div class="outline-text-2" id="text-4">
+<ol class="org-ol">
+<li>下载解压并获取.pb文件</li>
+<li>把.pb文件加载进当前会话
+<ol class="org-ol">
+<li>gfile.FastGFile(.pb_file, 'rb')</li>
+<li>获取graph定义句柄</li>
+<li>从.pb文件读取内容</li>
+<li>定义句柄解此内容作为graph定义</li>
+<li>tf导入该graph定义</li>
+</ol></li>
+<li><p>
+可视化该模型
+</p>
+<pre class="example">
+           /         URL of tgz ---&gt;  file name of tgz -+
+           |               |                            |--&gt; absolute path of tgz
+           |               |          local dir of tgz -+        |
+           |               v                   |                 v
+           |         download tgz   &lt;----------|-----------------+
+download   |               |                   |
+to         |               |                   |
+local     &lt;|               v                   |
+           |          extract tgz   &lt;----------+
+           |               |
+           |               |                                                                                                                                   predict label(one from
+           |               v                                                  /-------------------------------------------------------------------------------------+  1000) of new image
+           |    +--- classify_image_graph_def.pb                                                                                                                    |
+           |    |    imagenet_2012_challenge_label_map_proto.pbtxt            int to uid -&gt;+         parse function                                                 |
+           |    |    imagenet_synset_to_human_label_map.txt           uid to discription -&gt;+-------&gt;-----------------&gt; dict {int : discription}                     |
+           \    |    inception-2015-12-05.tgz                                                                                 |             |                       |
+                |                                                                                                             ^             v                       |
+           /    +---------------------+  with tf.Session() as sess:                                                           |             |                       |
+           |                          |  .........................                                       +----------&gt;---------+             |                       |
+           |                          |                          .                                       |                                  |                       |
+           |                          v                          .                                                                          |                       |
+           |         gfile.FastGFile(___, 'rb').read()           .                                  [ x,x,x,x,x ]                           |                       |
+           |                                         |           .                                       ^                                  |                       |
+           |                                         |           .                                       |   argsort[-5:][::-1]             |                       |
+load       |                                         |           .                                       |                                  v                       |
+to        &lt;|                                         v           .                                   ******** (1000,)                       |                       |
+session    |         tf.GraphDef().ParsetFromString(___)         .                                       ^                                  |                       |
+           |         -------------                               .                                       |   squeeze                        |                       |
+           |               |                                     .                                       |                                  -------|                |
+           |               |                                     .                                   ******** (1000,1) output                      |                |
+           |               +---------------+                     .                                                                                 |                |
+           |                               v                     .      get_tensor_by_name               ^                                         v                |
+           \         tf.import_meta_graph(___, name='') ===&gt;  graph  -----------------------&gt; tensor-&gt;  ---                   /  new img         label       \      |
+                                                                 .       get active function            |||                  /   +----------+                 \     |
+                                                         .........       of last layer                  |||                  |   |   ...   .|                 |     |
+                                                         .                                              |||          |&lt;----- |   |  ....   .|                 |     |
+                                                         .                                              |||          |       \   |  ........|                 /     |
+                                                         .                                              |||          |        \  +----------+ ,  ----------  /      |
+           /         tf.summary.FileWriter(log_dir, sess.graph)                                         --- &lt;---------                                              |
+           |                                 |                                                 inception-v3                            ^                            |
+visualize &lt;|                                 |                                                                                         |                            |
+           |                                 v                                                                                         | image get function         |
+           \         tensorboard --log_dir=_____                                                                                       |                            |
+                                                                                                                                       |-------- DIR                /
+
+</pre></li>
+</ol>
+</div>
+</div>
+
+<div id="org413c226" class="outline-2">
+<h2 id="org413c226"><span class="section-number-2">5</span> hub</h2>
+<div class="outline-text-2" id="text-5">
+
+<div class="figure">
+<p><img src="根據特定應用改裝 inception-v3/screenshot_2018-07-31_16-04-18.png" alt="screenshot_2018-07-31_16-04-18.png" />
+</p>
+</div>
+
+<pre class="example">
+                      xxx.pb     model          \
+                      yyy.pbtxt  int-uid         | --------+
+                      zzz.txt    uid-discription/          |
+                                                           | model.tgz
+                                                           |
+                                             /+--+    /+--+    /+--+    /+--+
++------------&gt;--------------------------    +-+-+|   +-+-+|   +-+-+|   +-+-+|
+|                               ...&lt;....    |   |/   |   |/   |   |/   |   |/  .....
+|                               .           +---+    +---+    +---+    +---+
+|                               .      inception    resnet  imagenet   a3c
+|                               .      _v3
+|                  as transform .                               |
+|                               .                               |  model_dir, the dir of downloaded tgz of pretrained model
+|                               v                               |
+|                               .                               |         ----------------------| output xxx.pb
+|                               .                               v        /                      |                       1. open .pb
+|                               .                        +--------------+                       v                       2. graph_def parse graph
+|                          your own    image_dir         |              |     output_graph                                 from .pb
+|            +------       Data set  ----------------&gt;   |  retrain.py  | &lt; --------------- a dir used to store ----+
+|            |                  .                        |              |                   the new NN model        |   3. import graph_def
+|            |                  .                        +--------------+                   suit for your task,     |      as it was defined
+|            |               to .                          ^        ^   +--------------+    "xxx.pb" file           |      by us
+|            |                  .                          |        |                  v                            |
+|            |                  .          bottleneck_dir  |        | output_labels                                 |
+|                          code vector  -------------------+        +---------------- a dir uesd to                 |
+v                          files        1 vector 1 file                               store all parsed              |
+|        train_data             .       same architechture with                       labels from                   |
+|    ... |- cars                .       img dir                                       image_dir                     |                          test images
+|    .        |- car1.jpng      .                                                     "yyy.txt" file,               |                         /
+|    .        |- car2.jpng      v                                                     like                          v              session   /
+|    .        |- car3.jpng      .                                                     "cars                                      +----------/+
+|    .        |- car4.jpng      .                                                     animals                      *   graph     |         / |
+|    .        |- ...            .                                                     flower"                     / \            |        |  |  predict
+|    .                          .                                                                                *   *      ---&gt; |run(_ , _ )| --------&gt; test images' labels
+|    ... |- animal              .                                                                                |   | \         |   /       |
+|    .        |- animal1.jpng   .                                                                                *   *  *        |  /        |
+|    .        |- animal2.jpng   .                                                                                                +-/---------+
+|    .        |- animal3.jpng   .                                                                                                 /
+|    .        |- animal4.jpng   .                                                                                                /
+|    .        |- ...            .                                                                                               /
+|    .                          .                                                                                              get tensor by name
+|    ... |- flower              .
+|    .        |- ...            .
+|    .                          .
+|    .                          .
+|  as label                as data
+|    |                          |
+|    +------------+-------------+
+|                 |
++------------&lt;----+
+ train the model
+</pre>
+</div>
+</div>
+
+<div id="org86bcf2d" class="outline-2">
+<h2 id="org86bcf2d"><span class="section-number-2">6</span> tf.stop_gradients(loss, embed)</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+tf.gradients(loss, embed) computes the partial derivative of the tensor loss
+with respect to the tensor embed. TensorFlow computes this partial derivative
+by backpropagation, so it is expected behavior that evaluating the result of
+tf.gradients(&#x2026;) performs backpropagation. However, evaluating that tensor
+does not perform any variable updates, because the expression does not
+include any assignment operations.
+</p>
+
+<p>
+tf.stop_gradient() is an operation that acts as the identity function in the
+forward direction, but stops the accumulated gradient from flowing through that
+operator in the backward direction. It does not prevent backpropagation
+altogether, but instead prevents an individual tensor from contributing to the
+gradients that are computed for an expression. The documentation for the
+operation has more details about the operation, and when to use it.
+</p>
+
+<p>
+注意, stop_gradient(tensor) 不会阻止反向传播求梯度, 他只会让括号内的tensor不对求梯度产生贡献.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

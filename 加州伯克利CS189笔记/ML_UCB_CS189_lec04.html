@@ -1,0 +1,762 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 04 Soft-SVM and Features</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 04 Soft-SVM and Features</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga6c82a4">lec 04 Soft-SVM and Features</a>
+<ul>
+<li><a href="#org3f9e21b">SOFT-MARGIN SUPPORT VECTOR MACHINES (SVMs)</a>
+<ul>
+<li><a href="#orgbd5222e">SVMs solves 2 problems:</a></li>
+</ul>
+</li>
+<li><a href="#orgb66cbb7">FEATURES</a>
+<ul>
+<li><a href="#org1f99008">Q:  How to do nonlinear decision boundaries?</a></li>
+<li><a href="#org62357d4">Example 1:  The <span class="underline">parabolic_lifting_map</span></a></li>
+<li><a href="#org168bc88">Example 2:  Axis-aligned ellipsoid/hyperboloid decision boundaries</a></li>
+<li><a href="#org775fdd3">Example 3:  Ellipsoid/hyperboloid</a></li>
+<li><a href="#org0262155">Example 4:  Predictor fn is degree-p polynomial</a></li>
+<li><a href="#org846de3c">Example 5:  Edge detection</a></li>
+</ul>
+</li>
+<li><a href="#org7af4bd3">Summarize of lec-4</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="orga6c82a4" class="outline-2">
+<h2 id="orga6c82a4">lec 04 Soft-SVM and Features</h2>
+<div class="outline-text-2" id="text-orga6c82a4">
+<p>
+参考 Tsinghua-Datamining chap5 SVM page 15
+</p>
+</div>
+
+<div id="org3f9e21b" class="outline-3">
+<h3 id="org3f9e21b">SOFT-MARGIN SUPPORT VECTOR MACHINES (SVMs)</h3>
+<div class="outline-text-3" id="text-org3f9e21b">
+<p>
+<code>=================================</code>
+</p>
+</div>
+<div id="orgbd5222e" class="outline-4">
+<h4 id="orgbd5222e">SVMs solves 2 problems:</h4>
+<div class="outline-text-4" id="text-orgbd5222e">
+<ul class="org-ul">
+<li>Hard-margin SVMs fail if data not linearly separable.</li>
+<li>"    "     "   sensitive to outliers.</li>
+</ul>
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-06-55.png" alt="screenshot_2017-05-03_15-06-55.png" />
+[Show example where one outlier moves the decision boundary a lot.]
+</p>
+
+<p>
+Idea:  Allow some samples to violate the margin, with <span class="underline">slack_variables</span>.
+       Modified constraint for sample i:
+</p>
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-07-13.png" alt="screenshot_2017-05-03_15-07-13.png" />
+</p>
+</div>
+<pre class="example">
+y_i (X_i . w + alpha) &gt;= 1 - xi_i
+</pre>
+
+<p>
+[Observe that the only difference between these constraints and the
+ hard margin constaints we saw last lecture is the extra slack term xi_i.]
+[We also impose new constraints, that the slack variables are never negative.]
+</p>
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-07-28.png" alt="screenshot_2017-05-03_15-07-28.png" />
+</p>
+</div>
+<pre class="example">
+xi_i &gt;= 0
+</pre>
+
+<p>
+[This inequality ensures that all samples that <b>don't</b> violate the
+ margin are treated the same; they all have xi_i = 0.  Sample i has nonzero
+ xi_i if and only if it violates the margin.]
+</p>
+
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-07-53.png" alt="screenshot_2017-05-03_15-07-53.png" />
+[Show figure of margin where some samples have slack.  For each violating
+ point, the slack distance is xi*_i = xi_i / |w|.]
+</p>
+
+<p>
+To prevent abuse of slack, we add a <span class="underline">loss_term</span> to objective fn.
+</p>
+
+<p>
+Optimization problem:
+</p>
+
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-08-25.png" alt="screenshot_2017-05-03_15-08-25.png" />
+</p>
+</div>
+
+<pre class="example">
+----------------------------------------------------------------------
+|                                                  n                 |
+| Find w, alpha, and xi_i that minimize |w|^2 + C sum xi_i           |
+|                                                 i=1                |
+| subject to y_i (X_i . w + alpha) &gt;= 1 - xi_i   for all i in [1, n] |
+|            xi_i &gt;= 0                           for all i in [1, n] |
+----------------------------------------------------------------------
+</pre>
+<p>
+...a quadratic program in d + n + 1 dimensions and 2n constraints.
+[It's a quadratic program because its objective function is quadratic and its
+ constraints are linear inequalities.]
+</p>
+
+<p>
+C &gt; 0 is a scalar <span class="underline">regularization_hyperparameter</span> that trades off:
+</p>
+
+<pre class="example">
+          |------------------------|------------------------------------------|
+          | small C                | big C                                    |
+----------|------------------------|------------------------------------------|
+ desire   | maximize margin 1/|w|  | keep most slack variables zero or small  |
+----------|------------------------|------------------------------------------|
+ danger   | underfitting           | overfitting                              |
+          | (misclassifies much    | (awesome training, awful test)           |
+          |  training data)        |                                          |
+----------|------------------------|------------------------------------------|
+ outliers | less sensitive         | very sensitive                           |
+----------|------------------------|------------------------------------------|
+ boundary | more "flat"            | more sinuous                             |
+-------------------------------------------------------------------------------
+</pre>
+
+<p>
+[The last row only applies to nonlinear decision boundaries, which we'll
+ discuss next.  Obviously, a linear decision boundary can't be sinuous.]
+</p>
+
+<p>
+Use validation to choose C.
+</p>
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-09-00.png" alt="screenshot_2017-05-03_15-09-00.png" />
+[Show examples of how slab varies with C.  Smallest C upper left; largest C
+ lower right.]
+
+[One way to think about slack is to pretend that slack is money we can spend
+ to buy permission for a sample to violate the margin.  The further a sample
+ penetrates the margin, the bigger the fine you have to pay.  We want to
+ make the margin as big as possible, but we also want to spend as little money
+ as possible.  If the regularization parameter C is small, it means we're
+ willing to spend lots of money on violations so we can get a bigger margin.
+ If C is big, it means we're cheap and we want to prevent violations, even
+ though we'll get a narrower margin .  If C is infinite, we're back to
+ a hard-margin SVM.]
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orgb66cbb7" class="outline-3">
+<h3 id="orgb66cbb7">FEATURES</h3>
+<div class="outline-text-3" id="text-orgb66cbb7">
+<p>
+<code>======</code>
+</p>
+</div>
+<div id="org1f99008" class="outline-4">
+<h4 id="org1f99008">Q:  How to do nonlinear decision boundaries?</h4>
+<div class="outline-text-4" id="text-org1f99008">
+<p>
+A:  Make nonlinear <span class="underline">features</span> that <span class="underline">lift</span> samples into a higher-dimensional
+    space.  High-d linear classifier -&gt; low-d nonlinear classifier.
+</p>
+
+<p>
+[Features work with all classifiers, including perceptrons, hard-margin SVMs,
+ and soft-margin SVMs.]
+</p>
+</div>
+</div>
+
+<div id="org62357d4" class="outline-4">
+<h4 id="org62357d4">Example 1:  The <span class="underline">parabolic_lifting_map</span></h4>
+<div class="outline-text-4" id="text-org62357d4">
+<hr />
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-10-37.png" alt="screenshot_2017-05-03_15-10-37.png" />f
+</p>
+<pre class="example">
+Phi(x): R^d -&gt; R^{d+1}
+         -       -
+         |   x   |                                          2
+Phi(x) = |       |   &lt;--- lifts x onto paraboloid x    = |x|
+         | |x|^2 |                                 d+1
+         -       -
+</pre>
+
+<p>
+[We've added a new feature, |x|^2.  Even though the new feature is just a
+ function of other input features, it gives our linear classifier more power.]
+</p>
+
+<p>
+Find a linear classifier in Phi-space.
+It induces a sphere classifier in x-space.
+</p>
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-10-59.png" alt="screenshot_2017-05-03_15-10-59.png" />
+</p>
+</div>
+
+<pre class="example">
+        ^    X  X
+        |         X
+        |  X  O     X
+        | X   O O  X                [Draw paraboloid, lifted samples, and
+        |X   O  OO                   plane decision boundary in 3D here.]
+        |  X O O  X X
+        |XX X    X
+        |     X   X
+        O-----------&gt;
+[Draw circle decision boundary]
+</pre>
+
+<p>
+单词：ellipsoid, 椭圆体;
+      sphere   , 球体
+      hyperboloid, 双曲面
+      paraboloid, 抛物面
+</p>
+
+<pre class="example">
+Theorem:  Phi(X_1), ..., Phi(X_n) are linearly separable iff X_1, ..., X_n are
+          separable by a hypersphere.
+          (Possibly a _degenerate_ hypersphere = hyperplane.)
+</pre>
+
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_11-29-29.png" alt="screenshot_2017-05-03_11-29-29.png" />
+</p>
+</div>
+
+<p>
+根据这个图可以看出，朝平面是一个特殊的球体; 同样的，也可以把一条线理解为一个特殊的圆形。
+</p>
+
+<p>
+Proof:  Consider hypersphere in R^d w/center c &amp; radius rho.
+</p>
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-11-45.png" alt="screenshot_2017-05-03_15-11-45.png" />
+</p>
+</div>
+
+<pre class="example">
+Points inside:  |x - c|^2 &lt; rho^2
+                |x|^2 - 2c . x + |c|^2 &lt; rho^2
+                           -       -
+                           |   x   |
+                [-2c^T  1] |       | &lt; rho^2 - |c|^2
+                           | |x|^2 |
+                           -       -
+        normal vector ^        ^ Phi(x)
+</pre>
+
+<p>
+Hence points inside sphere -&gt; same side of hyperplane in Phi-space.
+(Reverse implication works too.)
+</p>
+
+<p>
+[Although the math above doesn't expose it, hyperplane separators are a special
+ case of hypersphere separators, so hypersphere classifiers can do everything
+ linear classifiers can do and more.  If you take a sphere and increase its
+ radius to infinity while making it pass through some point, in the limit you
+ get a plane; so you can think of a plane as a degenerate sphere.  With the
+ parabolic lifting map, a hyperplane in x-space corresponds to a hyperplane in
+ Phi-space that is parallel to the x_{d+1}-axis.]
+</p>
+</div>
+</div>
+
+<div id="org168bc88" class="outline-4">
+<h4 id="org168bc88">Example 2:  Axis-aligned ellipsoid/hyperboloid decision boundaries</h4>
+<div class="outline-text-4" id="text-org168bc88">
+<hr />
+<p>
+[Draw examples of axis-aligned ellipses &amp; hyperbola.]
+</p>
+
+<p>
+In 3D, these have the formula
+</p>
+
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-12-25.png" alt="screenshot_2017-05-03_15-12-25.png" />
+A x_1^2 + B x_2^2 + C x_3^2 + D x_1 + E x_2 + F x_3 = -G
+</p>
+
+<p>
+[Here, the capital letters are scalars, not matrices.]
+</p>
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-12-54.png" alt="screenshot_2017-05-03_15-12-54.png" />
+Phi(x): R^d -&gt; R^{2d}
+Phi(x) = [ x_1^2  ...  x_d^2  x_1  ...  x_d ]^T
+</p>
+
+<p>
+[We've turned d input features into 2d features for our linear classifier.
+ If the samples are separable by an axis-aligned ellipsoid or hyperboloid, per
+ the formula above, then the samples lifted to Phi-space are separable by
+ a hyperplane whose normal vector is (A, B, C, D, E, F).]
+</p>
+</div>
+</div>
+
+<div id="org775fdd3" class="outline-4">
+<h4 id="org775fdd3">Example 3:  Ellipsoid/hyperboloid</h4>
+<div class="outline-text-4" id="text-org775fdd3">
+<hr />
+<p>
+[Draw example of non-axis-aligned ellipse.]
+</p>
+
+<p>
+General formula:  [for an ellipsoid or hyperboloid]
+</p>
+
+<div class="figure">
+<p><img src="Machine Learning/screenshot_2017-05-03_15-13-24.png" alt="screenshot_2017-05-03_15-13-24.png" />
+</p>
+</div>
+<pre class="example">
+A x_1^2 + B x_2^2 + C x_3^2 + D x_1 x_2 + E x_2 x_3 + F x_3 x_1 +
+G x_1 + H x_2 + I x_3 = -J
+
+Phi(x): R^d -&gt; R^{(d^2+3d)/2}
+</pre>
+
+
+<p>
+[The isosurface defined by this equation is called a <span class="underline">quadric</span>.  In the special
+ case of 2D, it's also known as a <span class="underline">conic_section</span>.]
+</p>
+
+<p>
+[You'll notice that there is a quadratic blowup in the number of features,
+ because every <b>pair</b> of input features creates a new feature in Phi-space.
+ If the dimension is large, these feature vectors are getting huge, and that's
+ going to impose a serious computational cost.  But it might be worth it to
+ find good classifiers for data that aren't linearly separable.]
+</p>
+</div>
+</div>
+
+<div id="org0262155" class="outline-4">
+<h4 id="org0262155">Example 4:  Predictor fn is degree-p polynomial</h4>
+<div class="outline-text-4" id="text-org0262155">
+<hr />
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-14-01.png" alt="screenshot_2017-05-03_15-14-01.png" />
+E.g. a cubic in R^2:
+</p>
+<pre class="example">
+                                                                              T
+Phi(x) = [ x_1^3  x_1^2 x_2  x_1 x_2^2  x_2^3  x_1^2  x_1 x_2  x_2^2  x_1  x_2]
+Phi(x): R^d -&gt; R^{O(d^p)}
+</pre>
+
+<p>
+[Now we're really blowing up the number of features!  If you have, say, 100
+ features per sample and you want to use degree-4 predictor functions, then
+ each lifted feature vector has a length on the order of 100 million,
+ and your learning algorithm will take approximately forever to run.]
+[However, later in the semester we will learn an extremely clever trick that
+ allows us to work with these huge feature vectors very quickly, without ever
+ computing them.  It's called "kernelization" or "the kernel trick".  So even
+ though it appears now that working with degree-4 polynomials is
+ computationally infeasible, it can actually be done very quickly.]
+</p>
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-14-30.png" alt="screenshot_2017-05-03_15-14-30.png" />
+[Show SVMs with degree 1/2/5 predictor functions.  Observe that the
+ margin tends to get wider as the degree increases.]
+</p>
+
+<p>
+[Increasing the degree like this accomplishes two things.
+</p>
+<ul class="org-ul">
+<li>First, the data might become linearly separable when you lift them to a high
+enough degree, even if the original data are not linearly separable.</li>
+<li>Second, raising the degree can increase the margin, so you might get a more
+robust separator.</li>
+</ul>
+<p>
+However, if you raise the degree too high, you will overfit the data.]
+</p>
+<p>
+ <img src="Machine Learning/screenshot_2017-05-03_15-15-19.png" alt="screenshot_2017-05-03_15-15-19.png" />
+[Show training vs. test error for degree 1/2/5 predictor functions.  In this
+ example, a degree-2 predictor gives the smallest test error.]
+</p>
+
+<p>
+[Sometimes you should search for the ideal degree--not too small, not too big.
+ It's a balancing act between underfitting and overfitting.  The degree is an
+ example of a <b>hyperparameter</b> that can be optimized by validation.]
+</p>
+
+<p>
+[If you're using both polynomial features and a soft-margin SVM, now
+ you have two hyperparameters:  the degree and C.  Generally, the optimal C
+ will be different for ever polynomial degree, so when you change degree, you
+ have to run validation again to find the best C for that degree.]
+</p>
+
+
+<p>
+[So far I've talked only about polynomial features.  But features can get much
+ more interesting than polynomials, and they can be tailored to fit a specific
+ problem.  Let's consider a type of feature you might use if you wanted to
+ implement, say, a handwriting recognition algorithm.]
+</p>
+</div>
+</div>
+
+<div id="org846de3c" class="outline-4">
+<h4 id="org846de3c">Example 5:  Edge detection</h4>
+<div class="outline-text-4" id="text-org846de3c">
+<hr />
+<p>
+<span class="underline">Edge_detector</span>:  algorithm for approximating grayscale/color gradients in
+  image, e.g.
+</p>
+<ul class="org-ul">
+<li>tap filter</li>
+<li>Sobel filter</li>
+<li>oriented Gaussian derivative filter</li>
+</ul>
+<p>
+[images are discrete, not continuous fields, so approximation is necessary.]
+</p>
+
+<p>
+[See "Image Derivatives" on Wikipedia.]
+</p>
+<p>
+<img src="Machine Learning/screenshot_2017-05-03_15-16-19.png" alt="screenshot_2017-05-03_15-16-19.png" />
+Collect line orientations in local histograms (each having 12 orientation bins
+  per region); use histograms as features (<b>instead</b> of raw pixels).
+</p>
+
+<p>
+[Show picture of image histograms.]
+</p>
+
+<p>
+Paper:  Maji &amp; Malik, 2009.
+</p>
+
+<p>
+[If you want to, optionally, use these features in Homework 1 and try to win
+ the Kaggle competition, this paper is a good online resource.]
+</p>
+
+<p>
+[When they use a linear SVM on the raw pixels, Maji &amp; Malik get an error rate
+ of 15.38% on the test set.  When they use a linear SVM on the histogram
+ features, the error rate goes down to 2.64%.]
+</p>
+
+<p>
+[Many applications can be improved by designing application-specific features.
+ There's no limit but your own creativity and ability to discern the structure
+ hidden in your application.]
+</p>
+</div>
+</div>
+</div>
+<div id="org7af4bd3" class="outline-3">
+<h3 id="org7af4bd3">Summarize of lec-4</h3>
+<div class="outline-text-3" id="text-org7af4bd3">
+<p>
+首先，通过 <b>线性方程</b> 得到一个 hyperplane;
+其次，通过 <b>升维</b> 把所有问题都转化为 <b>过原点</b> 问题;
+其次，通过 <b>对偶</b> 把所有问题都转化为 <b>优化 w 空间</b> 问题;
+其次，通过 <b>yi 技巧</b> 得到线性可分问题的 constraint-fn;
+其次，通过 <b>所有样本误差之和</b> 可以实现 GD;
+其次，通过 <b>单个样本误差 + convex-loss-fn</b> 可以实现 SGD;
+其次，通过 <b>SVMh</b> 解决 GD/SGD 的 biased;
+其次，通过 <b>hyperparameter: C of SVMs, k of k-nearst, p of polynomial</b> 控制 under/over fitting;
+其次，通过 <b>+-1 和 yi 技巧</b> 得到 SVMh 问题的 constraint-fn;
+其次，通过 <b>引入ξ(called 'zai')</b> 得到 SVMs 解决 SVMh 的 outliers;
+其次，通过 <b>ξ and C</b> 得到 SVMs 问题的 constraint-fn;
+其次，通过 <b>升维</b> 把线性不可分问题转为高阶线性可分问题;
+其次，通过 <b>概率分类</b> 解决 same point at coordinate, with different class;
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:57</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

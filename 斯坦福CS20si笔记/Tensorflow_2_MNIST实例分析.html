@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow 简单线性回归实例</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow 简单线性回归实例</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org811b295">1. Tensorflow 2 MNIST实例分析</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org6aefa43">1.0.1. MNIST introduction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org271663c">2. 简单非线性回归实例</a></li>
+<li><a href="#orgdd5bf20">3. 简单MNIST数据集分类</a>
+<ul>
+<li><a href="#orga26f0ec">3.1. cross_entropy</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org811b295" class="outline-2">
+<h2 id="org811b295"><span class="section-number-2">1</span> Tensorflow 2 MNIST实例分析</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org6aefa43" class="outline-4">
+<h4 id="org6aefa43"><span class="section-number-4">1.0.1</span> MNIST introduction</h4>
+<div class="outline-text-4" id="text-1-0-1">
+
+<div class="figure">
+<p><img src="Tensorflow/screenshot_2018-07-27_17-36-32.png" alt="screenshot_2018-07-27_17-36-32.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Tensorflow/screenshot_2018-07-27_17-38-39.png" alt="screenshot_2018-07-27_17-38-39.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Tensorflow/screenshot_2018-07-27_17-39-42.png" alt="screenshot_2018-07-27_17-39-42.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Tensorflow/screenshot_2018-07-27_17-44-42.png" alt="screenshot_2018-07-27_17-44-42.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Tensorflow/screenshot_2018-07-27_17-43-18.png" alt="screenshot_2018-07-27_17-43-18.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org271663c" class="outline-2">
+<h2 id="org271663c"><span class="section-number-2">2</span> 简单非线性回归实例</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-ipython" id="org58cbd0f">&lt;&lt;&#21253;&#23548;&#20837;&gt;&gt;
+&lt;&lt;&#25968;&#25454;&#20934;&#22791;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy&#26500;&#36896;(with/without noise)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20174;&#24050;&#26377;&#25968;&#25454;&#38598;&#23548;&#20837;&#20869;&#23384;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#25209;&#27425;&#22823;&#23567;</span>
+&lt;&lt;&#22270;&#26500;&#36896;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19968;&#27169;,&#20004;&#20989;,&#20004;&#22120;</span>
+&lt;&lt;&#22270;&#35745;&#31639;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#20004;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32467;&#26524;&#20998;&#26512;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32472;&#22270;</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/tpeEsy.png" alt="tpeEsy.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="org8fe9bac"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="org6b13b9a"><span class="org-comment-delimiter"># </span><span class="org-comment">&#20351;&#29992; numpy &#29983;&#25104;200&#20010;&#38543;&#26426;&#28857;</span>
+<span id="coderef-Dataset" class="coderef-off"><span class="org-variable-name">x_data</span> = np.linspace(-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">200</span>)[:, np.newaxis] (Dataset)</span>
+<span class="org-variable-name">noise</span> = np.random.normal(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">02</span>, x_data.shape)
+<span class="org-variable-name">y_data</span> = np.square(x_data) + noise
+</pre>
+</div>
+
+<p>
+<a href="#coderef-Dataset" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-Dataset');" onmouseout="CodeHighlightOff(this, 'coderef-Dataset');">注意这里构造的是整个数据集 (sample_num, smaple_dimension)</a>,有两个原因必须这么做:
+</p>
+<ol class="org-ol">
+<li>因为后面要做 one_sample * W + b 的矩阵乘法 所以这里必须给出 sample dimension</li>
+<li>因为后面喂数据给 placeholder 的时候,是把 run(fetch, feed) 中的feed一行一行拿出来喂进 NN 中</li>
+</ol>
+
+<p>
+所以他必须是一个二维数组, 注意神经网络是就像一个函数 f(x), 他是针对单个数据点进行预测的. 这点千万搞清楚. 这里和这里是配套使用的,必须要保持一致.
+</p>
+
+<pre class="example">
+                                    数据集形状                           单个样本形状
+                                    ---------------                      ---------
+x_data = np.linspace(-0.5, 0.5, 200)[:, np.newaxis]   x = tf.placeholder([None, 1])
+
+                                                  \ /
+                                                   +
+                                                  / \
+                                                 v   v
+                       tf.run(train, feed_dict={ x : x_data})
+</pre>
+
+<p>
+<a href="#coderef-Dataset" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-Dataset');" onmouseout="CodeHighlightOff(this, 'coderef-Dataset');">rank=1 vs. rank=2</a>
+</p>
+<pre class="example" id="[:, np.newaxis]">
+rank=1     rank=2
+------     -------
+(200, ) vs (200, 1)
+
+In [2]: import numpy as np
+
+In [9]: x_data = np.linspace(-0.5, 5, 200)
+
+In [36]: x_data.shape
+Out[42]: (200,)    &lt;====
+
+In [43]: x_data = np.linspace(-0.5, 5, 200)[:, np.newaxis]
+
+In [64]: x_data.shape
+Out[68]: (200, 1)  &lt;====
+</pre>
+
+
+<p>
+图结构与其在代码中的名称示意图
+</p>
+<pre class="example">
+layer name:        input layer      1-hiden layer      output layer
+
+                      |&lt;---------------&gt;|&lt;---------------&gt;|
+                      |   Weights_L1    |   Weights_L2    |
+output of
+this layer:          'x'              'L1'           'prediction'
+
+                                        *
+                                        *
+                                        *                              +-- square of residual
+                                        *                              |
+                      *                 *                 *       &lt;========&gt;      y
+                                        *
+                                        *
+                                        *
+                                        *
+                                        *
+</pre>
+
+
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="org263e272"><span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#20004;&#20010; placeholder</span>
+<span id="coderef-placeholder" class="coderef-off"><span class="org-variable-name">x</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">1</span>]) (placeholder)</span>
+<span class="org-variable-name">y</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">1</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#31070;&#32463;&#32593;&#32476;&#20013;&#38388;&#23618;</span>
+<span class="org-variable-name">Weights_L1</span> = tf.Variable(tf.random_normal([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>]))
+<span class="org-variable-name">biases_L1</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>]))
+<span class="org-variable-name">Wx_plus_b_L1</span> = tf.matmul(x, Weights_L1) + biases_L1
+<span class="org-variable-name">L1</span> = tf.nn.tanh(Wx_plus_b_L1)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#31070;&#32463;&#32593;&#32476;&#36755;&#20986;&#23618;</span>
+<span class="org-variable-name">Weights_L2</span> = tf.Variable(tf.random_normal([<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">1</span>]))
+<span class="org-variable-name">biases_L2</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>]))
+<span class="org-variable-name">Wx_plus_b_L2</span> = tf.matmul(L1, Weights_L2) + biases_L2
+<span class="org-variable-name">prediction</span> = tf.nn.tanh(Wx_plus_b_L2)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20108;&#27425;&#20195;&#20215;&#20989;&#25968; -&gt; &#20248;&#21270;&#22120; -&gt; &#26368;&#23567;&#21270;&#20195;&#20215;&#20989;&#25968;</span>
+<span class="org-variable-name">loss</span> = tf.reduce_mean(tf.square(y - prediction))
+<span class="org-variable-name">optimizer</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">train</span> = optimizer.minimize(loss)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#22120;</span>
+<span class="org-variable-name">init</span> = tf.global_variables_initializer()
+</pre>
+</div>
+
+<p>
+<a href="#coderef-placeholder" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-placeholder');" onmouseout="CodeHighlightOff(this, 'coderef-placeholder');">形状自适应的占位符</a>
+</p>
+
+<pre class="example" id="自适应形状的占位符定义">
+                         None 表示喂食数据时自动计算
+                               -----
+x = tf.placeholder(tf.float32, [None, 1])
+                               ---------
+                         不论以后喂给我的数据点是什么形状,
+                         我都将其转换成(~,1)的形状.
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="org6cd537a"><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#21021;&#22987;&#21270;&#22120;</span>
+    sess.run(init)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#20248;&#21270;&#22120;</span>
+    <span class="org-keyword">for</span> _ <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">2000</span>):
+        sess.run(train, feed_dict={x: x_data, y: y_data})
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#33719;&#24471;&#39044;&#27979;&#20540;</span>
+    <span class="org-variable-name">prediction_value</span> = sess.run(prediction, feed_dict={x: x_data})
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#32472;&#22270;</span>
+    plt.figure()
+<span id="coderef-scatter" class="coderef-off">    plt.scatter(x_data, y_data) (scatter)</span>
+<span id="coderef-plot" class="coderef-off">    plt.plot(x_data, prediction_value, <span class="org-string">'r-'</span>, lw=<span class="org-highlight-numbers-number">5</span>) (plot)</span>
+    plt.show()
+</pre>
+</div>
+
+
+<p>
+<a href="#coderef-plot" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-plot');" onmouseout="CodeHighlightOff(this, 'coderef-plot');">线图参数中的 'r-'('r' 红色, '-' 实线), 'lw=5'表示线宽 5 pixel</a>
+</p>
+
+<div class="figure">
+<p><img src="./obipy-resources/rLWftR.png" alt="rLWftR.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgdd5bf20" class="outline-2">
+<h2 id="orgdd5bf20"><span class="section-number-2">3</span> 简单MNIST数据集分类</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-ipython" id="org692ab38">&lt;&lt;&#21253;&#23548;&#20837;&gt;&gt;
+&lt;&lt;&#25968;&#25454;&#20934;&#22791;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy&#26500;&#36896;(with/without noise)</span>
+   <span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#25209;&#27425;&#22823;&#23567;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20174;&#24050;&#26377;&#25968;&#25454;&#38598;&#23548;&#20837;&#20869;&#23384;</span>
+   <span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#25209;&#27425;&#22823;&#23567;</span>
+&lt;&lt;&#22270;&#26500;&#36896;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19968;&#27169;,&#20004;&#20989;,&#20004;&#22120;</span>
+&lt;&lt;&#22270;&#35745;&#31639;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#20004;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32467;&#26524;&#20998;&#26512;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32472;&#22270;</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="linenr"> 1: </span><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="linenr"> 2: </span><span class="org-keyword">from</span> tensorflow.examples.tutorials.mnist <span class="org-keyword">import</span> input_data
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#36733;&#20837;&#25968;&#25454;</span>
+<span id="coderef-one_hot" class="coderef-off"><span class="linenr"> 5: </span><span class="org-variable-name">mnist</span> = input_data.read_data_sets(<span class="org-string">"MNIST"</span>, one_hot=<span class="org-constant">True</span>) (one_hot)</span>
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#25209;&#27425;&#22823;&#23567;</span>
+<span id="coderef-batch_size" class="coderef-off"><span class="linenr"> 8: </span><span class="org-variable-name">batch_size</span> = <span class="org-highlight-numbers-number">100</span> (batch_size)</span>
+<span class="linenr"> 9: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35745;&#31639;&#20849;&#26377;&#22810;&#23569;&#25209;&#27425;</span>
+<span id="coderef-floor division" class="coderef-off"><span class="linenr">10: </span><span class="org-variable-name">n_batch</span> = mnist.train.num_examples // batch_size (floor division)</span>
+<span class="linenr">11: </span>
+<span class="linenr">12: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#20004;&#20010; placeholder</span>
+<span class="linenr">13: </span><span class="org-variable-name">x</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">784</span>])
+<span class="linenr">14: </span><span class="org-variable-name">y</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">10</span>])
+<span class="linenr">15: </span>
+<span class="linenr">16: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#31616;&#21333;&#31070;&#32463;&#32593;&#32476;(&#26080;&#38544;&#34255;&#23618;)</span>
+<span class="linenr">17: </span><span class="org-variable-name">W</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">784</span>, <span class="org-highlight-numbers-number">10</span>]))
+<span class="linenr">18: </span><span class="org-variable-name">b</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">10</span>]))
+<span class="linenr">19: </span><span class="org-variable-name">prediction</span> = tf.nn.softmax(tf.matmul(x, W) + b)
+<span class="linenr">20: </span>
+<span class="linenr">21: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#20108;&#20989;,&#20108;&#22120;</span>
+<span class="linenr">22: </span><span class="org-variable-name">init</span> = tf.global_variables_initializer()
+<span class="linenr">23: </span><span class="org-variable-name">optimizer</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+<span class="linenr">24: </span><span class="org-variable-name">loss</span> = tf.reduce_mean(tf.square(y-prediction))
+<span class="linenr">25: </span><span class="org-variable-name">train</span> = optimizer.minimize(loss)
+<span class="linenr">26: </span>
+<span class="linenr">27: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#39044;&#27979;&#23545;&#38169;&#23384;&#22312;&#19968;&#20010;&#21521;&#37327;&#20013;</span>
+<span id="coderef-count correct prediction" class="coderef-off"><span class="linenr">28: </span><span class="org-variable-name">correct_prediction</span> = tf.equal(tf.argmax(y,<span class="org-highlight-numbers-number">1</span>), tf.argmax(prediction, <span class="org-highlight-numbers-number">1</span>)) (count correct prediction)</span>
+<span class="linenr">29: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35745;&#31639;&#20934;&#30830;&#29575;</span>
+<span class="linenr">30: </span><span class="org-variable-name">accuracy</span> = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+<span class="linenr">31: </span>
+<span class="linenr">32: </span>
+<span class="linenr">33: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#22270;&#35745;&#31639;</span>
+<span class="linenr">34: </span><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+<span class="linenr">35: </span>    sess.run(init)
+<span class="linenr">36: </span>    <span class="org-comment-delimiter"># </span><span class="org-comment">&#37319;&#21462;&#35757;&#32451;&#19968;&#36718;&#23601;&#27979;&#35797;&#19968;&#36718;&#30340;&#26041;&#24335;</span>
+<span class="linenr">37: </span>    <span class="org-keyword">for</span> epoch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">21</span>):
+<span class="linenr">38: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#35757;&#32451;&#27169;&#22411;</span>
+<span class="linenr">39: </span>        <span class="org-variable-name">acc_train</span> = <span class="org-highlight-numbers-number">0</span>
+<span class="linenr">40: </span>        <span class="org-keyword">for</span> batch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n_batch):
+<span class="linenr">41: </span>            <span class="org-variable-name">batch_xs</span>, <span class="org-variable-name">batch_ys</span> = mnist.train.next_batch(batch_size)
+<span class="linenr">42: </span>            <span class="org-variable-name">_</span>, <span class="org-variable-name">acc_train</span> = sess.run([train, accuracy], feed_dict={x:batch_xs, y:batch_ys})
+<span class="linenr">43: </span>
+<span class="linenr">44: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#27979;&#35797;&#27169;&#22411;</span>
+<span class="linenr">45: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#27979;&#35797;&#38598;&#24517;&#39035;&#20351;&#29992;&#24050;&#32463;&#35757;&#32451;&#23436;&#27605;&#30340;&#27169;&#22411;</span>
+<span class="linenr">46: </span>        <span class="org-variable-name">acc_test</span> = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels})
+<span class="linenr">47: </span>        <span class="org-keyword">print</span>(<span class="org-string">"Iter "</span> + <span class="org-builtin">str</span>(epoch) + <span class="org-string">" ,Train:"</span> + <span class="org-builtin">str</span>(acc_train) + <span class="org-string">" ,Test:"</span> + <span class="org-builtin">str</span>(acc_test))
+<span class="linenr">48: </span>
+</pre>
+</div>
+
+<p>
+<a href="#coderef-one_hot" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-one_hot');" onmouseout="CodeHighlightOff(this, 'coderef-one_hot');">数据集label总共有几种取值,就导入成几维的 one_hot 向量.</a> 这里数据集 label 总共有
+0~9 共10种取值, 就把每个 label 导入为10维的one_hot向量.
+</p>
+
+<p>
+<a href="#coderef-batch_size" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-batch_size');" onmouseout="CodeHighlightOff(this, 'coderef-batch_size');">batch 是以一个矩阵的形式(batch_size * smaple_dimension)喂食数据</a>
+</p>
+
+<p>
+<a href="#coderef-floor division" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-floor division');" onmouseout="CodeHighlightOff(this, 'coderef-floor division');">这个符号'//'是整除(向下取整)的意思.</a>
+</p>
+
+<p>
+<a href="#coderef-count correct prediction" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-count correct prediction');" onmouseout="CodeHighlightOff(this, 'coderef-count correct prediction');">'correct_prediction'中存储的是 boolean 值</a>
+</p>
+<pre class="example" id="解释 correct_prediction">
+y 中存有60000个one-hot vector:(60000, 10), 每个针对y的第二维度(也就是'行',每个
+sample)做 argmax, 可以得到 60000 个 max_value_index 组成的一个 Tensor; 同样的
+prediction经过argmax也会得到60000个 max_value_index 组成的一个 Tensor. 然后对
+这两个 Tensor 进行 element-wise 比较就可以得到一个 (60000,1) 的boolean Tensor.
+
+
+            one_hot vector of                                                        prediction(output
+             label of                                                                of NN) of
+index        one sample                                                               one sample
+
+  0              0  \                                                                  /  0.01
+  1              0   |                                                                |   0.12
+  2              0   |                                                                |   0.07
+  3              0   |                          equal or not                          |   0.01
+  4              1   | index of max value = 4   ============= 5 = index of max value  |   0.02
+  5              0   |                                |                               |   0.7
+  6              0   |                                |                               |   0.01
+  7              0   |                                |                               |   0.03
+  8              0   |                                |                               |   0.15
+  9              0  /                                 v                                \  0.15
+                                                 equal =&gt; True
+                                             not equal =&gt; False
+</pre>
+
+<pre class="example">
+
+                ------------------------&gt;---------------------|
+                | tf.equal                                    |                tf.reduce_mean
+                |                                             |              -----------------&gt; correct
+    +---------------------+                                   v              ^                  accuracy
+    |                     |                                   |              |
+tf.argmax             tf.argmax
++----------           +-----------------------------
+|0001000000           |.7 .2 .1 .0 .0 .0 .0 .0 .0 .0          t             1.0
++----------           +-----------------------------
+ 0001000000            .7 .2 .1 .0 .0 .0 .0 .0 .0 .0          f             0.0
+ 0001000000            .7 .2 .1 .0 .0 .0 .0 .0 .0 .0          t             1.0
+ 0001000000            .7 .2 .1 .0 .0 .0 .0 .0 .0 .0          t             1.0
+ ...                   ...                                    .              .
+ ...                   ...                                    .              .
+ ...                   ...                                    .              .
+ 0001000000            .7 .2 .1 .0 .0 .0 .0 .0 .0 .0          f             0.0
+
+                                                              |              |
+                                                              v              ^
+                                                              | tf.cast      |
+                                                              --------&gt;------|
+
+
+
+</pre>
+</div>
+
+
+<div id="orga26f0ec" class="outline-3">
+<h3 id="orga26f0ec"><span class="section-number-3">3.1</span> cross_entropy</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+\(\theta(s)=\frac{1}{1+e^{-s}}\)
+</p>
+
+<p>
+\(loss(f)=1/N\sum_{n=1}^N\theta(-y_nw^T_tx_n)(-y_nx_n)\)
+</p>
+
+<p>
+tf.reduce_mean(tf.sigmoid(tf.negative(tf.multiply(y, prediction))))
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

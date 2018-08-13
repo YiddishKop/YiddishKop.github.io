@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow 实现卷积神经网络</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow 实现卷积神经网络</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org054a1f8">1. Tensorflow-CNN</a></li>
+<li><a href="#org0db0fe4">2. CNN 应用于MNIST数据集分类</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="org054a1f8" class="outline-2">
+<h2 id="org054a1f8"><span class="section-number-2">1</span> Tensorflow-CNN</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+CNN: 局部感受和权值共享
+</p>
+
+<p>
+卷积核可以理解成一个模式匹配或者更形象一点,理解成滤波器.
+</p>
+
+
+
+<div class="figure">
+<p><img src="Tensorflow-CNN/screenshot_2018-07-30_16-22-38.png" alt="screenshot_2018-07-30_16-22-38.png" />
+</p>
+</div>
+
+<p>
+有几个卷积核就可以采样出几个特征图.
+</p>
+
+
+<p>
+池化上接卷积层, 一般有三种: max-pooling, mean-pooling, random-pooling
+</p>
+
+
+
+<div class="figure">
+<p><img src="Tensorflow-CNN/screenshot_2018-07-30_16-25-24.png" alt="screenshot_2018-07-30_16-25-24.png" />
+</p>
+</div>
+
+<p>
+padding
+</p>
+
+
+<p>
+same padding: 不保证; 可以超过图片边界采样
+</p>
+
+<p>
+valid padding: 不保证; 不可以超过
+</p>
+
+<pre class="example">
+
+一张 2*3 的图片,经过 "SAME" 和 "VALID" 两种方式采样, 会得到的不同结果
+
++---+---+---+
+|   |   |   |
+|---+---+---|
+|   |   |   |
++---+---+---+
+
+以 2*2 步长为 2 的窗口以 same padding 的方式进行 pooling 操作
+
+...........                ............
+.---------.--+      +---+--.-+---+****.
+.|   |   |.  |      |   |  . |   |   *.
+.|---+---+.--| ---&gt; |---+--.-+---|****. ---- 因为不够 2*2 了所以这里会
+.|   |   |.  |      |   |  . |   |   *.      多补出一列, 最终会采样出
+.---------.--+      +---+--.-+---+****.      1*2 的矩阵
+..........                 ............
+
+
+以 2*2 步长为 2 的窗口以 valid padding 的方式进行 pooling 操作
+
+...........
+.---------.--+      +---+---+---+
+.|   |   |.  |      |   |   |   |
+.|---+---+.--| ---&gt; |---+---+---+       ---- 不够了就停止
+.|   |   |.  |      |   |   |   |            最终会采样出
+.---------.--+      +---+---+---+            1*1 的矩阵
+..........                 
+
+
+</pre>
+</div>
+</div>
+
+<div id="org0db0fe4" class="outline-2">
+<h2 id="org0db0fe4"><span class="section-number-2">2</span> CNN 应用于MNIST数据集分类</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-ipython">&lt;&lt;&#21253;&#23548;&#20837;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;&#23548;&#20837; projector: for embeddings &#21487;&#35270;&#21270;&gt;&gt;</span>
+
+
+&lt;&lt;&#25968;&#25454;&#20934;&#22791;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy&#26500;&#36896;(with/without noise)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#38598;&#23548;&#20837;&#20869;&#23384;(one_hot or not)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25130;&#21462;&#24050;&#32463;&#23384;&#22312;&#25968;&#25454;&#38598;</span>
+
+&lt;&lt;&#22270;&#21442;&#25968;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25209;&#27425;&#22823;&#23567;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25209;&#27425;&#25968;&#37327;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">dropout &#20445;&#30041;&#29575;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#38598;&#20301;&#32622;</span>
+
+&lt;&lt;&#24037;&#20855;&#20989;&#25968;&#19982;&#24037;&#20855;&#22768;&#26126;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#23545;&#26576;&#20123; Variable &#36827;&#34892; OP &#24182; summary</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;def Variable: for embeddings &#21487;&#35270;&#21270;&gt;&gt; as untrainable Variable, stack front 3000 img, give name 'embeddings'</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;file IO: for embeddings &#21487;&#35270;&#21270;&gt;&gt; read in one_hot labels, argmax get true labels, write to file in one-label-one-line format</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">W, b &#21021;&#22987;&#21270;&#24037;&#20855;&#20989;&#25968;</span>
+
+&lt;&lt;&#22270;&#26500;&#36896;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19968;&#31070;: NN layers, name_scope for TB, &#21442;&#25968; summary</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. placeholders</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.1 x: dataset placeholder,</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">+ &lt;&lt;def OP: for img process, CNN &gt;&gt; reshape x                             ------+</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.2 y: labelset placeholder,                                                    |</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.3 keep_prob: dropout, keep rate of certain layer's nodes                      |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. Variables                                                                       |</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.0 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;                                                                |</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.1 &#31532;&#19968;&#23618;&#26435;&#37325; W, &#22768;&#26126; summary tf.summary.scalar/image/histogram node           |</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.2 &#31532;&#19968;&#23618;&#20559;&#32622; b, &#22768;&#26126; summary tf.summary.scalar/image/histogram node           |</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">+ &lt;&lt;conv2d layer: for CNN&gt;&gt; &#21482;&#25509;&#21463; [batch_size, height, width, channels] &#26684;&#24335; &lt;-+</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">+ &lt;&lt;max_pool layer: for CNN&gt;&gt;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. Operations</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">3.1 &#31532;&#19968;&#23618;&#36755;&#20986;(active_fn(score)), &#22768;&#26126; summary tf.summary.scalar/image/histogram node</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#20989;:</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. err_fn:</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.2 err fn(&#21333;&#28857;&#38169;&#35823;), &#22768;&#26126; summary, tf.summary.scalar/image/histogram node</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. loss_fn:</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.2 loss fn(&#25972;&#20307;&#38169;&#35823;), &#22768;&#26126; summary, tf.summary.scalar/image/histogram node</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#22120;:</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. &#21021;&#22987;&#21270;&#22120;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. &#20248;&#21270;&#22120;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20934;&#30830;&#29575;&#35745;&#31639;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. correct_prediction</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. accuracy</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21512;&#24182;summary</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#37197;&#32622; embeddings &#21487;&#35270;&#21270;&#21442;&#25968;</span>
+
+&lt;&lt;&#22270;&#35745;&#31639;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#21021;&#22987;&#21270;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">summary Writer for TB</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">for epoch_num: &lt;&lt;</span>
+<span class="org-comment-delimiter">#          </span><span class="org-comment">1. for batch_num:</span>
+<span class="org-comment-delimiter">#                 </span><span class="org-comment">1.1 x_y_of_next_batch;</span>
+<span class="org-comment-delimiter">#                 </span><span class="org-comment">1.2 &#36816;&#34892; &#20248;&#21270;&#22120;&#35745;&#31639; and summary&#35745;&#31639;</span>
+<span class="org-comment-delimiter">#          </span><span class="org-comment">2. &#36816;&#34892;&#20934;&#30830;&#29575;&#35745;&#31639;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">matplot&#32472;&#22270;</span>
+</pre>
+</div>
+
+
+<p>
+卷积核: [shape, image_channel, 卷积核个数], 就是缩减版的权重. 局部感受和权值共享.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-keyword">from</span> tensorflow.examples.tutorials.mnist <span class="org-keyword">import</span> input_data
+
+<span class="org-variable-name">mnist</span> = input_data.read_data_sets(<span class="org-string">'MNIST'</span>, one_hot=<span class="org-constant">True</span>)
+
+<span class="org-variable-name">batch_size</span> = <span class="org-highlight-numbers-number">100</span>
+
+<span class="org-variable-name">n_batch</span> = mnist.train.num_examples // batch_size
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#26435;&#20540;&#21644;&#25130;&#36317;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">weight_variable</span>(shape):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    shape = [filter_height, filter_width, in_channels, number]</span>
+<span class="org-doc">    """</span>
+    <span class="org-variable-name">initial</span> = tf.truncated_normal(shape, stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+    <span class="org-keyword">return</span> tf.Variable(initial)
+
+<span class="org-keyword">def</span> <span class="org-function-name">bias_variable</span>(shape):
+    <span class="org-variable-name">initial</span> = tf.constant(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, shape=shape)
+    <span class="org-keyword">return</span> tf.Variable(initial)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21367;&#22522;&#23618;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">conv2d</span>(x, W):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    x input tensor of shape `[batch, in_height, in_width, in_channels]`</span>
+
+<span class="org-doc">                                                                                 &#21367;&#31215;&#26680;&#20010;&#25968;</span>
+<span class="org-doc">                                                                                 ------------</span>
+<span class="org-doc">    W filter / kernel tensor of shape [filter_height, filter_width, in_channels, out_channels]</span>
+
+<span class="org-doc">    strides [1, x, y, 1]</span>
+<span class="org-doc">    `strides[0]=strides[3]=1` strides[1] &#20195;&#34920;x&#26041;&#21521;&#30340;&#27493;&#38271;, strides[2]&#20195;&#34920;y&#26041;&#21521;&#30340;&#27493;&#38271;</span>
+
+<span class="org-doc">    padding: a `string` from: `"SAME" or "VALID"`,</span>
+<span class="org-doc">    """</span>
+    <span class="org-keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>], padding=<span class="org-string">'SAME'</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#27744;&#21270;&#23618;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">max_pool_2x2</span>(x):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    ksize [1, x, y, 1] &#31383;&#21475;&#22823;&#23567; ksize[1] &#34920;&#31034;x&#26041;&#21521;&#30340;&#22823;&#23567;, ksize[2]&#34920;&#31034;y&#26041;&#21521;&#30340;&#22823;&#23567;</span>
+
+<span class="org-doc">    strides [1, x, y, 1]</span>
+<span class="org-doc">    `strides[0]=strides[3]=1` strides[1] &#20195;&#34920;x&#26041;&#21521;&#30340;&#27493;&#38271;, strides[2]&#20195;&#34920;y&#26041;&#21521;&#30340;&#27493;&#38271;</span>
+<span class="org-doc">    """</span>
+    <span class="org-keyword">return</span> tf.nn.max_pool(x, ksize=[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">1</span>], strides=[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">1</span>], padding=<span class="org-string">'SAME'</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21367;&#31215;&#26680;&#19982;&#27744;&#21270;&#30697;&#38453;&#30340;&#31227;&#21160;&#37117;&#26159;&#36890;&#36807;&#35774;&#32622; strides &#26469;&#25351;&#23450;&#30340;,&#19988;&#26684;&#24335;&#22266;&#23450; [1, x, y, 1]</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19981;&#21516;&#30340;&#26159;&#20004;&#32773;&#22823;&#23567;&#30340;&#35774;&#23450;, &#21367;&#31215;&#26680;&#36890;&#36807; filter &#26469;&#35774;&#32622;[filter_height, filter_width, in_channels, out_channels]</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#27744;&#21270;&#30697;&#38453;&#22823;&#23567;&#36890;&#36807; ksize &#26469;&#35774;&#32622;[1, x, y, 1]</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#20004;&#20010;placeholder</span>
+<span class="org-variable-name">x</span>=tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">784</span>])
+<span class="org-variable-name">y</span>=tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">10</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25913;&#21464;x&#30340;&#26684;&#24335;&#20026;4D&#21521;&#37327;[batch, in_height, in_width, in_channels]</span>
+<span class="org-variable-name">x_image</span> = tf.reshape(x, [-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">28</span>, <span class="org-highlight-numbers-number">28</span>, <span class="org-highlight-numbers-number">1</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#31532;&#19968;&#20010;&#21367;&#22522;&#23618;&#30340;&#26435;&#20540;&#21644;&#20559;&#32622;</span>
+<span class="org-variable-name">W_conv1</span> = weight_variable([<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">32</span>]) <span class="org-comment-delimiter">#</span><span class="org-comment">5*5&#30340;&#37319;&#26679;&#31383;&#21475;, 32&#20010;&#21367;&#31215;&#26680;&#20174;1&#20010;&#24179;&#38754;&#25277;&#21462;&#29305;&#24449;</span>
+<span class="org-variable-name">b_conv1</span> = bias_variable([<span class="org-highlight-numbers-number">32</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">&#27599;&#19968;&#20010;&#21367;&#31215;&#26680;&#19968;&#20010;&#20559;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25226;x_image&#21644;&#26435;&#20540;&#21521;&#37327;&#36827;&#34892;&#21367;&#31215;, &#20877;&#21152;&#19978;&#20559;&#32622;&#20540;, &#28982;&#21518;&#24212;&#29992;&#20110; relu &#28608;&#27963;&#20989;&#25968;</span>
+<span class="org-variable-name">h_conv1</span> = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+<span class="org-variable-name">h_pool1</span>= max_pool_2x2(h_conv1) <span class="org-comment-delimiter">#</span><span class="org-comment">&#36827;&#34892;max-pooling</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#31532;&#20108;&#20010;&#21367;&#22522;&#23618;&#30340;&#26435;&#20540;&#21644;&#20559;&#32622;</span>
+<span class="org-variable-name">W_conv2</span> = weight_variable([<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">32</span>,<span class="org-highlight-numbers-number">64</span>]) <span class="org-comment-delimiter">#</span><span class="org-comment">5*5&#30340;&#37319;&#26679;&#31383;&#21475;, 64&#20010;&#21367;&#31215;&#26680;&#20174;32&#20010;&#24179;&#38754;&#25277;&#21462;&#29305;&#24449;</span>
+<span class="org-variable-name">b_conv2</span> = bias_variable([<span class="org-highlight-numbers-number">64</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">&#27599;&#19968;&#20010;&#21367;&#31215;&#26680;&#19968;&#20010;&#20559;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25226;h_pool1&#21644;&#26435;&#20540;&#21521;&#37327;&#36827;&#34892;&#21367;&#31215;, &#20877;&#21152;&#19978;&#20559;&#32622;&#20540;, &#28982;&#21518;&#24212;&#29992;&#20110; relu &#28608;&#27963;&#20989;&#25968;</span>
+<span class="org-variable-name">h_conv2</span> = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+<span class="org-variable-name">h_pool2</span>= max_pool_2x2(h_conv2) <span class="org-comment-delimiter">#</span><span class="org-comment">&#36827;&#34892;max-pooling</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">28*28&#30340;&#22270;&#29255;&#31532;&#19968;&#27425;&#21367;&#31215;&#21518;&#36824;&#26159;28*28, &#31532;&#19968;&#27425;&#27744;&#21270;&#20043;&#21518;&#21464;&#20026;14*14</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#31532;&#20108;&#27425;&#21367;&#31215;&#21518;&#20026;14*14, &#31532;&#20108;&#27425;&#27744;&#21270;&#21518;&#21464;&#20026;7*7</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32463;&#36807;&#19978;&#38754;&#25805;&#20316;&#21518;&#24471;&#21040; 64 &#24352; 7*7 &#30340; feature map</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#31532;&#19968;&#20010;&#20840;&#36830;&#25509;&#23618;&#30340;&#26435;&#20540;</span>
+<span class="org-variable-name">W_fc1</span> = weight_variable([<span class="org-highlight-numbers-number">7</span>*<span class="org-highlight-numbers-number">7</span>*<span class="org-highlight-numbers-number">64</span>, <span class="org-highlight-numbers-number">1024</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">&#19978;&#19968;&#23618;&#26377; 7*7*64 &#20010;&#31070;&#32463;&#20803;, &#20840;&#36830;&#25509;&#23618;&#26377;2014&#31070;&#32463;&#20803;</span>
+<span class="org-variable-name">b_fc1</span> = bias_variable([<span class="org-highlight-numbers-number">1024</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25226;&#27744;&#21270;&#23618;2&#30340;&#36755;&#20986;&#25153;&#24179;&#21270;&#20026;1&#32500;</span>
+<span class="org-variable-name">h_pool2_flat</span> = tf.reshape(h_pool2, [-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">7</span>*<span class="org-highlight-numbers-number">7</span>*<span class="org-highlight-numbers-number">64</span>])
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#27714;&#31532;&#19968;&#20010;&#20840;&#36830;&#25509;&#23618;&#30340;&#36755;&#20986;</span>
+<span class="org-variable-name">h_fc1</span>= tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">keep_prob &#29992;&#26469;&#34920;&#31034;&#31070;&#32463;&#20803;&#30340; dropout keep &#29575;</span>
+<span class="org-variable-name">keep_prob</span> = tf.placeholder(tf.float32)
+<span class="org-variable-name">h_fc1_drop</span> = tf.nn.dropout(h_fc1, keep_prob)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;&#31532;&#20108;&#20010;&#20840;&#36830;&#25509;&#23618;</span>
+<span class="org-variable-name">W_fc2</span> = weight_variable([<span class="org-highlight-numbers-number">1024</span>, <span class="org-highlight-numbers-number">10</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">&#19978;&#19968;&#23618;&#26377; 7*7*64 &#20010;&#31070;&#32463;&#20803;, &#20840;&#36830;&#25509;&#23618;&#26377;2014&#31070;&#32463;&#20803;</span>
+<span class="org-variable-name">b_fc2</span> = bias_variable([<span class="org-highlight-numbers-number">10</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#35745;&#31639;&#36755;&#20986;</span>
+<span class="org-variable-name">prediction</span> = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20132;&#21449;&#29109;&#20195;&#20215;&#20989;&#25968;</span>
+<span class="org-variable-name">cross_entropy</span> = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=prediction))
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20351;&#29992; AdamOptimizer &#20248;&#21270;</span>
+<span class="org-variable-name">train_step</span> = tf.train.AdamOptimizer(<span class="org-highlight-numbers-number">1e</span>-<span class="org-highlight-numbers-number">4</span>).minimize(cross_entropy)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32467;&#26524;&#23384;&#25918;&#22312;&#19968;&#20010;bool list &#20013;</span>
+<span class="org-variable-name">correct_prediction</span> = tf.equal(tf.argmax(prediction, <span class="org-highlight-numbers-number">1</span>), tf.argmax(y, <span class="org-highlight-numbers-number">1</span>))
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#27714;&#20934;&#30830;&#29575;</span>
+<span class="org-variable-name">accuracy</span> = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#22270;&#35745;&#31639;</span>
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    sess.run(tf.global_variables_initializer())
+    <span class="org-keyword">for</span> epoch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">21</span>):
+        <span class="org-keyword">for</span> batch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n_batch):
+            <span class="org-variable-name">batch_xs</span>, <span class="org-variable-name">batch_ys</span> = mnist.train.next_batch(batch_size)
+            sess.run(train_step, feed_dict={x:batch_xs, y:batch_ys, keep_prob:<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span>})
+
+        <span class="org-variable-name">acc</span> = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels, keep_prob:<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>})
+        <span class="org-keyword">print</span>(<span class="org-string">"Iter "</span> + <span class="org-builtin">str</span>(epoch) + <span class="org-string">", Testing Accuracy= "</span> + <span class="org-builtin">str</span>(acc))
+</pre>
+</div>
+
+<p>
+0 - c77968f5-e34e-486e-b388-69e1e8d4cca8
+</p>
+
+<p>
+这里可通过 FileWriter 写入两次文件, 分别写入 train_accu 的 summary 和 test_accu
+的 summary, 这样在 tensorboard 中就可以同时看到两条 accuracy 变化曲线.通过这种方式, 可以很方便的判断模型是否存在 overfitting 的情况.
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

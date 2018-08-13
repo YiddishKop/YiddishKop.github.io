@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记11:文本分类与垃圾邮件检测</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记11:文本分类与垃圾邮件检测</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org93f1c11">1. Case Study - Text classification for SMS spam detection</a>
+<ul>
+<li><a href="#orgd734dcc">1.1. Training a Classifier on Text Features</a></li>
+<li><a href="#org335a0c1">1.2. Visualizing important features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org93f1c11" class="outline-2">
+<h2 id="org93f1c11"><span class="section-number-2">1</span> Case Study - Text classification for SMS spam detection</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+</pre>
+</div>
+
+<p>
+We first load the text data from the dataset directory that should be located in
+your notebooks directory, which we created by running the <code>fetch_data.py</code> script
+from the top level of the GitHub repository.
+</p>
+
+<p>
+Furthermore, we perform some simple preprocessing and split the data array into
+two parts:
+</p>
+
+<ol class="org-ol">
+<li>text: A list of lists, where each sublists contains the contents of our
+emails</li>
+<li><p>
+y: our SPAM vs HAM labels stored in binary;
+</p>
+<ul class="org-ul">
+<li>a <code>1</code> represents a spam message,</li>
+<li>a <code>0</code> represnts a ham (non-spam) message.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-keyword">with</span> <span class="org-builtin">open</span>(os.path.join(<span class="org-string">"datasets"</span>, <span class="org-string">"smsspam"</span>, <span class="org-string">"SMSSpamCollection"</span>)) <span class="org-keyword">as</span> f:
+    <span class="org-variable-name">lines</span> = [line.strip().split(<span class="org-string">"\t"</span>) <span class="org-keyword">for</span> line <span class="org-keyword">in</span> f.readlines()]
+<span class="org-variable-name">text</span> = [x[<span class="org-highlight-numbers-number">1</span>] <span class="org-keyword">for</span> x <span class="org-keyword">in</span> lines]
+<span class="org-variable-name">y</span> = [<span class="org-builtin">int</span>(x[<span class="org-highlight-numbers-number">0</span>] == <span class="org-string">"spam"</span>) <span class="org-keyword">for</span> x <span class="org-keyword">in</span> lines]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">text[:<span class="org-highlight-numbers-number">10</span>]
+</pre>
+</div>
+
+<pre class="example">
+['Go until jurong point, crazy.. Available only in bugis n great world la e buffet... Cine there got amore wat...',
+'Ok lar... Joking wif u oni...',
+"Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&amp;C's apply 08452810075over18's",
+'U dun say so early hor... U c already then say...',
+"Nah I don't think he goes to usf, he lives around here though",
+"FreeMsg Hey there darling it's been 3 week's now and no word back! I'd like some fun you up for it still? Tb ok! XxX std chgs to send, $1.50 to rcv",
+'Even my brother is not like to speak with me. They treat me like aids patent.',
+"As per your request 'Melle Melle (Oru Minnaminunginte Nurungu Vettam)' has been set as your callertune for all Callers. Press *9 to copy your friends Callertune",
+'WINNER!! As a valued network customer you have been selected to receivea $900 prize reward! To claim call 09061701461. Claim code KL341. Valid 12 hours only.',
+'Had your mobile 11 months or more? U R entitled to Update to the latest colour mobiles with camera for Free! Call The Mobile Update Co FREE on 08002986030']
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">y[:<span class="org-highlight-numbers-number">10</span>]
+</pre>
+</div>
+
+<pre class="example">
+[0, 0, 1, 0, 0, 1, 0, 0, 1, 1]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">'Number of ham and spam messages:'</span>, np.bincount(y))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-builtin">type</span>(text)
+</pre>
+</div>
+
+<pre class="example">
+list
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-builtin">type</span>(y)
+</pre>
+</div>
+
+<pre class="example">
+list
+
+</pre></li>
+</ol>
+
+<p>
+Next, we split our dataset into 2 parts, the test and training dataset:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-variable-name">text_train</span>, <span class="org-variable-name">text_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(text, y,
+                                                          random_state=<span class="org-highlight-numbers-number">42</span>,
+                                                          test_size=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>,
+                                                          stratify=y)
+</pre>
+</div>
+
+<p>
+Now, we use the CountVectorizer to parse the text data into a bag-of-words
+model.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-keyword">print</span>(<span class="org-string">'CountVectorizer defaults'</span>)
+CountVectorizer()
+</pre>
+</div>
+
+<pre class="example">
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(1, 1), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">vectorizer</span> = CountVectorizer()
+vectorizer.fit(text_train)
+<span class="org-variable-name">X_train</span> = vectorizer.transform(text_train)
+<span class="org-variable-name">X_test</span> = vectorizer.transform(text_test)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-builtin">len</span>(vectorizer.vocabulary_)
+</pre>
+</div>
+
+<pre class="example">
+7453
+
+</pre>
+
+<p>
+&gt;&gt;&gt; 4180 emails * 7453 vector(of words count)
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">X_train.shape
+</pre>
+</div>
+
+<pre class="example">
+(4180, 7453)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(vectorizer.get_feature_names()[:<span class="org-highlight-numbers-number">20</span>])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(vectorizer.get_feature_names()[<span class="org-highlight-numbers-number">2000</span>:<span class="org-highlight-numbers-number">2020</span>])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(X_train.shape)
+<span class="org-keyword">print</span>(X_test.shape)
+</pre>
+</div>
+</div>
+
+<div id="orgd734dcc" class="outline-3">
+<h3 id="orgd734dcc"><span class="section-number-3">1.1</span> Training a Classifier on Text Features</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+We can now train a classifier, for instance a logistic regression classifier,
+which is a fast baseline for text classification tasks:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> LogisticRegression
+<span class="org-variable-name">clf</span> = LogisticRegression()
+clf
+</pre>
+</div>
+
+<pre class="example">
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,
+penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+verbose=0, warm_start=False)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">clf.fit(X_train, y_train)
+</pre>
+</div>
+
+<pre class="example">
+LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,
+penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+verbose=0, warm_start=False)
+</pre>
+
+<p>
+We can now evaluate the classifier on the testing set. Let's first use the
+built-in score function, which is the rate of correct classification in the test
+set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">clf.score(X_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.98493543758967006
+
+</pre>
+
+<p>
+We can also compute the score on the training set to see how well we do there:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">clf.score(X_train, y_train)
+</pre>
+</div>
+
+<pre class="example">
+0.99832535885167462
+
+</pre>
+</div>
+</div>
+
+<div id="org335a0c1" class="outline-3">
+<h3 id="org335a0c1"><span class="section-number-3">1.2</span> Visualizing important features</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">def</span> <span class="org-function-name">visualize_coefficients</span>(classifier, feature_names, n_top_features=<span class="org-highlight-numbers-number">25</span>):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">get coefficients with large absolute values</span>
+    <span class="org-variable-name">coef</span> = classifier.coef_.ravel()
+    <span class="org-variable-name">positive_coefficients</span> = np.argsort(coef)[-n_top_features:]
+    <span class="org-variable-name">negative_coefficients</span> = np.argsort(coef)[:n_top_features]
+    <span class="org-variable-name">interesting_coefficients</span> = np.hstack([negative_coefficients, positive_coefficients])
+    <span class="org-comment-delimiter"># </span><span class="org-comment">plot them</span>
+    plt.figure(figsize=(<span class="org-highlight-numbers-number">15</span>, <span class="org-highlight-numbers-number">5</span>))
+    <span class="org-variable-name">colors</span> = [<span class="org-string">"red"</span> <span class="org-keyword">if</span> c &lt; <span class="org-highlight-numbers-number">0</span> <span class="org-keyword">else</span> <span class="org-string">"blue"</span> <span class="org-keyword">for</span> c <span class="org-keyword">in</span> coef[interesting_coefficients]]
+    plt.bar(np.arange(<span class="org-highlight-numbers-number">2</span> * n_top_features), coef[interesting_coefficients], color=colors)
+    <span class="org-variable-name">feature_names</span> = np.array(feature_names)
+    plt.xticks(np.arange(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span> * n_top_features + <span class="org-highlight-numbers-number">1</span>), feature_names[interesting_coefficients], rotation=<span class="org-highlight-numbers-number">60</span>, ha=<span class="org-string">"right"</span>);
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">visualize_coefficients(clf, vectorizer.get_feature_names())
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041qHv.png" alt="25041qHv.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">vectorizer</span> = CountVectorizer(min_df=<span class="org-highlight-numbers-number">2</span>)
+vectorizer.fit(text_train)
+<span class="org-variable-name">X_train</span> = vectorizer.transform(text_train)
+<span class="org-variable-name">X_test</span> = vectorizer.transform(text_test)
+<span class="org-variable-name">clf</span> = LogisticRegression()
+clf.fit(X_train, y_train)
+<span class="org-keyword">print</span>(clf.score(X_train, y_train))
+<span class="org-keyword">print</span>(clf.score(X_test, y_test))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-builtin">len</span>(vectorizer.get_feature_names())
+</pre>
+</div>
+
+<pre class="example">
+3439
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(vectorizer.get_feature_names()[:<span class="org-highlight-numbers-number">20</span>])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">visualize_coefficients(clf, vectorizer.get_feature_names())
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/250413R1.png" alt="250413R1.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="figures/supervised_scikit_learn.png" alt="supervised_scikit_learn.png" />
+</p>
+</div>
+
+<p>
+EXERCISE: Use TfidfVectorizer instead of CountVectorizer. Are the results
+better? How are the coefficients different? Change the parameters min_df and
+ngram_range of the TfidfVectorizer and CountVectorizer. How does that change the
+important features?
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

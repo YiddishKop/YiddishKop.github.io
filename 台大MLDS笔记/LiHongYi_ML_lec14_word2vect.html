@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-14 WordEmbedding</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-14 WordEmbedding</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd8c9856">1. lec-14: WordEmbedding</a></li>
+</ul>
+</div>
+</div>
+<div id="orgd8c9856" class="outline-2">
+<h2 id="orgd8c9856"><span class="section-number-2">1</span> lec-14: WordEmbedding</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf</a>
+</p>
+
+<p>
+这里是不能使用 auto-encoder 的
+</p>
+
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:5</a>
+</p>
+
+<p>
+机器可以根据菜英文和马英九都具有类似的语义结构，来推断出马英九和菜英文大概是类似的 ===&gt; 通过 context 来推断两个单词的 similarity
+</p>
+
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:6</a>
+</p>
+
+<p>
+有两种思想可以挖掘这种 context：
+</p>
+<pre class="example">
+
+</pre>
+<ol class="org-ol">
+<li><p>
+count based
+两个单词常常一起出现 co-occur ，那么就认为他们具有较高的相似性
+Glove Vector:
+<a href="http://nlp.stanford.edu/projects/glove/">http://nlp.stanford.edu/projects/glove/</a>
+</p>
+
+<p>
+还是通过 inner-product 来计算 similarity：希望 内积与出现次数 越接近越好
+</p></li>
+
+<li><p>
+prediction based(重点探讨)
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:7</a>
+</p>
+
+<p>
+given 前一个word，这里每一个w代表一个word。 predict which is next word.
+</p>
+
+<p>
+input: 是某个单词的 one-hot encoding; outpu: 是所有单词是 next word 的概率
+</p>
+
+<p>
+把 input layer 的下一层作为 word vector，为什么这么做呢？因为不同单词的 one-hot encoding 会产生不同的 next-layer neurons
+-&gt; z向量， 如果你把z向量的每一维都看作一个坐标轴，就可以画出某个单词在z这个坐标系统中的向量坐标，所有单词都可以画在里面，就可以看出谁离的更近。
+</p>
+
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:8</a>
+</p>
+
+<p>
+why prediction based method work
+</p>
+
+<p>
+他是如何 exploit context 的？菜英文 宣誓就职
+ wi-1  wi
+马英九 宣誓就职
+ wi-1  wi
+所以我们希望，当 input-layer 时，不管是菜英文or马英九最后 ouputlayer
+都是 ‘宣誓就职’ 的概率最高。那么在之前的 hidden layer 就肯定会有所体现: 每一层转换都是在拉近两个向量的距离，因此通过第一层就应该表现出这种趋势。
+</p>
+
+<p>
+但是这依然很难通过一个词汇就预测出下一个词汇，输入的信息不足以产生这种判断
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:9</a>
+</p>
+
+<p>
+基本的思想就是：1个单词不够，就2～n个单词，一般是需要10个单词。才能够
+learn 出比较合理的模型。
+</p>
+
+<p>
+如何一次输入10个单词呢？一般是进行·「向量叠加」，把10个向量按照层层叠起来就可以了。但是我们使用 one-hot encoding ，如果词典中单词量是1w
+那么10个单词的 one-hot encoding 叠加在一起的向量维度就是10w。
+</p>
+
+<p>
+我们希望在叠加起来的每一个 word 的 One-hot encoding 之间共享weight
+</p>
+
+<p>
+为什么要这么做呢？同一个word，因为在10个word序列的位置不同，如果不 share weight
+那么最后同一个word就会得到不同的映射z。
+</p>
+
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:10</a>
+</p>
+
+<p>
+基本的公式推导：
+</p>
+<ol class="org-ol">
+<li>word i-1 -&gt; xi-1; word i-2 -&gt; xi-2; combine to project to z</li>
+<li>z = W1xi-2 + W2xi-1</li>
+<li>W1 W2 both |Z|×|V| matrix</li>
+<li>make W1 = W2 = W  &#x2013;&gt; z = W(xi-2 + xi-1)</li>
+</ol>
+
+<p>
+这种 share weight 的做法在 CNN 中也出现过，该怎么做呢？
+How to make wi equal to wj?
+</p>
+<ol class="org-ol">
+<li>give the same initialization</li>
+<li>update wi : wi = wi - ita*(partial(wi)+partial(wj)</li>
+<li>update wj : wj = wj - ita*(partial(wi)+partial(wj)</li>
+</ol>
+<p>
+这样 初始值一样 更新步进一样 所以两者会一直保持相等。
+</p></li>
+</ol>
+
+
+<p>
+如何训练这个 NN 呢？完全 unsupervised, 写个脚本上网去爬就好了，unsupervised最好的地方就在于不需要给出 label，这省去了很多的麻烦。
+</p>
+
+<p>
+那我最后的结果跟谁比较呢，跟下一个单词比较爬下的文本：潮水退了就知道谁没穿裤子我们选择 2-gram（就是用前两个单词预测下一个单词）
+</p>
+
+<p>
+input 2-gram: enconding(潮水 + 退了)
+expected output: encoding(就)
+learning output: xx
+</p>
+
+<p>
+minimizing cross-entropy(learning - expected)
+</p>
+
+<p>
+input 2-gram: enconding(退了+就)
+expected output: encoding(知道)
+learning output: xx
+</p>
+
+<p>
+input 2-gram: enconding(就+知道)
+expected output: encoding(谁)
+learning output: xx
+</p>
+
+<p>
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:13</a>
+</p>
+
+<p>
+刚才讲的都是 prediction-based 的 base model, 还有很多 various architectures
+</p>
+
+<ol class="org-ol">
+<li>变形1：用 wi-1 + wi+1 &#x2013;predict&#x2013;&gt; wi</li>
+<li>变形2：用 wi &#x2013;predict&#x2013;&gt; wi-1 + wi+1</li>
+</ol>
+
+<p>
+word embedding 有很多好的特性
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:14</a>
+</p>
+
+<ol class="org-ol">
+<li>同一个动词的三个时态，国家跟首都，把他们放在一起，是有某种固定的形态的。</li>
+<li>某种「·属种」关系映射到的地方彼此靠近。</li>
+<li>可以做某些推理题目。（利用向量相近的方法）。</li>
+<li>可以做类似翻译的效果。</li>
+<li>图片分类，word embedding 可以很好的处理新增的他没有看过的类型的图片比如原来的种类只有 auto, horse, dog, 传统的图片分类很难处理新来的猫但是 word embedding 可以做的非常好, 一个新的类型的图片进来就正常做
+project，他确实就会出现在猫的周围</li>
+</ol>
+
+
+<p>
+刚才讲的都是 word embedding,那怎么做 document embedding?
+<a href="/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML_LiHongYi/course-lec-note/lec14-word2vec%20(v3).pdf">/media/yiddi/9C6C7BA46C7B783A/YIDDISHKOP/ML/TaiDa-ML<sub>LiHongYi</sub>/course-lec-note/lec14-word2vec (v3).pdf:20</a>
+</p>
+
+<ol class="org-ol">
+<li>document -&gt; Bag of word -&gt; NN(auto-encoder) Sementic Ebedding</li>
+<li>只有 bag of word 是完全不够的，因为没考虑单词的顺序对于语义的影响</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

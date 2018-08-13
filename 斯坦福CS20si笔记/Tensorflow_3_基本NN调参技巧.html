@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow 基本调参技巧</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow 基本调参技巧</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6588db8">1. Tensorflow_3</a></li>
+<li><a href="#org18cec0d">2. Dropout</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="org6588db8" class="outline-2">
+<h2 id="org6588db8"><span class="section-number-2">1</span> Tensorflow_3</h2>
+<div class="outline-text-2" id="text-1">
+<ol class="org-ol">
+<li>loss fn 的选择交叉熵适合 s 型激(sigmoid, tanh)活函数; 方差适合线性激活函数</li>
+<li>dropout 对治过拟合: 训练速度加快,但收敛速度放慢,对治过拟合, 你可以设置
+keep_probability of each layer</li>
+<li>epoch_number 会影响训练效果, 你可能要多试几种 epoch 值来最终决定自己的
+epoch.你应该观察 acc_test 和 acc_train, 当他们数值不怎么变化时, 也就意味着他们收敛了,这个时候的batch_number最合适</li>
+<li>优化器: 一般在做实验时选择速度较快的优化器(比如Ada系), 真正出论文的时候选用精度最高的</li>
+<li>W 和 b 的初始值: W 一般使用截断(truncated_normal)的标准差为0.1的高斯随机值作为初始值; b 一般使用 0.1 作为初始值</li>
+</ol>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-17-59.png" alt="screenshot_2018-07-28_14-17-59.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-19-45.png" alt="screenshot_2018-07-28_14-19-45.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-20-54.png" alt="screenshot_2018-07-28_14-20-54.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-24-17.png" alt="screenshot_2018-07-28_14-24-17.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-34-02.png" alt="screenshot_2018-07-28_14-34-02.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="Tensorflow_3/screenshot_2018-07-28_14-36-22.png" alt="screenshot_2018-07-28_14-36-22.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org18cec0d" class="outline-2">
+<h2 id="org18cec0d"><span class="section-number-2">2</span> Dropout</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-ipython">&lt;&lt;&#21253;&#23548;&#20837;&gt;&gt;
+
+&lt;&lt;&#25968;&#25454;&#20934;&#22791;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy&#26500;&#36896;(with/without noise)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20174;&#24050;&#26377;&#25968;&#25454;&#38598;&#23548;&#20837;&#20869;&#23384;</span>
+
+&lt;&lt;&#22270;&#21442;&#25968;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25209;&#27425;&#22823;&#23567;, &#25209;&#27425;&#25968;&#37327;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">dropout &#20445;&#30041;&#29575;</span>
+&lt;&lt;&#22270;&#26500;&#36896;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19968;&#27169;,</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#20989;: err fn(&#21333;&#28857;&#38169;&#35823;), loss fn(&#25972;&#20307;&#38169;&#35823;)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#22120;: &#21021;&#22987;&#21270;&#22120;, &#20248;&#21270;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20934;&#30830;&#29575;&#35745;&#31639;</span>
+
+&lt;&lt;&#22270;&#35745;&#31639;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#20004;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#33719;&#24471;&#20934;&#30830;&#29575;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#32472;&#22270;</span>
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="linenr"> 1: </span><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="linenr"> 2: </span><span class="org-keyword">from</span> tensorflow.examples.tutorials.mnist <span class="org-keyword">import</span> input_data
+<span class="linenr"> 3: </span>
+<span class="linenr"> 4: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#36733;&#20837;&#25968;&#25454;</span>
+<span class="linenr"> 5: </span><span class="org-variable-name">mnist</span> = input_data.read_data_sets(<span class="org-string">"MNIST"</span>, one_hot=<span class="org-constant">True</span>)
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span>
+<span class="linenr"> 8: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#27169;&#22411;&#21442;&#25968;</span>
+<span class="linenr"> 9: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35774;&#32622;&#25209;&#27425;&#22823;&#23567;</span>
+<span class="linenr">10: </span><span class="org-variable-name">batch_size</span> = <span class="org-highlight-numbers-number">100</span>
+<span class="linenr">11: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35745;&#31639;&#20849;&#26377;&#22810;&#23569;&#25209;&#27425;</span>
+<span class="linenr">12: </span><span class="org-variable-name">n_batch</span> = mnist.train.num_examples // batch_size
+<span class="linenr">13: </span>
+<span class="linenr">14: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#20004;&#20010; placeholder</span>
+<span class="linenr">15: </span><span class="org-variable-name">x</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">784</span>])
+<span class="linenr">16: </span><span class="org-variable-name">y</span> = tf.placeholder(tf.float32, [<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">10</span>])
+<span class="linenr">17: </span><span class="org-variable-name">keep_prob</span> = tf.placeholder(tf.float32)
+<span class="linenr">18: </span>
+<span class="linenr">19: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#31616;&#21333;&#31070;&#32463;&#32593;&#32476;(&#26080;&#38544;&#34255;&#23618;)</span>
+<span id="coderef-WandB" class="coderef-off"><span class="linenr">20: </span><span class="org-variable-name">W1</span> = tf.Variable(tf.truncated_normal([<span class="org-highlight-numbers-number">784</span>, <span class="org-highlight-numbers-number">2000</span>], stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)) (WandB)</span>
+<span class="linenr">21: </span><span class="org-variable-name">b1</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">2000</span>]) + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="linenr">22: </span><span class="org-variable-name">L1</span> = tf.nn.tanh(tf.matmul(x, W1) + b1)
+<span class="linenr">23: </span><span class="org-variable-name">L1_drop</span> = tf.nn.dropout(L1, keep_prob)
+<span class="linenr">24: </span>
+<span class="linenr">25: </span><span class="org-variable-name">W2</span> = tf.Variable(tf.truncated_normal([<span class="org-highlight-numbers-number">2000</span>, <span class="org-highlight-numbers-number">2000</span>], stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>))
+<span class="linenr">26: </span><span class="org-variable-name">b2</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">2000</span>]) + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="linenr">27: </span><span class="org-variable-name">L2</span> = tf.nn.tanh(tf.matmul(L1_drop, W2) + b2)
+<span class="linenr">28: </span><span class="org-variable-name">L2_drop</span> = tf.nn.dropout(L2, keep_prob)
+<span class="linenr">29: </span>
+<span class="linenr">30: </span><span class="org-variable-name">W3</span> = tf.Variable(tf.truncated_normal([<span class="org-highlight-numbers-number">2000</span>, <span class="org-highlight-numbers-number">1000</span>], stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>))
+<span class="linenr">31: </span><span class="org-variable-name">b3</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">1000</span>]) + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="linenr">32: </span><span class="org-variable-name">L3</span> = tf.nn.tanh(tf.matmul(L2_drop, W3) + b3)
+<span class="linenr">33: </span><span class="org-variable-name">L3_drop</span> = tf.nn.dropout(L3, keep_prob)
+<span class="linenr">34: </span>
+<span class="linenr">35: </span><span class="org-variable-name">W4</span> = tf.Variable(tf.truncated_normal([<span class="org-highlight-numbers-number">1000</span>, <span class="org-highlight-numbers-number">10</span>], stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>))
+<span class="linenr">36: </span><span class="org-variable-name">b4</span> = tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">10</span>])+ <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="linenr">37: </span><span class="org-variable-name">prediction</span> = tf.nn.softmax(tf.matmul(L3_drop, W4) + b4)
+<span class="linenr">38: </span>
+<span class="linenr">39: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#20108;&#20989;,&#20108;&#22120;</span>
+<span class="linenr">40: </span><span class="org-variable-name">init</span> = tf.global_variables_initializer()
+<span class="linenr">41: </span><span class="org-variable-name">optimizer</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+<span class="linenr">42: </span><span class="org-variable-name">loss</span> = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=prediction))
+<span class="linenr">43: </span><span class="org-variable-name">train</span> = optimizer.minimize(loss)
+<span class="linenr">44: </span>
+<span class="linenr">45: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#39044;&#27979;&#23545;&#38169;&#23384;&#22312;&#19968;&#20010;&#21521;&#37327;&#20013;</span>
+<span class="linenr">46: </span><span class="org-variable-name">correct_prediction</span> = tf.equal(tf.argmax(y,<span class="org-highlight-numbers-number">1</span>), tf.argmax(prediction, <span class="org-highlight-numbers-number">1</span>))
+<span class="linenr">47: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#35745;&#31639;&#20934;&#30830;&#29575;</span>
+<span class="linenr">48: </span><span class="org-variable-name">accuracy</span> = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+<span class="linenr">49: </span>
+<span class="linenr">50: </span>
+<span class="linenr">51: </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#22270;&#35745;&#31639;</span>
+<span class="linenr">52: </span><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+<span class="linenr">53: </span>    sess.run(init)
+<span class="linenr">54: </span>    <span class="org-comment-delimiter"># </span><span class="org-comment">&#37319;&#21462;&#35757;&#32451;&#19968;&#36718;&#23601;&#27979;&#35797;&#19968;&#36718;&#30340;&#26041;&#24335;</span>
+<span class="linenr">55: </span>    <span class="org-keyword">for</span> epoch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">31</span>):
+<span class="linenr">56: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#35757;&#32451;&#27169;&#22411;</span>
+<span class="linenr">57: </span>        <span class="org-variable-name">acc_train</span> = <span class="org-highlight-numbers-number">0</span>
+<span class="linenr">58: </span>        <span class="org-keyword">for</span> batch <span class="org-keyword">in</span> <span class="org-builtin">range</span>(n_batch):
+<span class="linenr">59: </span>            <span class="org-variable-name">batch_xs</span>, <span class="org-variable-name">batch_ys</span> = mnist.train.next_batch(batch_size)
+<span class="linenr">60: </span>            sess.run(train, feed_dict={x:batch_xs, y:batch_ys, keep_prob:<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>})
+<span class="linenr">61: </span>
+<span class="linenr">62: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#27979;&#35797;&#27169;&#22411;</span>
+<span class="linenr">63: </span>        <span class="org-comment-delimiter"># </span><span class="org-comment">&#27979;&#35797;&#38598;&#24517;&#39035;&#20351;&#29992;&#24050;&#32463;&#35757;&#32451;&#23436;&#27605;&#30340;&#27169;&#22411;</span>
+<span class="linenr">64: </span>        <span class="org-variable-name">acc_test</span> = sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels, keep_prob:<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>})
+<span class="linenr">65: </span>        <span class="org-variable-name">acc_train</span> = sess.run(accuracy, feed_dict={x:mnist.train.images, y:mnist.train.labels, keep_prob:<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>})
+<span class="linenr">66: </span>        <span class="org-keyword">print</span>(<span class="org-string">"Iter "</span> + <span class="org-builtin">str</span>(epoch) + <span class="org-string">" ,Train:"</span> + <span class="org-builtin">str</span>(acc_train) + <span class="org-string">" ,Test:"</span> + <span class="org-builtin">str</span>(acc_test))
+</pre>
+</div>
+
+<p>
+0 - 389d4752-a44f-49d9-a250-494187b67e51
+</p>
+
+<p>
+<a href="#coderef-WandB" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-WandB');" onmouseout="CodeHighlightOff(this, 'coderef-WandB');">一般对W初始化为截断的标准差为0.1的高斯随机值, 一般对b初始化为0.1</a>
+</p>
+
+
+<pre class="example">
+                     某一层神经元的输出
+                        --
+L1_drop = tf.nn.dropout(L1, keep_prob)
+                            ---------
+                            保留多少百分比神经元
+</pre>
+
+<blockquote>
+<p>
+一般而言你想要手动指定的值, 或是从其他地方获取的值, 都设置为 placeholder, 比如
+keep_prob, dataset, labels; 而你希望及其取学习的参数, 则设置为 Variable, 比如 W
+和 b. 一般 dropout 的 keep_prob 也设置为 placeholder 交由我们自己指定.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">p</span> = np.polynomial.Polynomial([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>])
+p
+</pre>
+</div>
+
+<p>
+0 - a66c0a82-bedf-48c4-acdc-2d6b93640de2
+</p>
+</div>
+</div>
+</div>
+</body>
+</html>

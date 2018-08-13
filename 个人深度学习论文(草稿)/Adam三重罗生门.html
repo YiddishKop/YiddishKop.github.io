@@ -1,0 +1,1468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 15:05 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adam的三重罗生门</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Adam的三重罗生门</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgc64c496">1. 前言:</a></li>
+<li><a href="#orgf15c8cc">2. Adam 简介</a>
+<ul>
+<li><a href="#org19d95fa">2.1. Adam 算法</a></li>
+<li><a href="#org52affc9">2.2. Adam 参数的意义</a></li>
+<li><a href="#org418522d">2.3. 相关资料搜集</a></li>
+</ul>
+</li>
+<li><a href="#orge7d250e">3. 鞍点的讨论</a>
+<ul>
+<li><a href="#org0594f18">3.1. 变数：β1</a></li>
+<li><a href="#org4eae9c9">3.2. 变数：β2</a></li>
+</ul>
+</li>
+<li><a href="#orge070107">4. 变数：ε</a></li>
+<li><a href="#orga310814">5. 数据集和模型</a>
+<ul>
+<li><a href="#orgcfae8c9">5.1. MNIST</a>
+<ul>
+<li><a href="#org35d5090">5.1.1. Dataset</a></li>
+<li><a href="#orge643432">5.1.2. NN 架构</a></li>
+<li><a href="#orgd38e390">5.1.3. model parameter</a></li>
+</ul>
+</li>
+<li><a href="#org016721e">5.2. Cifar-10</a>
+<ul>
+<li><a href="#orgfbd36e1">5.2.1. Dataset</a></li>
+<li><a href="#org52c9c83">5.2.2. NN 架构</a></li>
+<li><a href="#org6999374">5.2.3. model parameter</a></li>
+</ul>
+</li>
+<li><a href="#org6237c16">5.3. 回归</a>
+<ul>
+<li><a href="#org1c5168e">5.3.1. Dataset</a></li>
+<li><a href="#org048c5d5">5.3.2. 型号架构</a></li>
+<li><a href="#org2715a58">5.3.3. model parameter</a></li>
+</ul>
+</li>
+<li><a href="#orgf637574">5.4. DCGAN</a>
+<ul>
+<li><a href="#orge4e3b61">5.4.1. Dataset</a></li>
+<li><a href="#org57c7373">5.4.2. Model架构</a></li>
+<li><a href="#orga566e93">5.4.3. model parameter</a></li>
+</ul>
+</li>
+<li><a href="#orgdeeaf24">5.5. Wasserstein GAN</a>
+<ul>
+<li><a href="#orgcf5d1f2">5.5.1. Dataset</a></li>
+<li><a href="#org4023fda">5.5.2. Model架构</a></li>
+<li><a href="#orgabe8485">5.5.3. model parameter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd712e0a">6. 贡献和创新性</a></li>
+<li><a href="#org63931b5">7. 结论</a></li>
+<li><a href="#org7cbb977">8. 可以改进的地方</a></li>
+<li><a href="#orge2f34bf">9. 参考文献</a></li>
+</ul>
+</div>
+</div>
+
+<div id="orgc64c496" class="outline-2">
+<h2 id="orgc64c496"><span class="section-number-2">1</span> 前言:</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>Adam optimizer</code> 在 deep learning 中普遍可以得到很好的收敛结果，通常也是默认使用的 optimizer (之前的这篇文章仔细分析过 Adam 与其他 optimizer 在不同模型中的效果,
+可以参考)。Adam 原始论文<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>和一般的深度学习库中，Adam的三个参数： <code>β1</code> 、
+<code>β2</code> 、 <code>ε</code> 的默认值为 <code>0.9</code> 、 <code>0.999</code> 、 <code>10^-8</code> 。然而，我有几个疑问:
+</p>
+<ol class="org-ol">
+<li>这三个数字是不是就那么 <b>神奇</b>, 能让 Adam 弱水三千只取这一瓢饮;</li>
+<li>如果不是那为什么 <a href="https://github.com/tensorflow/tensorflow/blob/f1e596e7cbe7ef0d8cc559f1d12ceb19da27b49a/tensorflow/python/training/adam.py#L40">Tensorflow</a>/<a href="https://github.com/keras-team/keras/blob/672a873ffb344dfa030103cad69bdbc948184e8e/keras/optimizers.py#L453">Keras</a>/<a href="https://github.com/pytorch/pytorch/blob/64a60030a619ab656666be49aa332a96d8094845/torch/optim/adam.py#L30">Pytroch</a> 三大平台都以此作为默认值;</li>
+<li>如果改变其中某个参数值对收敛效果有什么影响。</li>
+</ol>
+
+<p>
+[注1]: 本文主要使用 DCGAN 和 WGAN 来尝试各种 <code>β1</code> 、 <code>β2</code> 、 <code>ε</code> 组合;
+</p>
+
+<p>
+[注2]: 在<a href="https://www.tensorflow.org/api_docs/python/tf/train/AdamOptimizer">Tensorflow官方文档</a>中, 有关于 ε 的简短说明, 之前没有注意, 这里补充
+</p>
+<blockquote>
+<p>
+The default value of 1e-8 for epsilon might not be a good default in general.
+For example, when training an Inception network on ImageNet a current good
+choice is 1.0 or 0.1
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orgf15c8cc" class="outline-2">
+<h2 id="orgf15c8cc"><span class="section-number-2">2</span> Adam 简介</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org19d95fa" class="outline-3">
+<h3 id="org19d95fa"><span class="section-number-3">2.1</span> Adam 算法</h3>
+<div class="outline-text-3" id="text-2-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-left">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">α</td>
+<td class="org-left">learning rate</td>
+</tr>
+
+<tr>
+<td class="org-left">β1</td>
+<td class="org-left">the exponential decay rate for the 1st moment estimates</td>
+</tr>
+
+<tr>
+<td class="org-left">β2</td>
+<td class="org-left">the exponential decay rate for the 2nd moment estimates</td>
+</tr>
+
+<tr>
+<td class="org-left">ε</td>
+<td class="org-left">a small value for numerical stability</td>
+</tr>
+
+<tr>
+<td class="org-left">f(θ)</td>
+<td class="org-left">objective function</td>
+</tr>
+</tbody>
+</table>
+
+
+\begin{array}
+\text{begin:} \\
+\hspace{10mm}m_{0} \leftarrow 0  \\
+\hspace{10mm}v_{0} \leftarrow 0 \\
+\hspace{10mm}t \leftarrow 0 \\
+\hspace{10mm}while \ \ \theta_t \ \  do \ \  not \ \  converge:\\
+\hspace{10mm}\hspace{10mm}t \leftarrow t + 1\\
+\hspace{10mm}\hspace{10mm}g_t \leftarrow \nabla_{\theta}f_t(\theta_{t-1}) \cdot{g_t}\\
+\hspace{10mm}\hspace{10mm}m_t \leftarrow \beta_1\cdot{m_{t-1}+(1-\beta_1)\cdot{g_t}} \\
+\hspace{10mm}\hspace{10mm}v_t \leftarrow \beta_2\cdot{v_{t-1}+(1-\beta_2)\cdot{g^2_t}}\\
+\hspace{10mm}\hspace{10mm}\hat{m_t} \leftarrow m_t/(1-\beta^t_1)\\
+\hspace{10mm}\hspace{10mm}\hat{v_t} \leftarrow v_t/(1-\beta^t_2)\\
+\hspace{10mm}\hspace{10mm}\hat{\theta_t} \leftarrow \theta_{t-1} - \alpha\cdot\hat{m_t}/(\sqrt{\hat{v_t}}+\epsilon)\\
+\text{end} \\
+\end{array}
+</div>
+</div>
+
+
+<div id="org52affc9" class="outline-3">
+<h3 id="org52affc9"><span class="section-number-3">2.2</span> Adam 参数的意义</h3>
+<div class="outline-text-3" id="text-2-2">
+<ol class="org-ol">
+<li><p>
+\(m_t,\beta_1\) :
+</p>
+
+<p>
+\(m_t\) 代表的是从第 0 个 time step 累积到第 t 个 time step 的动量，动量使每次更新时能够保留之前更新的方向；
+</p>
+
+<p>
+第t个time step的动量是由 \(m_{t-1}\cdot{\beta_1}\) 及 \((1-\beta_1)\cdot{g_t}\) 相加得到，所以 \(\beta_1\) 代表着 <b>你是更相信前次的动量, 还是更相信本次的梯度</b> 。因为保留了之前更新的方向，除了在更新时较稳定，更可以使参数卡在局部最小值时仍可以脱离出来。
+</p>
+
+<p>
+举例来说，当梯度 \(g=0\) 时，一般的SGD并不会更新参数 \(\theta\) ；而在Adam中，当
+\(g=0\) 时, \(m_t=m_{ t-1 }\) , 亦即 \(m_t\neq0\) ，\(\theta\) 还是会更新，并有机会逃离局部最小值。
+</p></li>
+
+<li><p>
+\(v_t,\beta_2\) :
+</p>
+
+<p>
+在Adam中，\(v_t\) 、 \(\beta_2\) 在演算法中的意义与 RMSProp 相同。\(v_t\) 的目的是随梯度g去调整 learning rate 的大小；\(\beta_2\) 则保留前一个时刻 learning rate 的比例。由于训练前期及后期的梯度值相差甚大，借由 \(v_t\) 和 \(\beta_2\) 调整 learning rate
+即可得到更好的收敛效果。
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="org418522d" class="outline-3">
+<h3 id="org418522d"><span class="section-number-3">2.3</span> 相关资料搜集</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>MNIST：Adam 的原始论文中提及，他们采用的默认参数可以在这个资料集得到最佳结果， 不过我仍会对这个十分经典的 toy example 中做验证。</li>
+
+<li>Cifar-10：由于在<a href="https://www.tensorflow.org/api_docs/python/tf/train/AdamOptimizer">Tensorflow的官方文档</a> 在ImageNet表现最好的时候是ε = 1或0.1，我想在比较简单的图形辨识 Cifar-10 尝试 Google Net的最佳参数能否也得到最好的结果。</li>
+
+<li>Kaggle，美国房价dataset：不同于前两个图形分类问题，我测试在 regression 的
+task 中，Adam 的默认参数的收敛效果。</li>
+
+<li>Conditional DCGAN：在 DCGAN 的众多网上源码中<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup><sup>, </sup><sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>，我发现大部分Adam中的β1设为
+0.5， 我想比较与默认值β1 = 0.9的差异。</li>
+
+<li><p>
+Wasserstein GAN：WGAN 的原始论文中<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>提及，若是使用Adam 作为optimizer，结果会很差、不稳定，因此我重新验证使用Adam Optimizer 以及 RMSprop 的结果差异。
+</p>
+<blockquote>
+<p>
+Finally, as a negative result, we report that WGAN training becomes unstable
+at times when one uses a momentum based optimizer such as Adam (with β1
+&gt; 0) on the critic, or when one uses high learning rates. &#x2026;&#x2026; We therefore
+switched to RMSProp which is known to perform well even on very
+nonstationary problems.
+</p>
+</blockquote></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="orge7d250e" class="outline-2">
+<h2 id="orge7d250e"><span class="section-number-2">3</span> 鞍点的讨论</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Ian Goodfellow 曾经在2015 的 Montreal Summer school<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup> 提到：neural networks 的loss
+function 中有许多鞍点，鞍点的影响大过局部最小值，因此可以先观察不同参数的 Adam
+在鞍点上收敛轨迹的特性，可以把得到的结果应用在之后的测试中。 先设计一个简单的对称鞍点，假设 model 中只有两个参数：w1, w2，定义loss function 的方程式为(平移至鞍点中心点为(1, 1) 是为了方便观察)：
+</p>
+
+<p>
+\(loss(w1，w2)=(w1-1)^2-(w2-1)^2\)
+</p>
+
+<p>
+每一次参数的起始点都固定为(w1, w2) = (-3, 0.8)，此时loss = 15.96
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-17-49.png" alt="screenshot_2018-08-10_06-17-49.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>鞍点图及 Adam 收敛轨迹</p>
+</div>
+
+
+<p>
+以下的图中，所有的黑线轨迹都代表Adam 默认参数的收敛轨迹；所有参数的收敛过程都经过600 个epochs，每10个 epochs 输出一次w1、w2 的坐标和对应的loss 值，因此每张图的轨迹都有 60 个点；并且，每一条轨迹的learning rate 都固定为0.005。
+</p>
+</div>
+
+<div id="org0594f18" class="outline-3">
+<h3 id="org0594f18"><span class="section-number-3">3.1</span> 变数：β1</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+注：β1 默认值= 0.9
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-20-12.png" alt="screenshot_2018-08-10_06-20-12.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>图2 显示 β1 分别= 0.9(黑)、0.1(蓝)、0.5(绿)、0.999(红)的收敛轨迹</p>
+</div>
+
+<p>
+可以发现除了红线以外，其他三者的轨迹都非常接近，(纵使三者的参数差距颇大)，尤其蓝、绿色的收敛轨迹几乎贴合在一起，因此，图3 聚焦在三者后期的轨迹，以利观察。
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-24-26.png" alt="screenshot_2018-08-10_06-24-26.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>放大 β1 后期的收敛轨迹</p>
+</div>
+
+<p>
+当β1 = 0.999时(较默认值大)，收敛轨迹比较难转向，因此收敛情况是这四者之中最糟糕的。推测可能是因为动量较大，导致曲面斜率方向改变时，来不及即时转向；亦即m t 几乎来自于m t-1，较少参考当前的梯度g，由于前期的梯度g较大，所以要是到training后期还保留这么大的梯度，很容易爆掉。至少，从这张图知道，一般的deep learning library会选择β1默认值为0.9而不是像β2的默认值为0.999。
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-26-59.png" alt="screenshot_2018-08-10_06-26-59.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>不同 β1 的 epoch-loss 图</p>
+</div>
+
+<p>
+并且，可发现当β1 = 0.1 ~ 0.9，其实收敛方式差异不大，尤其在β1 = 0.1和0.5几乎没有差别。不过，值得注意的是，β1 = 0.1和0.5还是比默认值的收敛情况好一些。
+</p>
+
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-28-41.png" alt="screenshot_2018-08-10_06-28-41.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>不同 β1 分别= 0.9(黑)、1.0(蓝)、0.5(绿)、0.0(红)的收敛轨迹</p>
+</div>
+
+
+<p>
+可以发现图中根本没有蓝线轨迹，因为蓝线在第一次迭代时就变成nan 了，原因在于Adam
+演算法中若β1 = 1 时会导致分母等于零。而其他三条轨迹的收敛情况都很相近，包含β1
+= 0 时的情况，这代表梯度g 跟动量的方向在对称鞍点的情形下几乎一样。
+</p>
+
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-29-57.png" alt="screenshot_2018-08-10_06-29-57.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>不同β1 在极端值的epoch – loss 图</p>
+</div>
+</div>
+</div>
+
+<div id="org4eae9c9" class="outline-3">
+<h3 id="org4eae9c9"><span class="section-number-3">3.2</span> 变数：β2</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+注：β2 默认值= 0.999
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-30-54.png" alt="screenshot_2018-08-10_06-30-54.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>β2 分别= 0.999(黑)、0.9(蓝)、0.0(绿)、1.0(红)的收敛轨迹</p>
+</div>
+
+<p>
+选择这几点的原因在于，当β2 介在0.0 ~ 0.9 之间时，收敛轨迹都很相近(可由此图看出)，因此在这个区间只比较这两个端点(0.0 和0.9)，并再多比较比默认值大的另一个极端值：
+1.0。可发现，蓝、绿线轨迹几乎不太会随loss function 的变化转弯。当 β2 = 0，物理意义上代表的是不会去记忆之前的learning rate ，所以也不会随着梯度g 减小而减小
+learning rate。所以可以知道，β2 至少不能太小，我从后段表7 也有观察到当 β2 很小的时候，结果会变得非常差。
+</p>
+
+<p>
+红线的讨论在图8。
+</p>
+
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-33-23.png" alt="screenshot_2018-08-10_06-33-23.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>放大起点位置</p>
+</div>
+
+<p>
+从图7中看起来红线轨迹消失了，然而放大收敛过程的起点位置(如图8)，可以发现起点有红点，近一步检查w1、w2的座标可发现，在β2 = 1时，w1和w2的座标完全没有改变，仍维持在(-3.0, 0.8)。原因在于，当β2 = 1时会使算法中 \(\hat{V_t}\) 这一项在分子分母都为零，并考虑参数的变化= \(\dfrac{text{const}}{\hat{v_{t}}+\epsilon}\) 为零(才符合此次实验结果)，表示Tensorflow很可能把分子分母都为零的 \(\hat{V_t}\) 定义成无限大了。
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-33-32.png" alt="screenshot_2018-08-10_06-33-32.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>不同 β2 的 epoch–loss 图</p>
+</div>
+
+<p>
+图9 可看出在对称鞍点的情况下，默认值β2 = 0.999 有最好的收敛情形，比0.999 小的
+0.0 到0.9 都有差不多的收敛效果(实际上，若将β2 慢慢从0.999调整到0.9，loss 曲线大致就是有规则的从图中黑线过渡到蓝线)，而比默认值大、大到极端值的β2 = 1.0 ，则完全没有收敛效果。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orge070107" class="outline-2">
+<h2 id="orge070107"><span class="section-number-2">4</span> 变数：ε</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+注：ε默认值= 10 -8
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-33-43.png" alt="screenshot_2018-08-10_06-33-43.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>ε 分别 = 10 -8(黑)、0.1(蓝)、1.0(绿)、0.0(红)的收敛轨迹</p>
+</div>
+
+<p>
+可发现图10也少了黑线轨迹，近一步的讨论留待图11。而红线轨迹ε = 0是收敛过程最佳的，随着ε增大，转弯开始变慢，收敛速度变慢。 和β1、β2相比，调整β1、β2至特定值时，会出现几乎完全不转弯、轨迹是直线的情形，但调整ε = 1时只是延后转弯时机，然而，由于算法中learning rate的分母有 \(\sqrt{\hat{V_t}}+\epsilon\) ，导致ε过大时收敛幅度变小，也因此我没有进一步再比较当ε更大的情况。
+</p>
+
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-33-56.png" alt="screenshot_2018-08-10_06-33-56.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>放大 ε 后期的收敛轨迹</p>
+</div>
+
+<p>
+输出四者的w1、w2座标后可发现黑线轨迹完全跟红线轨迹重合(由于程式先画出黑色点，因此会把红色点画在黑色点之上)，这由于 \(\epsilon=10^{-8}\) 已经几乎趋近于零，可能在这次的迭代过程中， \(\sqrt{V_t}\) 都不曾等于零，因此ε = 0不会造成
+\(\alpha\cdot\hat{m_t}/(\sqrt{\hat{v_t}}+\epsilon)\) 的分母= 0，造成收敛失败。并且
+Tensorflow可能也自动忽略了小数点位数太后面的项，因此看不出两者实际应该要有的些微差异(毕竟，“理论上”很小的数，和零仍是不一样的)。
+</p>
+
+
+<div class="figure">
+<p><img src="鞍点的讨论/screenshot_2018-08-10_06-34-05.png" alt="screenshot_2018-08-10_06-34-05.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>不同 ε 的epoch – loss 图</p>
+</div>
+
+<p>
+黑线同样隐藏在红线之后，由此图可看出，默认值ε = 10 -8 的收敛效果最佳，其次，随着ε增大，收敛效果会越来越不好。值得注意的是，可发现ε从10 -8到0.1的差异，明显小于从0.1过渡到1.0的差异。这点和我先前的实验结果很符合，当ε很小的时候(&lt; 0.1)，调整它时，收敛过程不太会有显著的改变。
+</p>
+</div>
+</div>
+
+<div id="orga310814" class="outline-2">
+<h2 id="orga310814"><span class="section-number-2">5</span> 数据集和模型</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Source code: <a href="https://github.com/YiddishKop/ml_src_adam_compare.git">https://github.com/YiddishKop/ml_src_adam_compare.git</a>
+</p>
+</div>
+
+<div id="orgcfae8c9" class="outline-3">
+<h3 id="orgcfae8c9"><span class="section-number-3">5.1</span> MNIST</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="org35d5090" class="outline-4">
+<h4 id="org35d5090"><span class="section-number-4">5.1.1</span> Dataset</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据集</th>
+<th scope="col" class="org-left">样本类型</th>
+<th scope="col" class="org-right">训练集</th>
+<th scope="col" class="org-right">验证集</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">MNIST</td>
+<td class="org-left">灰度图(28*28)</td>
+<td class="org-right">60000</td>
+<td class="org-right">6000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orge643432" class="outline-4">
+<h4 id="orge643432"><span class="section-number-4">5.1.2</span> NN 架构</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">层</th>
+<th scope="col" class="org-left">形状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">input_shape</td>
+<td class="org-left">(28,28,1)</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,30)</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,60)</td>
+</tr>
+
+<tr>
+<td class="org-left">max_pooling</td>
+<td class="org-left">(2,2)</td>
+</tr>
+
+<tr>
+<td class="org-left">flatten</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-left">600</td>
+</tr>
+
+<tr>
+<td class="org-left">keep_prob</td>
+<td class="org-left">0.5</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_softmax</td>
+<td class="org-left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orgd38e390" class="outline-4">
+<h4 id="orgd38e390"><span class="section-number-4">5.1.3</span> model parameter</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-left">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">learning_rate</td>
+<td class="org-left">0.001 (no decay)</td>
+</tr>
+
+<tr>
+<td class="org-left">loss fn</td>
+<td class="org-left">categorical cross entropy</td>
+</tr>
+
+<tr>
+<td class="org-left">epoch</td>
+<td class="org-left">30</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="org016721e" class="outline-3">
+<h3 id="org016721e"><span class="section-number-3">5.2</span> Cifar-10</h3>
+<div class="outline-text-3" id="text-5-2">
+</div>
+<div id="orgfbd36e1" class="outline-4">
+<h4 id="orgfbd36e1"><span class="section-number-4">5.2.1</span> Dataset</h4>
+<div class="outline-text-4" id="text-5-2-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据集</th>
+<th scope="col" class="org-left">样本类型</th>
+<th scope="col" class="org-right">训练集</th>
+<th scope="col" class="org-right">验证集</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Cifar-10</td>
+<td class="org-left">RGB彩图(32*32*3)</td>
+<td class="org-right">50000</td>
+<td class="org-right">10000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org52c9c83" class="outline-4">
+<h4 id="org52c9c83"><span class="section-number-4">5.2.2</span> NN 架构</h4>
+<div class="outline-text-4" id="text-5-2-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">层</th>
+<th scope="col" class="org-left">形状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">input_shape</td>
+<td class="org-left">(32,32,3)</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,32)</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,32)</td>
+</tr>
+
+<tr>
+<td class="org-left">max_pooling</td>
+<td class="org-left">(2,2)</td>
+</tr>
+
+<tr>
+<td class="org-left">keep_prob</td>
+<td class="org-left">0.25</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,64)</td>
+</tr>
+
+<tr>
+<td class="org-left">cnn_filter</td>
+<td class="org-left">(3,3,64)</td>
+</tr>
+
+<tr>
+<td class="org-left">max_pooling</td>
+<td class="org-left">(2,2)</td>
+</tr>
+
+<tr>
+<td class="org-left">keep_prob</td>
+<td class="org-left">0.25</td>
+</tr>
+
+<tr>
+<td class="org-left">flatten</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-left">512</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_softmax</td>
+<td class="org-left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org6999374" class="outline-4">
+<h4 id="org6999374"><span class="section-number-4">5.2.3</span> model parameter</h4>
+<div class="outline-text-4" id="text-5-2-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-left">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">learning_rate</td>
+<td class="org-left">1e-4 (decay)</td>
+</tr>
+
+<tr>
+<td class="org-left">loss fn</td>
+<td class="org-left">mse</td>
+</tr>
+
+<tr>
+<td class="org-left">epoch</td>
+<td class="org-left">200</td>
+</tr>
+
+<tr>
+<td class="org-left">batch_size</td>
+<td class="org-left">256</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="org6237c16" class="outline-3">
+<h3 id="org6237c16"><span class="section-number-3">5.3</span> 回归</h3>
+<div class="outline-text-3" id="text-5-3">
+</div>
+<div id="org1c5168e" class="outline-4">
+<h4 id="org1c5168e"><span class="section-number-4">5.3.1</span> Dataset</h4>
+<div class="outline-text-4" id="text-5-3-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据集</th>
+<th scope="col" class="org-left">样本类型</th>
+<th scope="col" class="org-right">训练集</th>
+<th scope="col" class="org-right">验证集</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><a href="https://www.kaggle.com/harlfoxem/housesalesprediction">house sales in king county, USA</a></td>
+<td class="org-left">csv</td>
+<td class="org-right">18000</td>
+<td class="org-right">3600</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org048c5d5" class="outline-4">
+<h4 id="org048c5d5"><span class="section-number-4">5.3.2</span> 型号架构</h4>
+<div class="outline-text-4" id="text-5-3-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">层</th>
+<th scope="col" class="org-right">形状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">input_shape</td>
+<td class="org-right">71</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-right">1000</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-right">1000</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-right">1000</td>
+</tr>
+
+<tr>
+<td class="org-left">fcn_relu</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">keep_prob</td>
+<td class="org-right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org2715a58" class="outline-4">
+<h4 id="org2715a58"><span class="section-number-4">5.3.3</span> model parameter</h4>
+<div class="outline-text-4" id="text-5-3-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-left">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">learning_rate</td>
+<td class="org-left">1e-4 (no decay)</td>
+</tr>
+
+<tr>
+<td class="org-left">loss fn</td>
+<td class="org-left">mse</td>
+</tr>
+
+<tr>
+<td class="org-left">epoch</td>
+<td class="org-left">40</td>
+</tr>
+
+<tr>
+<td class="org-left">batch_size</td>
+<td class="org-left">100</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="orgf637574" class="outline-3">
+<h3 id="orgf637574"><span class="section-number-3">5.4</span> DCGAN</h3>
+<div class="outline-text-3" id="text-5-4">
+</div>
+<div id="orge4e3b61" class="outline-4">
+<h4 id="orge4e3b61"><span class="section-number-4">5.4.1</span> Dataset</h4>
+<div class="outline-text-4" id="text-5-4-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">数据集</th>
+<th scope="col" class="org-left">样本类型</th>
+<th scope="col" class="org-right">训练集</th>
+<th scope="col" class="org-right">验证集</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><a href="https://drive.google.com/open?id=0BwJmB7alR-AvMHEtczZZN0EtdzQ">Cartoon image</a> Cifar-10</td>
+<td class="org-left">RGB彩图</td>
+<td class="org-right">18000</td>
+<td class="org-right">3600</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org57c7373" class="outline-4">
+<h4 id="org57c7373"><span class="section-number-4">5.4.2</span> Model架构</h4>
+<div class="outline-text-4" id="text-5-4-2">
+<p>
+Generator of conditional-DCGAN
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">输入feature (256+100维)</td>
+</tr>
+
+<tr>
+<td class="org-left">→ 通过fc [input = 356, output = (64 × 4 × 4 × 8)]</td>
+</tr>
+
+<tr>
+<td class="org-left">→ reshape成[4, 4, 128]</td>
+</tr>
+
+<tr>
+<td class="org-left">→ batch normalization(所有batch normalization的epsilon = 1e-5, momentum = 0.9)</td>
+</tr>
+
+<tr>
+<td class="org-left">→ relu activation</td>
+</tr>
+
+<tr>
+<td class="org-left">→ 通过4层deconv layer (kernel size = 5 × 5, stride = 2, filters依序为[256, 128, 64, 3])</td>
+</tr>
+
+<tr>
+<td class="org-left">→ 每通过一层deconv都经过batch normalization和relu再传到下一层</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Discriminator of conditional-DCGAN
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">两个feature：</td>
+</tr>
+
+<tr>
+<td class="org-left">image 维度= (64, 64, 3)，分成三类：real(符合文字叙述的图)、wrong(不符合文字叙述的图)、fake(G 对应文字产生的图)。</td>
+</tr>
+
+<tr>
+<td class="org-left">text 维度= 256。</td>
+</tr>
+
+<tr>
+<td class="org-left">图片经过4层convolution layer(kernel size = 5 × 5, stride = 2, filters各自为[64, 128,256, 512] )</td>
+</tr>
+
+<tr>
+<td class="org-left">→每一层都经过leaky relu (max(x, 0.2 x))</td>
+</tr>
+
+<tr>
+<td class="org-left">→后三层的convolution layer通过leaky relu前都会经过batch normalization (这部分的参数设定与generator中相同)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orga566e93" class="outline-4">
+<h4 id="orga566e93"><span class="section-number-4">5.4.3</span> model parameter</h4>
+<div class="outline-text-4" id="text-5-4-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-left">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">learning_rate</td>
+<td class="org-left">2e-4(decay)</td>
+</tr>
+
+<tr>
+<td class="org-left">loss fn</td>
+<td class="org-left">mse</td>
+</tr>
+
+<tr>
+<td class="org-left">epoch</td>
+<td class="org-left">200</td>
+</tr>
+
+<tr>
+<td class="org-left">batch_size</td>
+<td class="org-left">64</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="orgdeeaf24" class="outline-3">
+<h3 id="orgdeeaf24"><span class="section-number-3">5.5</span> Wasserstein GAN</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+在WGAN 原始论文中提到：因为WGAN 的训练过程较不稳定，不太适合使用就有动量的优化器，可能会导致loss 增加或是产生的sample 变差，因此可用 RMSProp 取代Adam，而此次我也会针对这一点进行验证。
+</p>
+</div>
+
+<div id="orgcf5d1f2" class="outline-4">
+<h4 id="orgcf5d1f2"><span class="section-number-4">5.5.1</span> Dataset</h4>
+<div class="outline-text-4" id="text-5-5-1">
+<p>
+同 DCGAN
+</p>
+</div>
+</div>
+
+<div id="org4023fda" class="outline-4">
+<h4 id="org4023fda"><span class="section-number-4">5.5.2</span> Model架构</h4>
+<div class="outline-text-4" id="text-5-5-2">
+<p>
+更改DCGAN的以下部分：
+</p>
+
+<ul class="org-ul">
+<li>去掉discriminator 输出的sigmoid。</li>
+<li>去掉 loss function 中的 log。</li>
+<li>在discriminator 加上weight-clipping，设定为0.01。</li>
+</ul>
+</div>
+</div>
+<div id="orgabe8485" class="outline-4">
+<h4 id="orgabe8485"><span class="section-number-4">5.5.3</span> model parameter</h4>
+<div class="outline-text-4" id="text-5-5-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">参数</th>
+<th scope="col" class="org-right">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">learning_rate</td>
+<td class="org-right">1e-4(decay)</td>
+</tr>
+
+<tr>
+<td class="org-left">loss fn</td>
+<td class="org-right">mse</td>
+</tr>
+
+<tr>
+<td class="org-left">epoch</td>
+<td class="org-right">15</td>
+</tr>
+
+<tr>
+<td class="org-left">batch_size</td>
+<td class="org-right">64</td>
+</tr>
+
+<tr>
+<td class="org-left">weight-cliping</td>
+<td class="org-right">0.01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div id="orgd712e0a" class="outline-2">
+<h2 id="orgd712e0a"><span class="section-number-2">6</span> 贡献和创新性</h2>
+</div>
+
+<div id="org63931b5" class="outline-2">
+<h2 id="org63931b5"><span class="section-number-2">7</span> 结论</h2>
+<div class="outline-text-2" id="text-7">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">MNIST</td>
+<td class="org-left">如同Adam 论文中的叙述，Adam 默认的参数是这个资料集上最好的优化器设定，然而，当 β1、β2 调小一点时，结果不会差很多。</td>
+</tr>
+
+<tr>
+<td class="org-left">Cifar-10</td>
+<td class="org-left">Adam 中的 β2 = 0.9。</td>
+</tr>
+
+<tr>
+<td class="org-left">regre</td>
+<td class="org-left">Adam 中的 β1、β2 调小一点(如0.5 和0.9)，可使error 下降一些。</td>
+</tr>
+
+<tr>
+<td class="org-left">DCGAN</td>
+<td class="org-left">使用Adam 时，要把β1 设定的小一点，才能较快随着discriminator 改变的方向转向。</td>
+</tr>
+
+<tr>
+<td class="org-left">WGAN</td>
+<td class="org-left">使用Adam，动量会造成收敛方向无法即时随着discriminator 改变的方向即时，因此结果会变差，并且变差的情况比DCGAN 严重许多。</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="org7cbb977" class="outline-2">
+<h2 id="org7cbb977"><span class="section-number-2">8</span> 可以改进的地方</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+可尝试使用更好的降维方法。我在参数对loss 的作图中，使用的降维方法为PCA，PCA 的降维过程中会损失一些空间分布的特性。所以我认为可以试试看其他降维的方法，例如：
+t-SNE，t-SNE可以保留一些空间的特性，也许可从图中得到更多资讯。从我做出的实验结果去找最佳Adam 参数的规则，设定一套流程来判断Adam 最佳的参数。原本我推测Adam 最佳参数与task 的性质(ex: Image classification)有关，然而Google Net 最佳的参数如果套用到Cifar-10 的model，performance 会变得非常差，所以，从我的实验结果来看，参数的选择应该和task 的性质没有绝对的相关性。后来我想到model 参数量的多寡会影响到整个
+loss function 的分布，因为直觉上简单的model 应该鞍点或是局部最小值的数量应该会远小于复杂的model 中鞍点跟局部最小值的数量，所以未来可以尝试看看model 参数量与Adam
+最佳参数的关系。除了不同参数在鞍点的表现，也可以尝试看看不同参数在local minimum
+的表现。
+</p>
+</div>
+</div>
+
+<div id="orge2f34bf" class="outline-2">
+<h2 id="orge2f34bf"><span class="section-number-2">9</span> 参考文献</h2>
+<div class="outline-text-2" id="text-9">
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://arxiv.org/pdf/1412.6980.pdf">Diederik P. Kingma, Jimmy Ba, Adam: A Method for Stochastic Optimization, arXiv, Dec. 2014</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://github.com/bamos/dcgan-completion.tensorflow">https://github.com/bamos/dcgan-completion.tensorflow</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://github.com/paarthneekhara/text-to-image">https://github.com/paarthneekhara/text-to-image</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://arxiv.org/pdf/1701.07875.pdf">Martin Arjovsky, Soumith Chintala, Léon Bottou, Wasserstein GAN, arXiv, Jan. 2017</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://videolectures.net/deeplearning2015_goodfellow_adversarial_examples/">Ian Goodfellow, Tutorial on Neural Network Optimization Problems, Deep Learning Summer School, Montreal, Aug. 2015</a>
+</p></div></div>
+
+
+</div>
+</div></div>
+</body>
+</html>

@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorboard 可视化功能深入</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorboard 可视化功能深入</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7a2b002">1. Tensorboard Embeddings 可视化功能</a>
+<ul>
+<li><a href="#org462c0fb">1.1. 其他处理部分</a></li>
+<li><a href="#orgd6df40a">1.2. 主要代码部分</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org7a2b002" class="outline-2">
+<h2 id="org7a2b002"><span class="section-number-2">1</span> Tensorboard Embeddings 可视化功能</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org462c0fb" class="outline-3">
+<h3 id="org462c0fb"><span class="section-number-3">1.1</span> 其他处理部分</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-ipython" id="org2743cab">&lt;&lt;get-pid&gt;&gt;
+&lt;&lt;kill-pid&gt;&gt;
+&lt;&lt;<span class="org-keyword">del</span>-graph-summary&gt;&gt;
+&lt;&lt;tensorboard-run&gt;&gt;
+&lt;&lt;run-tensorboard&gt;&gt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="org9ff1a6b">ps -aux | grep <span class="org-string">"python"</span> | grep -E <span class="org-string">"(default|lec4|tensorboard)"</span> | grep -v <span class="org-string">"grep"</span> | awk <span class="org-string">'{print $2}'</span>
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">6675</td>
+</tr>
+
+<tr>
+<td class="org-right">11038</td>
+</tr>
+
+<tr>
+<td class="org-right">11044</td>
+</tr>
+
+<tr>
+<td class="org-right">32122</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="org1f79a95"><span class="org-comment-delimiter">;; </span><span class="org-comment">&#21462;&#20803;&#32032;</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">r1l</span>(tbl)
+  (mapcar (<span class="org-keyword">lambda</span> (x) (number-to-string (car x))) tbl)
+  )
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(print pid)</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(print (reduce-one-layer pid))</span>
+(mapcar #'shell-command-to-string
+        (mapcar (<span class="org-keyword">lambda</span> (x) (concat <span class="org-string">"kill "</span> x)) (r1l pid))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="org165d5dd">rm -rf /home/yiddi/git_repos/on_ml_tensorflow/logs/*
+ls /home/yiddi/git_repos/on_ml_tensorflow/logs
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgd6df40a" class="outline-3">
+<h3 id="orgd6df40a"><span class="section-number-3">1.2</span> 主要代码部分</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython">&lt;&lt;&#21253;&#23548;&#20837;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;&#23548;&#20837; projector: for embeddings &#21487;&#35270;&#21270;&gt;&gt;</span>
+
+
+&lt;&lt;&#25968;&#25454;&#20934;&#22791;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy&#26500;&#36896;(with/without noise)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#38598;&#23548;&#20837;&#20869;&#23384;(one_hot or not)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25130;&#21462;&#24050;&#32463;&#23384;&#22312;&#25968;&#25454;&#38598;</span>
+
+&lt;&lt;&#22270;&#21442;&#25968;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25209;&#27425;&#22823;&#23567;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25209;&#27425;&#25968;&#37327;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">dropout &#20445;&#30041;&#29575;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#38598;&#20301;&#32622;</span>
+
+&lt;&lt;&#24037;&#20855;&#20989;&#25968;&#19982;&#24037;&#20855;&#22768;&#26126;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#23545;&#26576;&#20123; Variable &#36827;&#34892; OP &#24182; summary</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;def Variable: for embeddings &#21487;&#35270;&#21270;&gt;&gt; as untrainable Variable, stack front 3000 img, give name 'embeddings'</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;&lt;file IO: for embeddings &#21487;&#35270;&#21270;&gt;&gt; read in one_hot labels, argmax get true labels, write to file in one-label-one-line format</span>
+
+&lt;&lt;&#22270;&#26500;&#36896;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19968;&#31070;: NN layers, name_scope for TB, &#21442;&#25968; summary</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. placeholders</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.1 x: dataset placeholder,</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">+ &lt;&lt;def OP: for img process &gt;&gt; reshape x</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.2 y: labelset placeholder,</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">1.3 keep_prob: dropout, keep rate of certain layer's nodes</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. Variables</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.0 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.1 &#31532;&#19968;&#23618;&#26435;&#37325; W, &#22768;&#26126; summary tf.summary.scalar/image/histogram node</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">2.2 &#31532;&#19968;&#23618;&#20559;&#32622; b, &#22768;&#26126; summary tf.summary.scalar/image/histogram node</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. Operations</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">3.1 &#31532;&#19968;&#23618;&#36755;&#20986;(active_fn(score)), &#22768;&#26126; summary tf.summary.scalar/image/histogram node</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#20989;:</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. err_fn:</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.2 err fn(&#21333;&#28857;&#38169;&#35823;), &#22768;&#26126; summary, tf.summary.scalar/image/histogram node</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. loss_fn:</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.2 loss fn(&#25972;&#20307;&#38169;&#35823;), &#22768;&#26126; summary, tf.summary.scalar/image/histogram node</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20004;&#22120;:</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. &#21021;&#22987;&#21270;&#22120;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. &#20248;&#21270;&#22120;</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20934;&#30830;&#29575;&#35745;&#31639;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">1. correct_prediction</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">1.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">2. accuracy</span>
+<span class="org-comment-delimiter">#      </span><span class="org-comment">2.1 &#21517;&#31216;&#31354;&#38388;&#35774;&#32622;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21512;&#24182;summary</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#37197;&#32622; embeddings &#21487;&#35270;&#21270;&#21442;&#25968;</span>
+
+&lt;&lt;&#22270;&#35745;&#31639;&gt;&gt;
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#21021;&#22987;&#21270;&#22120;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">summary Writer for TB</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">for epoch_num: &lt;&lt;</span>
+<span class="org-comment-delimiter">#          </span><span class="org-comment">1. for batch_num:</span>
+<span class="org-comment-delimiter">#                 </span><span class="org-comment">1.1 x_y_of_next_batch;</span>
+<span class="org-comment-delimiter">#                 </span><span class="org-comment">1.2 &#36816;&#34892; &#20248;&#21270;&#22120;&#35745;&#31639; and summary&#35745;&#31639;</span>
+<span class="org-comment-delimiter">#          </span><span class="org-comment">2. &#36816;&#34892;&#20934;&#30830;&#29575;&#35745;&#31639;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">matplot&#32472;&#22270;</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="orgc9f310d"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-keyword">from</span> tensorflow.contrib.tensorboard.plugins <span class="org-keyword">import</span> projector
+<span class="org-keyword">from</span> tensorflow.examples.tutorials.mnist <span class="org-keyword">import</span> input_data
+
+<span class="org-variable-name">mnist</span> = input_data.read_data_sets(<span class="org-string">"MNIST"</span>, one_hot=<span class="org-constant">True</span>)
+<span class="org-variable-name">max_steps</span> = <span class="org-highlight-numbers-number">1001</span>
+<span class="org-variable-name">image_num</span> = <span class="org-highlight-numbers-number">3000</span>
+<span class="org-variable-name">DIR</span> = <span class="org-string">"/home/yiddi/git_repos/on_ml_tensorflow/"</span>
+
+<span class="org-variable-name">sess</span> = tf.Session()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#37324;&#35760;&#24405;&#20102;&#20320;&#22914;&#20309;&#33719;&#21462;&#25968;&#25454;&#38598;&#20013;&#30340;&#19968;&#37096;&#20998;&#30340;&#25805;&#20316;,&#36825;&#37324;&#26159;&#33719;&#21462;&#27979;&#35797;&#38598;&#22270;&#29255;&#30340;&#21069;3000&#24352;</span>
+<span class="org-variable-name">embeddings</span> = tf.Variable(tf.stack(mnist.test.images[:image_num]), trainable=<span class="org-constant">False</span>, name=<span class="org-string">'embeddings'</span>)
+
+<span class="org-keyword">def</span> <span class="org-function-name">variable_summaries</span>(var):
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'summaries'</span>):
+        <span class="org-variable-name">mean</span> = tf.reduce_mean(var)
+        tf.summary.scalar(<span class="org-string">'mean'</span>, mean)
+        <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'stddev'</span>):
+              <span class="org-variable-name">stddev</span> = tf.sqrt(tf.reduce_mean(tf.square(var - mean)))
+        tf.summary.scalar(<span class="org-string">'stddev'</span>, stddev)
+        tf.summary.scalar(<span class="org-string">'max'</span>, tf.reduce_max(var))
+        tf.summary.scalar(<span class="org-string">'min'</span>, tf.reduce_min(var))
+        tf.summary.histogram(<span class="org-string">'histogram'</span>, var)
+
+
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'input'</span>):
+    <span class="org-variable-name">x</span>=tf.placeholder(tf.float32, [<span class="org-constant">None</span>,<span class="org-highlight-numbers-number">784</span>], name=<span class="org-string">'x-input'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">--&gt;-+ &#22240;&#20026; placeholder.shape &#19982;&#25968;&#25454;&#38598;.shape &#26159;&#19968;&#33268;&#30340;,&#32780;&#26500;&#24314;&#22270;&#30340;&#26102;&#20505;</span>
+    <span class="org-variable-name">y</span>=tf.placeholder(tf.float32, [<span class="org-constant">None</span>,<span class="org-highlight-numbers-number">10</span>], name=<span class="org-string">'y-input'</span>)  <span class="org-comment-delimiter">#     </span><span class="org-comment">| &#25105;&#20204;&#24182;&#19981;&#30693;&#36947;&#25968;&#25454;&#38598;&#26377;&#22810;&#23569;&#20010;&#26679;&#26412;, &#25152;&#20197; placeholder &#31532;&#19968;&#32500;&#24230;&#35774;&#32622;</span>
+                                                             <span class="org-comment-delimiter">#     </span><span class="org-comment">v &#20026; None, &#36825;&#26679;&#23601;&#23548;&#33268; image_shaped_input &#31532;&#19968;&#32500;&#24230;&#35774;&#32622;&#20026;-1, &#34920;&#31034;</span>
+                                                             <span class="org-comment-delimiter">#     </span><span class="org-comment">| &#27492;&#22788;&#20540;&#33258;&#36866;&#24212;, &#24403;&#21069;&#19981;&#30830;&#23450;.</span>
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'input_reshape'</span>):                         <span class="org-comment-delimiter">#     </span><span class="org-comment">|</span>
+    <span class="org-variable-name">image_shaped_input</span> = tf.reshape(x, [-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">28</span>, <span class="org-highlight-numbers-number">28</span>, <span class="org-highlight-numbers-number">1</span>])      <span class="org-comment-delimiter"># </span><span class="org-comment">-&lt;--+ &#36825;&#37324;reshape&#30340;&#30446;&#30340;&#26159;&#25226;&#20197;&#21521;&#37327;&#24418;&#24335;&#23384;&#20648;&#30340;&#22270;&#29255;,&#36824;&#21407;&#25104;&#30697;&#38453;&#30340;&#24418;&#24335;&#20197;&#20415;&#32472;&#21046;</span>
+    tf.summary.image(<span class="org-string">'input'</span>, image_shaped_input, <span class="org-highlight-numbers-number">10</span>)        <span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#37324;&#26159;&#25918;&#32622; 10 &#24352;&#22270;&#29255;&#36827;&#20837; summary file</span>
+
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'layer'</span>):
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'weights'</span>):
+        <span class="org-variable-name">W</span>=tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">784</span>, <span class="org-highlight-numbers-number">10</span>]),name=<span class="org-string">'W'</span>)
+        variable_summaries(W)
+
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'biases'</span>):
+        <span class="org-variable-name">b</span>=tf.Variable(tf.zeros([<span class="org-highlight-numbers-number">10</span>]),name=<span class="org-string">'b'</span>)
+        variable_summaries(b)
+
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'score'</span>):
+        <span class="org-variable-name">score</span>=tf.matmul(x, W) + b
+
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'softmax'</span>):
+        <span class="org-variable-name">prediction</span>=tf.nn.softmax(score)
+
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'loss'</span>):
+    <span class="org-variable-name">loss</span>=tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=prediction))
+    tf.summary.scalar(<span class="org-string">'loss'</span>, loss)
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'train'</span>):
+    <span class="org-variable-name">train_step</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>).minimize(loss)
+
+sess.run(tf.global_variables_initializer())
+
+<span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'accuracy'</span>):
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'correct_prediction'</span>):
+        <span class="org-variable-name">correct_prediction</span>=tf.equal(tf.argmax(y,<span class="org-highlight-numbers-number">1</span>), tf.argmax(prediction, <span class="org-highlight-numbers-number">1</span>))
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">'accuracy'</span>):
+        <span class="org-variable-name">accuracy</span> = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        tf.summary.scalar(<span class="org-string">'accuracy'</span>, accuracy)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20135;&#29983;metadata&#25991;&#20214;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25226;&#27599;&#20010;sample&#30340;&#26631;&#31614;(&#21363;,&#23545;&#24212;&#20160;&#20040;&#25968;&#23383;) &#20889;&#20837;metadata&#25991;&#20214;&#20013;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">metadata.tsv &#24418;&#22914;:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">-------------</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1 \</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">7  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">0  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">6  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">.  |-- 3000 &#34892;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">.  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">.  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">3  |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">9 /</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">-------------</span>
+<span class="org-keyword">if</span> tf.gfile.Exists(DIR + <span class="org-string">'projector/projector/metadata.tsv'</span>):
+    tf.gfile.Remove(DIR + <span class="org-string">'projector/projector/metadata.tsv'</span>)
+<span class="org-keyword">with</span> <span class="org-builtin">open</span>(DIR + <span class="org-string">'projector/projector/metadata.tsv'</span>, <span class="org-string">'w'</span>) <span class="org-keyword">as</span> f:
+    <span class="org-variable-name">labels</span> = sess.run(tf.argmax(mnist.test.labels[:], <span class="org-highlight-numbers-number">1</span>))
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(image_num):
+        f.write(<span class="org-builtin">str</span>(labels[i]) + <span class="org-string">'\n'</span>)
+
+<span class="org-variable-name">merged</span> = tf.summary.merge_all()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#37197;&#32622; embedding &#21487;&#35270;&#21270;&#30456;&#20851;&#21442;&#25968;</span>
+<span class="org-variable-name">projector_writer</span> = tf.summary.FileWriter(DIR + <span class="org-string">'projector/projector'</span>, sess.graph)
+<span class="org-variable-name">saver</span> = tf.train.Saver() <span class="org-comment-delimiter">#</span><span class="org-comment">&#21487;&#20197;&#20445;&#23384;&#32593;&#32476;&#27169;&#22411;, &#29983;&#25104; ckpt file.</span>
+<span class="org-variable-name">config</span> = projector.ProjectorConfig() <span class="org-comment-delimiter"># </span><span class="org-comment">&#23450;&#20041;&#37197;&#32622;&#25991;&#20214;</span>
+<span class="org-variable-name">embed</span>= config.embeddings.add()
+<span class="org-variable-name">embed.tensor_name</span> = embeddings.name <span class="org-comment-delimiter">#</span><span class="org-comment">&#23384;&#20648;&#37096;&#20998;&#25968;&#25454;&#38598;&#30340;untrainable Variable&#21517;&#23383;&#36171;&#20540;&#32473; embedding &#23618;&#30340;tensor_name</span>
+<span class="org-variable-name">embed.metadata_path</span> = DIR + <span class="org-string">'projector/projector/metadata.tsv'</span> <span class="org-comment-delimiter"># </span><span class="org-comment">labels &#25991;&#20214;&#21517;</span>
+<span class="org-variable-name">embed.sprite.image_path</span> = DIR + <span class="org-string">'projector/projector/mnist_10k_sprite.png'</span> <span class="org-comment-delimiter"># </span><span class="org-comment">&#21407;&#22987;&#22270;&#29255;&#25991;&#20214;</span>
+embed.sprite.single_image_dim.extend([<span class="org-highlight-numbers-number">28</span>,<span class="org-highlight-numbers-number">28</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">&#25353;&#29031; 28*28 &#20999;&#20998;&#25991;&#20214;</span>
+projector.visualize_embeddings(projector_writer, config) <span class="org-comment-delimiter"># </span><span class="org-comment">&#36733;&#20837; writer &#21644; config &#36827;&#34892;&#21487;&#35270;&#21270;, &#20135;&#29983; xxxx.pbtxt file</span>
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(max_steps):
+    <span class="org-variable-name">batch_xs</span>, <span class="org-variable-name">batch_ys</span> = mnist.train.next_batch(<span class="org-highlight-numbers-number">100</span>)
+    <span class="org-variable-name">run_options</span> = tf.RunOptions(trace_level=tf.RunOptions.FULL_TRACE) <span class="org-comment-delimiter"># </span><span class="org-comment">&#22266;&#23450;&#29992;&#27861;</span>
+    <span class="org-variable-name">run_metadata</span> = tf.RunMetadata() <span class="org-comment-delimiter"># </span><span class="org-comment">&#22266;&#23450;&#29992;&#27861;</span>
+    <span class="org-variable-name">summary</span>, <span class="org-variable-name">_</span> = sess.run([merged, train_step], feed_dict={x:batch_xs, y:batch_ys}, options=run_options, run_metadata=run_metadata)
+    projector_writer.add_run_metadata(run_metadata, <span class="org-string">'step%03d'</span> % i)
+    projector_writer.add_summary(summary, i)
+
+    <span class="org-keyword">if</span> i%<span class="org-highlight-numbers-number">100</span> == <span class="org-highlight-numbers-number">0</span>:
+        <span class="org-variable-name">acc</span>=sess.run(accuracy, feed_dict={x:mnist.test.images, y:mnist.test.labels})
+        <span class="org-keyword">print</span>(<span class="org-string">"Iter "</span> + <span class="org-builtin">str</span>(i) + <span class="org-string">", Testing Accuracy= "</span>  + <span class="org-builtin">str</span>(acc))
+
+saver.save(sess, DIR + <span class="org-string">'projector/projector/a_model.ckpt'</span>, global_step=max_steps)
+projector_writer.close()
+sess.close()
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">require</span> '<span class="org-constant">ob-async</span>)
+</pre>
+</div>
+
+<pre class="example">
+ob-async
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org0ebc5de">tensorboard --logdir=/home/yiddi/git_repos/on_ml_tensorflow/projector/projector
+</pre>
+</div>
+
+<pre class="example">
+d0b50d716025b683cdae4cf4e54826d7
+
+</pre>
+
+<p>
+embedding 可视化流程
+</p>
+<pre class="example">
+       ^Embedding Space
+       |
+       |
+       |          2                     TensorBoard
+       |         22
+       |
+       |       2         0
+       |     1             00          ---------&lt;-----------------------------------------+
+       |    111            0                                                              |
+       |                                                                                  |
+-------+----------------------------&gt;                                                     |
+       |                                                                                  |
+                                                     用于在TB中显示每个点的真实label      |
+                                                                                          | PCA: from 784D to 2D
++--------------+                                                                          |
+|    ...       |                                     metadata.tsv    -------------        |
+|    ...       |                                                     1 \                  |
+|     ..       |                           embed.metadata_path       7  |                 |
+|     ..       |   -------------+          = xxx.tsv                 0  |                 |
+|   ......     |                |                                    6  |                 |
+|   ......     |                |                                    .  |-- 3000 行       ^
++--------------+                |                                    .  |                 |
+\              /                |                                    .  |                 |
+ \            /                 |                                    3  |                 |
+  \          /                  |                                    9 /                  |
+   \         |                  |                                    -------------        |
+    \        |                  |                                                         |
+     \       |                  |                                                         |
+      \      |                  |                     embeddings                          |
+       \     |                  |                             784 D                       |
+        \   /                   |                     /-----------------------\           |
++--+--+--+--+--+                |                    [[12, 143, 120, 1, 23, ...]    \     |
+|  |  |  |  |  |                |                     [12, 139, 151, 9, 63, ...]     |
++--+--+--+--+--+                |                     [22, 199, 120, 3, 83, ...]     |  3000 行
+|  |  |  |  |  |                +------------------   [62, 177, 192, 5, 13, ...]     |
++--+--+--+--+--+                                      ...                            |
+|  |  |  |  |  |                                      [91, 254, 120, 14, 30, ...]]  /
++--+--+--+--+--+
+|  |  |  |  |  |                                     数据集中的点集
++--+--+--+--+--+                                     embed.tensor_name = embeddings.name
+|  |  |  |  |  |
++--+--+--+--+--+                                     用来做降维并在TB显示的数据集
+数据集中的点对应的图片集
+
+embed.sprite.image_path = xxx.png
+
+用于在 TB embedding 坐标中显示其
+原始图片是什么.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

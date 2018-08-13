@@ -1,0 +1,1600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matplotlib 第三课</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Matplotlib 第三课</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org41210b5">1. part-II, Plotting_Methods_Overviwe</a>
+<ul>
+<li><a href="#orgc30ef1b">1.1. The Basics: 1D series/points</a>
+<ul>
+<li><a href="#orgf36d8fa">1.1.1. plot vs. scatter</a></li>
+<li><a href="#orgf33ec71">1.1.2. bar graph: <code>ax.bar(...)</code> and <code>ax.barh(...)</code></a></li>
+<li><a href="#orgfc34941">1.1.3. fill regions: <code>ax.fill(x, y)</code> or <code>fill_between(...)</code></a></li>
+<li><a href="#orgda3c89d">1.1.4. fill regions between x-axis and f(x)</a></li>
+<li><a href="#org9acbf9e">1.1.5. fill regions between g(x) and f(x)</a></li>
+<li><a href="#orgad8a8c8">1.1.6. stackplot graph</a></li>
+</ul>
+</li>
+<li><a href="#orgdffee82">1.2. 2D Arrays and Images</a>
+<ul>
+<li><a href="#org2d2286e">1.2.1. ScalarMappable</a></li>
+<li><a href="#org3728852">1.2.2. Colorbars</a></li>
+<li><a href="#org9132005">1.2.3. colorbar inside the image</a></li>
+<li><a href="#org22061c3">1.2.4. colorbar outside the image</a></li>
+<li><a href="#org0386e10">1.2.5. Shared keyword arguments</a></li>
+<li><a href="#orge797257">1.2.6. with out vmin vmax</a></li>
+<li><a href="#org78ed7d3">1.2.7. with vmin vmax</a></li>
+<li><a href="#org9075999">1.2.8. pcolor(pcolormesh) vs. imshow vs. scatter</a></li>
+</ul>
+</li>
+<li><a href="#orgd7a2b04">1.3. Vector Fields</a></li>
+<li><a href="#org88749ed">1.4. Data Distributions</a></li>
+<li><a href="#org760e59f">1.5. Artist</a></li>
+<li><a href="#org1f945d7">1.6. Data keyword argument ( the author highlight )</a></li>
+<li><a href="#orgcc0746d">1.7. Exercise 2.1</a>
+<ul>
+<li><a href="#org44529a1">1.7.1. exercise of <code>fill</code> and <code>bar</code> graph</a></li>
+</ul>
+</li>
+<li><a href="#org6c74eae">1.8. Exercise 2.2</a></li>
+</ul>
+</li>
+<li><a href="#org12271ef">2. misc tools</a>
+<ul>
+<li><a href="#org0323ba4">2.1. python</a>
+<ul>
+<li><a href="#org25e235a">2.1.1. for in zip() vs. for in enumerate()</a></li>
+</ul>
+</li>
+<li><a href="#orgf780bbf">2.2. numpy</a>
+<ul>
+<li><a href="#org6ebc19a">2.2.1. numpy.cumsum(arr, dtype, axis)</a></li>
+<li><a href="#orge6e3dbe">2.2.2. numpy.ptp(arr, axis, out)</a></li>
+<li><a href="#orgf7a5421">2.2.3. numpy.array.reshape(-1, num)</a></li>
+<li><a href="#org32411d0">2.2.4. numpy.random</a></li>
+</ul>
+</li>
+<li><a href="#orgaa5140e">2.3. matplotlib</a>
+<ul>
+<li><a href="#org21e059f">2.3.1. plt.figure().add_axes</a></li>
+<li><a href="#orgf92b3a4">2.3.2. plt.figure()</a></li>
+<li><a href="#org57be36f">2.3.3. ImageGrid()</a></li>
+<li><a href="#org332836e">2.3.4. plt.subplots()</a></li>
+<li><a href="#orga7cfadb">2.3.5. plt.figaspect(ratioBetweenHeightAndWidth)</a></li>
+<li><a href="#orga75761b">2.3.6. ax.imshow(arr, vmin, vmax, interpolation)</a></li>
+<li><a href="#orgd98aef0">2.3.7. interpolation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org41210b5" class="outline-2">
+<h2 id="org41210b5"><span class="section-number-2">1</span> part-II, Plotting_Methods_Overviwe</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Let's get our standard imports out of the way</span>
+%matplotlib inline
+<span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> print_function
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib
+<span class="org-comment-delimiter"># </span><span class="org-comment">matplotlib.use('nbagg')</span>
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+</div>
+
+<div id="orgc30ef1b" class="outline-3">
+<h3 id="orgc30ef1b"><span class="section-number-3">1.1</span> The Basics: 1D series/points</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="orgf36d8fa" class="outline-4">
+<h4 id="orgf36d8fa"><span class="section-number-4">1.1.1</span> plot vs. scatter</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Some one says that, scatter is plot without lines. This is technically
+<b>misconception</b>. Because if you want a plot without lines, you still can do
+this using plot method. If what you really want in a situation you plot
+markers and <b>color or scale them based upon some other piece of data</b>, then
+scatter is the sole way to fit this requirement.
+</p>
+</div>
+</div>
+
+<div id="orgf33ec71" class="outline-4">
+<h4 id="orgf33ec71"><span class="section-number-4">1.1.2</span> bar graph: <code>ax.bar(...)</code> and <code>ax.barh(...)</code></h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ol class="org-ol">
+<li>ax.bar(x, height, width, yerr=e): <code>bar</code> plots your bar vertically.</li>
+<li>ax.barh(x, height, width, yerr=e): <code>barh</code> plots your bar horizontally.</li>
+<li>ax.bar(l, h, w, b)</li>
+<li>ax.axhline(location, color, linewidth): infinite long horizontal line at <code>location</code></li>
+<li>ax.axvline(location, color, linewidth): infinite long vertical line at <code>location</code></li>
+</ol>
+
+<p>
+<code>vert_bars = axes[0].bar(x, y, color='lightblue', align='center')</code>
+</p>
+
+<p>
+draw a <b>vertical</b> bar with <b>height</b> = <code>y</code>, locate horizontally at = <code>x</code>.
+</p>
+
+<p>
+<code>horiz_bars = axes[1].barh(x, y, color='lightblue', align='center')</code>
+</p>
+
+<p>
+draw a <b>horizontal</b> bar with <b>width</b> = <code>y</code>, locate vertically at = <code>x</code>.
+</p>
+
+<p>
+<code>axes[0].axhline(0, color='gray', linewidth=2)</code>
+</p>
+
+<p>
+add a horizontal line at <code>y = 0</code>
+</p>
+
+<p>
+<code>axes[1].axvline(0, color='gray', linewidth=2)</code>
+</p>
+
+<p>
+add a vertial line at <code>x = 0</code>
+</p>
+
+<pre class="example">
+.  no yerr      has yerr                      ^
+.                   -      -                  |                       +---+
+.                   |       \                 | height y[0]       +---+   |
+.                   |       |                 |          \        |   |   |
+.   +---+         +-+-+     |- yerr           |           +---+   |   |   |
+.   |   |         | | |     |                 |           |   |   |   |   |
+.   |   |         | | |     /                 |           |   |   |   |   |
+.   |   |         | - |    -                  |           |   +---+   |   |
+.   |   |         |   |                       |           |   |   |   |   +---+
+.   |   |         |   |                       |           |   |   |   |   |   +---+
+.   |   |         |   |                       |           |   |   |   |   |   |   +---+
+.   +---+         +---+                       +-----------+---+---+---+---+---+---+---+-------&gt;
+.                                                        /  ^  \              |width\
+.                                                     x[0]  |   x[1]  =classic style: draw bar-left-edge at x[0]=
+.                                                           |
+.                                                          x[0]       =new style: draw bar-center at x[0]=
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.random.seed(<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">x</span>=np.arange(<span class="org-highlight-numbers-number">5</span>)
+<span class="org-variable-name">y</span>=np.random.randn(<span class="org-highlight-numbers-number">5</span>)
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(ncols=<span class="org-highlight-numbers-number">2</span>, figsize=plt.figaspect(<span class="org-highlight-numbers-number">1</span>./<span class="org-highlight-numbers-number">2</span>))
+
+<span class="org-variable-name">vert_bars</span> = axes[<span class="org-highlight-numbers-number">0</span>].bar(x, y, color=<span class="org-string">'lightblue'</span>, align=<span class="org-string">'center'</span>)
+<span class="org-variable-name">horiz_bars</span> = axes[<span class="org-highlight-numbers-number">1</span>].barh(x, y, color=<span class="org-string">'lightblue'</span>, align=<span class="org-string">'center'</span>)
+
+axes[<span class="org-highlight-numbers-number">0</span>].axhline(<span class="org-highlight-numbers-number">0</span>, color=<span class="org-string">'gray'</span>, linewidth=<span class="org-highlight-numbers-number">2</span>)
+axes[<span class="org-highlight-numbers-number">1</span>].axvline(<span class="org-highlight-numbers-number">0</span>, color=<span class="org-string">'gray'</span>, linewidth=<span class="org-highlight-numbers-number">2</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284WVc.png" alt="17284WVc.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgfc34941" class="outline-4">
+<h4 id="orgfc34941"><span class="section-number-4">1.1.3</span> fill regions: <code>ax.fill(x, y)</code> or <code>fill_between(...)</code></h4>
+<div class="outline-text-4" id="text-1-1-3">
+<ol class="org-ol">
+<li>fill</li>
+<li>fill_between(x, y1, y2=0, color)</li>
+</ol>
+
+<p>
+The curves are defined by the points (x, y1) and (x, y2). This creates one or
+multiple polygons describing the filled area.
+</p>
+</div>
+</div>
+
+<div id="orgda3c89d" class="outline-4">
+<h4 id="orgda3c89d"><span class="section-number-4">1.1.4</span> fill regions between x-axis and f(x)</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<div class="org-src-container">
+<pre class="src src-ipython">np.random.seed(<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y</span>=np.random.randn(<span class="org-highlight-numbers-number">100</span>).cumsum()
+<span class="org-variable-name">x</span>=np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>)
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+ax.fill_between(x, y, color=<span class="org-string">'lightblue'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284MjH.png" alt="17284MjH.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org9acbf9e" class="outline-4">
+<h4 id="org9acbf9e"><span class="section-number-4">1.1.5</span> fill regions between g(x) and f(x)</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span>=np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">200</span>)
+<span class="org-variable-name">y1</span> = <span class="org-highlight-numbers-number">2</span>*x+<span class="org-highlight-numbers-number">1</span>
+<span class="org-variable-name">y2</span> = <span class="org-highlight-numbers-number">3</span>*x+<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span>
+<span class="org-variable-name">y_mean</span>=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>*x*np.cos(<span class="org-highlight-numbers-number">2</span>*x)+<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span>*x+<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">1</span>
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+ax.fill_between(x, y1, y2, color=<span class="org-string">'yellow'</span>)
+
+ax.plot(x, y_mean, color=<span class="org-string">'black'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284CcW.png" alt="17284CcW.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgad8a8c8" class="outline-4">
+<h4 id="orgad8a8c8"><span class="section-number-4">1.1.6</span> stackplot graph</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<ol class="org-ol">
+<li>stackplot</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orgdffee82" class="outline-3">
+<h3 id="orgdffee82"><span class="section-number-3">1.2</span> 2D Arrays and Images</h3>
+<div class="outline-text-3" id="text-1-2">
+<ol class="org-ol">
+<li>ax.imshow(data, &#x2026;) : Colormapped or RGB arrays</li>
+<li>pcolor/pcolormesh : Colormapped 2D arrays
+<ol class="org-ol">
+<li>either</li>
+<li>pcolor(x, y, z)</li>
+<li>pcolormesh(x, y, z)</li>
+</ol></li>
+<li>contour, contourf, clabel: Contour/label 2D data
+<ol class="org-ol">
+<li>contour</li>
+<li>contourf</li>
+<li>contourf + contour + clabel</li>
+</ol></li>
+</ol>
+</div>
+
+<div id="org2d2286e" class="outline-4">
+<h4 id="org2d2286e"><span class="section-number-4">1.2.1</span> ScalarMappable</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+<code>imshow, pcolor, pcolormesh, scatter, contour</code> and any other matplotlib methods that
+map a range of <b>data values</b> onto a <b>colormap</b> are all instance of
+<code>ScalarMappable</code>
+</p>
+
+<p>
+For a ScalarMappable type instance
+a) you can display a <b>colorbar</b> for them;
+b) they share several <b>keyword arguments</b>;
+</p>
+</div>
+</div>
+<div id="org3728852" class="outline-4">
+<h4 id="org3728852"><span class="section-number-4">1.2.2</span> Colorbars</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Adding a <code>colorbar</code> to the figure to display what <code>colors</code> correspond to
+<code>values</code> of data we've plotted.
+</p>
+
+<p>
+<code>mappable</code> means can mapping from values to colors: image and contour
+</p>
+
+<p>
+<code>fig.colorbar()</code> is a <b>Figure method</b>, <b>NOT Axes method</b>. That because
+colorbar doesn't operate on the axes, like below. A colorbar will 'steal'
+some space from other subplots for displaying, and if you have multiple
+subplots you can steall space from them all equally.
+</p>
+
+<p>
+you can define a <code>axes</code> to hold the <code>colorbar</code>:
+cax = fig.add_axes([0.27, 0.8, 0.5, 0.05])
+fig.colorbar(
+im,                      # &lt;- which image or contour you want to add a colorbar
+cax=cax,                 # &lt;- colorbar itself is a axes, how it looks like
+orientation='horizontal' # &lt;- orientation of value and color displays
+)
+</p>
+
+<pre class="example">
+.
+.                             This is *colorbar*
+.                             tells different values
+.  This is *axes*             for different colors
+.    |                         |
+.    v                         v
+.  +-----------------------+  +-+
+.  |                       |  | | 1.2
+.  |                       |  | | 0.8
+.  |    different          |  | | 0.4
+.  |    colors display     |  | | 0.0
+.  |    here               |  | | -0.4
+.  |                       |  | |
+.  |                       |  | |
+.  |                       |  | |
+.  +-----------------------+  +-+
+.
+</pre>
+</div>
+</div>
+
+<div id="org9132005" class="outline-4">
+<h4 id="org9132005"><span class="section-number-4">1.2.3</span> colorbar inside the image</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+
+<span class="org-variable-name">data</span> = np.load(get_sample_data(<span class="org-string">'axes_grid/bivariate_normal.npy'</span>))
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+<span class="org-variable-name">im</span> = ax.imshow(data, cmap=<span class="org-string">'gist_earth'</span>)
+fig.colorbar(im)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284Um1.png" alt="17284Um1.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org22061c3" class="outline-4">
+<h4 id="org22061c3"><span class="section-number-4">1.2.4</span> colorbar outside the image</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+when you want define the location and size of colorbar, you must give it a
+<b>axes</b>, and make it the para <code>cax</code> of <code>imshow()</code>:
+</p>
+<ol class="org-ol">
+<li>create a figure</li>
+<li>create several+1 axes
+<ol class="org-ol">
+<li>fig, axes = plt.subplots(nrows, ncols, figsize)</li>
+<li>bar_axes = fig.add_axes([l,b,w,h])</li>
+</ol></li>
+<li>several axes for imshow of different value array
+<ol class="org-ol">
+<li>for i, dt in dataset: axes[i].imshow(dt)</li>
+</ol></li>
+<li>1 for colorbar
+<ol class="org-ol">
+<li>plt.colorbar(im, cax=bar_axes)</li>
+</ol></li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">define an axes, used for hold colorbar</span>
+<span class="org-variable-name">cax</span> = fig.add_axes([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">27</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>])
+
+<span class="org-variable-name">im</span> = ax.imshow( data, cmap=<span class="org-string">'gist_earth'</span>)
+fig.colorbar(
+    im,                      <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- which subplot you want to add a colorbar</span>
+    cax=cax,                 <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- colorbar itself is a subplot, how it looks like</span>
+    orientation=<span class="org-string">'horizontal'</span> <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- orientation of value and color displays</span>
+)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284GwE.png" alt="17284GwE.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org0386e10" class="outline-4">
+<h4 id="org0386e10"><span class="section-number-4">1.2.5</span> Shared keyword arguments</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">shared kwargs</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">cmap</td>
+<td class="org-left">the colormap used to display the input values</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">- gist_earth; seismic</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">vmin</td>
+<td class="org-left">minimum data value correspond to 'bottom' of colormap</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">vmax</td>
+<td class="org-left">maximum &#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.'top' of colormap</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">norm</td>
+<td class="org-left"><code>Normalize</code> instance to control how values map to colormap</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">default is linear scaling between vmin and vmax, but other</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">norms are ok, eg lognorm, powernorm</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orge797257" class="outline-4">
+<h4 id="orge797257"><span class="section-number-4">1.2.6</span> with out vmin vmax</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+<span class="org-variable-name">data</span> = np.load(get_sample_data(<span class="org-string">'axes_grid/bivariate_normal.npy'</span>))
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+<span class="org-variable-name">im</span> = ax.imshow(data, cmap=<span class="org-string">'seismic'</span>, interpolation=<span class="org-string">'nearest'</span>)
+fig.colorbar(im)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/46265CY.png" alt="46265CY.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org78ed7d3" class="outline-4">
+<h4 id="org78ed7d3"><span class="section-number-4">1.2.7</span> with vmin vmax</h4>
+<div class="outline-text-4" id="text-1-2-7">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+<span class="org-variable-name">data</span> = np.load(get_sample_data(<span class="org-string">'axes_grid/bivariate_normal.npy'</span>))
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+<span class="org-variable-name">im</span> = ax.imshow(data, cmap=<span class="org-string">'seismic'</span>, vmin= -<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>, vmax=<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>, interpolation=<span class="org-string">'nearest'</span>)
+fig.colorbar(im)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626GNe.png" alt="4626GNe.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org9075999" class="outline-4">
+<h4 id="org9075999"><span class="section-number-4">1.2.8</span> pcolor(pcolormesh) vs. imshow vs. scatter</h4>
+<div class="outline-text-4" id="text-1-2-8">
+<p>
+Note that, <code>imshow</code>, can directly convert a matrix to an image by
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.imshow(<span class="org-string">'2d_ndarray'</span>)
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">pcolor(pcolormesh)</th>
+<th scope="col" class="org-left">imshow</th>
+<th scope="col" class="org-left">scatter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">slow</td>
+<td class="org-left">fast</td>
+<td class="org-left">resize markers</td>
+</tr>
+
+<tr>
+<td class="org-left">flexible</td>
+<td class="org-left">rigid</td>
+<td class="org-left">recolor markers</td>
+</tr>
+
+<tr>
+<td class="org-left">more than rectangular</td>
+<td class="org-left">only allow rectangular</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In short, imshow can interpolate and display large arrays very quickly,
+pcolor, you can use arbitrary grids so long as they're ordered in an
+organized fashion so that they're monotonic, they don't have to be
+regular.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgd7a2b04" class="outline-3">
+<h3 id="orgd7a2b04"><span class="section-number-3">1.3</span> Vector Fields</h3>
+<div class="outline-text-3" id="text-1-3">
+<ol class="org-ol">
+<li>arrow/quiver/streamplot: Vector fields
+<ol class="org-ol">
+<li>arrow(x, y, dx, dy)</li>
+<li>quiver(x, y, dx, dy)</li>
+<li>streamplot(x, y, dx, dy)</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="org88749ed" class="outline-3">
+<h3 id="org88749ed"><span class="section-number-3">1.4</span> Data Distributions</h3>
+<div class="outline-text-3" id="text-1-4">
+<ol class="org-ol">
+<li>ax.hist(dists)</li>
+<li>ax.boxplot(dists)</li>
+<li>ax.violinplot(dists)</li>
+</ol>
+</div>
+</div>
+<div id="org760e59f" class="outline-3">
+<h3 id="org760e59f"><span class="section-number-3">1.5</span> Artist</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Take the bar graph as example, if we want draw the bars below the horizontal
+line with different color. We will need to catch the <b>Artist</b> object. Any
+thing you can see in a Matplotlib <b>figure/axes/line/bar/etc</b> is an <b>Artist</b>
+object. And every <b>Artist</b> have <code>set(...)</code> method, when you need do some
+specific settings for certain <b>line,bar,path,etc</b>, you will need it.
+</p>
+
+<pre class="example">
+.
+. *do some specific setting for ONE line/path/bar*
+.
+. ~ax.plot~ ==&gt; *lines* --------------------+                              +----&gt; for line in lines:
+. A list of Line2D objects                  |                              |          line.set(...)
+. representing the plotted data.            |                              |
+.                                           |                              |
+.                                           |      a collection of         |
+. ~ax.bar~ ==&gt; *BarContainer* --------------+----&gt; *Artist*, collection ---|----&gt; for bar in barContainer
+. Container with all the bars               |      is iterated             |          bar.set(...)
+. and optionally errorbars.                 |                              |
+.                                           |                              |
+.                                           |                              |
+. ~ax.scatter~ ==&gt; *paths* -----------------+                              +----&gt; for path in paths
+. PathCollection                                                                      path.set(...)
+.
+.
+Other similar *Artist*, not in this illustration:
+1. ~ax.fill_between~ ==&gt; *PolyCollection*
+   A PolyCollection containing the plotted polygons.
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">recolor the bars below horizontal line with different color</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+<span class="org-variable-name">vert_bars</span> = ax.bar(x, y, color=<span class="org-string">'lightblue'</span>, align=<span class="org-string">'center'</span>)
+
+<span class="org-keyword">for</span> bar, height <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(vert_bars, y):
+    <span class="org-keyword">if</span> height &lt; <span class="org-highlight-numbers-number">0</span>:
+        bar.<span class="org-builtin">set</span>(edgecolor=<span class="org-string">'darkred'</span>, color=<span class="org-string">'salmon'</span>, linewidth=<span class="org-highlight-numbers-number">3</span>)
+
+plt.show()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org1f945d7" class="outline-3">
+<h3 id="org1f945d7"><span class="section-number-3">1.6</span> Data keyword argument ( the author highlight )</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Brand new feature added in version 1.5 matplotlib, called "data keyword
+argument". Which make plotting pandas dataframe not so <b>heavy</b>.
+</p>
+
+<p>
+When using specialized data structures such as pandas dataframe and XArray,
+the input data to be plotted are accessed like a dictionary elements.
+</p>
+
+<pre class="example">
+.   ~df['colName']~
+.
+.   DataFrame: df
+.   |  a |  b |  c |
+.   |----+----+----|
+.   | 13 | 39 | 36 |
+.   |  3 |  9 |  6 |
+.   | 32 | 96 | 93 |
+.   |  5 | 15 | 12 |
+.
+.   BAD:
+.   ~ax.fill_between(df['a'], df['a']*2+1, df['a']*3+1.2, color = 'yellow', data=data_obj)~
+.
+.   GOOD:
+.   ~data_obj = {'x' : ___ , 'y1' : ___ , 'y2' : ___ , 'mean' : ___}~
+.       |
+.       +----------------------------------------------------+
+.                                                            |
+.                    key  key   key                          v
+.   ~ax.fill_between('x', 'y1', 'y2', color = 'yellow', data=data_obj)~
+.                     |     |     |                          ^ ^ ^
+.                     |     |     \---------getvalue---------+ | |
+.                     |     \---------------getvalue-----------+ |
+.                     \---------------------getvalue-------------+
+</pre>
+
+<p>
+This can get very <b>repetitive</b> and <b>tedious</b> as one types out a plotting
+command accessing those elements. So, the data keyword argument was added to
+many of the plotting functions in v1.5. With this feature, one can pass in a
+single dictionary-like object as data, and use the string key names in the
+place of the usual input data arguments.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span>=np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">200</span>)
+<span class="org-variable-name">data_obj</span> = {<span class="org-string">'x'</span> : x,
+            <span class="org-string">'y1'</span> : <span class="org-highlight-numbers-number">2</span>*x+<span class="org-highlight-numbers-number">1</span>,
+            <span class="org-string">'y2'</span> : <span class="org-highlight-numbers-number">3</span>*x+<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span>,
+            <span class="org-string">'mean'</span> : <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>*x*np.cos(<span class="org-highlight-numbers-number">2</span>*x)+<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span>*x+<span class="org-highlight-numbers-number">1</span>}
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span>=plt.subplots()
+ax.fill_between(<span class="org-string">'x'</span>, <span class="org-string">'y1'</span>, <span class="org-string">'y2'</span>, color = <span class="org-string">'yellow'</span>, data=data_obj)
+ax.plot(<span class="org-string">'x'</span>, <span class="org-string">'mean'</span>, color=<span class="org-string">'black'</span>, data=data_obj)
+
+plt.show()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgcc0746d" class="outline-3">
+<h3 id="orgcc0746d"><span class="section-number-3">1.7</span> Exercise 2.1</h3>
+<div class="outline-text-3" id="text-1-7">
+</div>
+<div id="org44529a1" class="outline-4">
+<h4 id="org44529a1"><span class="section-number-4">1.7.1</span> exercise of <code>fill</code> and <code>bar</code> graph</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+np.random.seed(<span class="org-highlight-numbers-number">1</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Generate data</span>
+<span class="org-variable-name">y_raw</span> = np.random.randn(<span class="org-highlight-numbers-number">1000</span>).cumsum() + <span class="org-highlight-numbers-number">15</span>
+<span class="org-variable-name">x_raw</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">24</span>, y_raw.size)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Get averages of every 100 samples</span>
+<span class="org-variable-name">x_pos</span> = x_raw.reshape(-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">100</span>).<span class="org-builtin">min</span>(axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y_avg</span> = y_raw.reshape(-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">100</span>).mean(axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y_err</span> = y_raw.reshape(-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">100</span>).ptp(axis=<span class="org-highlight-numbers-number">1</span>)
+
+<span class="org-variable-name">bar_width</span> = x_pos[<span class="org-highlight-numbers-number">1</span>] - x_pos[<span class="org-highlight-numbers-number">0</span>]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Make a made up future prediction with a fake condition</span>
+<span class="org-variable-name">x_pred</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">30</span>)
+<span class="org-variable-name">y_max_pred</span> = y_avg[<span class="org-highlight-numbers-number">0</span>] + y_err[<span class="org-highlight-numbers-number">0</span>] + <span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">3</span>*x_pred
+<span class="org-variable-name">y_min_pred</span> = y_avg[<span class="org-highlight-numbers-number">0</span>] - y_err[<span class="org-highlight-numbers-number">0</span>] + <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span>*x_pred
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Just so you don't. have to guess the colors ...</span>
+<span class="org-variable-name">barcolor</span>, <span class="org-variable-name">linecolor</span>, <span class="org-variable-name">fillcolor</span> = <span class="org-string">'wheat'</span>, <span class="org-string">'salmon'</span>, <span class="org-string">'lightblue'</span>
+
+<span class="org-comment-delimiter"># </span><span class="custom">DONE</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span>= plt.subplots()
+<span class="org-variable-name">bars</span> = axes.bar(x_pos, height=y_avg, width=bar_width, yerr=y_err, color=barcolor)
+<span class="org-variable-name">lines</span> = axes.plot(x_raw, y_raw, color=linecolor)
+<span class="org-variable-name">regions</span> = axes.fill_between(x_pred, y_max_pred, y_min_pred, color=fillcolor)
+axes.<span class="org-builtin">set</span>(xlim=[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">30</span>], ylim=[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">100</span>], title=<span class="org-string">'Future Projection of Attitdes'</span>, ylabel=<span class="org-string">'Snarkiness (snark units)'</span>, xlabel=<span class="org-string">'Minutes since class began'</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284c5A.png" alt="17284c5A.png" />
+</p>
+</div>
+
+<pre class="example">
+24/1000 = 0.24
+x_raw: 0, 0.24, 0.48, 0.72, 0.96, 1.2 ... 24 : 1000
+
+reshape to 10 * 1000
+...... 100
+......-------------------------------
+row-0: 0, 0.24, 0.48, 0.72, 0.96, 1.2  ====.min ===&gt;
+row-1: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-2: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-3: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-0: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-0: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-0: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-0: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-8: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+row-9: 0, 0.24, 0.48, 0.72, 0.96, 1.2
+
+x_pos.shape= (10,)
+y_avg.shape= (10,) mean of row
+y_err.shape= (10,) range max-min of row
+
+          num=50
+........ ------
+x_pred = 0 ~ 30
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org6c74eae" class="outline-3">
+<h3 id="org6c74eae"><span class="section-number-3">1.8</span> Exercise 2.2</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+colorbar with vmin and vmax
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+np.random.seed(<span class="org-highlight-numbers-number">1</span>)
+
+plt.style.use(<span class="org-string">'classic'</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Generate random data</span>
+<span class="org-variable-name">data1</span> = np.random.random((<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data2</span> = <span class="org-highlight-numbers-number">2</span> * np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data3</span> = <span class="org-highlight-numbers-number">3</span> * np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">set up figure and axes</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(ncols=<span class="org-highlight-numbers-number">3</span>, figsize=plt.figaspect(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>))
+fig.tight_layout()
+<span class="org-variable-name">cax</span> = fig.add_axes([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">55</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">03</span>]) <span class="org-comment-delimiter"># </span><span class="org-comment">add axes for colorbar</span>
+
+<span class="org-comment-delimiter"># </span><span class="custom">DONE</span>
+<span class="org-variable-name">im1</span>, <span class="org-variable-name">im2</span>, <span class="org-variable-name">im3</span> = [ axes[i].imshow(dt, cmap=<span class="org-string">'seismic'</span>, vmin=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, vmax=<span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">0</span>, interpolation=<span class="org-string">'nearest'</span>) <span class="org-keyword">for</span> i, dt <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>([data1, data2, data3])]
+plt.colorbar(im1, cax = cax, orientation=<span class="org-string">'horizontal'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626zUf.png" alt="4626zUf.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org12271ef" class="outline-2">
+<h2 id="org12271ef"><span class="section-number-2">2</span> misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org0323ba4" class="outline-3">
+<h3 id="org0323ba4"><span class="section-number-3">2.1</span> python</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="org25e235a" class="outline-4">
+<h4 id="org25e235a"><span class="section-number-4">2.1.1</span> for in zip() vs. for in enumerate()</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<pre class="example">
+.
+.                | arr |     dt1   dt2   dt3
+.                |-----|    +--+  +--+  +--+
+.                |   4 |    | 1|  | 2|  | 3|
+.                |   5 |    +--+  +--+  +--+
+.                |   6 |
+.                -------    ----------------
+. ~zip~ ==&gt;(     [4,5,6]  ,     [1,2,3]     )
+.                   i              dt
+.                   4     +        1
+.                   5     +        2
+.                   6     +        3
+.
+.
+.                   dt1   dt2   dt3                         | arr |
+.                  +--+  +--+  +--+                         |-----|
+.                  | 1|  | 2|  | 3|                   /----&gt;|   4 |
+.                  +--+  +--+  +--+                   |/---&gt;|   5 |
+. ~enumerate~ =&gt; enumerateObj (can index it)          ||/--&gt;|   6 |
+.                    dt                 i             |||
+.                     1         +       0 ------------/||
+.                     2         +       1 -------------/|
+.                     3         +       2 --------------/
+.
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">dt1</span>, <span class="org-variable-name">dt2</span>, <span class="org-variable-name">dt3</span> = <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>
+<span class="org-variable-name">arr</span> = np.array([<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">result_arr</span> = np.random.randn(<span class="org-highlight-numbers-number">3</span>)
+<span class="org-keyword">print</span> (result_arr)
+<span class="org-keyword">for</span> i, dt <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>([dt1, dt2, dt3]):
+    <span class="org-variable-name">result_arr</span>[i] = arr[i] + dt
+<span class="org-keyword">print</span> (result_arr[i])
+<span class="org-keyword">for</span> res, ele, dt <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(result_arr, arr, [dt1, dt2, dt3]):
+    <span class="org-variable-name">res</span> = ele + dt
+<span class="org-keyword">print</span> (res)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgf780bbf" class="outline-3">
+<h3 id="orgf780bbf"><span class="section-number-3">2.2</span> numpy</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="org6ebc19a" class="outline-4">
+<h4 id="org6ebc19a"><span class="section-number-4">2.2.1</span> numpy.cumsum(arr, dtype, axis)</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Return the cumulative sum of the elements along a given axis.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">argument</th>
+<th scope="col" class="org-left">return</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">no axis argument</td>
+<td class="org-left">return a 1-D array of cumulative sum from front to end of flattened array</td>
+</tr>
+
+<tr>
+<td class="org-left">axis = 0</td>
+<td class="org-left">return a 2-D array of cumulative sum from front-row to back-row</td>
+</tr>
+
+<tr>
+<td class="org-left">axis = 1</td>
+<td class="org-left">return a 2-D array of cumulative sum from left-column to right-column</td>
+</tr>
+
+<tr>
+<td class="org-left">dtype = float</td>
+<td class="org-left">change type of element to float</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">a</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">return a 1-D array of cumulative sum from front to end of flattened array</span>
+np.cumsum(a)
+</pre>
+</div>
+
+<pre class="example">
+array([ 1,  3,  6, 10, 15, 21])
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">return a 1-D array of cumulative sum and specify data types</span>
+np.cumsum(a, dtype=<span class="org-builtin">float</span>)
+</pre>
+</div>
+
+<pre class="example">
+array([ 1.,  3.,  6., 10., 15., 21.])
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">return a 2-D array of cumulative sum from front-row to back-row</span>
+np.cumsum(a,axis=<span class="org-highlight-numbers-number">0</span>)
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 2, 3],
+[5, 7, 9]])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">return a 2-D array of cumulative sum from left-column to right-column</span>
+np.cumsum(a,axis=<span class="org-highlight-numbers-number">1</span>)
+</pre>
+</div>
+
+<pre class="example">
+array([[ 1,  3,  6],
+[ 4,  9, 15]])
+</pre>
+</div>
+</div>
+
+<div id="orge6e3dbe" class="outline-4">
+<h4 id="orge6e3dbe"><span class="section-number-4">2.2.2</span> numpy.ptp(arr, axis, out)</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Range of values (maximum - minimum) along an axis.
+</p>
+<pre class="example">
+&gt;&gt;&gt; x = np.arange(4).reshape((2,2))
+
+&gt;&gt;&gt; x
+array([[0, 1],
+[2, 3]])
+
+&gt;&gt;&gt; np.ptp(x, axis=0)
+array([2, 2])
+
+&gt;&gt;&gt; np.ptp(x, axis=1)
+array([1, 1])
+</pre>
+</div>
+</div>
+
+<div id="orgf7a5421" class="outline-4">
+<h4 id="orgf7a5421"><span class="section-number-4">2.2.3</span> numpy.array.reshape(-1, num)</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+<code>-1</code> means I don't care the number of rows;
+<code>num</code> means I only require the number of columns should be <code>num</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">arr</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">100</span>).reshape(-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>)
+<span class="org-keyword">print</span> ( arr )
+</pre>
+</div>
+</div>
+</div>
+<div id="org32411d0" class="outline-4">
+<h4 id="org32411d0"><span class="section-number-4">2.2.4</span> numpy.random</h4>
+<div class="outline-text-4" id="text-2-2-4">
+<ol class="org-ol">
+<li><p>
+np.random.seed(num)
+</p>
+<pre class="example">
+setup the random number generator
+
+</pre></li>
+<li><p>
+np.random.randn(10)
+</p>
+<pre class="example">
+create an array of random number, with 10-elements inside
+
+</pre></li>
+<li><p>
+np.random.randint(num_start, num_stop)
+</p>
+<pre class="example">
+create a random integer in range [start, stop]
+
+</pre></li>
+<li><p>
+np.random.random((row_num, column_num))
+</p>
+<pre class="example">
+create an multiple dimension (row_num*column_num) array of random double in (0,1)
+
+</pre></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.random.random((<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">10</span>))
+</pre>
+</div>
+
+<pre class="example">
+array([[0.44688024, 0.25058039, 0.31516404, 0.65540106, 0.60013046,
+0.25673085, 0.44849235, 0.62245202, 0.75876794, 0.01955568],
+[0.49521851, 0.48317782, 0.0923694 , 0.3201248 , 0.87163057,
+0.82611117, 0.95797277, 0.98415232, 0.85615723, 0.32127401]])
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgaa5140e" class="outline-3">
+<h3 id="orgaa5140e"><span class="section-number-3">2.3</span> matplotlib</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="org21e059f" class="outline-4">
+<h4 id="org21e059f"><span class="section-number-4">2.3.1</span> plt.figure().add_axes</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+<code>fig.add_axes([l,b,w,h])</code> is a more flexible version than
+<code>fig.add_subplot()</code> add_axes(*args, **kwargs)
+</p>
+
+<p>
+Add an axes at position rect <code>[left, bottom, width, height]</code> where all
+quantities are in <code>fractions of figure</code> width and height.
+</p>
+
+<pre class="example">
+.
+.   +----------------------------------+
+.   |                                  +----&gt; figure
+.   |    left=0.4                      |
+.   |/--------------\            /-----+----&gt; axes
+.   |                            |     |
+.   |          /     +----------------+|
+.   |  bottom  |     |   width=0.5    ||
+.   |  = 0.5   |     |                ||
+.   |          |     | height=0.5     ||
+.   |          \     |                ||
+.   +----------------+----------------++
+.
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">figx</span> = plt.figure()
+figx.add_axes([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>])
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284gLF.png" alt="17284gLF.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf92b3a4" class="outline-4">
+<h4 id="orgf92b3a4"><span class="section-number-4">2.3.2</span> plt.figure()</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+<code>F = plt.figure(1, (4.5, 4.5))</code>
+<code>F = plt.figure("1", (4.5, 4.5))</code>
+</p>
+</div>
+</div>
+<div id="org57be36f" class="outline-4">
+<h4 id="org57be36f"><span class="section-number-4">2.3.3</span> ImageGrid()</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+figure -&gt; imagegrid -&gt; locatableAxes -&gt; imshow
+</p>
+
+<ol class="org-ol">
+<li>create a Figure
+<ul class="org-ul">
+<li>specify the id or window's title</li>
+<li>specify the size of window</li>
+</ul></li>
+<li>create a ImageGrid(collection of locatable Axes)
+<ul class="org-ul">
+<li>on this figure</li>
+<li>do partition on figure and specify the location to hold imagegrid</li>
+<li>do partition on imagegrid, each part is a locatable axes</li>
+</ul></li>
+<li>prepare the data in the form of np.array
+<ul class="org-ul">
+<li>path or iobuffer = get_sample_data from mlp.sample_data</li>
+<li>np.array = np.load()</li>
+</ul></li>
+<li>map np.array to colormap by imshow on each locatable axes</li>
+</ol>
+
+<pre class="example">
+.
+. [id = ~1~ ]
+. +------------------------------------+
+. |                default             |
+. |------------------------------------|
+. |                                    |\
+. |                                    | +
+. |                                    | |
+. |                                    | |
+. |                                    | |
+. |                                    | | 4.5                | F = plt.figure(1, (4.5, 4.5))
+. |                                    | |
+. |                                    | |
+. |                                    | |
+. |                                    | |
+. |                                    | |
+. |                                    | +
+. |                                    |/
+. +------------------------------------+
+.  \----------------------------------/
+.                  4.5
+.
+.
+. +------------------------------------+                       | grid = ImageGrid(F, 211,  # similar to subplot(111)
+. |                default         +---+--- nrows_ncols=(1,3)  |                  nrows_ncols=(1, 3),
+. |-------------------------------/----|                       |                  axes_pad=0.1,
+. |.-----------+-----------+-----+----.|                       |                  add_all=True,
+. ||           |           |          ||                       |                  label_mode="L",
+. ||           |           |          ||                       |                  )
+. ||   white   |   white   |   white  ||  subplot(2,1,1)
+. || locatable | locatable | locatable||
+. ||   axes    |   axes    |   axes   ||                       # ~grid = ImageGrid(F, 211,  # similar to subplot(111)~
+. |+-----------+-----------+----------+|                       # F -&gt; add ImageGrid on figure 'F' at *location*:
+. ||                                  ||                       # 1 -&gt; 2 row
+. ||                                  ||                       # 1 -&gt; 1 column
+. ||                                  ||                       # 1 -&gt; *index* of rowNum * colNum = 1
+. ||                                  ||
+. ||                                \ ||
+. |.---------------------------------\.|
+. .-----------------------------------\.
+.                                      \  subplot(2,1,2)
+.
+.
+. +------------------------------------+                      | im1 = Z
+. |                default             |                      | im2 = Z[:, :10]
+. |------------------------------------|                      | im3 = Z[:, 10:]
+. |.------------------+----------+----.|                      | vmin, vmax = Z.min(), Z.max()
+. || im1         ..   | im2      |im3 ||                      | for i, im in enumerate([im1, im2, im3]):
+. ||    ..........    |   ..     | .  ||                      |     print (i, im)
+. ||    .... ...      |    ...   | .. ||                      |     ax = grid[i]
+. ||    ........      |       .  |    ||                      |     print ( "ax type: ")
+. ||    .             |       .  |    ||                      |     print (type(ax) )
+. |+------------------+----------+----+|                      |     ax.imshow(im,
+. ||                                  ||                      |               origin="lower",
+. ||                                  ||                      |               vmin=vmin, vmax=vmax,
+. ||                                  ||                      |               interpolation="nearest")
+. ||                                  ||
+. ||                                  ||                      # imshow will give different locatable axes
+. |.----------------------------------.|                      # different size according to nparray size,
+. .------------------------------------.                      # and different image according to imshow
+.
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">from</span> mpl_toolkits.axes_grid1 <span class="org-keyword">import</span> ImageGrid
+
+<span class="org-keyword">def</span> <span class="org-function-name">get_demo_image</span>():
+    <span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+    <span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+    <span class="org-variable-name">f</span> = get_sample_data(<span class="org-string">"axes_grid/bivariate_normal.npy"</span>, asfileobj=<span class="org-constant">False</span>)
+    <span class="org-variable-name">z</span> = np.load(f)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">z is a numpy array of 15x15</span>
+    <span class="org-keyword">return</span> z, (-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, -<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-variable-name">F</span> = plt.figure(<span class="org-highlight-numbers-number">1</span>, (<span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>))
+<span class="org-variable-name">grid</span> = ImageGrid(F, <span class="org-highlight-numbers-number">111</span>,  <span class="org-comment-delimiter"># </span><span class="org-comment">similar to subplot(111)</span>
+                 nrows_ncols=(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>),
+                 axes_pad=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,
+                 add_all=<span class="org-constant">True</span>,
+                 label_mode=<span class="org-string">"L"</span>,
+                 )
+<span class="org-variable-name">Z</span>, <span class="org-variable-name">extent</span> = get_demo_image()  <span class="org-comment-delimiter"># </span><span class="org-comment">demo image</span>
+
+<span class="org-variable-name">im1</span> = Z
+<span class="org-variable-name">im2</span> = Z[:, :<span class="org-highlight-numbers-number">10</span>]
+<span class="org-variable-name">im3</span> = Z[:, <span class="org-highlight-numbers-number">10</span>:]
+<span class="org-variable-name">vmin</span>, <span class="org-variable-name">vmax</span> = Z.<span class="org-builtin">min</span>(), Z.<span class="org-builtin">max</span>()
+<span class="org-keyword">for</span> i, im <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>([im1, im2, im3]):
+    <span class="org-keyword">print</span> (i, im)
+    <span class="org-variable-name">ax</span> = grid[i]
+    <span class="org-keyword">print</span> ( <span class="org-string">"ax type: "</span>)
+    <span class="org-keyword">print</span> (<span class="org-builtin">type</span>(ax) )
+    ax.imshow(im, origin=<span class="org-string">"lower"</span>, vmin=vmin,
+              vmax=vmax, interpolation=<span class="org-string">"nearest"</span>)
+
+plt.draw()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626s4R.png" alt="4626s4R.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org332836e" class="outline-4">
+<h4 id="org332836e"><span class="section-number-4">2.3.4</span> plt.subplots()</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<div class="org-src-container">
+<pre class="src src-ipython">plt.subplots(
+<span class="org-highlight-numbers-number">1</span>. nrows=<span class="org-highlight-numbers-number">1</span>,                   <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- number of rows in figure</span>
+<span class="org-highlight-numbers-number">2</span>. ncols=<span class="org-highlight-numbers-number">1</span>,                   <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- number of columns in figure</span>
+<span class="org-highlight-numbers-number">3</span>. figsize=plt.figaspect(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- figaspect will return a tuple</span>
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orga7cfadb" class="outline-4">
+<h4 id="orga7cfadb"><span class="section-number-4">2.3.5</span> plt.figaspect(ratioBetweenHeightAndWidth)</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<pre class="example">
+.
+.              tall / wide = 0.5
+.                   |
+.                   v
+.    plt.figaspect(0.5) will return a tuple (default_size, default_size*0.5)
+.                                            ------------  ----------------
+.                                            figwidth      figheight
+.
+</pre>
+</div>
+</div>
+<div id="orga75761b" class="outline-4">
+<h4 id="orga75761b"><span class="section-number-4">2.3.6</span> ax.imshow(arr, vmin, vmax, interpolation)</h4>
+<div class="outline-text-4" id="text-2-3-6">
+<p>
+interpolation='nearest' will make the <code>unit size(1,1)</code> the same color.
+</p>
+</div>
+</div>
+
+<div id="orgd98aef0" class="outline-4">
+<h4 id="orgd98aef0"><span class="section-number-4">2.3.7</span> interpolation</h4>
+<div class="outline-text-4" id="text-2-3-7">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">figure and n+1 ax</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(
+    nrows=<span class="org-highlight-numbers-number">2</span>,
+    ncols=<span class="org-highlight-numbers-number">3</span>,
+    figsize=plt.figaspect(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>)
+)
+<span class="org-variable-name">cax</span> = fig.add_axes([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">01</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">01</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">get data in form of np.array</span>
+<span class="org-variable-name">data1</span> = np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data2</span> = <span class="org-highlight-numbers-number">2</span>*np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data3</span> = <span class="org-highlight-numbers-number">3</span>*np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data4</span> = np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data5</span> = <span class="org-highlight-numbers-number">2</span>*np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">data6</span> = <span class="org-highlight-numbers-number">3</span>*np.random.random((<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">10</span>))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">interpolation='nearest'</span>
+<span class="org-keyword">for</span> ax,dt <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes[<span class="org-highlight-numbers-number">0</span>,:], [data1, data2, data3]):
+    <span class="org-variable-name">im</span> = ax.imshow(dt, vmin=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, vmax=<span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">0</span>, interpolation=<span class="org-string">'nearest'</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">without interpolation</span>
+<span class="org-keyword">for</span> ax,dt <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes[<span class="org-highlight-numbers-number">1</span>,:], [data4, data5, data6]):
+    <span class="org-variable-name">im2</span> = ax.imshow(dt, vmin=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, vmax=<span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">0</span>)
+
+plt.colorbar(im, cax=cax, orientation=<span class="org-string">'horizontal'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/46264g2.png" alt="46264g2.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

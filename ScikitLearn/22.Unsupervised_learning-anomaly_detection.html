@@ -1,0 +1,2307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记21:非监督学习-离群点检测</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记21:非监督学习-离群点检测</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org70692e4">1. outlier detection</a>
+<ul>
+<li><a href="#org494f533">1.1. Types of outlier detection setups</a></li>
+<li><a href="#org39a04af">1.2. Anomaly detection with density estimation</a>
+<ul>
+<li><a href="#orgb343dcb">1.2.1. Generating the data set</a></li>
+<li><a href="#org3ab1451">1.2.2. find the maximum likelihood KernelDensity model fit for train_data</a></li>
+<li><a href="#org5e8cfb2">1.2.3. compute the log-likelihood of each point in train_data</a></li>
+<li><a href="#orgbb240d2">1.2.4. find the 95% cut point of all points' log-likelihood</a></li>
+<li><a href="#orgec3309c">1.2.5. create data points by <code>meshgrid</code></a></li>
+<li><a href="#org47dd924">1.2.6. draw the contour covering the points whose log-likelihood are 95% largest</a></li>
+</ul>
+</li>
+<li><a href="#org8add957">1.3. now with One-Class SVM</a>
+<ul>
+<li><a href="#org765b116">1.3.1. drawbacks of density based estimation</a></li>
+<li><a href="#org42ddf91">1.3.2. one-class svm enter</a></li>
+<li><a href="#orgbbdffca">1.3.3. what is outlier in SVM view</a></li>
+<li><a href="#org0226c3c">1.3.4. how to set the parameter 'nu'</a></li>
+<li><a href="#org970006c">1.3.5. output detection result</a></li>
+<li><a href="#orgea948de">1.3.6. [Q] why we have so different contour function for the same problem</a></li>
+<li><a href="#org791d860">1.3.7. what is decision_function(), predict() in svm</a></li>
+<li><a href="#orgff09e9c">1.3.8. draw the contour and outliers</a></li>
+<li><a href="#org42e5b57">1.3.9. how to get the outliers</a></li>
+<li><a href="#org236caf8">1.3.10. how to get the support vectors</a></li>
+<li><a href="#org0524379">1.3.11. support vectors vs. outliers</a></li>
+<li><a href="#org13d0d3d">1.3.12. EXERCISE</a></li>
+</ul>
+</li>
+<li><a href="#org2708032">1.4. now with Isolation Forest</a>
+<ul>
+<li><a href="#org087a799">1.4.1. what is isolation forest and why does it work</a></li>
+<li><a href="#orga795d67">1.4.2. build isolation forest model</a></li>
+<li><a href="#orgf39520a">1.4.3. EXERCISE</a></li>
+<li><a href="#org154f4c6">1.4.4. apply isolation forest on digits data set</a>
+<ul>
+<li><a href="#orgd409a2a">1.4.4.1. The digits data set consists in images (8 x 8) of digits.</a></li>
+<li><a href="#orge50e929">1.4.4.2. preview the digits image by <code>imshow</code></a></li>
+<li><a href="#orged813b1">1.4.4.3. flatten images before using as training data</a></li>
+<li><a href="#org29991c6">1.4.4.4. focus on digit '5' images</a></li>
+<li><a href="#orge7e069c">1.4.4.5. find the 5% outliers: build model</a></li>
+<li><a href="#org53f05d8">1.4.4.6. find the 5% outliers: compute the abnormality by <code>decision_function</code></a></li>
+<li><a href="#orgff2dc97">1.4.4.7. find the 5% outliers: find the strongest inliers by <code>argsort</code></a></li>
+<li><a href="#orge85f1dd">1.4.4.8. find the 5% outliers: find the strongest outliers</a></li>
+</ul>
+</li>
+<li><a href="#org3b0e8d1">1.4.5. EXERCISE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org2ccdaab">2. Misc tools</a>
+<ul>
+<li><a href="#org9ad54fe">2.1. scikit-learn</a>
+<ul>
+<li><a href="#org3fcc12c">2.1.1. ML models by now</a></li>
+<li><a href="#orgda45876">2.1.2. OneClassSVM</a></li>
+</ul>
+</li>
+<li><a href="#org9409ca3">2.2. Numpy</a>
+<ul>
+<li><a href="#org8133fe0">2.2.1. np.c_</a></li>
+<li><a href="#org0d26d08">2.2.2. np.r_</a></li>
+</ul>
+</li>
+<li><a href="#org2f64a37">2.3. Scipy</a>
+<ul>
+<li><a href="#orgcfa5fd5">2.3.1. scipy.stats.mstats.mquantiles</a></li>
+</ul>
+</li>
+<li><a href="#org7928384">2.4. Statistics</a>
+<ul>
+<li><a href="#orgab477b9">2.4.1. <span class="todo TODO">TODO</span> quantiles in statistics</a></li>
+</ul>
+</li>
+<li><a href="#org1cb631d">2.5. Matplotlib</a>
+<ul>
+<li><a href="#org270dcb7">2.5.1. module by now</a></li>
+<li><a href="#org17eda65">2.5.2. plt.contour</a></li>
+<li><a href="#org8466bac">2.5.3. plt.contourf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6f2c019">3. code snippet</a>
+<ul>
+<li><a href="#orgec18506">3.1. how to draw one digt in one subplot</a></li>
+<li><a href="#org755e14f">3.2. how to generate 2-d points with 3 cluster</a></li>
+</ul>
+</li>
+<li><a href="#orgb3e3c55">4. scikit learn guide</a>
+<ul>
+<li><a href="#orgb029fa8">4.1. 2.8. Density Estimation</a>
+<ul>
+<li><a href="#org8cb12cc">4.1.1. 2.8.1. Density Estimation: Histograms</a></li>
+<li><a href="#org6bd416c">4.1.2. 2.8.2. Kernel Density Estimation</a>
+<ul>
+<li><a href="#org54523d9">4.1.2.1. mathematical definition</a></li>
+<li><a href="#org1deca8b">4.1.2.2. what is a bandwidth in KDE</a></li>
+<li><a href="#orgc63db24">4.1.2.3. various kinds of Kernels</a></li>
+<li><a href="#org0ebee41">4.1.2.4. distance metrics of KDE</a></li>
+<li><a href="#org6071380">4.1.2.5. common applications of KDE: species density in South Amercican</a></li>
+<li><a href="#orgeb56e31">4.1.2.6. common applications of KDE: generate digits based on given digits</a></li>
+<li><a href="#orgf71329d">4.1.2.7. Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org255b609">4.2. Outlier detection with several methods</a>
+<ul>
+<li><a href="#org202802a">4.2.1. 4 general methods to do outliers detection</a></li>
+<li><a href="#org369163a">4.2.2. performance illustration of 4 general methods</a></li>
+<li><a href="#org6639c46">4.2.3. code snippet</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> warnings
+warnings.filterwarnings(<span class="org-string">"ignore"</span>)
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+
+<div id="org70692e4" class="outline-2">
+<h2 id="org70692e4"><span class="section-number-2">1</span> outlier detection</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Anomaly detection is a machine learning task that consists in spotting so-called
+outliers.
+</p>
+
+<blockquote>
+<p>
+“An outlier is an observation in a data set which appears to be inconsistent
+with the remainder of that set of data.” Johnson 1992
+</p>
+
+<p>
+“An outlier is an observation which deviates so much from the other observations
+as to arouse suspicions that it was generated by a different mechanism.”
+Outlier/Anomaly Hawkins 1980
+</p>
+</blockquote>
+</div>
+
+<div id="org494f533" class="outline-3">
+<h3 id="org494f533"><span class="section-number-3">1.1</span> Types of outlier detection setups</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>Supervised AD
+<ul class="org-ul">
+<li>Labels available for both normal data and outlier</li>
+<li>Similar to rare class mining / imbalanced classification</li>
+</ul></li>
+<li>Semi-supervised AD (Novelty Detection)
+<ul class="org-ul">
+<li>Only normal data available to train</li>
+<li>The algorithm learns on normal data only</li>
+</ul></li>
+<li>Unsupervised AD (Outlier Detection)
+<ul class="org-ul">
+<li>no labels, training set = normal + abnormal data</li>
+<li>Assumption: anomalies are very rare</li>
+</ul></li>
+</ul>
+
+<p>
+Let's first get familiar with different <b>unsupervised anomaly detection
+approaches and algorithms</b>. In order to visualise the output of the different
+algorithms we consider a toy data set consisting in a two-dimensional Gaussian
+mixture.
+</p>
+</div>
+</div>
+
+<div id="org39a04af" class="outline-3">
+<h3 id="org39a04af"><span class="section-number-3">1.2</span> Anomaly detection with density estimation</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="orgb343dcb" class="outline-4">
+<h4 id="orgb343dcb"><span class="section-number-4">1.2.1</span> Generating the data set</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_blobs
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_blobs(n_features=<span class="org-highlight-numbers-number">2</span>, centers=<span class="org-highlight-numbers-number">3</span>, n_samples=<span class="org-highlight-numbers-number">500</span>,
+                  random_state=<span class="org-highlight-numbers-number">42</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X.shape
+</pre>
+</div>
+
+<pre class="example">
+(500, 2)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.figure()
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>])
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199PsK.png" alt="3199PsK.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3ab1451" class="outline-4">
+<h4 id="org3ab1451"><span class="section-number-4">1.2.2</span> find the maximum likelihood KernelDensity model fit for train_data</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+kernel density is a normal pdf(probability density function).
+</p>
+
+<p>
+By <code>fit()</code> we can find the maximum likelihood kernel density fn fit for this
+'X' datasets
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.neighbors.kde <span class="org-keyword">import</span> KernelDensity
+<span class="org-comment-delimiter"># </span><span class="org-comment">Estimate density with a Gaussian kernel density estimator</span>
+<span class="org-variable-name">kde</span> = KernelDensity(kernel=<span class="org-string">'gaussian'</span>)
+<span class="org-variable-name">kde</span> = kde.fit(X)
+kde
+</pre>
+</div>
+
+<pre class="example">
+KernelDensity(algorithm='auto', atol=0, bandwidth=1.0, breadth_first=True,
+kernel='gaussian', leaf_size=40, metric='euclidean',
+metric_params=None, rtol=0)
+</pre>
+</div>
+</div>
+
+<div id="org5e8cfb2" class="outline-4">
+<h4 id="org5e8cfb2"><span class="section-number-4">1.2.3</span> compute the log-likelihood of each point in train_data</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">kde_X</span> = kde.score_samples(X)
+<span class="org-keyword">print</span>(kde_X.shape)  <span class="org-comment-delimiter"># </span><span class="org-comment">contains the log-likelihood of all data points in 'X' on</span>
+                    <span class="org-comment-delimiter"># </span><span class="org-comment">this kde(some like pdf). The smaller it is ,The rarer is</span>
+                    <span class="org-comment-delimiter"># </span><span class="org-comment">the sample. https://www.youtube.com/watch?v=ddqny3aZNPY</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgbb240d2" class="outline-4">
+<h4 id="orgbb240d2"><span class="section-number-4">1.2.4</span> find the 95% cut point of all points' log-likelihood</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+because the decision_function(or called value-function, compute the value
+of each point) of this kde is log-likelihood(point). So every
+decision_function value(can get by score_samples(point)) says something
+about the occurence probability of this point on this kde( or called pdf).
+For that reason, we can just keep the largest 95% score_samples(x) value
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.stats.mstats <span class="org-keyword">import</span> mquantiles
+<span class="org-variable-name">alpha_set</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">95</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">what mquantiles method do is find the given percent(by ~prob~) largest</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">element of given list(by ~a~)</span>
+<span class="org-variable-name">tau_kde</span> = mquantiles(kde_X, <span class="org-highlight-numbers-number">1</span>. - alpha_set)
+<span class="org-keyword">print</span> ( tau_kde )
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgec3309c" class="outline-4">
+<h4 id="orgec3309c"><span class="section-number-4">1.2.5</span> create data points by <code>meshgrid</code></h4>
+<div class="outline-text-4" id="text-1-2-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">n_samples</span>, <span class="org-variable-name">n_features</span> = X.shape
+<span class="org-variable-name">X_range</span> = np.zeros((n_features, <span class="org-highlight-numbers-number">2</span>)) <span class="org-comment-delimiter"># </span><span class="org-comment">(2,2)</span>
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- min value of each column(feature) in dataset</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">assign to first column of x_range</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">[[feature_1_min,_]</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">[feature_2_min,_]]</span>
+<span class="org-variable-name">X_range</span>[:, <span class="org-highlight-numbers-number">0</span>] = np.<span class="org-builtin">min</span>(X, axis=<span class="org-highlight-numbers-number">0</span>) - <span class="org-highlight-numbers-number">1</span>.
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- max value of each column(feature) in dataset</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">assign to first column of x_range</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">[[feature_1_min,feature_1_max]</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">[feature_2_min,feature_2_max]]</span>
+<span class="org-variable-name">X_range</span>[:, <span class="org-highlight-numbers-number">1</span>] = np.<span class="org-builtin">max</span>(X, axis=<span class="org-highlight-numbers-number">0</span>) + <span class="org-highlight-numbers-number">1</span>.
+
+<span class="org-variable-name">h</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>  <span class="org-comment-delimiter"># </span><span class="org-comment">step size of the mesh</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">compute [min, max] of each feature, to set the meshgrid range</span>
+<span class="org-variable-name">x_min</span>, <span class="org-variable-name">x_max</span> = X_range[<span class="org-highlight-numbers-number">0</span>]
+<span class="org-variable-name">y_min</span>, <span class="org-variable-name">y_max</span> = X_range[<span class="org-highlight-numbers-number">1</span>]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">meshgrid is some-like the full combination of two array</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">meshgrid([1,2], [3,4]) =&gt; list of array of array: [[1|,2],</span>
+<span class="org-comment-delimiter">#                                                    </span><span class="org-comment">[1|,2]]</span>
+<span class="org-comment-delimiter">#                                                   </span><span class="org-comment">[[3||,3],</span>
+<span class="org-comment-delimiter">#                                                    </span><span class="org-comment">[4||,4]]</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">you can create points by select one-axis value from 1st array, eg: 1, 1</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">you can create points by select one-axis value from 2nd array, eg: 3, 4</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">you get (1,3), (1,4)</span>
+<span class="org-variable-name">xx</span>, <span class="org-variable-name">yy</span>= np.meshgrid(np.arange(x_min, x_max, h),
+                 np.arange(y_min, y_max, h))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">then you flatten xx and yy by ravel(), to get all x-values and y-values</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">finally, you stack all x-values and y-values on last axes after post-pended</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">which is the functionality of np.c_</span>
+<span class="org-variable-name">grid</span> = np.c_[xx.ravel(), yy.ravel()]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org47dd924" class="outline-4">
+<h4 id="org47dd924"><span class="section-number-4">1.2.6</span> draw the contour covering the points whose log-likelihood are 95% largest</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">Z_kde</span> = kde.score_samples(grid) <span class="org-comment-delimiter"># </span><span class="org-comment">get the decision_function value of each point</span>
+                                <span class="org-comment-delimiter"># </span><span class="org-comment">here is the log-likelihood value of each point</span>
+<span class="org-keyword">print</span>(Z_kde)
+<span class="org-variable-name">Z_kde</span> = Z_kde.reshape(xx.shape)
+plt.figure()
+<span class="org-variable-name">c_0</span> = plt.contour(xx, yy, Z_kde, levels=tau_kde, colors=<span class="org-string">'red'</span>, linewidths=<span class="org-highlight-numbers-number">3</span>)
+plt.clabel(c_0, inline=<span class="org-highlight-numbers-number">1</span>, fontsize=<span class="org-highlight-numbers-number">15</span>, fmt={tau_kde[<span class="org-highlight-numbers-number">0</span>]: <span class="org-builtin">str</span>(alpha_set)})
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>])
+plt.legend()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199c2Q.png" alt="3199c2Q.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org8add957" class="outline-3">
+<h3 id="org8add957"><span class="section-number-3">1.3</span> now with One-Class SVM</h3>
+<div class="outline-text-3" id="text-1-3">
+</div>
+<div id="org765b116" class="outline-4">
+<h4 id="org765b116"><span class="section-number-4">1.3.1</span> drawbacks of density based estimation</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+The problem of density based estimation is that they tend to become
+<b>inefficient</b> when the dimensionality of the data increase. It's the so-called
+<b>curse of dimensionality</b> that affects particularly density estimation
+algorithms. The <b>one-class SVM</b> algorithm can be used in such cases.
+</p>
+</div>
+</div>
+
+<div id="org42ddf91" class="outline-4">
+<h4 id="org42ddf91"><span class="section-number-4">1.3.2</span> one-class svm enter</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.svm <span class="org-keyword">import</span> OneClassSVM
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgbbdffca" class="outline-4">
+<h4 id="orgbbdffca"><span class="section-number-4">1.3.3</span> what is outlier in SVM view</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+three kinds of outliers from near to far:
+</p>
+<ol class="org-ol">
+<li>support vector(on the fat margin)</li>
+<li>in the fat margin</li>
+<li>on the wrong side</li>
+</ol>
+
+
+<p>
+All the ourliers have a same property:
+</p>
+
+<p>
+\(\theta^T \cdot \textbf{X} + b \leq 1\), that is <code>svm_model.predict(x) = -1</code>
+</p>
+
+<blockquote>
+<p>
+.
+.          (1)                        (2)                     (3)                   (3)
+.      |        . ..           |        . ..           |        . ..           |        . ..
+.      |      \ &#x2026;..          |      \ &#x2026;..          |      \ &#x2026;..          |      \ &#x2026;..
+.      |    \  . &#x2026;           |    \  . &#x2026;           |    \  . &#x2026;           |    \  . &#x2026;
+.      |  \  \  \              |  \  \ .\              |  \  \  \              |  \  \  \
+.      |   \  \  \             |   \  \  \             |   \ .\  \             |  .\  \  \
+.      | <b>*</b>\  \  \            | <b>*</b>\  \  \            | <b>*</b>\  \  \            | <b>*</b>\  \  \
+.      | <b>*</b> *  \              | <b>*</b> *  \              | <b>*</b> *  \              | <b>*</b> *  \
+.  ------&#x2013;&#x2014;&#x00ad;----&#x2013;&#x2014;  ------&#x2013;&#x2014;&#x00ad;----&#x2013;&#x2014;  ------&#x2013;&#x2014;&#x00ad;----&#x2013;&#x2014;  ------&#x2013;&#x2014;&#x00ad;----&#x2013;&#x2014;
+.      |                       |                       |                       |
+.
+</p>
+</blockquote>
+
+
+<p>
+near:
+SVs can also be seen as outliers, because they must lie on the edge of a group,
+otherwise they'll not be support vectors.
+</p>
+
+<p>
+farther:
+on the right side in the fat margin
+</p>
+
+<p>
+farthest:
+on the wrong side(inside or outside the margin)
+</p>
+
+
+<div class="figure">
+<p><img src="now with One-Class SVM/screenshot_2018-06-14_21-53-14.png" alt="screenshot_2018-06-14_21-53-14.png" />
+</p>
+</div>
+
+<p>
+如果要分对所有点，由于 on the wrong side 离群点的存在，我们将无法构造出能将数据分开的超平面来.
+</p>
+
+
+<div class="figure">
+<p><img src="now with One-Class SVM/screenshot_2018-06-15_08-37-49.png" alt="screenshot_2018-06-15_08-37-49.png" />
+</p>
+</div>
+
+<p>
+用黑圈圈起来的那个蓝点是一个离群点，它偏离了自己原本所应该在的那个半空间，如果直接忽略掉它的话，原来的分隔超平面还是挺好的，但是由于这个离群点的出现，导致分隔超平面不得不被挤歪了，变成途中黑色虚线所示，同时间隔也相应变小了。当然，更严重的情况是，如果这个离群点再往右上移动一些距离的话，我们将无法构造出能将数据分开的超平面来。
+</p>
+</div>
+</div>
+
+<div id="org0226c3c" class="outline-4">
+<h4 id="org0226c3c"><span class="section-number-4">1.3.4</span> how to set the parameter 'nu'</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+<code>nu = 0.05</code> # upper bound of the <b>fraction of outliers</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">nu</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>  <span class="org-comment-delimiter">#  </span><span class="org-comment">upper bound of the fraction of outliers</span>
+<span class="org-variable-name">ocsvm</span> = OneClassSVM(
+    kernel=<span class="org-string">'rbf'</span>,
+    gamma=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>,
+    nu=nu)
+ocsvm.fit(X)
+</pre>
+</div>
+
+<pre class="example">
+OneClassSVM(cache_size=200, coef0=0.0, degree=3, gamma=0.05, kernel='rbf',
+max_iter=-1, nu=0.05, random_state=None, shrinking=True, tol=0.001,
+verbose=False)
+</pre>
+</div>
+</div>
+
+<div id="org970006c" class="outline-4">
+<h4 id="org970006c"><span class="section-number-4">1.3.5</span> output detection result</h4>
+<div class="outline-text-4" id="text-1-3-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">because this is one-class svm, so just this class or NOT this class</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">1: this class</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">-1: NOT this class</span>
+<span class="org-variable-name">X_outliers</span> = X[ocsvm.predict(X) == -<span class="org-highlight-numbers-number">1</span>]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgea948de" class="outline-4">
+<h4 id="orgea948de"><span class="section-number-4">1.3.6</span> [Q] why we have so different contour function for the same problem</h4>
+<div class="outline-text-4" id="text-1-3-6">
+<blockquote>
+<p>
+c_0 = plt.contour(xx, yy, Z_ocsvm, levels=[0], colors='red', linewidths=3)
+c_0 = plt.contour(xx, yy, Z_kde, levels=tau_kde, colors='red', linewidths=3)
+</p>
+</blockquote>
+
+<p>
+Note that, in order to draw z-axes based on x and y, we should have a
+function of x and y, this function :
+</p>
+<ul class="org-ul">
+<li>in one-class-svm is called <code>ocsvm_model.decision_function(point)</code></li>
+<li>in KDE is called <code>kde_model.score_samples(point)</code></li>
+</ul>
+
+<p>
+they both say the same thing: z-value(the new created axis) of contour
+</p>
+
+<p>
+for one-class-SVM:
+</p>
+<hr />
+<p>
+*we set concern region(the 95% nearest points against to the separating
+hyperplane) in SVM model, so levels(decision_function value) of contour is
+0*
+</p>
+
+<p>
+we give the svm model parameter 'nu' 0.05
+</p>
+
+<p>
+nu = 0.05  #  upper bound of the fraction of outliers
+ocsvm = OneClassSVM(kernel='rbf', gamma=0.05, nu=nu) # setup <code>nu</code> of the SVM
+c_0 = plt.contour(xx, yy, Z_ocsvm, levels=[0], colors='red', linewidths=3)
+</p>
+
+<p>
+parameter 'levels' of this contour of SVM:
+</p>
+<ul class="org-ul">
+<li><code>0</code> is the point on the separating hyperplane.</li>
+<li><code>&lt;0</code> is the point on the wrong side of separating hyperplane, here is NOT belong this class</li>
+<li><code>&gt;0</code> is the point on the right side ofseparating hyperplane, here is belong this class</li>
+</ul>
+
+<p>
+The value we assign to parameter of contour(): <code>levels</code>, is the value of
+decision_function, because we here use one-class-svm, so all points with
+negative decision function value are the wrong predicted points, and because
+we set SVM model parameter 'nu'=0.05, so this model will only guarantee the
+decision_fn value of points who has the 95% shortest distance larger than 0.
+</p>
+
+
+<p>
+for KDE:
+</p>
+<hr />
+<p>
+*no parameter about concern region in KDE we can set, but the
+z-value(log-likelihood of this sample on certain kde, can be computed by
+score_samples(point)) it self says some thing about the occurence
+probability, so we order them and keep the largest 95%, and set the 5%
+z-value in ordered z-value list as the levels of contour*
+</p>
+
+
+<p>
+we give the percent(of largest of z-value) we want to keep to 'alpha_set'
+</p>
+
+<p>
+alpha_set = 0.95
+tau_kde = mquantiles(kde_X, 1. - alpha_set)
+</p>
+
+<p>
+we compute the levels: tau_kde
+c_0 = plt.contour(xx, yy, Z_kde, levels=tau_kde, colors='red', linewidths=3)
+</p>
+</div>
+</div>
+
+<div id="org791d860" class="outline-4">
+<h4 id="org791d860"><span class="section-number-4">1.3.7</span> what is decision_function(), predict() in svm</h4>
+<div class="outline-text-4" id="text-1-3-7">
+<p>
+decision_function:
+</p>
+
+<p>
+\(\theta^T \cdot \textbf{X} + b\)
+</p>
+</div>
+</div>
+
+<div id="orgff09e9c" class="outline-4">
+<h4 id="orgff09e9c"><span class="section-number-4">1.3.8</span> draw the contour and outliers</h4>
+<div class="outline-text-4" id="text-1-3-8">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">Z_ocsvm</span> = ocsvm.decision_function(grid) <span class="org-comment-delimiter"># </span><span class="org-comment">Signed distance to the separating hyperplane.</span>
+<span class="org-variable-name">Z_ocsvm</span> = Z_ocsvm.reshape(xx.shape)
+
+plt.figure()
+
+<span class="org-variable-name">c_0</span> = plt.contour(xx, yy, Z_ocsvm, levels=[<span class="org-highlight-numbers-number">0</span>], colors=<span class="org-string">'red'</span>, linewidths=<span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">note that, we take contour obj as parameter of clabel.</span>
+plt.clabel(c_0, inline=<span class="org-highlight-numbers-number">1</span>, fontsize=<span class="org-highlight-numbers-number">15</span>, fmt={<span class="org-highlight-numbers-number">0</span>: <span class="org-builtin">str</span>(alpha_set)}) <span class="org-comment-delimiter"># </span><span class="org-comment">draw clabel '0.95'</span>
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>])
+plt.scatter(X_outliers[:, <span class="org-highlight-numbers-number">0</span>], X_outliers[:, <span class="org-highlight-numbers-number">1</span>], color=<span class="org-string">'red'</span>)
+plt.legend()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199pAX.png" alt="3199pAX.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org42e5b57" class="outline-4">
+<h4 id="org42e5b57"><span class="section-number-4">1.3.9</span> how to get the outliers</h4>
+<div class="outline-text-4" id="text-1-3-9">
+<ol class="org-ol">
+<li>one-class svm obj</li>
+<li>model with specifying threshold percentage 'nu'</li>
+<li>collect the -1 labeled data point X[svm_model.predict(x) == -1]</li>
+</ol>
+</div>
+</div>
+
+<div id="org236caf8" class="outline-4">
+<h4 id="org236caf8"><span class="section-number-4">1.3.10</span> how to get the support vectors</h4>
+<div class="outline-text-4" id="text-1-3-10">
+<p>
+The so-called support vectors of the one-class SVM form the outliers
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_SV</span> = X[ocsvm.support_] <span class="org-comment-delimiter"># </span><span class="org-comment">support_ attr will return indices of the support</span>
+                         <span class="org-comment-delimiter"># </span><span class="org-comment">vectors, then we can get it by index it in dataset</span>
+<span class="org-keyword">print</span> (ocsvm.decision_function(X_SV))
+<span class="org-keyword">print</span> (ocsvm.decision_function(X_outliers))
+<span class="org-keyword">print</span> (X_outliers.shape)
+<span class="org-keyword">print</span> (X_SV.shape)
+<span class="org-variable-name">n_SV</span> = <span class="org-builtin">len</span>(X_SV)
+<span class="org-variable-name">n_outliers</span> = <span class="org-builtin">len</span>(X_outliers)
+<span class="org-keyword">print</span>(<span class="org-string">'{0:.2f} &lt;= {1:.2f} &lt;= {2:.2f}?'</span>.<span class="org-builtin">format</span>(<span class="org-highlight-numbers-number">1</span>./n_samples*n_outliers, nu, <span class="org-highlight-numbers-number">1</span>./n_samples*n_SV))
+</pre>
+</div>
+
+<p>
+<b>Only the support vectors are involved in the decision function of the
+One-Class SVM</b>.
+</p>
+
+<ul class="org-ul">
+<li>Plot the level sets of the One-Class SVM decision function as we did for the true density.</li>
+<li><p>
+Emphasize the Support vectors.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows = <span class="org-highlight-numbers-number">1</span>, ncols=<span class="org-highlight-numbers-number">2</span>, figsize=(<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">5</span>))
+axes[<span class="org-highlight-numbers-number">0</span>].contourf(xx, yy, Z_ocsvm, <span class="org-highlight-numbers-number">10</span>, cmap=plt.cm.Blues_r)
+axes[<span class="org-highlight-numbers-number">1</span>].contourf(xx, yy, Z_ocsvm, <span class="org-highlight-numbers-number">10</span>, cmap=plt.cm.Blues_r)
+axes[<span class="org-highlight-numbers-number">0</span>].contour(xx, yy, Z_ocsvm, levels=[<span class="org-highlight-numbers-number">0</span>], color= <span class="org-string">'red'</span>, linewidths=<span class="org-highlight-numbers-number">3</span>)
+axes[<span class="org-highlight-numbers-number">0</span>].scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], s=<span class="org-highlight-numbers-number">1</span>.)
+axes[<span class="org-highlight-numbers-number">1</span>].scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], s=<span class="org-highlight-numbers-number">1</span>.)
+axes[<span class="org-highlight-numbers-number">0</span>].scatter(X_SV[:, <span class="org-highlight-numbers-number">0</span>], X_SV[:, <span class="org-highlight-numbers-number">1</span>], color=<span class="org-string">'orange'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">plot the SVs</span>
+axes[<span class="org-highlight-numbers-number">1</span>].plot(X_outliers[:, <span class="org-highlight-numbers-number">0</span>], X_outliers[:, <span class="org-highlight-numbers-number">1</span>], <span class="org-string">'or'</span>)  <span class="org-comment-delimiter"># </span><span class="org-comment">plot the outliers</span>
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199q6p.png" alt="3199q6p.png" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="org0524379" class="outline-4">
+<h4 id="org0524379"><span class="section-number-4">1.3.11</span> support vectors vs. outliers</h4>
+<div class="outline-text-4" id="text-1-3-11">
+<ul class="org-ul">
+<li>support vectors: the point just lie on the fat margin</li>
+<li>outliers: only satisfying both two conditions we can call it outlier
+<ol class="org-ol">
+<li>the point is true + / - label, but on predicted - / + side</li>
+<li>the point whose decision function value lie outside of the 95% cut
+points of all data points <b>&lt;&lt;&lt; this note use this as evidence to judge
+whether or not a outlier</b></li>
+</ol></li>
+</ul>
+
+
+<div class="figure">
+<p><img src="now with One-Class SVM/screenshot_2018-06-14_21-53-14.png" alt="screenshot_2018-06-14_21-53-14.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org13d0d3d" class="outline-4">
+<h4 id="org13d0d3d"><span class="section-number-4">1.3.12</span> EXERCISE</h4>
+<div class="outline-text-4" id="text-1-3-12">
+<ul class="org-ul">
+<li>Change the gamma parameter and see it's influence on the smoothness of the
+decision function.</li>
+</ul>
+
+<ul class="org-ul">
+<li></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="org2708032" class="outline-3">
+<h3 id="org2708032"><span class="section-number-3">1.4</span> now with Isolation Forest</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="org087a799" class="outline-4">
+<h4 id="org087a799"><span class="section-number-4">1.4.1</span> what is isolation forest and why does it work</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+<b>Isolation Forest</b> is an anomaly detection algorithm <b>based on trees</b>. The
+algorithm builds a number of random trees and the rationale is that if a sample
+is isolated <b>it should alone in a leaf after very few random splits</b>. Isolation
+Forest builds <b>a score of abnormality based the depth of the tree</b> at which
+samples end up.
+</p>
+</div>
+</div>
+
+<div id="orga795d67" class="outline-4">
+<h4 id="orga795d67"><span class="section-number-4">1.4.2</span> build isolation forest model</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> IsolationForest
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">iforest</span> = IsolationForest(n_estimators=<span class="org-highlight-numbers-number">300</span>, contamination=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">10</span>)
+<span class="org-variable-name">iforest</span> = iforest.fit(X)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">Z_iforest</span> = iforest.decision_function(grid)
+<span class="org-variable-name">Z_iforest</span> = Z_iforest.reshape(xx.shape)
+plt.figure()
+<span class="org-variable-name">c_0</span> = plt.contour(xx, yy,
+                  Z_iforest,
+                  levels=[iforest.threshold_],
+                  colors=<span class="org-string">'red'</span>, linewidths=<span class="org-highlight-numbers-number">3</span>)
+plt.clabel(c_0,
+           inline=<span class="org-highlight-numbers-number">1</span>,
+           fontsize=<span class="org-highlight-numbers-number">15</span>,
+           fmt={iforest.threshold_: <span class="org-builtin">str</span>(alpha_set)})
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], s=<span class="org-highlight-numbers-number">1</span>.)
+plt.legend()
+plt.show()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199DjL.png" alt="3199DjL.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf39520a" class="outline-4">
+<h4 id="orgf39520a"><span class="section-number-4">1.4.3</span> EXERCISE</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+EXERCISE: Illustrate graphically the influence of the number of trees on the
+smoothness of the decision function?
+</p>
+</div>
+</div>
+
+<div id="org154f4c6" class="outline-4">
+<h4 id="org154f4c6"><span class="section-number-4">1.4.4</span> apply isolation forest on digits data set</h4>
+<div class="outline-text-4" id="text-1-4-4">
+<p>
+We will now apply the IsolationForest algorithm to spot digits written in an
+unconventional way.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits()
+
+</pre>
+</div>
+</div>
+
+<div id="orgd409a2a" class="outline-5">
+<h5 id="orgd409a2a"><span class="section-number-5">1.4.4.1</span> The digits data set consists in images (8 x 8) of digits.</h5>
+<div class="outline-text-5" id="text-1-4-4-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">images</span> = digits.images
+<span class="org-variable-name">labels</span> = digits.target
+images.shape
+</pre>
+</div>
+
+<pre class="example">
+(1797, 8, 8)
+
+</pre>
+</div>
+</div>
+
+<div id="orge50e929" class="outline-5">
+<h5 id="orge50e929"><span class="section-number-5">1.4.4.2</span> preview the digits image by <code>imshow</code></h5>
+<div class="outline-text-5" id="text-1-4-4-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">i</span> = <span class="org-highlight-numbers-number">102</span>
+plt.figure(figsize=(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>))
+plt.title(<span class="org-string">'{0}'</span>.<span class="org-builtin">format</span>(labels[i]))
+plt.axis(<span class="org-string">'off'</span>)
+plt.imshow(images[i], cmap=plt.cm.gray_r, interpolation=<span class="org-string">'nearest'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Ede.png" alt="3199Ede.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orged813b1" class="outline-5">
+<h5 id="orged813b1"><span class="section-number-5">1.4.4.3</span> flatten images before using as training data</h5>
+<div class="outline-text-5" id="text-1-4-4-3">
+<p>
+To use the images as a training set we need to flatten the images.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">n_samples</span> = <span class="org-builtin">len</span>(digits.images)
+<span class="org-variable-name">data</span> = digits.images.reshape((n_samples, -<span class="org-highlight-numbers-number">1</span>))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">data.shape
+</pre>
+</div>
+
+<pre class="example">
+(1797, 64)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span> = data
+<span class="org-variable-name">y</span> = digits.target
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X.shape
+</pre>
+</div>
+
+<pre class="example">
+(1797, 64)
+
+</pre>
+</div>
+</div>
+
+<div id="org29991c6" class="outline-5">
+<h5 id="org29991c6"><span class="section-number-5">1.4.4.4</span> focus on digit '5' images</h5>
+<div class="outline-text-5" id="text-1-4-4-4">
+<p>
+Let's focus on digit 5.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_5</span> = X[y == <span class="org-highlight-numbers-number">5</span>]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X_5.shape
+</pre>
+</div>
+
+<pre class="example">
+(182, 64)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">4</span>))
+<span class="org-keyword">for</span> ax, x <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes, X_5[:<span class="org-highlight-numbers-number">5</span>]):
+    <span class="org-variable-name">img</span> = x.reshape(<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">reshape to a matrix and imshow will map each</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">element of matrix directly into image with pixels</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">of same location</span>
+    ax.imshow(img, cmap=plt.cm.gray_r, interpolation=<span class="org-string">'nearest'</span>)
+    ax.axis(<span class="org-string">'off'</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199cvc.png" alt="3199cvc.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orge7e069c" class="outline-5">
+<h5 id="orge7e069c"><span class="section-number-5">1.4.4.5</span> find the 5% outliers: build model</h5>
+<div class="outline-text-5" id="text-1-4-4-5">
+<ul class="org-ul">
+<li>Let's use IsolationForest to find the top 5% most abnormal images.</li>
+<li><p>
+Let's plot them !
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> IsolationForest
+<span class="org-variable-name">iforest</span> = IsolationForest(contamination=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>)
+<span class="org-variable-name">iforest</span> = iforest.fit(X_5)
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="org53f05d8" class="outline-5">
+<h5 id="org53f05d8"><span class="section-number-5">1.4.4.6</span> find the 5% outliers: compute the abnormality by <code>decision_function</code></h5>
+<div class="outline-text-5" id="text-1-4-4-6">
+<p>
+Compute the level of "abnormality" with iforest.decision_function. The lower,
+the more abnormal.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">iforest_X</span> = iforest.decision_function(X_5)
+plt.hist(iforest_X);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Rnk.png" alt="3199Rnk.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orgff2dc97" class="outline-5">
+<h5 id="orgff2dc97"><span class="section-number-5">1.4.4.7</span> find the 5% outliers: find the strongest inliers by <code>argsort</code></h5>
+<div class="outline-text-5" id="text-1-4-4-7">
+<p>
+Let's plot the strongest inliers
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_strong_inliers</span> = X_5[np.argsort(iforest_X)[-<span class="org-highlight-numbers-number">10</span>:]] <span class="org-comment-delimiter"># </span><span class="org-comment">the lower the abnormal</span>
+                                                    <span class="org-comment-delimiter"># </span><span class="org-comment">the larger the normal</span>
+                                                    <span class="org-comment-delimiter"># </span><span class="org-comment">the most normal is tail of argsort</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>))
+<span class="org-keyword">for</span> i, ax <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(<span class="org-builtin">range</span>(<span class="org-builtin">len</span>(X_strong_inliers)), axes.ravel()):
+    ax.imshow(X_strong_inliers[i].reshape((<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>)),
+               cmap=plt.cm.gray_r, interpolation=<span class="org-string">'nearest'</span>)
+    ax.axis(<span class="org-string">'off'</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199exq.png" alt="3199exq.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orge85f1dd" class="outline-5">
+<h5 id="orge85f1dd"><span class="section-number-5">1.4.4.8</span> find the 5% outliers: find the strongest outliers</h5>
+<div class="outline-text-5" id="text-1-4-4-8">
+<p>
+Let's plot the strongest outliers
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>))
+
+<span class="org-variable-name">X_outliers</span> = X_5[iforest.predict(X_5) == -<span class="org-highlight-numbers-number">1</span>]
+
+<span class="org-keyword">for</span> i, ax <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(<span class="org-builtin">range</span>(<span class="org-builtin">len</span>(X_outliers)), axes.ravel()):
+    ax.imshow(X_outliers[i].reshape((<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>)),
+               cmap=plt.cm.gray_r, interpolation=<span class="org-string">'nearest'</span>)
+    ax.axis(<span class="org-string">'off'</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199DOv.png" alt="3199DOv.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org3b0e8d1" class="outline-4">
+<h4 id="org3b0e8d1"><span class="section-number-4">1.4.5</span> EXERCISE</h4>
+<div class="outline-text-4" id="text-1-4-5">
+<p>
+EXERCISE: Rerun the same analysis with all the other digits
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org2ccdaab" class="outline-2">
+<h2 id="org2ccdaab"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org9ad54fe" class="outline-3">
+<h3 id="org9ad54fe"><span class="section-number-3">2.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="org3fcc12c" class="outline-4">
+<h4 id="org3fcc12c"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import make_moons</li>
+<li>from sklearn.datasets import make_circles</li>
+<li>from sklearn.datasets import make_s_curve</li>
+<li>from mpl_toolkits.mplot3d import Axes3D</li>
+<li>from sklearn.datasets import make_regression</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits</li>
+<li>from sklearn.datasets import load_breast_cancer</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.model_selection import learning_curve</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.feature_selection import SelectPercentile</li>
+<li>from sklearn.feature_selection import f_classif</li>
+<li>from sklearn.feature_selection import f_regression</li>
+<li>from sklearn.feature_selection import chi2</li>
+<li>from sklearn.feature_selection import SelectFromModel</li>
+<li>from sklearn.feature_selection import RFE</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.linear_model import Ridge</li>
+<li>from sklearn.linear_model import Lasso</li>
+<li>from sklearn.linear_model import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.neighbors.kde import KernelDensity *</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.cluster import DBSCAN</li>
+<li>from sklearn.cluster import AgglomerativeClustering</li>
+<li>from scipy.cluster.hierarchy import linkage</li>
+<li>from scipy.cluster.hierarchy import dendrogram</li>
+<li>from scipy.stats.mstats import mquantiles</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.svm import OneClassSVM *</li>
+<li>from sklearn.tree import DecisionTreeRegressor</li>
+<li>from sklearn.ensemble import RandomForestClassifier</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor</li>
+<li>from sklearn.ensemble import IsolationForest</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.manifold import TSNE</li>
+<li>from sklearn.manifold import Isomap</li>
+</ol>
+</blockquote>
+</div>
+</div>
+
+<div id="orgda45876" class="outline-4">
+<h4 id="orgda45876"><span class="section-number-4">2.1.2</span> OneClassSVM</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+Unsupervised Outlier Detection.
+</p>
+
+<p>
+Estimate the support of a high-dimensional distribution.
+</p>
+
+<p>
+The implementation is based on libsvm.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">OneClassSVM(kernel=&#8217;rbf&#8217;,
+            degree=<span class="org-highlight-numbers-number">3</span>,
+            gamma=&#8217;auto&#8217;, <span class="org-comment-delimiter"># </span><span class="org-comment">Kernel coefficient for &#8216;rbf&#8217;, &#8216;poly&#8217; and &#8216;sigmoid&#8217;.</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">If gamma is &#8216;auto&#8217; then 1/n_features will be used</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">instead.</span>
+            coef0=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>,    <span class="org-comment-delimiter"># </span><span class="org-comment">Independent term in kernel function. It is only</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">significant in &#8216;poly&#8217; and &#8216;sigmoid&#8217;.</span>
+            tol=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">001</span>,
+            nu=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>,       <span class="org-comment-delimiter"># </span><span class="org-comment">An upper bound on the fraction of training errors</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">and a lower bound of the fraction of support</span>
+                          <span class="org-comment-delimiter"># </span><span class="org-comment">vectors</span>
+            shrinking=<span class="org-constant">True</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">Whether to use the shrinking heuristic.</span>
+            cache_size=<span class="org-highlight-numbers-number">200</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">Specify the size of the kernel cache (in MB)</span>
+            verbose=<span class="org-constant">False</span>,
+            max_iter=-<span class="org-highlight-numbers-number">1</span>,
+            random_state=<span class="org-constant">None</span>)
+</pre>
+</div>
+
+<p>
+attributes:
+</p>
+<hr />
+<blockquote>
+<p>
+
+</p>
+
+<ol class="org-ol">
+<li><p>
+support_ : array-like, shape = [n_SV].
+</p>
+
+<p>
+<b>Indices</b> of support vectors.
+</p></li>
+
+<li><p>
+support_vectors_ : array-like, shape = [nSV, n_features].
+</p>
+
+<p>
+Support vectors.
+</p></li>
+
+<li><p>
+dual_coef_ : array, shape = [1, n_SV].
+</p>
+
+<p>
+Coefficients of the support vectors in the decision function.
+</p></li>
+
+<li><p>
+coef_ : array, shape = [1, n_features]
+</p>
+
+<p>
+Weights assigned to the features (coefficients in the primal problem). This
+is only available in the case of a linear kernel. coef_ is readonly property
+derived from dual_coef_ and support_vectors_
+</p></li>
+
+<li><p>
+intercept_ : array, shape = [1,]
+</p>
+
+<p>
+Constant in the decision function.
+</p></li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+<div id="org9409ca3" class="outline-3">
+<h3 id="org9409ca3"><span class="section-number-3">2.2</span> Numpy</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="org8133fe0" class="outline-4">
+<h4 id="org8133fe0"><span class="section-number-4">2.2.1</span> np.c_</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<ol class="org-ol">
+<li>last axis</li>
+<li>upgrade to at least 2-D</li>
+<li>1's post-pend</li>
+</ol>
+
+<p>
+Translates slice objects to <b>concatenation</b> along the <b>second axis</b>.
+</p>
+
+<p>
+This is short-hand for <code>np.r_['-1,2,0', index expression]</code>, which is useful
+because of its common occurrence. In particular, arrays will be stacked
+along their <b>last axis</b> after being <b>upgraded to at least 2-D</b> with <b>1’s
+post-pended</b> (3,) &#x2013;&gt; (3,1) to the shape (column vectors made out of 1-D arrays).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+np.c_[np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>]), np.array([<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>])]
+<span class="org-comment-delimiter"># </span><span class="org-comment">(3,) post-pended to (3,1)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">[1,2,3] post-pended to [[1],  [[4,</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">[4,5,6]                 [2],   [5],</span>
+<span class="org-comment-delimiter">#                         </span><span class="org-comment">[3]]   [6]]</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">then do:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 4],
+[2, 5],
+[3, 6]])
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.c_[np.array([ [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>] ]), <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, np.array([ [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>] ])]
+<span class="org-comment-delimiter"># </span><span class="org-comment">(1,3) dont need to append</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">(1,) append to (1,1)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">then do:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">| | |</span>
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 2, 3, 0, 0, 4, 5, 6]])
+
+</pre>
+</div>
+</div>
+
+<div id="org0d26d08" class="outline-4">
+<h4 id="org0d26d08"><span class="section-number-4">2.2.2</span> np.r_</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<ol class="org-ol">
+<li>first axis</li>
+<li>upgrade to at least 2-D</li>
+<li>1's post-pend</li>
+</ol>
+
+<p>
+stack in unit of <b>first axes</b>, that is row in common case.
+</p>
+<hr />
+<hr />
+<hr />
+<hr />
+<div class="org-src-container">
+<pre class="src src-ipython">np.r_[np.array([ [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>] ]), np.array([ [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>] ])]
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 2, 3],
+[4, 5, 6]])
+</pre>
+</div>
+</div>
+</div>
+<div id="org2f64a37" class="outline-3">
+<h3 id="org2f64a37"><span class="section-number-3">2.3</span> Scipy</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="orgcfa5fd5" class="outline-4">
+<h4 id="orgcfa5fd5"><span class="section-number-4">2.3.1</span> scipy.stats.mstats.mquantiles</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+what mquantiles method do is find the given percent(by <code>prob</code>) largest
+element of given list(by <code>a</code>)
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">mquantiles(a,                      <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- array-like, input data</span>
+           prob=[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">75</span>], <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- list of quantiles to compute</span>
+           alphap=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>,             <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- plotting position parameter</span>
+           betap=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>,              <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- plotting position parameter</span>
+           axis=<span class="org-constant">None</span>,              <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- axis along which to perform trimming</span>
+           limit=()
+)
+</pre>
+</div>
+<p>
+Computes empirical quantiles for a data array.
+</p>
+</div>
+</div>
+</div>
+<div id="org7928384" class="outline-3">
+<h3 id="org7928384"><span class="section-number-3">2.4</span> Statistics</h3>
+<div class="outline-text-3" id="text-2-4">
+</div>
+<div id="orgab477b9" class="outline-4">
+<h4 id="orgab477b9"><span class="section-number-4">2.4.1</span> <span class="todo TODO">TODO</span> quantiles in statistics</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Not 1/4, but <b>cut points</b>.
+</p>
+
+<p>
+<a href="https://www.wikiwand.com/en/Quantile">https://www.wikiwand.com/en/Quantile</a>
+</p>
+
+<p>
+In statistics and probability <b>quantiles</b> are <b>cut points</b> dividing the range
+of a probability distribution <b>into contiguous intervals</b> with <b>equal
+probabilities</b>, or dividing the observations in a sample in the same way.
+</p>
+
+
+<div class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Iqr_with_quantile.png/440px-Iqr_with_quantile.png" alt="440px-Iqr_with_quantile.png" />
+</p>
+</div>
+
+<p>
+In above image, <b>3 quantiles(cut points)</b>: Q1, Q2, Q3, create <b>4 probability-equal region</b> ==&gt; 1/4, each region has 25% probability
+</p>
+
+<p>
+if you have 2 quantiles, they will create 3 probability-equal region ===&gt; 1/3, each region has 33.3333% probability
+if you have 1 quantiles, they will create 2 probability-equal region ===&gt; 1/2, each region has 50% probability
+</p>
+</div>
+</div>
+</div>
+<div id="org1cb631d" class="outline-3">
+<h3 id="org1cb631d"><span class="section-number-3">2.5</span> Matplotlib</h3>
+<div class="outline-text-3" id="text-2-5">
+</div>
+<div id="org270dcb7" class="outline-4">
+<h4 id="org270dcb7"><span class="section-number-4">2.5.1</span> module by now</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<blockquote>
+<p>
+from mpl_toolkits.mplot3d import Axes3D *
+</p>
+</blockquote>
+</div>
+</div>
+<div id="org17eda65" class="outline-4">
+<h4 id="org17eda65"><span class="section-number-4">2.5.2</span> plt.contour</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+Note that, what we assign to levels, is the Z_ocsvm or Z_kde or Z_iforest's
+value, which is computed by decision_function(xx, yy)
+</p>
+
+<p>
+c_0 = plt.contour(xx, yy, Z_ocsvm, levels=[0], colors='red', linewidths=3)
+c_0 = plt.contour(xx, yy, Z_kde, levels=tau_kde, colors='red', linewidths=3)
+</p>
+</div>
+</div>
+<div id="org8466bac" class="outline-4">
+<h4 id="org8466bac"><span class="section-number-4">2.5.3</span> plt.contourf</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<ul class="org-ul">
+<li><p>
+contour() draw contour lines
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">Z_ocsvm</span> = ocsvm.decision_function(grid) <span class="org-comment-delimiter"># </span><span class="org-comment">Signed distance to the separating hyperplane.</span>
+<span class="org-variable-name">Z_ocsvm</span> = Z_ocsvm.reshape(xx.shape)
+
+plt.figure()
+
+<span class="org-variable-name">c_0</span> = plt.contour(xx, yy, Z_ocsvm, levels=[<span class="org-highlight-numbers-number">0</span>], colors=<span class="org-string">'red'</span>, linewidths=<span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">note that, we take contour obj as parameter of clabel.</span>
+plt.clabel(c_0, inline=<span class="org-highlight-numbers-number">1</span>, fontsize=<span class="org-highlight-numbers-number">15</span>, fmt={<span class="org-highlight-numbers-number">0</span>: <span class="org-builtin">str</span>(alpha_set)}) <span class="org-comment-delimiter"># </span><span class="org-comment">draw clabel '0.95'</span>
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>])
+plt.scatter(X_outliers[:, <span class="org-highlight-numbers-number">0</span>], X_outliers[:, <span class="org-highlight-numbers-number">1</span>], color=<span class="org-string">'red'</span>)
+plt.legend()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199pAX.png" alt="3199pAX.png" />
+</p>
+</div></li>
+
+<li><p>
+contourf() draw filled contours
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows = <span class="org-highlight-numbers-number">1</span>, ncols=<span class="org-highlight-numbers-number">2</span>, figsize=(<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">5</span>))
+axes[<span class="org-highlight-numbers-number">0</span>].contourf(xx, yy, Z_ocsvm, <span class="org-highlight-numbers-number">10</span>, cmap=plt.cm.Blues_r)
+axes[<span class="org-highlight-numbers-number">1</span>].contourf(xx, yy, Z_ocsvm, <span class="org-highlight-numbers-number">10</span>, cmap=plt.cm.Blues_r)
+axes[<span class="org-highlight-numbers-number">0</span>].scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], s=<span class="org-highlight-numbers-number">1</span>.)
+axes[<span class="org-highlight-numbers-number">1</span>].scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], s=<span class="org-highlight-numbers-number">1</span>.)
+axes[<span class="org-highlight-numbers-number">0</span>].scatter(X_SV[:, <span class="org-highlight-numbers-number">0</span>], X_SV[:, <span class="org-highlight-numbers-number">1</span>], color=<span class="org-string">'orange'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">plot the SVs</span>
+axes[<span class="org-highlight-numbers-number">1</span>].plot(X_outliers[:, <span class="org-highlight-numbers-number">0</span>], X_outliers[:, <span class="org-highlight-numbers-number">1</span>], <span class="org-string">'or'</span>)  <span class="org-comment-delimiter"># </span><span class="org-comment">plot the outliers</span>
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199DcX.png" alt="3199DcX.png" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="org6f2c019" class="outline-2">
+<h2 id="org6f2c019"><span class="section-number-2">3</span> code snippet</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="orgec18506" class="outline-3">
+<h3 id="orgec18506"><span class="section-number-3">3.1</span> how to draw one digt in one subplot</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>),
+                         subplot_kw={<span class="org-string">'xticks'</span>:(), <span class="org-string">'yticks'</span>: ()})
+<span class="org-keyword">for</span> ax, img <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes.ravel(), digits.images):
+    ax.imshow(img, interpolation=<span class="org-string">"none"</span>, cmap=<span class="org-string">"gray"</span>)
+</pre>
+</div>
+</div>
+</div>
+<div id="org755e14f" class="outline-3">
+<h3 id="org755e14f"><span class="section-number-3">3.2</span> how to generate 2-d points with 3 cluster</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_blobs
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_blobs(n_features=<span class="org-highlight-numbers-number">2</span>, centers=<span class="org-highlight-numbers-number">3</span>, n_samples=<span class="org-highlight-numbers-number">500</span>,
+                  random_state=<span class="org-highlight-numbers-number">42</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgb3e3c55" class="outline-2">
+<h2 id="orgb3e3c55"><span class="section-number-2">4</span> scikit learn guide</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="orgb029fa8" class="outline-3">
+<h3 id="orgb029fa8"><span class="section-number-3">4.1</span> 2.8. Density Estimation</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+<a href="https://www.youtube.com/watch?v=gPWsDh59zdo">https://www.youtube.com/watch?v=gPWsDh59zdo</a>
+</p>
+
+
+<div class="figure">
+<p><img src="scikit learn guide/screenshot_2018-06-14_03-26-35.png" alt="screenshot_2018-06-14_03-26-35.png" />
+</p>
+</div>
+
+<p>
+we put weight '1' (in bold font) on observations in the same bin, and '0' otherwise;
+</p>
+
+<p>
+but kernel density puts continuous weight that's decreasing the further we move away from the
+the point 'x' (in red font color)
+</p>
+
+
+<div class="figure">
+<p><img src="scikit learn guide/screenshot_2018-06-14_03-26-53.png" alt="screenshot_2018-06-14_03-26-53.png" />
+</p>
+</div>
+
+<p>
+KDE has the same intuition sense that it's an average: divide by b(bandwidth).
+KDE is kind of the equivalent of the width of the bins of the Kernel function.
+</p>
+
+<p>
+Kernel function weighs observations differently depending on how far away they
+are from the point x( the one we're evaluating in f(x) ): \((x_i - x)\), so we sum over all
+observations.
+</p>
+
+<p>
+<b>one of the kernel function is Gaussian density &#x2014; the PDF of the normal</b>.
+</p>
+
+<p>
+lower bandwidth, overfitting, unsmooth, variance with many peaks, so our predict
+PDF showed here moves from up and down too much
+</p>
+<hr />
+
+
+<div class="figure">
+<p><img src="scikit learn guide/screenshot_2018-06-14_03-38-45.png" alt="screenshot_2018-06-14_03-38-45.png" />
+</p>
+</div>
+
+
+<p>
+larger bandwidth, underfitting, smooth, bias with only ONE peak
+</p>
+<hr />
+
+
+<div class="figure">
+<p><img src="scikit learn guide/screenshot_2018-06-14_03-39-33.png" alt="screenshot_2018-06-14_03-39-33.png" />
+</p>
+</div>
+
+
+<p>
+normal bandwidth, similar to true distribution, with two peak
+</p>
+<hr />
+
+
+<div class="figure">
+<p><img src="scikit learn guide/screenshot_2018-06-14_03-40-03.png" alt="screenshot_2018-06-14_03-40-03.png" />
+</p>
+</div>
+
+
+
+
+
+
+<p>
+Density estimation walks the line between unsupervised learning, feature
+engineering, and data modeling. Some of the most popular and useful density
+estimation techniques are mixture models such as Gaussian Mixtures
+(sklearn.mixture.GaussianMixture), and neighbor-based approaches such as the
+kernel density estimate (sklearn.neighbors.KernelDensity). Gaussian Mixtures are
+discussed more fully in the context of clustering, because the technique is also
+useful as an unsupervised clustering scheme.
+</p>
+
+<p>
+Density estimation is a very simple concept, and most people are already
+familiar with one common density estimation technique: the histogram.
+</p>
+</div>
+
+<div id="org8cb12cc" class="outline-4">
+<h4 id="org8cb12cc"><span class="section-number-4">4.1.1</span> 2.8.1. Density Estimation: Histograms</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+A histogram is a simple visualization of data where <b>bins are defined</b>, and the
+number of <b>data points within each bin</b> is tallied. An example of a histogram
+can be seen in the upper-left panel of the following figure:
+</p>
+
+
+<div class="figure">
+<p><img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_kde_1d_0011.png" alt="sphx_glr_plot_kde_1d_0011.png" />
+</p>
+</div>
+
+<p>
+A major problem with histograms, however, is that the <b>choice of binning</b> can
+have a disproportionate effect on the resulting visualization.
+</p>
+
+<p>
+Consider the upper-right panel of the above figure. <b>It shows a histogram over
+the same data, with the bins shifted right</b>. The results of the two
+visualizations look entirely different, and might <b>lead to different
+interpretations of the data</b>.
+</p>
+
+<p>
+Intuitively, one can also think of a histogram as a <b>stack of blocks</b>, <b>one
+block per point</b>. By stacking the blocks in the appropriate grid space, we
+recover the histogram.
+</p>
+
+<p>
+But what if, instead of stacking the blocks on a regular grid, we center each
+block on the point it represents, and sum the total height at each location?
+This idea leads to the lower-left visualization. It is perhaps not as clean as a
+histogram, but the fact that the <b>data drive the block locations mean that it is
+a much better representation of the underlying data</b>.
+</p>
+
+<p>
+<b>This visualization is an example of a kernel density estimation</b>, in this case
+with a <b>top-hat kernel</b> (i.e. a square block at each point). We can recover a
+smoother distribution by using a smoother kernel. The bottom-right plot shows a
+<b>Gaussian kernel density estimate</b>, in which <b>each point</b> contributes a Gaussian
+curve to the total. The result is a smooth density estimate which is derived
+from the data, and functions as a powerful non-parametric model of the
+distribution of points.
+</p>
+</div>
+</div>
+
+<div id="org6bd416c" class="outline-4">
+<h4 id="org6bd416c"><span class="section-number-4">4.1.2</span> 2.8.2. Kernel Density Estimation</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+Kernel density estimation in scikit-learn is implemented in the
+<code>sklearn.neighbors.KernelDensity estimator</code>, which uses the <b>Ball Tree or KD
+Tree</b> for efficient queries (see Nearest Neighbors for a discussion of these).
+</p>
+
+<p>
+Though the above example uses a 1D data set for simplicity, kernel density
+estimation <b>can be performed in any number of dimensions</b>, though in practice
+the curse of dimensionality causes its performance to degrade in high
+dimensions.
+</p>
+
+<p>
+In the following figure, 100 points are drawn from a bimodal distribution, and
+the kernel density estimates are shown for three choices of kernels:
+</p>
+
+
+<div class="figure">
+<p><img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_kde_1d_0031.png" alt="sphx_glr_plot_kde_1d_0031.png" />
+</p>
+</div>
+
+<p>
+It’s clear how the kernel shape affects the smoothness of the resulting
+distribution. The scikit-learn kernel density estimator can be used as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">&gt;&gt;&gt; <span class="org-keyword">from</span> sklearn.neighbors.kde <span class="org-keyword">import</span> KernelDensity
+&gt;&gt;&gt; <span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+&gt;&gt;&gt; <span class="org-variable-name">X</span> = np.array([[-<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>], [-<span class="org-highlight-numbers-number">2</span>, -<span class="org-highlight-numbers-number">1</span>], [-<span class="org-highlight-numbers-number">3</span>, -<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">2</span>]])
+&gt;&gt;&gt; <span class="org-variable-name">kde</span> = KernelDensity(kernel=<span class="org-string">'gaussian'</span>, bandwidth=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>).fit(X)
+&gt;&gt;&gt; kde.score_samples(X)
+array([-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41075698</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41075698</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41076071</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41075698</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41075698</span>,
+       -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">41076071</span>])
+</pre>
+</div>
+</div>
+<div id="org54523d9" class="outline-5">
+<h5 id="org54523d9"><span class="section-number-5">4.1.2.1</span> mathematical definition</h5>
+<div class="outline-text-5" id="text-4-1-2-1">
+<p>
+Here we have used <code>kernel='gaussian'</code>, as seen above. Mathematically, a kernel
+is a positive function <code>K(x;h)</code> which is controlled by the bandwidth parameter
+<code>h</code>. Given this kernel form, the density estimate at a point <code>y</code> within a group
+of points \(x_i; i=1\cdots N\) is given by:
+</p>
+
+<p>
+\(\rho_K(y) = \sum_{i=1}^{N} K((y - x_i) / h)\)
+</p>
+</div>
+</div>
+
+<div id="org1deca8b" class="outline-5">
+<h5 id="org1deca8b"><span class="section-number-5">4.1.2.2</span> what is a bandwidth in KDE</h5>
+<div class="outline-text-5" id="text-4-1-2-2">
+<p>
+The <b>bandwidth</b> here acts as a <b>smoothing parameter</b>, <b>controlling the tradeoff
+between bias and variance in the result</b>.
+</p>
+
+<ul class="org-ul">
+<li><b>large</b> bandwidth leads to a very <b>smooth</b> (i.e. high-bias) density distribution.</li>
+<li><b>small</b> bandwidth leads to an <b>unsmooth</b> (i.e. high-variance) density distribution.</li>
+</ul>
+
+<p>
+<code>sklearn.neighbors.KernelDensity</code> implements several common kernel forms, which
+are shown in the following figure:
+</p>
+
+
+<div class="figure">
+<p><img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_kde_1d_0021.png" alt="sphx_glr_plot_kde_1d_0021.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgc63db24" class="outline-5">
+<h5 id="orgc63db24"><span class="section-number-5">4.1.2.3</span> various kinds of Kernels</h5>
+<div class="outline-text-5" id="text-4-1-2-3">
+<p>
+The form of these kernels is as follows:
+</p>
+
+<p>
+Gaussian kernel (kernel = 'gaussian')
+</p>
+
+<p>
+\(K(x; h) \propto \exp(- \frac{x^2}{2h^2} )\)
+</p>
+
+<p>
+Tophat kernel (kernel = 'tophat')
+</p>
+
+<p>
+\(K(x; h) \propto 1 if x < h\)
+</p>
+
+<p>
+Epanechnikov kernel (kernel = 'epanechnikov')
+</p>
+
+<p>
+\(K(x; h) \propto 1 - \frac{x^2}{h^2}\)
+</p>
+
+<p>
+Exponential kernel (kernel = 'exponential')
+</p>
+
+<p>
+\(K(x; h) \propto \exp(-x/h)\)
+</p>
+
+<p>
+Linear kernel (kernel = 'linear')
+</p>
+
+<p>
+\(K(x; h) \propto 1 - x/h if x < h\)
+</p>
+
+<p>
+Cosine kernel (kernel = 'cosine')
+</p>
+
+<p>
+\(K(x; h) \propto \cos(\frac{\pi x}{2h}) if x < h\)
+</p>
+</div>
+</div>
+
+<div id="org0ebee41" class="outline-5">
+<h5 id="org0ebee41"><span class="section-number-5">4.1.2.4</span> distance metrics of KDE</h5>
+<div class="outline-text-5" id="text-4-1-2-4">
+<p>
+The kernel density estimator can be used with any of the valid <b>distance
+metrics</b> (see <code>sklearn.neighbors.DistanceMetric</code> for a list of available
+metrics), though the results are properly normalized only for the Euclidean
+metric. One particularly useful metric is the <b>Haversine distance which measures
+the angular distance between points on a sphere</b>.
+</p>
+</div>
+</div>
+
+<div id="org6071380" class="outline-5">
+<h5 id="org6071380"><span class="section-number-5">4.1.2.5</span> common applications of KDE: species density in South Amercican</h5>
+<div class="outline-text-5" id="text-4-1-2-5">
+<p>
+Here is an example of using a
+kernel density estimate for a visualization of geospatial data, in this case the
+distribution of observations of two different species on the South American
+continent:
+</p>
+
+
+<div class="figure">
+<p><img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_species_kde_0011.png" alt="sphx_glr_plot_species_kde_0011.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orgeb56e31" class="outline-5">
+<h5 id="orgeb56e31"><span class="section-number-5">4.1.2.6</span> common applications of KDE: generate digits based on given digits</h5>
+<div class="outline-text-5" id="text-4-1-2-6">
+<p>
+One other useful application of kernel density estimation is to learn a
+<b>non-parametric generative model of a dataset</b> in order to efficiently draw new
+samples from this generative model. Here is an example of using this process to
+create a new set of hand-written digits, using a <b>Gaussian kernel learned on a
+PCA projection</b> of the data:
+</p>
+
+
+<div class="figure">
+<p><img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_digits_kde_sampling_0011.png" alt="sphx_glr_plot_digits_kde_sampling_0011.png" />
+</p>
+</div>
+
+<p>
+The “new” data consists of linear combinations of the input data, with weights
+probabilistically drawn given the KDE model.
+</p>
+</div>
+</div>
+
+<div id="orgf71329d" class="outline-5">
+<h5 id="orgf71329d"><span class="section-number-5">4.1.2.7</span> Examples</h5>
+<div class="outline-text-5" id="text-4-1-2-7">
+<p>
+Simple 1D Kernel Density Estimation: computation of simple kernel density
+estimates in one dimension.
+</p>
+
+<p>
+Kernel Density Estimation: an example of using
+Kernel Density estimation to learn a generative model of the hand-written digits
+data, and drawing new samples from this model.
+</p>
+
+<p>
+Kernel Density Estimate of Species Distributions: an example of Kernel Density
+estimation using the Haversine distance metric to visualize geospatial data
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="org255b609" class="outline-3">
+<h3 id="org255b609"><span class="section-number-3">4.2</span> Outlier detection with several methods</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="org202802a" class="outline-4">
+<h4 id="org202802a"><span class="section-number-4">4.2.1</span> 4 general methods to do outliers detection</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+When the amount of contamination is known, this example illustrates three
+different ways of performing <b>Novelty and Outlier Detection</b>:
+</p>
+
+<ol class="org-ol">
+<li>based on a <b>robust estimator of covariance</b>, which is <b>assuming</b> that the
+data are Gaussian distributed and performs <b>better than the One-Class SVM</b> in
+that case.</li>
+<li>using the <b>One-Class SVM</b> and its ability to capture the shape of the data
+set, hence performing <b>better when the data is strongly non-Gaussian</b>, i.e.
+with two well-separated clusters;</li>
+<li>using the <b>Isolation Forest</b> algorithm, which is based on random forests and
+hence more adapted to <b>large-dimensional settings</b>, even if it performs quite
+well in the examples below.</li>
+<li>using the <b>Local Outlier Factor</b> to measure the local deviation of a given
+data point with respect to its neighbors by comparing their <b>local density</b>.</li>
+</ol>
+
+<p>
+<code>svm.OneClassSVM(nu=0.95 * outliers_fraction + 0.05, kernel="rbf", gamma=0.1)</code>
+</p>
+
+<p>
+<code>EllipticEnvelope(contamination=outliers_fraction)</code>
+</p>
+
+<p>
+<code>IsolationForest(max_samples=n_samples, contamination=outliers_fraction, random_state=rng)</code>
+</p>
+
+<p>
+<code>LocalOutlierFactor(n_neighbors=35, contamination=outliers_fraction)</code>
+</p>
+</div>
+</div>
+
+<div id="org369163a" class="outline-4">
+<h4 id="org369163a"><span class="section-number-4">4.2.2</span> performance illustration of 4 general methods</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+The ground truth about inliers and outliers is given by the points colors while
+the orange-filled area indicates which points are reported as inliers by each
+method.
+</p>
+
+<p>
+Here, we <b>assume that we know the fraction of outliers</b> in the datasets. Thus
+rather than using the ‘predict’ method of the objects, we set the <b>threshold</b> on
+the <b>decision_function</b> to separate out the corresponding fraction.
+</p>
+
+<p>
+<img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_outlier_detection_001.png" alt="sphx_glr_plot_outlier_detection_001.png" />
+<img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_outlier_detection_002.png" alt="sphx_glr_plot_outlier_detection_002.png" />
+<img src="http://scikit-learn.org/stable/_images/sphx_glr_plot_outlier_detection_003.png" alt="sphx_glr_plot_outlier_detection_003.png" />
+</p>
+</div>
+</div>
+
+<div id="org6639c46" class="outline-4">
+<h4 id="org6639c46"><span class="section-number-4">4.2.3</span> code snippet</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np <span class="org-keyword">from</span>
+scipy <span class="org-keyword">import</span> stats <span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt <span class="org-keyword">import</span>
+matplotlib.font_manager
+
+<span class="org-keyword">from</span> sklearn <span class="org-keyword">import</span> svm
+<span class="org-keyword">from</span> sklearn.covariance <span class="org-keyword">import</span> EllipticEnvelope
+<span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> IsolationForest
+<span class="org-keyword">from</span> sklearn.neighbors <span class="org-keyword">import</span> LocalOutlierFactor
+
+<span class="org-keyword">print</span>(<span class="org-builtin">__doc__</span>)
+
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">42</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Example settings</span>
+<span class="org-variable-name">n_samples</span> = <span class="org-highlight-numbers-number">200</span>
+<span class="org-variable-name">outliers_fraction</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>
+<span class="org-variable-name">clusters_separation</span> = [<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">define two outlier detection tools to be compared</span>
+<span class="org-variable-name">classifiers</span> = {
+    <span class="org-string">"One-Class SVM"</span>: svm.OneClassSVM(nu=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">95</span> * outliers_fraction + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>,
+                                     kernel=<span class="org-string">"rbf"</span>, gamma=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>),
+    <span class="org-string">"Robust covariance"</span>: EllipticEnvelope(contamination=outliers_fraction),
+    <span class="org-string">"Isolation Forest"</span>: IsolationForest(max_samples=n_samples,
+                                        contamination=outliers_fraction,
+                                        random_state=rng),
+    <span class="org-string">"Local Outlier Factor"</span>: LocalOutlierFactor(
+        n_neighbors=<span class="org-highlight-numbers-number">35</span>,
+        contamination=outliers_fraction)}
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Compare given classifiers under given settings</span>
+<span class="org-variable-name">xx</span>, <span class="org-variable-name">yy</span> = np.meshgrid(np.linspace(-<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">100</span>), np.linspace(-<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">100</span>))
+<span class="org-variable-name">n_inliers</span> = <span class="org-builtin">int</span>((<span class="org-highlight-numbers-number">1</span>. - outliers_fraction) * n_samples)
+<span class="org-variable-name">n_outliers</span> = <span class="org-builtin">int</span>(outliers_fraction * n_samples)
+<span class="org-variable-name">ground_truth</span> = np.ones(n_samples, dtype=<span class="org-builtin">int</span>)
+<span class="org-variable-name">ground_truth</span>[-n_outliers:] = -<span class="org-highlight-numbers-number">1</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Fit the problem with varying cluster separationfor i, offset in enumerate(clusters_separation):</span>
+    np.random.seed(<span class="org-highlight-numbers-number">42</span>)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Data generation</span>
+    <span class="org-variable-name">X1</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span> * np.random.randn(n_inliers // <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>) - offset
+    <span class="org-variable-name">X2</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span> * np.random.randn(n_inliers // <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>) + offset
+    <span class="org-variable-name">X</span> = np.r_[X1, X2]
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Add outliers</span>
+    <span class="org-variable-name">X</span> = np.r_[X, np.random.uniform(low=-<span class="org-highlight-numbers-number">6</span>, high=<span class="org-highlight-numbers-number">6</span>, size=(n_outliers, <span class="org-highlight-numbers-number">2</span>))]
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Fit the model</span>
+    plt.figure(figsize=(<span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">7</span>))
+    <span class="org-keyword">for</span> i, (clf_name, clf) <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>(classifiers.items()):
+        <span class="org-comment-delimiter"># </span><span class="org-comment">fit the data and tag outliers</span>
+        <span class="org-keyword">if</span> clf_name == <span class="org-string">"Local Outlier Factor"</span>:
+            <span class="org-variable-name">y_pred</span> = clf.fit_predict(X)
+            <span class="org-variable-name">scores_pred</span> = clf.negative_outlier_factor_
+        <span class="org-keyword">else</span>:
+            clf.fit(X)
+            <span class="org-variable-name">scores_pred</span> = clf.decision_function(X)
+            <span class="org-variable-name">y_pred</span> = clf.predict(X)
+        <span class="org-variable-name">threshold</span> = stats.scoreatpercentile(scores_pred,
+                                            <span class="org-highlight-numbers-number">100</span> * outliers_fraction)
+        <span class="org-variable-name">n_errors</span> = (y_pred != ground_truth).<span class="org-builtin">sum</span>()
+        <span class="org-comment-delimiter"># </span><span class="org-comment">plot the levels lines and the points</span>
+        <span class="org-keyword">if</span> clf_name == <span class="org-string">"Local Outlier Factor"</span>:
+            <span class="org-comment-delimiter"># </span><span class="org-comment">decision_function is private for LOF</span>
+            <span class="org-variable-name">Z</span> = clf._decision_function(np.c_[xx.ravel(), yy.ravel()])
+        <span class="org-keyword">else</span>:
+            <span class="org-variable-name">Z</span> = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
+        <span class="org-variable-name">Z</span> = Z.reshape(xx.shape)
+        <span class="org-variable-name">subplot</span> = plt.subplot(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>, i + <span class="org-highlight-numbers-number">1</span>)
+        subplot.contourf(xx, yy, Z, levels=np.linspace(Z.<span class="org-builtin">min</span>(), threshold, <span class="org-highlight-numbers-number">7</span>),
+                         cmap=plt.cm.Blues_r)
+        <span class="org-variable-name">a</span> = subplot.contour(xx, yy, Z, levels=[threshold],
+                            linewidths=<span class="org-highlight-numbers-number">2</span>, colors=<span class="org-string">'red'</span>)
+        subplot.contourf(xx, yy, Z, levels=[threshold, Z.<span class="org-builtin">max</span>()],
+                         colors=<span class="org-string">'orange'</span>)
+        <span class="org-variable-name">b</span> = subplot.scatter(X[:-n_outliers, <span class="org-highlight-numbers-number">0</span>], X[:-n_outliers, <span class="org-highlight-numbers-number">1</span>], c=<span class="org-string">'white'</span>,
+                            s=<span class="org-highlight-numbers-number">20</span>, edgecolor=<span class="org-string">'k'</span>)
+        <span class="org-variable-name">c</span> = subplot.scatter(X[-n_outliers:, <span class="org-highlight-numbers-number">0</span>], X[-n_outliers:, <span class="org-highlight-numbers-number">1</span>], c=<span class="org-string">'black'</span>,
+                            s=<span class="org-highlight-numbers-number">20</span>, edgecolor=<span class="org-string">'k'</span>)
+        subplot.axis(<span class="org-string">'tight'</span>)
+        subplot.legend(
+            [a.collections[<span class="org-highlight-numbers-number">0</span>], b, c],
+            [<span class="org-string">'learned decision function'</span>, <span class="org-string">'true inliers'</span>, <span class="org-string">'true outliers'</span>],
+            prop=matplotlib.font_manager.FontProperties(size=<span class="org-highlight-numbers-number">10</span>),
+            loc=<span class="org-string">'lower right'</span>)
+        subplot.set_xlabel(<span class="org-string">"%d. %s (errors: %d)"</span> % (i + <span class="org-highlight-numbers-number">1</span>, clf_name, n_errors))
+        subplot.set_xlim((-<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">7</span>))
+        subplot.set_ylim((-<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">7</span>))
+    plt.subplots_adjust(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">04</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">96</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">94</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">26</span>)
+    plt.suptitle(<span class="org-string">"Outlier detection"</span>)
+
+plt.show()
+
+</pre>
+</div>
+<p>
+Total running time of the script: ( 0 minutes 2.847 seconds)
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

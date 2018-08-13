@@ -1,0 +1,843 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:48 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matplotlib 第二课</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Matplotlib 第二课</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgabad3ae">1. part-I : Figures_Subplots_and_layouts</a>
+<ul>
+<li><a href="#orgc145465">1.1. OO-manner to plot (heavy way but good for complex situation)</a>
+<ul>
+<li><a href="#org31f6149">1.1.1. backends</a></li>
+<li><a href="#orge860d61">1.1.2. some components</a></li>
+<li><a href="#orgbbe302c">1.1.3. Figures</a></li>
+<li><a href="#org71e33b0">1.1.4. create and show</a></li>
+<li><a href="#org9b89c46">1.1.5. resize the figure</a></li>
+<li><a href="#org32c1175">1.1.6. Axes( and subplot )</a></li>
+<li><a href="#orge40566a">1.1.7. Basic Plotting</a></li>
+</ul>
+</li>
+<li><a href="#org00a4dfa">1.2. pyplot-manner to plot (simple way but unsafe for complex situation)</a></li>
+<li><a href="#orgea681c3">1.3. Multiple Axes (a numpy array of subplot)</a></li>
+</ul>
+</li>
+<li><a href="#orgf348f3e">2. Exercise 1.1</a></li>
+<li><a href="#org3858ba9">3. misc tools</a>
+<ul>
+<li><a href="#org9116ef6">3.1. python</a>
+<ul>
+<li><a href="#org21a0a53">3.1.1. zip() vs. itertools.zip_longest()</a></li>
+</ul>
+</li>
+<li><a href="#org7523240">3.2. Numpy</a>
+<ul>
+<li><a href="#org06a82ab">3.2.1. np.linspace() vs. np.arange()</a></li>
+</ul>
+</li>
+<li><a href="#org668fd88">3.3. Matplotlib</a>
+<ul>
+<li><a href="#org78b77ba">3.3.1. plt.plot(xarr,yarr,'linecolor/linestyle/marker', label='')</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgabad3ae" class="outline-2">
+<h2 id="orgabad3ae"><span class="section-number-2">1</span> part-I : Figures_Subplots_and_layouts</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="orgc145465" class="outline-3">
+<h3 id="orgc145465"><span class="section-number-3">1.1</span> OO-manner to plot (heavy way but good for complex situation)</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="org31f6149" class="outline-4">
+<h4 id="org31f6149"><span class="section-number-4">1.1.1</span> backends</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+This is why mlpt is so successful, it has multiple <b>backends</b>, some like the JVM works for cross-platform.
+when you encount some error, you should specify which <b>backend</b> you are using
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib
+<span class="org-keyword">print</span> ( matplotlib.__version__ )
+<span class="org-keyword">print</span>( matplotlib.get_backend() )
+matplotlib.use(<span class="org-string">'nbagg'</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orge860d61" class="outline-4">
+<h4 id="orge860d61"><span class="section-number-4">1.1.2</span> some components</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ol class="org-ol">
+<li>Figure  contains (Subplot, Axes)</li>
+<li>Axes    contains (2 or more Axis)
+<ul class="org-ul">
+<li>Subplot is the white area, it's the Axes on grid system.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="orgbbe302c" class="outline-4">
+<h4 id="orgbbe302c"><span class="section-number-4">1.1.3</span> Figures</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+By default, mpl will not show anything until told to do so.
+</p>
+<ol class="org-ol">
+<li>create a figure: <code>plt.figure()</code></li>
+<li>show it: <code>plt.show()</code></li>
+<li>resize the height and width: <code>plt.figrue( figsize = (111,222) )</code></li>
+<li>resize to twice big: <code>plt.figure( figsize = plt.figaspect(2.0) )</code></li>
+</ol>
+</div>
+</div>
+<div id="org71e33b0" class="outline-4">
+<h4 id="org71e33b0"><span class="section-number-4">1.1.4</span> create and show</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">fig</span> = plt.figure()
+plt.show()
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.figure.Figure at 0x7f251169eeb8&gt;
+
+</pre>
+</div>
+</div>
+
+<div id="org9b89c46" class="outline-4">
+<h4 id="org9b89c46"><span class="section-number-4">1.1.5</span> resize the figure</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span> = plt.figure( figsize=(<span class="org-highlight-numbers-number">111</span>, <span class="org-highlight-numbers-number">222</span>) )  <span class="org-comment-delimiter"># </span><span class="org-comment">specify the size of figure</span>
+<span class="org-variable-name">fig</span> = plt.figure( figsize = plt.figaspect(<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>)) <span class="org-comment-delimiter"># </span><span class="org-comment">enlarge size to 2X</span>
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.figure.Figure at 0x7f25114df390&gt;
+
+</pre>
+</div>
+</div>
+
+<div id="org32c1175" class="outline-4">
+<h4 id="org32c1175"><span class="section-number-4">1.1.6</span> Axes( and subplot )</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<ul class="org-ul">
+<li>Axes</li>
+<li>subplot</li>
+</ul>
+<p>
+All plotting is done with respect to an <b>Axes</b>, <b>Axes</b> is made up of Axis
+and many other things. An <b>Axes</b> must belong to a Figure( and only one
+Figure ).An <b>Subplot</b> is just an <b>Axes</b> on a grid system.
+</p>
+
+<ol class="org-ol">
+<li>create a Figure: <code>plt.figure()</code></li>
+<li>show it: <code>plt.show()</code></li>
+<li>resize the height and width: <code>plt.figrue( figsize = (111,222) )</code></li>
+<li>resize to twice big: <code>plt.figure( figsize = plt.figaspect(2.0) )</code></li>
+<li>&lt;&#x2013; add an Axes to Fiture: <code>fig.add_axes</code> or <code>fig.add_subplot</code></li>
+<li>&lt;&#x2013; set attributes of Axes(xlim, ylim, xlabel, ylabel, title): <code>ax.set( xlim=,ylim=,xlabel=,...)</code></li>
+<li>&lt;&#x2013; or set each attribute separately: <code>ax.set_xlim()</code> <code>ax.set_ylim()</code></li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-variable-name">ax</span> = fig.add_subplot(<span class="org-highlight-numbers-number">111</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">basically, 1 row and 1 column</span>
+ax.<span class="org-builtin">set</span>( xlim=[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>],
+        ylim=[-<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">8</span>],
+        title=<span class="org-string">'An Example Axes'</span>,
+        ylabel=<span class="org-string">'Y-Axis'</span>,
+        xlabel=<span class="org-string">'X-Axis'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284mDS.png" alt="17284mDS.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orge40566a" class="outline-4">
+<h4 id="orge40566a"><span class="section-number-4">1.1.7</span> Basic Plotting</h4>
+<div class="outline-text-4" id="text-1-1-7">
+<p>
+Most plotting happens on Axes.
+</p>
+<ul class="org-ul">
+<li>plot: draws points with lines connecting them.</li>
+<li>scatter: draw unconnected points, can scaled and colored by additional
+variables</li>
+
+<li>create a Figure: <code>plt.figure()</code></li>
+<li>show it: <code>plt.show()</code></li>
+<li>resize the height and width: <code>plt.figrue( figsize = (111,222) )</code></li>
+<li>resize to twice big: <code>plt.figure( figsize = plt.figaspect(2.0) )</code></li>
+<li>add an Axes to Fiture: <code>fig.add_axes</code> or <code>fig.add_subplot</code></li>
+<li>set attributes of Axes(xlim, ylim, xlabel, ylabel, title): <code>ax.set( xlim=,ylim=,xlabel=,...)</code></li>
+<li>or set each attribute separately: <code>ax.set_xlim()</code> <code>ax.set_ylim()</code></li>
+<li>&lt;&#x2013; plotting on axes: <code>ax.plot(xlist, ylist, color, linewidth)</code></li>
+<li>&lt;&#x2013; scatter on axes: <code>ax.scatter(xlist, ylist, color, marker)</code></li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-variable-name">ax</span> = fig.add_subplot(<span class="org-highlight-numbers-number">111</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">basically, 1 row and 1 column</span>
+ax.<span class="org-builtin">set</span>( xlim=[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>],
+        ylim=[<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">50</span>],
+        title=<span class="org-string">'An Example Axes'</span>,
+        ylabel=<span class="org-string">'Y-Axis'</span>,
+        xlabel=<span class="org-string">'X-Axis'</span>)
+ax.plot( [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">30</span>], color=<span class="org-string">'lightblue'</span>, linewidth=<span class="org-highlight-numbers-number">3</span>)
+ax.scatter( [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span>], [<span class="org-highlight-numbers-number">11</span>, <span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">26</span>], color=<span class="org-string">'darkgreen'</span>, marker=<span class="org-string">'^'</span>)
+ax.set_xlim(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284nEZ.png" alt="17284nEZ.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org00a4dfa" class="outline-3">
+<h3 id="org00a4dfa"><span class="section-number-3">1.2</span> pyplot-manner to plot (simple way but unsafe for complex situation)</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Interestingly, all the above codes are in an OO-manner to plot something, it is a little heavy:
+</p>
+<ol class="org-ol">
+<li>create a figure, resize it</li>
+<li>create an axes or subplot on that figure, set attrs</li>
+<li>plotting something on that axes, set attrs</li>
+</ol>
+<p>
+Many times, we just want to open ipython, plot something to see, we don't want figure, don't
+want axes, we only need plotting somthing.
+</p>
+
+<p>
+<b>pyplot Enter!</b>
+</p>
+
+<ul class="org-ul">
+<li><b>all methods of an Axes object exist as a function in the pyplot module</b>.
+<code>plt.xlim(1, 10)</code>, pyplot calls <code>ax.set_xlim(1, 10)</code> on "current" Axes.</li>
+<li><b>plt assumes you plot and set.attr on current Figure and Axes</b></li>
+<li><b>if no Figure and Axes, matplotlib will create one for you</b></li>
+</ul>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">OO-manner</th>
+<th scope="col" class="org-left">pyplot-manner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">1. create a Figure:</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>plt.figure()</code></td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left">2. show it:</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>plt.show()</code></td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left">3. resize the height and width:</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>plt.figrue( figsize = (111,222) )</code></td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left">4. resize to twice big:</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>plt.figure( figsize = plt.figaspect(2.0) )</code></td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left">5. add an Axes to Fiture:</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>fig.add_axes</code> or <code>fig.add_subplot</code></td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left">6. set attributes of Axes(xlim, ylim, xlabel, ylabel, title):</td>
+<td class="org-left">xxx</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ax.set( xlim=,ylim=,xlabel=,...)</code></td>
+<td class="org-left">xxx</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">7. or set each attribute separately:</td>
+<td class="org-left">1. set.attrs</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ax.set_xlim()</code> <code>ax.set_ylim()</code></td>
+<td class="org-left"><code>plt.xlim()</code></td>
+</tr>
+
+<tr>
+<td class="org-left">8. plotting on axes:</td>
+<td class="org-left">2. plotting</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ax.plot(xlist, ylist, color, linewidth)</code></td>
+<td class="org-left"><code>plt.plot(...)</code></td>
+</tr>
+
+<tr>
+<td class="org-left">9. scatter on axes:</td>
+<td class="org-left">3. scatter</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ax.scatter(xlist, ylist, color, marker)</code></td>
+<td class="org-left"><code>plt.scatter(...)</code></td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">ax.plot( [1,2,3,4], [10, 20, 25, 30], color='lightblue', linewidth=3)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">ax.scatter( [0.3, 3.8, 1.2, 2.5], [11, 25, 9, 26], color='darkgreen', marker='^')</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">ax.set_xlim(0.1, 4.5)</span>
+plt.plot( [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">30</span>], color=<span class="org-string">'lightblue'</span>, linewidth=<span class="org-highlight-numbers-number">3</span>)
+plt.scatter( [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span>], [<span class="org-highlight-numbers-number">11</span>, <span class="org-highlight-numbers-number">25</span>, <span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">26</span>], color=<span class="org-string">'darkgreen'</span>, marker=<span class="org-string">'^'</span>)
+plt.xlim(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/172840Of.png" alt="172840Of.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="orgea681c3" class="outline-3">
+<h3 id="orgea681c3"><span class="section-number-3">1.3</span> Multiple Axes (a numpy array of subplot)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+If you want your axes to be on a regular grid system, using
+<code>plt.subplots(...)</code> to create a figure and add the axes to it automatically.
+It will create <b>a figure</b> for you and <b>a 2D numpy array</b> of subplot objects.
+</p>
+
+<p>
+Note that, <code>plt.subplot()</code> is different from <code>plt.subplots()</code>
+</p>
+
+<p>
+One really nice thing about <code>plt.subplots()</code> is that, when it's called with
+<b>no arguments</b>, it creates <b>a new figure</b> with <b>a new subplot</b>.
+</p>
+
+<p>
+<code>fig,ax=plt.subplots() ===&gt; fig=plt.figure() + ax=fig.add_subplot(111)</code>
+<code>subplots = figure + add_subplot</code>
+</p>
+
+<ol class="org-ol">
+<li>create a Figure: <code>plt.figure()</code></li>
+<li>show it: <code>plt.show()</code></li>
+<li>resize the height and width: <code>plt.figrue( figsize = (111,222) )</code></li>
+<li>resize to twice big: <code>plt.figure( figsize = plt.figaspect(2.0) )</code></li>
+<li>&lt;&#x2013; add multiple axes to figure: <code>plt.subplots(nrows, nclos)</code> or <code>plt.subplots()</code>
+<ol class="org-ol">
+<li><del>add an Axes to Fiture: <code>fig.add_axes</code> or <code>fig.add_subplot</code>.</del></li>
+</ol></li>
+<li>set attributes of Axes(xlim, ylim, xlabel, ylabel, title): <code>ax.set( xlim=,ylim=,xlabel=,...)</code></li>
+<li>&lt;&#x2013; index the numpy array or iterate the flattened numpy array to do settings.
+<ol class="org-ol">
+<li><del>or set each attribute separately: <code>ax.set_xlim()</code> <code>ax.set_ylim()</code>.</del></li>
+</ol></li>
+<li>plotting on axes: <code>ax.plot(xlist, ylist, color, linewidth)</code></li>
+<li>scatter on axes: <code>ax.scatter(xlist, ylist, color, marker)</code></li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">create one figure and add 4 subplot to it</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">axes is a 2D numpy array of subplot</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows = <span class="org-highlight-numbers-number">2</span>, ncols=<span class="org-highlight-numbers-number">2</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284BZl.png" alt="17284BZl.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">create one figure and add 4 subplot to it</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">axes is a 2D numpy array of subplot</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows = <span class="org-highlight-numbers-number">2</span>, ncols=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">you can index the 2D numpy array do some settings separately</span>
+axes[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">set</span>(title=<span class="org-string">'Upper Left'</span>)
+axes[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">set</span>(title=<span class="org-string">'Upper Right'</span>)
+axes[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">set</span>(title=<span class="org-string">'Lower Left'</span>)
+axes[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">set</span>(title=<span class="org-string">'Lower Right'</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">you can iterate over all items in a flattened numpy array do some settings</span>
+<span class="org-keyword">for</span> ax <span class="org-keyword">in</span> axes.flat:
+    ax.<span class="org-builtin">set</span>( xticks = [], yticks = [])
+<span class="org-comment-delimiter"># </span><span class="org-comment">show figure</span>
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284oMU.png" alt="17284oMU.png" />
+</p>
+</div>
+
+<p>
+One really nice thing about <code>plt.subplots()</code> is that, when it's called with
+no arguments, it creates <b>a new figure</b> with <b>single subplot</b>.
+</p>
+
+<p>
+<code>fig=plt.figure() + ax=fig.add_subplot(111) ===&gt; fig,ax=plt.subplots()</code>
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf348f3e" class="outline-2">
+<h2 id="orgf348f3e"><span class="section-number-2">2</span> Exercise 1.1</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<code>for ax, y, name in zip(axes, [y1, y2, y3], names):</code>
+</p>
+
+<ul class="org-ul">
+<li>axes is a 3 elements np.array;</li>
+<li>[y1,y2,y3] is a 3 elements array, also each y is an array same size with x;</li>
+<li>names is a 3 elemnts array;</li>
+</ul>
+
+<p>
+This usage of <code>for ... in zip</code> is some like the <code>pattern match in for</code> in
+scala. Extract each item in this 3-Tuple.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">this style make image more fittable</span>
+plt.style.use(<span class="org-string">'classic'</span>)
+
+<span class="org-variable-name">x</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>)
+<span class="org-variable-name">y1</span>, <span class="org-variable-name">y2</span>, <span class="org-variable-name">y3</span> = np.cos(x), np.cos(x+<span class="org-highlight-numbers-number">1</span>), np.cos(x+<span class="org-highlight-numbers-number">3</span>)
+<span class="org-variable-name">names</span> = [<span class="org-string">'Signal 1'</span>, <span class="org-string">'Signal 2'</span>, <span class="org-string">'Signal 3'</span>]
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows=<span class="org-highlight-numbers-number">3</span>,ncols=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">for</span> ax, y, name <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes, [y1, y2, y3], names):
+    ax.plot(x, y, color=<span class="org-string">'black'</span>)
+    ax.<span class="org-builtin">set</span>(xticks=[], yticks=[], title=name)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/17284gER.png" alt="17284gER.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3858ba9" class="outline-2">
+<h2 id="org3858ba9"><span class="section-number-2">3</span> misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org9116ef6" class="outline-3">
+<h3 id="org9116ef6"><span class="section-number-3">3.1</span> python</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="org21a0a53" class="outline-4">
+<h4 id="org21a0a53"><span class="section-number-4">3.1.1</span> zip() vs. itertools.zip_longest()</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<pre class="example">
+.            [1,   2,   3,   4]
+.            [4,   5,   6]          zip
+. --------------------------------------
+. iterator   (1,4)(2,5)(3,6)
+.
+.
+.            [1,   2,   3,   4]
+.            [4,   5,   6]          zip_longest
+. ---------------------------------------------
+. iterator   (1,4)(2,5)(3,6)(4,None)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> itertools
+<span class="org-variable-name">x</span> = [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>]
+<span class="org-variable-name">y</span> = [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]
+<span class="org-variable-name">zipped</span> = <span class="org-builtin">zip</span>(x, y)
+<span class="org-builtin">list</span>( zipped )
+</pre>
+</div>
+
+<pre class="example">
+[(1, 4), (2, 5), (3, 6)]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">longest_zipped</span> = itertools.zip_longest(x, y)
+<span class="org-builtin">list</span>( longest_zipped )
+</pre>
+</div>
+
+<pre class="example">
+[(1, 4), (2, 5), (3, 6), (4, None)]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org7523240" class="outline-3">
+<h3 id="org7523240"><span class="section-number-3">3.2</span> Numpy</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="org06a82ab" class="outline-4">
+<h4 id="org06a82ab"><span class="section-number-4">3.2.1</span> np.linspace() vs. np.arange()</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+np.linspace(start, stop, num=50)
+np.arange(start, stop, step)
+</p>
+</div>
+</div>
+</div>
+<div id="org668fd88" class="outline-3">
+<h3 id="org668fd88"><span class="section-number-3">3.3</span> Matplotlib</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="org78b77ba" class="outline-4">
+<h4 id="org78b77ba"><span class="section-number-4">3.3.1</span> plt.plot(xarr,yarr,'linecolor/linestyle/marker', label='')</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+what is label here
+</p>
+<pre class="example">
+.
+.   +---------------------------------------------+
+.   |    |                                        |
+.   |    |    -------------                       |
+.   |    |     .........        +---------+       |
+.   |    |     .  ......        | -- size | &lt;------------- this is ~label~ para of ~plt.plot(xxx, lablel)~
+.   |    |     ..... ....       | .. width|       |
+.   |    |     ....     .....   +---------+       |
+.   |    |  ....            .                     |
+.   |    |     .            ...                   |
+.   |   ----------------------------&gt;             |
+.   |    |                                        |
+.   +---------------------------------------------+
+.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

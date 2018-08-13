@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记07:非监督学习clustering</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记07:非监督学习clustering</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org37040e1">1. Unsupervised Learning Part 2 &#x2013; Clustering</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org4f5bb45">1.0.1. what is clustering</a></li>
+<li><a href="#org56542b7">1.0.2. application of clustering</a></li>
+</ul>
+</li>
+<li><a href="#orgab1d3df">1.1. K-means</a>
+<ul>
+<li><a href="#org87f9c2f">1.1.1. what is K-means</a></li>
+<li><a href="#org7f91370">1.1.2. creating</a></li>
+<li><a href="#org3eb5ca1">1.1.3. fitting and predict</a></li>
+<li><a href="#org96107ee">1.1.4. comparing to true labels using confusion_matrix and accuracy_score</a></li>
+<li><a href="#org5cb50a5">1.1.5. comparing to true labels using adjusted_rand_score</a></li>
+<li><a href="#orgbd9e551">1.1.6. short-comming-1 of K-means</a></li>
+<li><a href="#org46b76ec">1.1.7. The Elbow Method: solve the short-coming-1  using <code>km.inertia_</code></a></li>
+<li><a href="#org0979d4f">1.1.8. short-comming 2~4 of K-means</a></li>
+</ul>
+</li>
+<li><a href="#org0bde379">1.2. Some Notable Clustering Routines</a></li>
+</ul>
+</li>
+<li><a href="#orgfcc8c21">2. Misc tools</a>
+<ul>
+<li><a href="#orgf6a62e4">2.1. scikit-learn</a>
+<ul>
+<li><a href="#org14aae9c">2.1.1. ML models by now</a></li>
+<li><a href="#org18ec3de">2.1.2. sklearn.metrics.confusion_matrix</a></li>
+<li><a href="#orga5053c8">2.1.3. sklearn.metrics.accuracy_score</a></li>
+<li><a href="#org1641e28">2.1.4. sklearn.metrics.adjusted_rand_score</a></li>
+<li><a href="#orge2951ac">2.1.5. ML fn of this note</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+</pre>
+</div>
+
+<div id="org37040e1" class="outline-2">
+<h2 id="org37040e1"><span class="section-number-2">1</span> Unsupervised Learning Part 2 &#x2013; Clustering</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org4f5bb45" class="outline-4">
+<h4 id="org4f5bb45"><span class="section-number-4">1.0.1</span> what is clustering</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<p>
+Clustering is the task of gathering samples into groups of similar
+samples according to some predefined similarity or distance (dissimilarity)
+measure, such as the Euclidean distance.
+</p>
+
+
+<div class="figure">
+<p><img src="figures/clustering.png" alt="clustering.png" />
+</p>
+</div>
+
+<p>
+In this section we will explore a basic clustering task on some synthetic and
+real-world datasets.
+</p>
+</div>
+</div>
+
+<div id="org56542b7" class="outline-4">
+<h4 id="org56542b7"><span class="section-number-4">1.0.2</span> application of clustering</h4>
+<div class="outline-text-4" id="text-1-0-2">
+<p>
+Here are some common applications of clustering algorithms:
+</p>
+
+<ul class="org-ul">
+<li>Compression for data reduction</li>
+<li>Summarizing data as a reprocessing step for recommender systems</li>
+<li>Similarly:
+<ul class="org-ul">
+<li>grouping related web news (e.g. Google News) and web search results</li>
+<li>grouping related stock quotes for investment portfolio management</li>
+<li>building customer profiles for market analysis</li>
+</ul></li>
+<li>Building a code book of prototype samples for unsupervised feature extraction</li>
+</ul>
+</div>
+</div>
+
+<div id="orgab1d3df" class="outline-3">
+<h3 id="orgab1d3df"><span class="section-number-3">1.1</span> K-means</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="org87f9c2f" class="outline-4">
+<h4 id="org87f9c2f"><span class="section-number-4">1.1.1</span> what is K-means</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Let's start by creating a simple, 2-dimensional, synthetic dataset:
+</p>
+
+<p>
+In the scatter plot above, we can see three separate groups of data points and
+we would like to recover them using clustering &#x2013; think of "<b>discovering</b>" the
+class labels that we already take for granted in a classification task.
+</p>
+
+<p>
+Even if the groups are obvious in the data, it is hard to find them when the
+data lives in a high-dimensional space, which we can't visualize in a single
+histogram or scatterplot.
+</p>
+
+<p>
+Now we will use one of the simplest clustering algorithms, <b>K-means</b>. This is an
+<b>iterative algorithm(or called lazy algorithm)</b> which searches for three cluster
+centers such that the distance from each point to its cluster is minimized. The
+standard implementation of K-means uses the Euclidean distance, which is why we
+want to make sure that all <b>our variables are measured on the same scale</b> if we
+are working with real-world datastets. In the previous notebook, we talked about
+one technique to achieve this, namely, <code>standardization</code>.
+</p>
+
+<p>
+Question:
+what would you expect the output to look like?
+</p>
+</div>
+</div>
+
+<div id="org7f91370" class="outline-4">
+<h4 id="org7f91370"><span class="section-number-4">1.1.2</span> creating</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.cluster <span class="org-keyword">import</span> KMeans
+<span class="org-variable-name">kmeans</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">3</span>, random_state=<span class="org-highlight-numbers-number">42</span>)
+</pre>
+</div>
+
+<p>
+We can get the cluster labels either by calling <code>fit</code> and then accessing the
+<code>labels_</code> attribute of the K means estimator, or by calling <code>fit_predict</code>. Either
+way, the result contains the ID of the cluster that each point is assigned to.
+</p>
+</div>
+</div>
+
+<div id="org3eb5ca1" class="outline-4">
+<h4 id="org3eb5ca1"><span class="section-number-4">1.1.3</span> fitting and predict</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">labels</span> = kmeans.fit_predict(X)
+labels
+</pre>
+</div>
+
+<pre class="example">
+array([1, 2, 1, 2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 1, 1, 2, 0, 2, 2, 2, 0, 0, 1,
+0, 1, 2, 2, 0, 0, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 1, 0, 1, 2, 0,
+0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 2, 2, 0, 2, 1, 2, 1, 2, 2, 2, 0, 2,
+1, 1, 0, 1, 0, 0, 2, 0, 1, 2, 0, 0, 0, 2, 0, 1, 1, 1, 0, 0, 0, 1, 2,
+1, 0, 2, 1, 0, 1, 0, 0], dtype=int32)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.<span class="org-builtin">all</span>(y == labels)
+</pre>
+</div>
+
+<pre class="example">
+False
+
+</pre>
+
+<p>
+Let's visualize the assignments that have been found
+</p>
+</div>
+</div>
+
+<div id="org96107ee" class="outline-4">
+<h4 id="org96107ee"><span class="section-number-4">1.1.4</span> comparing to true labels using confusion_matrix and accuracy_score&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXERCISE">EXERCISE</span></span></h4>
+<div class="outline-text-4" id="text-1-1-4">
+<div class="org-src-container">
+<pre class="src src-ipython">plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=labels);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041ixO.png" alt="25041ixO.png" />
+</p>
+</div>
+
+<p>
+Compared to the true labels:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=y);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041v7U.png" alt="25041v7U.png" />
+</p>
+</div>
+
+<p>
+Here, we are probably satisfied with the clustering results. But in general we
+might want to have a more quantitative evaluation. How about comparing our
+cluster labels with the ground truth we got when generating the blobs?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics <span class="org-keyword">import</span> confusion_matrix, accuracy_score
+<span class="org-keyword">print</span>(<span class="org-string">'Accuracy score:'</span>, accuracy_score(y, labels))
+<span class="org-keyword">print</span>(confusion_matrix(y, labels))
+np.mean(y == labels)
+</pre>
+</div>
+
+<pre class="example">
+0.34000000000000002
+
+</pre>
+
+<p>
+But we actually do 100% correctly, only due to different label number, we get
+only 33% correctly:
+</p>
+<ul class="org-ul">
+<li>standard answer: [2,1,3]</li>
+<li>we give: [1,2,3]</li>
+</ul>
+
+<p>
+But for every elements we group them correctly.
+</p>
+
+<blockquote>
+<p>
+EXERCISE: After looking at the "True" label array y, and the scatterplot and
+labels above, can you figure out why our computed accuracy is 0.0, not 1.0, and
+can you fix it?
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org5cb50a5" class="outline-4">
+<h4 id="org5cb50a5"><span class="section-number-4">1.1.5</span> comparing to true labels using adjusted_rand_score</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Even though we recovered the partitioning of the data into clusters perfectly,
+the cluster IDs we assigned were arbitrary, and we can not hope to recover them.
+Therefore, we must use a different scoring metric, such as adjusted_rand_score,
+which is invariant to permutations of the labels:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics <span class="org-keyword">import</span> adjusted_rand_score
+adjusted_rand_score(y, labels)
+</pre>
+</div>
+
+<pre class="example">
+1.0
+
+</pre>
+</div>
+</div>
+
+<div id="orgbd9e551" class="outline-4">
+<h4 id="orgbd9e551"><span class="section-number-4">1.1.6</span> short-comming-1 of K-means</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<p>
+<b>specify the number of clusters</b>
+</p>
+
+<p>
+One of the "short-comings" of K-means is that we have to <b>specify the number of
+clusters</b>, which we often don't know apriori. For example, let's have a look what
+happens if we set the number of clusters to 2 in our synthetic 3-blob dataset:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">kmeans</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">2</span>, random_state=<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">labels</span> = kmeans.fit_predict(X)
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=labels);
+kmeans.cluster_centers_
+</pre>
+</div>
+
+<pre class="example">
+array([[ 5.60396367,  3.94805847],
+[-6.00060712, -7.45465799]])
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/250418Fb.png" alt="250418Fb.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org46b76ec" class="outline-4">
+<h4 id="org46b76ec"><span class="section-number-4">1.1.7</span> The Elbow Method: solve the short-coming-1  using <code>km.inertia_</code></h4>
+<div class="outline-text-4" id="text-1-1-7">
+<p>
+The Elbow method is a "rule-of-thumb" approach to finding the optimal number of
+clusters. Here, we look at the cluster <code>dispersion</code> for different values of k:
+</p>
+
+<blockquote>
+<p>
+<code>dispersion</code>
+In statistics, dispersion (also called variability, scatter, or spread) is the
+extent to which a distribution is stretched or squeezed. Common examples of
+measures of statistical dispersion are the variance, standard deviation, and
+interquartile range
+</p>
+</blockquote>
+
+<p>
+here we use <code>km.inertia_</code> describe the <code>dispersion(spread)</code>
+</p>
+<blockquote>
+<p>
+<code>km.inertia_</code> : float, Sum of squared distances of samples to their closest
+cluster center.
+</p>
+
+<p>
+<code>inertia_</code> is one attribute of km model after fitting training dataset, it will
+give you some 'feeling' of connection strength of elements inside each group,
+which returned as 'label' by km model after fitting training dataset.
+</p>
+</blockquote>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">distortions</span> = []
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">11</span>):
+    <span class="org-variable-name">km</span> = KMeans(n_clusters=i,
+                random_state=<span class="org-highlight-numbers-number">0</span>)
+    km.fit(X)
+    distortions.append(km.inertia_)
+    plt.plot(<span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">11</span>), distortions, marker=<span class="org-string">'o'</span>)
+    plt.xlabel(<span class="org-string">'Number of clusters'</span>)
+    plt.ylabel(<span class="org-string">'Distortion'</span>)
+    plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041JQh.png" alt="25041JQh.png" />
+</p>
+</div>
+
+<p>
+Then, we pick the value that resembles the "<b>pit of an elbow</b>." As we can see,
+this would be <b>k=3</b> in this case, which makes sense given our visual expection of
+the dataset previously.
+</p>
+</div>
+</div>
+
+<div id="org0979d4f" class="outline-4">
+<h4 id="org0979d4f"><span class="section-number-4">1.1.8</span> short-comming 2~4 of K-means</h4>
+<div class="outline-text-4" id="text-1-1-8">
+<p>
+Clustering comes with assumptions:
+</p>
+
+<p>
+A clustering algorithm finds clusters by making assumptions with samples should
+be grouped together. Each algorithm makes different assumptions and the quality
+and interpretability of your results will depend on whether the assumptions are
+satisfied for your goal.
+</p>
+
+<p>
+For <code>K-means clustering</code>, the model is that all clusters have:
+</p>
+<ol class="org-ol">
+<li><b>equal</b> variance.</li>
+<li><b>spherical</b> variance.</li>
+<li><b>balanced</b> sized blobs</li>
+</ol>
+
+<p>
+Summarizing: short-commings of K-means:
+</p>
+<blockquote>
+<p>
+So we have 4 short-comings of K-means:
+</p>
+<ol class="org-ol">
+<li>Incorrect number of clusters &lt;&lt;&lt; solved by elbow-method</li>
+<li>Anisotropicly distributed data</li>
+<li>Different variance</li>
+<li>Unevenly sized blobs</li>
+</ol>
+</blockquote>
+
+<p>
+In general, there is no guarantee that structure found by a clustering algorithm
+has anything to do with what you were interested in.
+</p>
+
+<p>
+We can easily create a dataset that has non-isotropic clusters, on which kmeans
+will fail:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.figure(figsize=(<span class="org-highlight-numbers-number">12</span>, <span class="org-highlight-numbers-number">12</span>))
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">----------------------------------------</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. Incorrect number of clusters</span>
+<span class="org-variable-name">n_samples</span> = <span class="org-highlight-numbers-number">1500</span>
+<span class="org-variable-name">random_state</span> = <span class="org-highlight-numbers-number">170</span>
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_blobs(n_samples=n_samples, random_state=random_state)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">return 0/1 array because the 'n_clusters=2'</span>
+<span class="org-variable-name">y_pred</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">2</span>, random_state=random_state).fit_predict(X)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">split figure into 2*2 subplots, and use the 1st as default subplot to scatter or plot</span>
+<span class="org-comment-delimiter">##    </span><span class="org-comment">subplot(nrows, ncols, index)</span>
+<span class="org-comment-delimiter">##    </span><span class="org-comment">subplot(    2,     2,     1)</span>
+<span class="org-comment-delimiter">##    </span><span class="org-comment">subplot(221)</span>
+plt.subplot(<span class="org-highlight-numbers-number">221</span>)
+
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=y_pred)
+plt.title(<span class="org-string">"Incorrect Number of Blobs"</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">----------------------------------------</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. Anisotropicly distributed data</span>
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">linear transformation on data points</span>
+<span class="org-variable-name">transformation</span> = [[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">60834549</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">63667341</span>], [-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">40887718</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">85253229</span>]]
+<span class="org-variable-name">X_aniso</span> = np.dot(X, transformation)
+<span class="org-variable-name">y_pred</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">3</span>, random_state=random_state).fit_predict(X_aniso)
+plt.subplot(<span class="org-highlight-numbers-number">222</span>)
+plt.scatter(X_aniso[:, <span class="org-highlight-numbers-number">0</span>], X_aniso[:, <span class="org-highlight-numbers-number">1</span>], c=y_pred)
+plt.title(<span class="org-string">"Anisotropicly Distributed Blobs"</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">----------------------------------------</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. Different variance</span>
+<span class="org-variable-name">X_varied</span>, <span class="org-variable-name">y_varied</span> = make_blobs(n_samples=n_samples,
+                                cluster_std=[<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>],
+                                random_state=random_state)
+<span class="org-variable-name">y_pred</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">3</span>, random_state=random_state).fit_predict(X_varied)
+plt.subplot(<span class="org-highlight-numbers-number">223</span>)
+plt.scatter(X_varied[:, <span class="org-highlight-numbers-number">0</span>], X_varied[:, <span class="org-highlight-numbers-number">1</span>], c=y_pred)
+plt.title(<span class="org-string">"Unequal Variance"</span>)
+
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">----------------------------------------</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">4. Unevenly sized blobs</span>
+<span class="org-variable-name">X_filtered</span> = np.vstack((X[y == <span class="org-highlight-numbers-number">0</span>][:<span class="org-highlight-numbers-number">500</span>], X[y == <span class="org-highlight-numbers-number">1</span>][:<span class="org-highlight-numbers-number">100</span>], X[y == <span class="org-highlight-numbers-number">2</span>][:<span class="org-highlight-numbers-number">10</span>]))
+<span class="org-variable-name">y_pred</span> = KMeans(n_clusters=<span class="org-highlight-numbers-number">3</span>,
+                random_state=random_state).fit_predict(X_filtered)
+plt.subplot(<span class="org-highlight-numbers-number">224</span>)
+plt.scatter(X_filtered[:, <span class="org-highlight-numbers-number">0</span>], X_filtered[:, <span class="org-highlight-numbers-number">1</span>], c=y_pred)
+plt.title(<span class="org-string">"Unevenly Sized Blobs"</span>)
+
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.text.Text at 0x7f9c489e5d68&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/25041jkt.png" alt="25041jkt.png" />
+</p>
+</div>
+
+<p>
+​
+</p>
+</div>
+</div>
+</div>
+<div id="org0bde379" class="outline-3">
+<h3 id="org0bde379"><span class="section-number-3">1.2</span> Some Notable Clustering Routines</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+May be DBSCAN is the best one
+</p>
+
+<p>
+The following are two well-known clustering algorithms.
+</p>
+
+<ul class="org-ul">
+<li><code>sklearn.cluster.KMeans</code> : The simplest, yet effective clustering algorithm.
+Needs to be provided with the number of clusters in advance, and assumes that
+the data is normalized as input (but use a PCA model as preprocessor).</li>
+<li><code>sklearn.cluster.MeanShift</code> : Can find better looking clusters than KMeans but
+is not scalable to high number of samples.</li>
+<li><code>sklearn.cluster.DBSCAN</code> : Can detect irregularly shaped clusters <b>based on
+density</b>, i.e. sparse regions in the input space are likely to become
+inter-cluster boundaries. Can also detect outliers (samples that are not part
+of a cluster).</li>
+<li><code>sklearn.cluster.AffinityPropagation</code> : Clustering algorithm based on message
+passing between data points.</li>
+<li><code>sklearn.cluster.SpectralClustering</code> : KMeans applied to a projection of the
+<b>normalized graph Laplacian</b>: finds normalized graph cuts if the affinity matrix
+is interpreted as an adjacency matrix of a graph.</li>
+<li><code>sklearn.cluster.Ward</code> : Ward implements <b>hierarchical clustering</b> based on the
+Ward algorithm, a variance-minimizing approach. At each step, it minimizes the
+sum of squared differences within all clusters (<b>inertia</b> criterion).</li>
+</ul>
+
+<p>
+Of these, Ward, SpectralClustering, DBSCAN and Affinity propagation can also
+work with <b>precomputed similarity matrices</b>.
+</p>
+
+
+<div class="figure">
+<p><img src="figures/cluster_comparison.png" alt="cluster_comparison.png" />
+</p>
+</div>
+
+<p>
+EXERCISE: digits clustering: Perform K-means clustering on the digits data,
+searching for ten clusters. Visualize the cluster centers as images (i.e.
+reshape each to 8x8 and use plt.imshow) Do the clusters seem to be correlated
+with particular digits? What is the adjusted_rand_score? Visualize the projected
+digits as in the last notebook, but this time use the cluster labels as the
+color. What do you notice?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-comment-delimiter"># </span><span class="org-comment">...</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="orgfcc8c21" class="outline-2">
+<h2 id="orgfcc8c21"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="orgf6a62e4" class="outline-3">
+<h3 id="orgf6a62e4"><span class="section-number-3">2.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="org14aae9c" class="outline-4">
+<h4 id="org14aae9c"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>sklearn.cluster.KMeans</li>
+<li>sklearn.cluster.MeanShift</li>
+<li>sklearn.cluster.DBSCAN &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>sklearn.cluster.AffinityPropagation</li>
+<li>sklearn.cluster.SpectralClustering</li>
+<li>sklearn.cluster.Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+</ol>
+</blockquote>
+</div>
+</div>
+<div id="org18ec3de" class="outline-4">
+<h4 id="org18ec3de"><span class="section-number-4">2.1.2</span> sklearn.metrics.confusion_matrix</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+<a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html</a>
+</p>
+
+<p>
+Confusion matrix usage to evaluate the quality of the output of a classifier.
+</p>
+
+<ul class="org-ul">
+<li>the <b>diagonal</b> elements represent <b>the number</b> of points for which the predicted
+label is <b>equal</b> to the true label.</li>
+<li><b>off-diagonal</b> elements are those that are <b>mislabeled</b> by the classifier.</li>
+</ul>
+
+<p>
+The higher the diagonal values of the confusion matrix the better, indicating
+many correct predictions.
+</p>
+
+<blockquote>
+<p>
+.                                          predicted label
+.                                               |
+.                                   ----------------------------&#x2013;&#x2014;
+.                     |            | setosa | versicolor | virginica |
+.                     |------------<del>--------</del>-------&#x2013;&#x2014;+------&#x2013;&#x2014;|
+.                  |  | setosa     |     13 |          0 |         0 |
+.  true label &#x2014;&gt; |  | versicolor |      0 |         10 |         6 |
+.                  |  | virginica  |      0 |          0 |         9 |
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orga5053c8" class="outline-4">
+<h4 id="orga5053c8"><span class="section-number-4">2.1.3</span> sklearn.metrics.accuracy_score</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<blockquote>
+<p>
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from sklearn.metrics import accuracy_score
+&gt;&gt;&gt; y_pred = [0, 2, 1, 3]
+&gt;&gt;&gt; y_true = [0, 1, 2, 3]
+&gt;&gt;&gt; accuracy_score(y_true, y_pred)
+0.5
+&gt;&gt;&gt; accuracy_score(y_true, y_pred, normalize=False)
+2
+</p>
+</blockquote>
+</div>
+</div>
+<div id="org1641e28" class="outline-4">
+<h4 id="org1641e28"><span class="section-number-4">2.1.4</span> sklearn.metrics.adjusted_rand_score</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+some like the comparing of two set, we just compare the content of set,
+ignore the order of set.
+</p>
+
+<blockquote>
+<p>
+&gt;&gt;&gt; from sklearn.metrics.cluster import adjusted_rand_score
+&gt;&gt;&gt; adjusted_rand_score([0, 0, 1, 1], [0, 0, 1, 1])
+1.0
+&gt;&gt;&gt; adjusted_rand_score([0, 0, 1, 1], [1, 1, 0, 0])
+1.0
+</p>
+</blockquote>
+</div>
+</div>
+<div id="orge2951ac" class="outline-4">
+<h4 id="orge2951ac"><span class="section-number-4">2.1.5</span> ML fn of this note</h4>
+<div class="outline-text-4" id="text-2-1-5">
+<p>
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=3, random_state=42)
+labels = kmeans.fit_predict(X) #&lt;- same with <code>kmeans.fit(X).predict(X)</code>
+</p>
+
+
+<p>
+km = KMeans(n_clusters=i,
+random_state=0)
+km.inertia_
+</p>
+
+<p>
+y_pred = KMeans(n_clusters=2, random_state=random_state).fit_predict(X) #&lt;- return [0,0,1,0,1,&#x2026;,0,1,0,0]
+plt.scatter(X[:, 0], X[:, 1], c=y_pred) #&lt;- both array of boolean and array of 0/1 can be passed to parameter 'c'
+</p>
+
+<p>
+X_varied, y_varied = make_blobs(n_samples=n_samples,
+cluster_std=[1.0, 2.5, 0.5],
+random_state=random_state)
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

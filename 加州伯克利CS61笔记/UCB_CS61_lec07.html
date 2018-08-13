@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>List</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">List</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org736c22d">0.1. lec 7 LISTS</a></li>
+</ul>
+</li>
+<li><a href="#org2108c86">1. LINKED LISTS (a recursive data type)</a>
+<ul>
+<li><a href="#org0720ea5">1.1. Linked lists vs. array lists</a></li>
+<li><a href="#org7b63edb">1.2. Lists of Objects</a></li>
+<li><a href="#org1a88642">1.3. A List Class</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="org736c22d" class="outline-3">
+<h3 id="org736c22d"><span class="section-number-3">0.1</span> lec 7 LISTS</h3>
+<div class="outline-text-3" id="text-0-1">
+<p>
+Let's consider two different data structures for storing a list of things:
+an array and a linked list.
+</p>
+
+<p>
+An array is a pretty obvious way to store a list, with a big advantage:  it
+enables very fast access of each item.  However, it has two disadvantages.
+</p>
+
+<p>
+First, if we want to insert an item at the beginning or middle of an array, we
+have to slide a lot of items over one place to make room.  This takes time
+proportional to the length of the array.
+</p>
+
+<p>
+Second, an array has a fixed length that can't be changed.  If we want to add
+items to the list, but the array is full, we have to allocate a whole new array
+and move all the ints from the old array to the new one.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">AList</span> {
+  <span class="org-type">int</span> <span class="org-variable-name">a</span>[];
+  <span class="org-type">int</span> <span class="org-variable-name">lastItem</span>;
+
+  <span class="org-keyword">public</span> <span class="org-function-name">AList</span>() {
+    a = <span class="org-keyword">new</span> <span class="org-type">int</span>[<span class="org-highlight-numbers-number">10</span>];                           <span class="org-comment-delimiter">// </span><span class="org-comment">The number "10" is arbitrary.</span>
+    lastItem = -<span class="org-highlight-numbers-number">1</span>;
+  }
+
+  <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">insertItem</span>(<span class="org-type">int</span> <span class="org-variable-name">newItem</span>, <span class="org-type">int</span> <span class="org-variable-name">location</span>) {
+    <span class="org-type">int</span> <span class="org-variable-name">i</span>;
+
+    <span class="org-keyword">if</span> (lastItem + <span class="org-highlight-numbers-number">1</span> == a.length) {               <span class="org-comment-delimiter">// </span><span class="org-comment">No room left in the array?</span>
+      <span class="org-type">int</span> <span class="org-variable-name">b</span>[] = <span class="org-keyword">new</span> <span class="org-type">int</span>[<span class="org-highlight-numbers-number">2</span> * a.length];  <span class="org-comment-delimiter">// </span><span class="org-comment">Allocate a new array, twice as long.</span>
+      <span class="org-keyword">for</span> (i = <span class="org-highlight-numbers-number">0</span>; i &lt;= lastItem; i++) {      <span class="org-comment-delimiter">// </span><span class="org-comment">Copy items to the bigger array.</span>
+        b[i] = a[i];
+      }
+      a = b;                   <span class="org-comment-delimiter">// </span><span class="org-comment">Replace the too-small array with the new one.</span>
+    }
+    <span class="org-keyword">for</span> (i = lastItem; i &gt;= location; i--) {       <span class="org-comment-delimiter">// </span><span class="org-comment">Shift items to the right.</span>
+      a[i + <span class="org-highlight-numbers-number">1</span>] = a[i];
+    }
+    a[location] = newItem;
+    lastItem++;
+  }
+}
+</pre>
+</div>
+<p>
+
+</p>
+</div>
+</div>
+<div id="org2108c86" class="outline-2">
+<h2 id="org2108c86"><span class="section-number-2">1</span> LINKED LISTS (a recursive data type)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+We can avoid these problems by choosing a Scheme-like representation of lists.
+A linked list is made up of <span class="underline">nodes</span>.  Each node has two components:  an item,
+and a reference to the next node in the list.  These components are analogous
+to "car" and "cdr".  However, our node is an explicitly defined object.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-scala">public <span class="org-keyword">class</span> <span class="org-type">ListNode</span> {          <span class="org-comment-delimiter">// </span><span class="org-comment">ListNode is a recursive type</span>
+  public int item;
+  public <span class="org-constant">ListNode</span> next;          <span class="org-comment-delimiter">// </span><span class="org-comment">Here we're using ListNode before</span>
+}                                <span class="org-comment-delimiter">//   </span><span class="org-comment">we've finished declaring it.</span>
+</pre>
+</div>
+
+<p>
+Let's make some ListNodes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-type">ListNode</span> <span class="org-variable-name">l1</span> = <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(), <span class="org-variable-name">l2</span> = <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(), <span class="org-variable-name">l3</span> = <span class="org-keyword">new</span> <span class="org-type">ListNode</span>();
+l1.item = <span class="org-highlight-numbers-number">7</span>;
+l2.item = <span class="org-highlight-numbers-number">0</span>;
+l3.item = <span class="org-highlight-numbers-number">6</span>;
+</pre>
+</div>
+
+<pre class="example">
+     -------------         -------------         -------------
+     |     ----- |         |     ----- |         |     ----- |
+     | item| 7 | |         | item| 0 | |         | item| 6 | |
+l1--&gt;|     ----- |    l2--&gt;|     ----- |    l3--&gt;|     ----- |
+     |     ----- |         |     ----- |         |     ----- |
+     | next| ? | |         | next| ? | |         | next| ? | |
+     |     ----- |         |     ----- |         |     ----- |
+     -------------         -------------         -------------
+</pre>
+
+<p>
+Now let's link them together.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">l1.next = l2;
+l2.next = l3;
+</pre>
+</div>
+
+<p>
+What about the last node?  We need a reference that doesn't reference anything.
+In Java, this is called "null".
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java">l3.next = <span class="org-constant">null</span>;
+</pre>
+</div>
+
+<pre class="example">
+     -------------         -------------         -------------
+     |     ----- |         |     ----- |         |     ----- |
+     | item| 7 | |         | item| 0 | |         | item| 6 | |
+l1--&gt;|     ----- |    l2--&gt;|     ----- |    l3--&gt;|     ----- |
+     |     ----- |         |     ----- |         |     ----- |
+     | next| .-+-+--------&gt;| next| .-+-+--------&gt;| next| X | |
+     |     ----- |         |     ----- |         |     ----- |
+     -------------         -------------         -------------
+</pre>
+
+<p>
+To simplify programming, let's add some constructors to the ListNode class.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-function-name">ListNode</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>, <span class="org-type">ListNode</span> <span class="org-variable-name">n</span>) {
+  item = i;
+  next = n;
+}
+
+<span class="org-keyword">public</span> <span class="org-function-name">ListNode</span>(<span class="org-type">int</span> <span class="org-variable-name">i</span>) {
+  <span class="org-keyword">this</span>(i, <span class="org-constant">null</span>);
+}
+</pre>
+</div>
+
+<p>
+These constructors allow us to emulate Scheme's "cons" operation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-type">ListNode</span> <span class="org-variable-name">l1</span> = <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(<span class="org-highlight-numbers-number">7</span>, <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(<span class="org-highlight-numbers-number">0</span>, <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(<span class="org-highlight-numbers-number">6</span>)));
+</pre>
+</div>
+<p>
+
+</p>
+</div>
+<div id="org0720ea5" class="outline-3">
+<h3 id="org0720ea5"><span class="section-number-3">1.1</span> Linked lists vs. array lists</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Linked lists have several advantages over array-based lists. Inserting an item
+into the middle of a linked list takes just a small constant amount of time, if
+you already have a reference to the previous node (and don't have to walk
+through the whole list searching for it). The list can keep growing until memory
+runs out.
+</p>
+
+<p>
+The following method inserts a new item into the list immediately after "this".
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">insertAfter</span>(<span class="org-type">int</span> <span class="org-variable-name">item</span>) {
+  next = <span class="org-keyword">new</span> <span class="org-type">ListNode</span>(item, next);
+}
+
+l2.insertAfter(<span class="org-highlight-numbers-number">3</span>);
+</pre>
+</div>
+
+<pre class="example">
+     -------------       -------------   -------------       -------------
+     |     ----- |       |     ----- |   |     ----- |       |     ----- |
+     | item| 7 | |       | item| 0 | |   | item| 3 | |       | item| 6 | |
+l1--&gt;|     ----- |  l2--&gt;|     ----- |   |     ----- |  l3--&gt;|     ----- |
+     |     ----- |       |     ----- |   |     ----- |       |     ----- |
+     | next| .-+-+------&gt;| next| .-+-+--&gt;| next| .-+-+------&gt;| next| X | |
+     |     ----- |       |     ----- |   |     ----- |       |     ----- |
+     -------------       -------------   -------------       -------------
+</pre>
+
+<p>
+However, linked lists have a big disadvantage compared to arrays.  Finding the
+nth item of an array takes a tiny, constant amount of time.  Finding the nth
+item of a linked list takes time proportional to n.  You have to start at the
+head of the list and walk forward n - 1 nodes, one "next" at a time.
+</p>
+
+<p>
+Many of the data structures we will study in this class will be attempts to
+find a compromise between arrays and linked lists.  We'll learn data structures
+that are fast for both arbitrary lookups (like arrays) <span class="underline">and</span> arbitrary
+insertions (like linked lists).
+</p>
+</div>
+</div>
+
+<div id="org7b63edb" class="outline-3">
+<h3 id="org7b63edb"><span class="section-number-3">1.2</span> Lists of Objects</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+For greater generality, let's change ListNodes so that each node contains not
+an int, but a reference to any Java object.  In Java, we can accomplish this by
+declaring a reference of type Object.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">SListNode</span> {
+  <span class="org-keyword">public</span> <span class="org-type">Object</span> <span class="org-variable-name">item</span>;
+  <span class="org-keyword">public</span> <span class="org-type">SListNode</span> <span class="org-variable-name">next</span>;
+}
+</pre>
+</div>
+
+<p>
+The "S" in "SListNode" stands for singly-linked.  This will make sense when we
+contrast these lists with doubly-linked lists later.  You'll see the SListNode
+class in next week's lab and homework.
+</p>
+</div>
+</div>
+<div id="org1a88642" class="outline-3">
+<h3 id="org1a88642"><span class="section-number-3">1.3</span> A List Class</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+There are two problems with SListNodes.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Suppose x and y are pointers to the same shopping list. Suppose we insert
+</p>
+
+<p>
+a new item at the beginning of the list thusly:
+</p>
+<div class="org-src-container">
+<pre class="src src-java">x = <span class="org-keyword">new</span> <span class="org-type">SListNode</span>(<span class="org-string">"soap"</span>, x);
+</pre>
+</div>
+
+<p>
+y doesn't point to the new item; y still points to the second item in x's
+list. If y goes shopping for x, he'll forget to buy soap.
+</p></li>
+
+<li>How do you represent an empty list? The obvious way is "x = null". However,
+Java won't let you call a SListNode method&#x2013;or any method&#x2013;on a null object.
+If you write "x.insertAfter(item)" when x is null, you'll get a run-time
+error, even though x is declared to be a SListNode. (There are good reasons
+for this, which you'll learn later in the course.)</li>
+</ol>
+
+<p>
+The solution is a separate SList class, whose job is to maintain the head
+(first node) of the list.  We will put many of the methods that operate on
+lists in the SList class, rather than the SListNode class.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">SList</span> {
+  <span class="org-keyword">private</span> <span class="org-type">SListNode</span> <span class="org-variable-name">head</span>;             <span class="org-comment-delimiter">// </span><span class="org-comment">First node in list.</span>
+  <span class="org-keyword">private</span> <span class="org-type">int</span> <span class="org-variable-name">size</span>;                   <span class="org-comment-delimiter">// </span><span class="org-comment">Number of items in list.</span>
+
+  <span class="org-keyword">public</span> <span class="org-function-name">SList</span>() {                    <span class="org-comment-delimiter">// </span><span class="org-comment">Here's how to represent an empty list.</span>
+    head = <span class="org-constant">null</span>;
+    size = <span class="org-highlight-numbers-number">0</span>;
+  }
+
+  <span class="org-keyword">public</span> <span class="org-type">void</span> <span class="org-function-name">insertFront</span>(<span class="org-type">Object</span> <span class="org-variable-name">item</span>) {
+    head = <span class="org-keyword">new</span> <span class="org-type">SListNode</span>(item, head);
+    size++;
+  }
+}
+</pre>
+</div>
+
+<pre class="example">
+             SList object                    SListNode object
+             -------------                     -------------  String object
+  -----      |     ----- |                     |     ----- |     ----------
+x | .-+-----&gt;| size| 1 | |                     | item| .-+-+----&gt;|  milk  |
+  -----      |     ----- |                     |     ----- |     ----------
+  -----      |     ----- |                     |     ----- |
+y | .-+-----&gt;| head| .-+-+--------------------&gt;| next| X | |
+  -----      |     ----- |                     |     ----- |
+             -------------                     -------------
+</pre>
+
+<p>
+Now, when you call x.insertFront("fish"), every reference to that SList can see
+the change.
+</p>
+
+<pre class="example">
+
+          SList           SListNode                SListNode
+          -------------   -------------            -------------
+  -----   |     ----- |   |     ----- |  --------  |     ----- |  --------
+x | .-+--&gt;| size| 2 | |   | item| .-+-+-&gt;| fish |  | item| .-+-+-&gt;| milk |
+  -----   |     ----- |   |     ----- |  --------  |     ----- |  --------
+  -----   |     ----- |   |     ----- |            |     ----- |
+y | .-+--&gt;| head| .-+-+--&gt;| next| .-+-+-----------&gt;| next| X | |
+  -----   |     ----- |   |     ----- |            |     ----- |
+          -------------   -------------            -------------
+</pre>
+
+<p>
+Another advantage of the SList class is that it can keep a record of the
+SList's size (number of SListNodes).  Hence, the size can be determined more
+quickly than if the SListNodes had to be counted.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

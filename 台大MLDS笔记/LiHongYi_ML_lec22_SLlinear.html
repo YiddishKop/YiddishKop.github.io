@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-22 Structured Linear Model</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-22 Structured Linear Model</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8a53ffb">1. Structured Linear Model</a>
+<ul>
+<li><a href="#org336833a">1.1. Structure Linear Model: problem 1</a></li>
+<li><a href="#org46a8dc4">1.2. eg1, Object Detection</a>
+<ul>
+<li><a href="#orgf10aab4">1.2.1. visual word as a Φi</a></li>
+<li><a href="#orgbf16485">1.2.2. 用 DL 获得 Φi</a></li>
+</ul>
+</li>
+<li><a href="#orga813746">1.3. eg2, Summarization</a></li>
+<li><a href="#org2a18769">1.4. eg3, Retrieval</a></li>
+<li><a href="#orgd8efdd8">1.5. Structure Linear Model: problem 2</a></li>
+<li><a href="#org3964ce5">1.6. Structure Linear Model: problem 3</a>
+<ul>
+<li><a href="#org330ba95">1.6.1. eg1, Obejct Dectection</a></li>
+<li><a href="#org48687f4">1.6.2. 如何把 structure 数据变成 vector 数据</a></li>
+<li><a href="#org024d498">1.6.3. 寻找让正确处理的图片打分最高的 w</a></li>
+<li><a href="#orgc8eedd2">1.6.4. 解决 problem-3 的算法</a></li>
+<li><a href="#orgb6162ec">1.6.5. 举例说明算法过程：</a></li>
+<li><a href="#org5dc96d3">1.6.6. 算法会终止的证明：（略）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org8a53ffb" class="outline-2">
+<h2 id="org8a53ffb"><span class="section-number-2">1</span> Structured Linear Model</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+&gt;&gt;&gt; 神之三问：
+</p>
+<hr />
+<p>
+• Evaluation: What does F(x,y) look like?
+• Inference: How to solve the “arg max” problem
+• Training: Given training data, how to find F(x,y)
+</p>
+<hr />
+
+<p>
+<b>如果第一个问题表示成一个特殊的形式，那么第三个问题就不是问题。</b>
+</p>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_14-15-10.png" alt="screenshot_2017-06-17_14-15-10.png" />
+</p>
+</div>
+</div>
+<div id="org336833a" class="outline-3">
+<h3 id="org336833a"><span class="section-number-3">1.1</span> Structure Linear Model: problem 1</h3>
+<div class="outline-text-3" id="text-1-1">
+<blockquote>
+<p>
+<a href="#orgbf16485">用 DL 获得 Φi</a>
+注意如何获得 Φ 呢？
+</p>
+
+<p>
+其实 DeepLearning 的 hiden-layer 不就是 feature extractor 么之前讲过的。
+</p>
+</blockquote>
+
+<p>
+Φ1(x,y) 表示 xy 具有特征 1 的强度             scala;
+Φ2(x,y) 表示 xy 具有特征 2 的强度             scala;
+&#x2026;
+</p>
+<hr />
+<p>
+Φ(x，y) = [Φ3(x,y), Φ2(x,y), Φ3(x,y)&#x2026;]  vector.
+</p>
+
+<p>
+可以把每一个 Φ 都理解成一个 F 的分量，只不过这些分量之间是线性组合的关系：
+F(x,y) = w1•Φ1(x，y) + w2•Φ2(x，y) + w3•Φ3(x，y)&#x2026;
+w1,w2,w3&#x2026; 是要从 training data 中学到的
+</p>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_14-27-35.png" alt="screenshot_2017-06-17_14-27-35.png" />
+</p>
+</div>
+
+<p>
+如果第一个问题表示成一个特殊的形式，那么第三个问题就不是问题。
+</p>
+
+<p>
+举例说明，这个公式的具体意思：
+</p>
+</div>
+</div>
+<div id="org46a8dc4" class="outline-3">
+<h3 id="org46a8dc4"><span class="section-number-3">1.2</span> eg1, Object Detection</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<img src="Structured Linear Model/screenshot_2017-06-17_14-47-39.png" alt="screenshot_2017-06-17_14-47-39.png" />
+在 bounding-box 这个例子中，
+x  is image;
+y  is box;
+Φi is 自己找的一些 x,y 匹配的特征：
+</p>
+<ul class="org-ul">
+<li>percentage of color red   in box y</li>
+<li>percentage of color green in box y</li>
+<li>percentage of color blue  in box y</li>
+<li>percentage of color red out of box y</li>
+<li>&#x2026;&#x2026;</li>
+<li>area of box y</li>
+<li>number of specific patterns in box y</li>
+<li>&#x2026;&#x2026;</li>
+</ul>
+</div>
+<div id="orgf10aab4" class="outline-4">
+<h4 id="orgf10aab4"><span class="section-number-4">1.2.1</span> visual word as a Φi</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+注意图中有些【大大小小的不同颜色的方块】，这叫做 pattern
+一个小方块就是一个 pattern, pattern 就像是文章中的词汇一样。也叫做 visual word. 一般这么描述：在这个 方框 里面编号是 100 号的
+visual word 出现幾個。他也是一个维度的 featuren:Φi
+</p>
+
+<p>
+问题：這些 visual word 是要自己找呢？还是可以自动生成？因为这是个线性模型，我们是没办法做太复杂的事情，想提高效果，你要抽出很好的 feature.
+</p>
+</div>
+</div>
+
+<div id="orgbf16485" class="outline-4">
+<h4 id="orgbf16485"><span class="section-number-4">1.2.2</span> 用 DL 获得 Φi</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+那怎么抽取 feature 呢？ 像上面那些 我们自己找的 x,y 匹配 feature
+不一定是好的，这里可以用 CNN 来做。
+CNN 的 input 是 image, output 就是一个 vector,而这个 vector 可以很好的代表这个 bounding-box 里面的东西。
+</p>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_14-52-22.png" alt="screenshot_2017-06-17_14-52-22.png" />
+</p>
+</div>
+
+<p>
+bounding box 是没法用 DNN 来做的，因为 DNN 怎么会知道 box
+应该框在哪里。所以一般 object dectection 都是用 DNN + structure learning
+来做的。
+</p>
+
+<p>
+所以抽取 feature 是可以用 deep learning 来做。可以把所有的 hiden-layer 都理解成是对 input-layer 数据的某种 feature extraction
+转换，最后输出给 output-layer 的是抽取之后的 features.
+</p>
+</div>
+</div>
+</div>
+<div id="orga813746" class="outline-3">
+<h3 id="orga813746"><span class="section-number-3">1.3</span> eg2, Summarization</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-00-50.png" alt="screenshot_2017-06-17_15-00-50.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org2a18769" class="outline-3">
+<h3 id="org2a18769"><span class="section-number-3">1.4</span> eg3, Retrieval</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-01-14.png" alt="screenshot_2017-06-17_15-01-14.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<div id="orgd8efdd8" class="outline-3">
+<h3 id="orgd8efdd8"><span class="section-number-3">1.5</span> Structure Linear Model: problem 2</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+<img src="Structured Linear Model/screenshot_2017-06-17_15-03-26.png" alt="screenshot_2017-06-17_15-03-26.png" />
+如果第一个问题定义好了，下面怎么办呢？
+[假装]已经被解决了，这里没弄懂李老师想干什么，他没有讲这个
+</p>
+</div>
+</div>
+<div id="org3964ce5" class="outline-3">
+<h3 id="org3964ce5"><span class="section-number-3">1.6</span> Structure Linear Model: problem 3</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+<img src="Structured Linear Model/screenshot_2017-06-17_15-05-22.png" alt="screenshot_2017-06-17_15-05-22.png" />
+希望找到一个 w 使得以下条件被满足：
+</p>
+
+<p>
+对所有训练数据，希望正确的 xr,yr 得到的 w•Φ &gt; 大于 其他所有的 xr,y 得到的 w•Φ
+</p>
+
+<p>
+举例说明：
+</p>
+</div>
+<div id="org330ba95" class="outline-4">
+<h4 id="org330ba95"><span class="section-number-4">1.6.1</span> eg1, Obejct Dectection</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<pre class="example">
+框对的图片的向量的打分 &gt; 框错的图片的向量的打分
+
+</pre>
+
+<hr />
+<p>
+之前说过 Φ(x,y) 是一个 vector, F(x,y) = w•Φ(x,y)
+换句话说，每一个 x1-image,y1-box 都有一个对应的 Φ(x1,y2)
+他是一个 vector ,也就是一个【点】。
+</p>
+
+<p>
+Φ(x1,y1) = Φ(iamge,box) = 一个点
+</p>
+<hr />
+
+<p>
+现在有两个【正确】 boxed image
+也就是两个【正确】处理过的图片，也就是（x1,y<sup>1</sup>），（x2,y<sup>2</sup>）
+</p>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-34-39.png" alt="screenshot_2017-06-17_15-34-39.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-30-38.png" alt="screenshot_2017-06-17_15-30-38.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-32-46.png" alt="screenshot_2017-06-17_15-32-46.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_15-33-05.png" alt="screenshot_2017-06-17_15-33-05.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org48687f4" class="outline-4">
+<h4 id="org48687f4"><span class="section-number-4">1.6.2</span> 如何把 structure 数据变成 vector 数据</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+&gt;&gt;&gt; 经过处理的图片 &#x2014;Φ&#x2014;&gt; 点
+&gt;&gt;&gt; structure   &#x2014;Φ&#x2014;&gt; vector
+</p>
+<hr />
+<p>
+Φ(x1,y1) = Φ(iamge,box) = 一个点
+</p>
+
+<p>
+现在有两个【正确】 boxed image
+也就是两个【正确】处理过的图片，也就是（x1,y<sup>1</sup>），（x2,y<sup>2</sup>）
+</p>
+
+<p>
+对于 (x1,y<sup>1</sup>)   通过 Φ 转换之后形成红色● Φ(x1,y<sup>1</sup>)
+对于 (x1,瞎吊框) 通过 Φ 转换之后形成蓝色● Φ(x1,瞎吊框)
+</p>
+
+<p>
+那么红色点会只有一个，而蓝色点有无数多个。
+</p>
+
+<p>
+对于 (x2,y<sup>2</sup>)   通过 Φ 转换之后形成红色★ Φ(x2,y<sup>2</sup>)
+对于 (x2,瞎吊框) 通过 Φ 转换之后形成蓝色★ Φ(x2,瞎吊框)
+</p>
+
+<p>
+那么红色点会只有一个，而蓝色点有无数多个。
+</p>
+<hr />
+</div>
+</div>
+<div id="org024d498" class="outline-4">
+<h4 id="org024d498"><span class="section-number-4">1.6.3</span> 寻找让正确处理的图片打分最高的 w</h4>
+<div class="outline-text-4" id="text-1-6-3">
+<p>
+x 图片
+(x,y) 处理过的图片Φ(x,y) 处理过的图片的某些特征的向量
+F(x,y) = w•Φ(x,y) 处理过的图片的某些特征的向量的打分现在处理过的图片都表示成了向量，下面我要做的就是进一步给所有的向量【打分】，分数最高的就是【框对的】，其他的都是【瞎吊框】，如何打分呢？
+</p>
+
+<pre class="example">
+内积是什么，是向量夹角，向量相似性，也是映射
+
+</pre>
+
+<pre class="example">
+打分就是把 Φ vector 内积到 w 上
+
+</pre>
+
+<blockquote>
+<p>
+找到这样的 w 同时让
+</p>
+<ol class="org-ol">
+<li>w•Φ(x1,框对的) &gt; w•Φ(x1,瞎吊框)</li>
+<li>w•Φ(x2,框对的) &gt; w•Φ(x2,瞎吊框)</li>
+</ol>
+<p>
+亦即框对的图片的向量的打分 &gt; 框错的图片的向量的打分
+</p>
+</blockquote>
+<p>
+<img src="Structured Linear Model/screenshot_2017-06-17_15-59-32.png" alt="screenshot_2017-06-17_15-59-32.png" />
+注意 w 的方向很重要，他指明了【正】的方向
+</p>
+</div>
+</div>
+
+<div id="orgc8eedd2" class="outline-4">
+<h4 id="orgc8eedd2"><span class="section-number-4">1.6.4</span> 解决 problem-3 的算法</h4>
+<div class="outline-text-4" id="text-1-6-4">
+<p>
+这个算法跟轩田老师的 perceptron 算法基本一致
+</p>
+<div class="org-src-container">
+<pre class="src src-algo">- x1  表示 第一张未 box 的图片
+- y^1 表示 给第一张图正确 box
+- y1  表示 第一张图的所有 box 方法
+- y*1 表示 能最大化打分的 box 方法
+
+1. 我有一堆正确 boxed-images: {(x1,y^1),(x2,y^2),(x2,y^2)...}
+2. 初始化 w0 = 0
+3. do {
+       挑出（下）一个图片，计算出【处理后的图片的向量的打分】 wi•Φ(x1,y1)
+       这里 y1 有无限多个－－瞎吊框有无限种方法，所以这个分数也有无限多个
+       找出其中能让 wi•Φ(x1,y1) 最大的那个 y*1（这一步就是 problem-2,我们先假设他已经完成了）
+       比较 y*1 与 y^1
+       如果 y*1 ≠ y^1, 则更新 w = w + Φ(x1,y^1) - Φ(x1,y*1)
+      } until (w can not be updated by all images)
+</pre>
+</div>
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_16-20-02.png" alt="screenshot_2017-06-17_16-20-02.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb6162ec" class="outline-4">
+<h4 id="orgb6162ec"><span class="section-number-4">1.6.5</span> 举例说明算法过程：</h4>
+<div class="outline-text-4" id="text-1-6-5">
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_16-32-35.png" alt="screenshot_2017-06-17_16-32-35.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_16-33-06.png" alt="screenshot_2017-06-17_16-33-06.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_16-33-25.png" alt="screenshot_2017-06-17_16-33-25.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Structured Linear Model/screenshot_2017-06-17_16-33-53.png" alt="screenshot_2017-06-17_16-33-53.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org5dc96d3" class="outline-4">
+<h4 id="org5dc96d3"><span class="section-number-4">1.6.6</span> 算法会终止的证明：（略）</h4>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

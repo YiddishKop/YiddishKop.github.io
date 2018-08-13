@@ -1,0 +1,1348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 03</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 03</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#cat-3.1-examples-of-categories-orders-monoids">Cat 3.1 Examples of categories, orders, monoids</a>
+<ul>
+<li><a href="#section">0 &#x2014; empty Category</a></li>
+<li><a href="#section-1">1 &#x2014; Category with 1 object</a>
+<ul>
+<li><a href="#catgetory-from-graph">Catgetory from Graph</a></li>
+<li><a href="#org89031f6">extend <b>free</b> to other structure</a></li>
+</ul>
+</li>
+<li><a href="#other-kind-of-categories-orders">Other kind of categories: orders</a>
+<ul>
+<li><a href="#orgdb7bdda">pre-order is composable</a></li>
+<li><a href="#pre-order-is-associativity">pre-order is associativity</a></li>
+<li><a href="#pre-order-is-identity.">pre-order is Identity.</a></li>
+<li><a href="#thin-category">Thin Category</a></li>
+<li><a href="#hom-set">Hom-Set</a></li>
+<li><a href="#pratial-order">Pratial-order</a></li>
+<li><a href="#invertible-and-epimorphism-and-monomorphism-in-thin-category">Invertible and Epimorphism and Monomorphism in Thin Category</a></li>
+<li><a href="#thick-category">Thick Category</a></li>
+</ul>
+</li>
+<li><a href="#talk-back-to-singleton-category-monoid">Talk back to singleton category: monoid</a>
+<ul>
+<li><a href="#intuition-how-to-define-monoid-in-set-theory-and-algebra">Intuition: how to define monoid in Set theory and algebra</a></li>
+<li><a href="#examples-of-monoid-in-set-theroy">Examples of Monoid in Set Theroy:</a></li>
+<li><a href="#monoid-in-category-theory">Monoid in Category Theory</a></li>
+<li><a href="#monoid-vs.strongly-typed-system-in-programming-language">Monoid vs. strongly typed system in programming language</a></li>
+<li><a href="#orgb50587c">more about the totoal order, partial order and pre-order about</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cat-3.2-kleisli-category">Cat 3.2 Kleisli Category</a>
+<ul>
+<li>
+<ul>
+<li><a href="#composable">Composable?</a></li>
+<li><a href="#associativity">Associativity?</a></li>
+<li><a href="#identity">Identity?</a></li>
+<li><a href="#build-new-category-from-exist-category-by-adding-monoid">Build new Category from exist Category by adding Monoid</a></li>
+<li><a href="#kleisli-category">Kleisli Category</a></li>
+<li><a href="#monad">Monad</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org8546be5" class="outline-2">
+<h2 id="cat-3.1-examples-of-categories-orders-monoids"><a id="org8546be5"></a>Cat 3.1 Examples of categories, orders, monoids</h2>
+<div class="outline-text-2" id="text-cat-3.1-examples-of-categories-orders-monoids">
+<p>
+Review previous: reformulation of the language of the arrows or
+morphisms or function between sets.
+</p>
+
+<p>
+from previous course, we know about something of Cat of sets who as a
+model of Cat of type and function.
+</p>
+
+<p>
+Now, Let's exapnd our horizons and look at other interesting Cat.
+</p>
+
+<p>
+<b>what is the simplest category?</b> Cat who has 0 object. if no object,
+then no arrows, because arrow is starting from one object to another. 0
+object, 0 arrow is Cat? Rember the 3 axioms of Cat?
+</p>
+
+<ol class="org-ol">
+<li>every object has a circle arrow</li>
+<li>left/right identity function</li>
+<li>associativety: (f/g)/h = f/(g/h)</li>
+</ol>
+
+<blockquote>
+<p>
+yes, it satisfy all 3 axiom (maybe it strange to think about)
+</p>
+</blockquote>
+</div>
+
+<div id="org0795e10" class="outline-3">
+<h3 id="section"><a id="org0795e10"></a>0 &#x2014; empty Category</h3>
+<div class="outline-text-3" id="text-section">
+<p>
+This Cat is empty, call it 0, not to be confused with number 0.
+</p>
+
+<p>
+but this category is useless, unless used in a <b>context</b>
+</p>
+
+<pre class="example">
+0 is useless
+but combine with 1, it's usefull
+10
+1000
+1000000
+</pre>
+
+<p>
+<b>what is the context for this category</b> context would have been
+important if we had a <b>category of all categories</b>.
+</p>
+
+<p>
+there is a category of small categories in which objects form a set, and
+not some big things.
+</p>
+
+<p>
+there is also category of all categories, but it is much more insidious,
+because you have to work with pieces that are not sets.
+</p>
+</div>
+</div>
+
+<div id="org8476e6c" class="outline-3">
+<h3 id="section-1"><a id="org8476e6c"></a>1 &#x2014; Category with 1 object</h3>
+<div class="outline-text-3" id="text-section-1">
+<p>
+this is 1 object Cat, it's pretty useless category by itself, Except
+again, <b>in the context of the category of all categories</b>.
+</p>
+
+<p>
+then she will give you some information without explanation until a
+terminal object in the category of categories.
+</p>
+</div>
+
+<div id="orge8a1bcd" class="outline-4">
+<h4 id="catgetory-from-graph"><a id="orge8a1bcd"></a>Catgetory from Graph</h4>
+<div class="outline-text-4" id="text-catgetory-from-graph">
+<p>
+they are looks similar when draw, but very different:
+</p>
+
+<ol class="org-ol">
+<li>Cat will <b>automatically</b> adding arrows because of <b>composition &#x2013; axiom2</b>
+<img src="https://i.imgur.com/QvrJ9wY.jpg" alt="QvrJ9wY.jpg" />
+
+<dl class="org-dl">
+<dt>when exist: f :: a-&gt;b, g</dt><dd>b-&gt;c, then there must be an arrow from a-&gt;c.</dd>
+<dt>(no term)</dt><dd>when Cat having more objects, this process will go on and on.</dd>
+</dl></li>
+
+<li>For a Cat, although number of arrows are growing on and on, but some
+arrows are totally same because of <b>association &#x2013; axiom2</b>, this will
+slow down the growing number of arrows.</li>
+</ol>
+
+<p>
+so, in Cat, it's very normal to adding things <b>freely</b> and automatically
+by the 3 axioms.
+</p>
+
+<p>
+it is a structure called free construct(or <b>svobodnuyu</b> category)
+</p>
+
+<p>
+Such a category called: free category
+</p>
+</div>
+</div>
+
+<div id="org89031f6" class="outline-4">
+<h4 id="org89031f6">extend <b>free</b> to other structure</h4>
+<div class="outline-text-4" id="text-org89031f6">
+<blockquote>
+<p>
+<b>free</b> monoid In general, if you have any other structure, not a
+category or a graph, you can apply the same process to create a free
+piece, like a <b>free group</b>, <b>free monoid</b> and so on
+</p>
+</blockquote>
+
+<p>
+this is a typical construction for the theory of categories.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org92851a8" class="outline-3">
+<h3 id="other-kind-of-categories-orders"><a id="org92851a8"></a>Other kind of categories: orders</h3>
+<div class="outline-text-3" id="text-other-kind-of-categories-orders">
+<p>
+Orders are categories in which the arrows are not functions. But in the category
+of right-hand is something else, is <b>not a function</b>, not some abstract thing,
+but <b>attitude</b> or a <b>relation</b>.
+</p>
+
+<p>
+In particular, it is interesting relation "less than or equal to"
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/ustiHD7.jpg" alt="ustiHD7.jpg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>arrow is LT</p>
+</div>
+
+<p>
+we can say: <b>a comes before b in some order</b>
+</p>
+
+<p>
+There are 3 kinds of order:
+</p>
+<ol class="org-ol">
+<li>pre-order</li>
+<li>partial order</li>
+<li><b>total order</b></li>
+</ol>
+
+<p>
+we are more familiar with total order, because they are used when
+sorting on elements, it must be defined <b>total order</b>
+</p>
+</div>
+
+<div id="orgdb7bdda" class="outline-4">
+<h4 id="orgdb7bdda">pre-order is composable</h4>
+<div class="outline-text-4" id="text-orgdb7bdda">
+<p>
+But, the simplest order we can have is the <b>pre-order</b>. Pre-order here
+is imposed the minimum conditions(restriction). The minimum restriction
+is it must be <b>composable</b>:
+</p>
+
+<blockquote>
+<p>
+if a&lt;=b, b&lt;=c, then a&lt;=c.
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/s0bJvVm.jpg" alt="s0bJvVm.jpg" />
+</p>
+<p><span class="figure-number">Figure 2: </span>preorder is composable</p>
+</div>
+
+<p>
+also &gt; if a&lt;=b, we can also has b&lt;=a
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/gA1GcNk.jpg" alt="gA1GcNk.jpg" />
+</p>
+<p><span class="figure-number">Figure 3: </span>a-&gt;b-&gt;a loop</p>
+</div>
+
+<p>
+the preorder will automatically composable
+</p>
+</div>
+</div>
+
+<div id="org119dafb" class="outline-4">
+<h4 id="pre-order-is-associativity"><a id="org119dafb"></a>pre-order is associativity</h4>
+<div class="outline-text-4" id="text-pre-order-is-associativity">
+<p>
+Why associative? Because the two objects in this scenario are connected
+or not: 1. 1 arrow between a and b 2. 0 arrow between a and b 3. &gt;1
+arrows is not possible
+</p>
+
+<blockquote>
+<p>
+(&lt;= &lt;=)&lt;= equal to &lt;=(&lt;= &lt;=)
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+If a and b are in a relation, then there is an arrow from a to b, if
+else no arrow between a and b.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+Here the situation is <b>not possible with many arrows</b> between objects.
+</p>
+</blockquote>
+
+<p>
+function vs. relation(attitude) * function is <b>infinite</b> choices *
+relation is <b>binary</b> choices
+</p>
+
+<p>
+Total order vs. pre-order vs. partial order * total order: between <b>any
+2 objects</b> there is an <b>arrow</b>. * pre-order: may have arrow or not *
+partial order: may have arrow or not
+</p>
+</div>
+</div>
+
+<div id="org4fcdea5" class="outline-4">
+<h4 id="pre-order-is-identity."><a id="org4fcdea5"></a>pre-order is Identity.</h4>
+<div class="outline-text-4" id="text-pre-order-is-identity.">
+<blockquote>
+<p>
+a &lt;= a
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org1404347" class="outline-4">
+<h4 id="thin-category"><a id="org1404347"></a>Thin Category</h4>
+<div class="outline-text-4" id="text-thin-category">
+<p>
+Such a category like pre-order, called: thin category. Only &lt;= 1
+arrow between two objects, it's looks so Thin.
+</p>
+
+<p>
+Any thin category corresponds to preorder,every preorder corresponds to
+a thin category, they are 1 to 1 corresponding.
+</p>
+
+<p>
+So like 1 to Natural Number, to all kinds of orders the preorder is the
+simplest.
+</p>
+
+<p>
+because it is just a category, although it's a thin category.
+</p>
+</div>
+</div>
+
+<div id="orgccb7153" class="outline-4">
+<h4 id="hom-set"><a id="orgccb7153"></a>Hom-Set</h4>
+<div class="outline-text-4" id="text-hom-set">
+<p>
+hom-set hom(x,y) is the collection of all <b>morphisms</b> from x to y.
+</p>
+
+<p>
+every arrow has its name what we called home-set: &gt; hom-set : C(a,b) <i>/
+all morphism from a to b &gt; or &gt; hom-set : C(a,a) /</i> all morphism from a
+to a
+</p>
+
+<p>
+It's a set of arrows, in the set theory it's a set. The thin category is
+small category of any Hom-set is either a singleton or empty.
+</p>
+
+<p>
+We will talk about Hom-set in future.
+</p>
+
+<p>
+We can impose more restriction to get another category like <b>partial
+order</b>, we don't like loop in pre-order. partial Order has no loops: &gt;
+if a-&gt;b, absolutely not b-&gt;a
+</p>
+</div>
+</div>
+
+<div id="org9d8553f" class="outline-4">
+<h4 id="pratial-order"><a id="org9d8553f"></a>Pratial-order</h4>
+<div class="outline-text-4" id="text-pratial-order">
+<ul class="org-ul">
+<li>partial-order has more restriction than pre-order;</li>
+<li>partial-order is like DAG(direted no-loop graph)</li>
+</ul>
+
+<p>
+partial order vs. total order * total order has arrow between any two
+object; * partial order don't have all pair connected.
+</p>
+</div>
+</div>
+
+<div id="org1ea8e40" class="outline-4">
+<h4 id="invertible-and-epimorphism-and-monomorphism-in-thin-category"><a id="org1ea8e40"></a>Invertible and Epimorphism and Monomorphism in Thin Category</h4>
+<div class="outline-text-4" id="text-invertible-and-epimorphism-and-monomorphism-in-thin-category">
+<p>
+In thin category, something epimorphism and monomorphism doesn't have to
+be invertible.
+</p>
+
+<p>
+Function in Set theory,is both injective and surjective, is invertible,
+and isomorphism, it's also called bijection.
+</p>
+
+<p>
+Rember that: 1. fg = fg' =&gt; g = g' : monomorphism 2. gf = g'f =&gt; g = g'
+</p>
+<pre class="example">
+epimorphism
+
+</pre>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/k8l5Bt7.jpg" alt="k8l5Bt7.jpg" />
+</p>
+<p><span class="figure-number">Figure 4: </span>epi and mono</p>
+</div>
+
+<p>
+they all have multiple arrows between two object.
+</p>
+
+<p>
+But this is <b>not allowed</b> in Thin Category.
+</p>
+
+<blockquote>
+<p>
+So, every arrow in the pre-order is monomorphism and epimorphism.
+</p>
+</blockquote>
+
+<p>
+So, in Thin Cagegory , an arrow is epi and mono, dose not have to be
+invertible.
+</p>
+
+<p>
+when refer to Partial order, invertible is absolutely dosen't exist,
+because it dese not allow <b>loop</b>, it's a DAG.
+</p>
+</div>
+</div>
+
+<div id="org6d063fa" class="outline-4">
+<h4 id="thick-category"><a id="org6d063fa"></a>Thick Category</h4>
+<div class="outline-text-4" id="text-thick-category">
+<p>
+Thin Category defines a relation, only allow 1 or 0 arrow between 2
+objects. Thick Categroy also defines a relation, but with allowing many
+arrows between 2 objects, each arrow can be seen as a prove th the
+relation.
+</p>
+
+<p>
+This is a different approach, another intuition, and the proof relevant
+things are becoming more important, in the <b>homotopy</b> theory of types
+[HoTT].
+</p>
+
+<p>
+HoTT build on the assumption that it is insufficient to show the
+relationship of one to the other, there are different ways of such
+evidence, and they are not equivalent.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgdba9c5b" class="outline-3">
+<h3 id="talk-back-to-singleton-category-monoid"><a id="orgdba9c5b"></a>Talk back to singleton category: monoid</h3>
+<div class="outline-text-3" id="text-talk-back-to-singleton-category-monoid">
+
+<div class="figure">
+<p><img src="https://i.imgur.com/ZMMooRV.jpg" alt="ZMMooRV.jpg" />
+</p>
+<p><span class="figure-number">Figure 5: </span>monoid</p>
+</div>
+
+<p>
+Singleton Categoy, can of course have many circle arrow, and consider
+the axiom2 &#x2014; <b>composition</b>, when one arrow's output is another arrow's
+input, they can compose together.
+</p>
+
+<p>
+The intresting thing is that, <b>all the Singleton Category's arrow are
+composable</b>, because there is only 1 object, every arrow begin and end
+in this object.
+</p>
+
+<p>
+This thing has a name &#x2014; <b>monoid</b>
+</p>
+
+<p>
+<b>monoid</b> means single.
+</p>
+
+<p>
+Any category has a single object, it's a <b>monoid</b>
+</p>
+</div>
+
+<div id="org0b3165c" class="outline-4">
+<h4 id="intuition-how-to-define-monoid-in-set-theory-and-algebra"><a id="org0b3165c"></a>Intuition: how to define monoid in Set theory and algebra</h4>
+<div class="outline-text-4" id="text-intuition-how-to-define-monoid-in-set-theory-and-algebra">
+<blockquote>
+<p>
+set, operator &#x2013; muliplication &#x2013; binary operator &#x2014; impose condition
+on set &#x2014; unit is ele,like 1
+</p>
+</blockquote>
+
+<p>
+Monoid is a special set, with a operator to demonstrait its trait. we
+impose <b>1 restriction</b> respectively on the <b>binary operater</b> and <b>set</b>,
+to build a monoid:
+</p>
+
+<p>
+<b>Restriction on set: Unity</b>
+</p>
+
+<pre class="example">
+- we want **one elment** in the Set to be **unity**.
+- operator(unity, other) = oter; operator(other, unity)= other
+</pre>
+
+<p>
+<b>Restriction on operator: Associativity</b>
+</p>
+
+<pre class="example">
+- we want **an binary operator** which obey the **associativity**
+- (a oper b) oper c = a oper (b oper c)
+</pre>
+
+<blockquote>
+<p>
+R1 + R2 ==&gt; for any a: e * a = a * e = e
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/3v9FpzF.jpg" alt="3v9FpzF.jpg" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Unit and Associativity for monoid</p>
+</div>
+
+<blockquote>
+<p>
+If there is something both <b>unity and associativity</b>, it's Monoid.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+monoid in Set Theory and algebra = unity + associativity
+</p>
+</blockquote>
+
+<p>
+you see that, we now talk about the <b>details</b>, the <b>element level</b>, it's
+the definition of monoid in Set Thoery. Keep in mind that we have not
+talked about Categtory definiton of monoid.
+</p>
+</div>
+</div>
+
+<div id="org2ab6b46" class="outline-4">
+<h4 id="examples-of-monoid-in-set-theroy"><a id="org2ab6b46"></a>Examples of Monoid in Set Theroy:</h4>
+<div class="outline-text-4" id="text-examples-of-monoid-in-set-theroy">
+<p>
+For a monid, you need follow the formular to describe its structure
+</p>
+
+<blockquote>
+<p>
+&#x2026; form &#x2026; under &#x2026; with <b>form</b> a monoid <b>under</b> , <b>with</b> unity
+</p>
+</blockquote>
+
+<ol class="org-ol">
+<li>Integer form a monoid under production, with unity 1;</li>
+<li>Integer form a monoid under addition, with unity 0;</li>
+<li>String form a monoid under concatenation, with unity empty string</li>
+<li>List form a monoid, under append, with unity empty list. tips ： this
+is why in Haskell string is list, because they are both a monoid.</li>
+</ol>
+</div>
+</div>
+
+<div id="orgc51cfc3" class="outline-4">
+<h4 id="monoid-in-category-theory"><a id="orgc51cfc3"></a>Monoid in Category Theory</h4>
+<div class="outline-text-4" id="text-monoid-in-category-theory">
+<p>
+Remember that,
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Set theory</th>
+<th scope="col" class="org-left">Category theory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">detail</td>
+<td class="org-left">whole,no detail</td>
+</tr>
+
+<tr>
+<td class="org-left">many different defintion use many different terms</td>
+<td class="org-left">use and ONLY use function describe everything</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>now Monoid in Category is also follow the habit of Category theory: use
+and ONLY use function to define a Monoid.</b>
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/ViNfr7h.jpg" alt="ViNfr7h.jpg" />
+</p>
+<p><span class="figure-number">Figure 7: </span>monoid in Category Theory and Set Theory</p>
+</div>
+
+<p>
+<b>How to do that</b> In a <b>1 object Category</b>, we ignore all details only
+left the object and morphism(and morphism set: Hom-set). So we have: 1.
+1 object 2. hom-set: 1 morphism&#x2014;Identity
+</p>
+
+<p>
+now we talk about <b>one special kind of 1 object Category</b>, with not only
+Identity morphism, but many morphism from this object to this object, we
+have: 1. 1 object 2. Hom-set: many morphism from and to this object
+</p>
+
+<p>
+<b>then, we will find hom-set of this Category is a Monoid in Set theory:</b>
+</p>
+<ol class="org-ol">
+<li>we have a unity in this set: - Identity morphism; 2. we have a</li>
+</ol>
+<p>
+operator that can do association: - Category has 3 axioms: Identity,
+Composable, Associativity - although we don't know what is exactly the
+operator is ,but we know this operator is a morphism/arrow in Category,
+then it must obey the 3 axioms, so it must be associativity
+</p>
+
+<p>
+then we can say, Hom-set of this special Category is a Monoid.
+</p>
+
+<p>
+So again, we made it, we win! we use and ONLY use function to define a
+monoid in Category: if hom-set of an Category is a Monoid in Set theory,
+then this Category is a monoid.
+</p>
+</div>
+</div>
+
+<div id="orgd9e17d1" class="outline-4">
+<h4 id="monoid-vs.strongly-typed-system-in-programming-language"><a id="orgd9e17d1"></a>Monoid vs. strongly typed system in programming language</h4>
+<div class="outline-text-4" id="text-monoid-vs.strongly-typed-system-in-programming-language">
+<p>
+General category(specially category of set), correspond to strongly
+typed, which is kind of type system, you CAN NOT actually compose any 2
+function, every function's input and output type can't match each other
+&#x2014; type is devided every precisely, too details.
+</p>
+
+<p>
+Oppose to that, Monoid is a kind of weak type system, or even no types,
+every 2 functions can compose.
+</p>
+</div>
+</div>
+
+<div id="orgb50587c" class="outline-4">
+<h4 id="orgb50587c">more about the totoal order, partial order and pre-order about</h4>
+<div class="outline-text-4" id="text-orgb50587c">
+<p>
+inclusion relation
+</p>
+<p>
+:CUSTOM_ID: more-about-the-totoal-order-partial-order-and-pre-order-about-inclusion-relation
+</p>
+
+<p>
+summary: more details about the total order, partial oder, pre-order.
+</p>
+
+<p>
+Let's define a relation on sets, a <b>inclusion relation</b>, what set is to
+be a subset of another.
+</p>
+
+<p>
+Is this inclusion relation a total order, partial order, or pre-order?
+</p>
+
+<p>
+<b>what would we check？</b> 1. identity - a ⊆ a 2. composition - a ⊆ b, b ⊆
+c, then a ⊆ c 3. associativity - (a ⊆ b) ⊆ c = a ⊆ (b ⊆ c)
+</p>
+
+<p>
+<b>Identity morphism is a kind of reflexivity</b>
+</p>
+
+<blockquote>
+<p>
+tips: the term "reflexivity" will more and more often occur in our
+followed lectures.
+</p>
+</blockquote>
+
+<p>
+just review the 3 order:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">total order</th>
+<th scope="col" class="org-left">partial order</th>
+<th scope="col" class="org-left">pre-order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">fully connected graph</td>
+<td class="org-left">DAG</td>
+<td class="org-left">Thin Category: 0/1 connected graph</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>
+tips:
+偏序只对*部分元素*存在关系R，全序对集合中*任意两个元素*都有关系R。例如：集合的包含关系就是半序，也就是偏序，因为*两个集合可以互不包含*；实数中的大小关系是全序，两个实数必有一个大于等于另一个；
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+我理解： 全序（total order）就是所有元素pair都可以放在一条线上，实际上 total order 也叫 line
+order, 这条线的前后关系就是关系 R 的运算顺序。也就是集合的所有点都存在关系 R。 偏序（partial
+order）就是不是所有的元素pair都存在关系 R，也就是说他存在不止一条线。
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org7154d95" class="outline-2">
+<h2 id="cat-3.2-kleisli-category"><a id="org7154d95"></a>Cat 3.2 Kleisli Category</h2>
+<div class="outline-text-2" id="text-cat-3.2-kleisli-category">
+<p>
+think about this real programming task: &gt; Refact our porject to: every
+time invocation of a function, log its name,augument and action. &gt; This
+means that every function invocation must leave a trail.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">bool</span> negate(bool x) {
+  return <span class="org-haskell-operator">!</span>x
+}
+</pre>
+</div>
+
+<p>
+will change to:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> add a global log to store every function trail<span class="org-haskell-operator">.</span>
+<span class="org-haskell-definition">string</span> log <span class="org-haskell-operator">=</span> <span class="org-string">""</span>
+
+<span class="org-haskell-definition">bool</span> negate(bool x) {
+  <span class="org-haskell-operator">//</span> add some operation to log action <span class="org-haskell-keyword">of</span> funciton
+  log <span class="org-haskell-operator">+=</span> <span class="org-string">"not!"</span>
+  return <span class="org-haskell-operator">!</span>x
+}
+</pre>
+</div>
+
+<p>
+this is the simplest way to handle this requirement, but,~simplicity is
+not easy~
+</p>
+
+<p>
+For this solution, we create <b>dependence</b>, the hidden <b>relationship</b>
+between function and log variable. Something like the long-range
+interations in quantum mechanics &#x2014; <b>a long distance dependency</b>. The
+risk is once you remove the log variable, your whole program will fail
+down. The complexity will exponentially grow when we add
+multi-threading.
+</p>
+
+<p>
+Now lets move a little bit, to make this function a <b>more purer</b>
+function, means that no side-effect, all the states changed will
+explicitly show in the return expression:
+</p>
+
+<p>
+change codes again:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">string</span> log <span class="org-haskell-operator">=</span> <span class="org-string">""</span>
+<span class="org-haskell-operator">//</span> make log as an augument <span class="org-haskell-keyword">of</span> function, which you must explicitly passed a value<span class="org-haskell-operator">.</span>
+pair<span class="org-haskell-definition">&lt;</span>bool,string<span class="org-haskell-operator">&gt;</span> negate(bool x, string log) {
+  <span class="org-haskell-operator">//</span> compose the <span class="org-string">"log"</span> and <span class="org-string">"negate"</span>, refect this <span class="org-highlight-numbers-number">2</span> action <span class="org-haskell-keyword">in</span> result returned<span class="org-haskell-operator">.</span>
+  return make_pair(<span class="org-haskell-operator">!</span>x, log<span class="org-haskell-operator">+</span><span class="org-string">"not!"</span>)
+}
+</pre>
+</div>
+
+<p>
+now, we don't worry about the vanishment of log variable,because
+everytime you call a function you must explicityly specify the place
+where you log it .
+</p>
+
+<p>
+But our function is just <b>more purer</b>, not <b>absolutely pure</b>.
+</p>
+
+<p>
+remember that: &gt; when you funtion is pure, you can memoise it(or
+tabulate it)
+</p>
+
+<p>
+This means that everytime you input the same value, function must return
+the same result.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> assume log file now is empty<span class="org-haskell-operator">.</span>
+negate(true, log) <span class="org-haskell-operator">-&gt;</span> (fail, <span class="org-string">""</span> <span class="org-haskell-operator">+</span> <span class="org-string">"not!"</span>)
+negate(true, log) <span class="org-haskell-operator">-&gt;</span> (fail, <span class="org-string">"not!"</span> <span class="org-haskell-operator">+</span> <span class="org-string">"not!"</span>)
+</pre>
+</div>
+
+<p>
+you see that, same input lead to different output.
+</p>
+
+<p>
+So, this a good solutin, but no quite!
+</p>
+
+<p>
+the key issue is caused by "+", so again change:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">string</span> log <span class="org-haskell-operator">=</span> <span class="org-string">""</span>
+pair<span class="org-haskell-definition">&lt;</span>bool,string<span class="org-haskell-operator">&gt;</span> negate(bool x) {
+  return make_pair(<span class="org-haskell-operator">!</span>x, <span class="org-string">"not!"</span>)
+}
+</pre>
+</div>
+
+<p>
+But, who concatenate the string with orgininal content of log? we should
+do some function composition to handle this, but by now everthing is OK,
+right? We have a pure function, his functionality is explicitly and
+unity.
+</p>
+
+<p>
+The next step is to concern about how to do composition: what if we
+change the method of composition, modify the way we compose function.
+</p>
+
+<p>
+Let's define a new way of composing fucntions.
+</p>
+
+<p>
+the default composition:
+</p>
+
+<pre class="example">
+def compose[A,B,C](fn1: A=&gt;B, fn2: B=&gt;C):A=&gt;C = (a:A) =&gt; fn2(fn1(a)))
+</pre>
+
+<p>
+now we change the way of composing, which correspond to the function
+<b>negate</b> we defined above.
+</p>
+
+<pre class="example">
+def compose[A,B,C](fn1: A=&gt;(B,String), fn2: B=&gt;(C,String):A=&gt;(C,String) = {
+  (a:A) =&gt; {
+    val p1 = fn1(a)
+    val p2 = fn2(p1._1)
+    (p2._1, p1._2 + p2._2)
+  }
+}
+</pre>
+
+<p>
+Every time you do some composition of 2 functions, you must tip yourself
+that, dose this compose make some hint about a Category?
+</p>
+</div>
+
+<div id="orgb2860b1" class="outline-4">
+<h4 id="composable"><a id="orgb2860b1"></a>Composable?</h4>
+<div class="outline-text-4" id="text-composable">
+<p>
+Of course it is
+</p>
+</div>
+</div>
+
+<div id="org8455ba8" class="outline-4">
+<h4 id="associativity"><a id="org8455ba8"></a>Associativity?</h4>
+<div class="outline-text-4" id="text-associativity">
+<p>
+It's obviously that the default composition is associative, but when we
+add a String to make type of result a Tuple, is that will change the
+associativity? No, add a string to return type ,will not change
+associativity. because we just do that by <b>string concatenation</b>:
+</p>
+
+<pre class="example">
+string a,b,c
+(a+b)+c isEqual a+(b+c)
+</pre>
+
+<p>
+String concatenation is Associative, and more than that, it's a Monoid
+</p>
+</div>
+</div>
+
+<div id="org996bb28" class="outline-4">
+<h4 id="identity"><a id="org996bb28"></a>Identity?</h4>
+<div class="outline-text-4" id="text-identity">
+<p>
+String forms a Monoid under concatenation with Identity empty string. So
+this new compose function has Identity.
+</p>
+</div>
+</div>
+
+<div id="org5b9615e" class="outline-4">
+<h4 id="build-new-category-from-exist-category-by-adding-monoid"><a id="org5b9615e"></a>Build new Category from exist Category by adding Monoid</h4>
+<div class="outline-text-4" id="text-build-new-category-from-exist-category-by-adding-monoid">
+<pre class="example">
+// "+" here means some way of combining, eg Tuple
+Category + Monoid = Category
+default compose + String under concatenation with empty string = Catetory
+default compose + Integer under addition with 0 = Catetory
+default compose + List under append with empty list = Catetory
+</pre>
+
+<p>
+So now, not only the String can be log, but any monoid can be log,
+because log is just additive to make One Cat to another Cat.
+</p>
+
+<p>
+now let's go back to the original problem, and with a bird eye view: 1.
+we have a bunch of functions, they may forms a Cat with a type system.
+</p>
+<ol class="org-ol">
+<li>then we want to add some operation to every funtions. 3. The only</li>
+</ol>
+<p>
+restriction to the operation is it must be an Monoid.
+</p>
+</div>
+</div>
+
+<div id="org2eb1bff" class="outline-4">
+<h4 id="kleisli-category"><a id="org2eb1bff"></a>Kleisli Category</h4>
+<div class="outline-text-4" id="text-kleisli-category">
+<blockquote>
+<p>
+keep in mind that : Kleisli Cat has the <b>same objects</b> with the
+original Cat from wich we build the Kleisli Cat, but <b>different
+arrows</b>
+</p>
+</blockquote>
+
+<p>
+I build a category whose object is A,B,C &#x2014; types. But arrows in this
+Category is not the function as you see as before. * usual
+function(arrows): A &#x2014;&gt; B * funtion in this scenario: A &#x2014;&gt; (B,String)
+</p>
+
+<p>
+(B, String) is called <b>embellishment</b>.
+</p>
+
+<p>
+for this <code>A ---&gt; (B,String)</code> , I know: 1. what is Identity 2. I know how
+to do composition 3. I know how to do assocaitivity
+</p>
+
+<p>
+so I get a Category, this kind of Category actually has its name:
+<b>Kleisli Category</b>.
+</p>
+
+<p>
+<code>A ---&gt; (B,String)</code>, called Kleisli Arrow, these embellished funtions.
+</p>
+
+<p>
+In scala, this something like:
+</p>
+
+<pre class="example">
+// Int ---&gt; Option[String]
+def arr(a: Int): Option[String] = Some(a.toString)
+</pre>
+
+<blockquote>
+<p>
+Kleisli Arraow can de defined a huge kinds of <b>embellishments</b>, what
+show above is just one example of <b>embellishment</b> using <b>pairing</b> the
+result with string. There are many other <b>embellishment</b>, and very
+usefull.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orgfb59736" class="outline-4">
+<h4 id="monad"><a id="orgfb59736"></a>Monad</h4>
+<div class="outline-text-4" id="text-monad">
+<p>
+These arrows are composable is actually because these <b>embellishment</b> is
+the Monad.
+</p>
+
+<p>
+We haven't talk about <b>monad</b>, but <b>monad</b> is nothing special, it's just
+the <b>way of composing</b> special types of functions.
+</p>
+
+<p>
+people can't understant what is <b>monad</b>, is because of the imperative
+language background.
+</p>
+
+<p>
+In imperative programming, we think so &#x2014; keyword "return" : 1. call
+funtion <b>return</b> something 2. then we do something with the <b>returned</b>
+result.
+</p>
+
+<p>
+In functioanl programming, we think so &#x2014; keyword "compose" : 1. I
+<b>compose</b> a bunch of operations using function composition. 2. what if I
+use a <b>different composition</b>, also function composition, but with some
+kind of flare, something additional(like combine with Monoid), I have
+<b>one degree of freeedom</b> when defining a new composition. If I use this
+<b>degree of freedom</b>, I'm using a <b>Monad</b>.
+</p>
+
+<blockquote>
+<p>
+Monad key word: way of composing; one degree of freedom
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

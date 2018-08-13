@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:48 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Numpy-笔记2</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Numpy-笔记2</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge565dcf">1. Numpy</a>
+<ul>
+<li><a href="#org9ed1b9e">1.1. numpy io</a></li>
+<li><a href="#org34d749e">1.2. numpy matrix operation</a>
+<ul>
+<li><a href="#orge38aca9">1.2.1. solve linear equation by numpy</a></li>
+<li><a href="#org547e11c">1.2.2. solve nonlinear equation</a></li>
+<li><a href="#orgdc0b7e7">1.2.3. integration</a></li>
+<li><a href="#org253fe9a">1.2.4. derivative</a></li>
+<li><a href="#org3cf460e">1.2.5. interpolation</a></li>
+<li><a href="#orgc71f414">1.2.6. liear regression and a polynormial regression</a></li>
+<li><a href="#orgc7f93af">1.2.7. nonlinear regression</a></li>
+<li><a href="#orgeec1a67">1.2.8. differential equation</a></li>
+<li><a href="#org10d03a4">1.2.9. optimization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orge565dcf" class="outline-2">
+<h2 id="orge565dcf"><span class="section-number-2">1</span> Numpy</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org9ed1b9e" class="outline-3">
+<h3 id="org9ed1b9e"><span class="section-number-3">1.1</span> numpy io</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li><code>np.savetxt('path', nparrayRef, delimiter=',')</code></li>
+<li><code>np.loadtxt('path',             delimiter=',')</code></li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">x</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>*np.pi, <span class="org-highlight-numbers-number">4</span>)
+<span class="org-variable-name">y</span> = np.cos(x)
+
+<span class="org-variable-name">data</span> = np.vstack((x,y))
+<span class="org-variable-name">data</span> = data.T
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- 'file i' in numpy.savetxt(filename, nparray)</span>
+np.savetxt(<span class="org-string">'data.txt'</span>, data, delimiter=<span class="org-string">','</span>)
+<span class="org-keyword">print</span> (os.path.abspath(<span class="org-string">"data.txt"</span>))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- 'file o'</span>
+<span class="org-variable-name">z</span>=np.loadtxt(<span class="org-string">'data.txt'</span>, delimiter=<span class="org-string">','</span>)
+
+<span class="org-keyword">print</span> (x)
+<span class="org-keyword">print</span> (y)
+<span class="org-keyword">print</span> (z)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org34d749e" class="outline-3">
+<h3 id="org34d749e"><span class="section-number-3">1.2</span> numpy matrix operation</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="orge38aca9" class="outline-4">
+<h4 id="orge38aca9"><span class="section-number-4">1.2.1</span> solve linear equation by numpy</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<ul class="org-ul">
+<li>np.linalg.inv(nparray)</li>
+<li>np.linalg.solve(a,b) # &lt;- solve ax=b</li>
+<li>sym.linsolve</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-doc">""" how to solve equation: ax=b</span>
+<span class="org-doc">"""</span>
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> sympy <span class="org-keyword">as</span> sym
+
+<span class="org-variable-name">A</span> = np.array([[<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>]])
+<span class="org-keyword">print</span> (A)
+
+<span class="org-variable-name">b</span> = np.array([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">method-1: x = A^-1 * b</span>
+<span class="org-variable-name">sol1</span> = np.dot(np.linalg.inv(A), b)
+<span class="org-keyword">print</span> (sol1)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">method-2: solve equation: ax=b by np.linalg.solve</span>
+<span class="org-variable-name">sol2</span> = np.linalg.solve(A,b)
+<span class="org-keyword">print</span> (sol2)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">method-3: solve equation: ax=b by sympy.linsolve</span>
+sym.init_printing()
+<span class="org-variable-name">x</span>, <span class="org-variable-name">y</span> = sym.symbols(<span class="org-string">'x y'</span>)
+<span class="org-variable-name">z</span> = sym.linsolve([<span class="org-highlight-numbers-number">3</span>*x+<span class="org-highlight-numbers-number">2</span>*y-<span class="org-highlight-numbers-number">1</span>, x+<span class="org-highlight-numbers-number">2</span>*y], (x, y))
+sym.pprint(z)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org547e11c" class="outline-4">
+<h4 id="org547e11c"><span class="section-number-4">1.2.2</span> solve nonlinear equation</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.optimize <span class="org-keyword">import</span> fsolve
+
+<span class="org-keyword">def</span> <span class="org-function-name">f</span>(z):
+    <span class="org-variable-name">x</span>=z[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">y</span>=z[<span class="org-highlight-numbers-number">1</span>]
+    <span class="org-keyword">return</span> [x+<span class="org-highlight-numbers-number">2</span>*y, x**<span class="org-highlight-numbers-number">2</span>+y**<span class="org-highlight-numbers-number">2</span>-<span class="org-highlight-numbers-number">1</span>]
+
+<span class="org-variable-name">z0</span> = [<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>]
+<span class="org-variable-name">z</span> = fsolve(f,z0)
+<span class="org-keyword">print</span> (z)
+<span class="org-keyword">print</span> (f(z))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgdc0b7e7" class="outline-4">
+<h4 id="orgdc0b7e7"><span class="section-number-4">1.2.3</span> integration</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.integrate <span class="org-keyword">import</span> quad
+
+<span class="org-keyword">def</span> <span class="org-function-name">f</span>(x):
+    <span class="org-keyword">return</span> x**<span class="org-highlight-numbers-number">2</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">integrate from 0 to 2 on expression x^2</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">method-1: using scipy</span>
+<span class="org-keyword">print</span> (quad(f, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>)[<span class="org-highlight-numbers-number">0</span>])
+<span class="org-keyword">print</span> (<span class="org-highlight-numbers-number">2</span>**<span class="org-highlight-numbers-number">3</span>/<span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">method-2: using sympy</span>
+<span class="org-keyword">import</span> sympy <span class="org-keyword">as</span> sym
+<span class="org-variable-name">x</span> = sym.Symbol(<span class="org-string">'x'</span>)
+<span class="org-variable-name">f</span> = sym.integrate(x**<span class="org-highlight-numbers-number">2</span>, x)
+f
+<span class="org-comment-delimiter"># </span><span class="org-comment">sym.pprint(f)</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947Wax.png" alt="4947Wax.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org253fe9a" class="outline-4">
+<h4 id="org253fe9a"><span class="section-number-4">1.2.4</span> derivative</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.misc <span class="org-keyword">import</span> derivative
+
+<span class="org-keyword">def</span> <span class="org-function-name">f</span>(x):
+    <span class="org-keyword">return</span> x**<span class="org-highlight-numbers-number">2</span>
+
+<span class="org-keyword">print</span> (derivative(f, <span class="org-highlight-numbers-number">2</span>, dx=<span class="org-highlight-numbers-number">1e</span>-<span class="org-highlight-numbers-number">10</span>))
+
+<span class="org-keyword">import</span> sympy <span class="org-keyword">as</span> sym
+<span class="org-variable-name">x</span>=sym.Symbol(<span class="org-string">'x'</span>)
+<span class="org-variable-name">f</span>=sym.diff(x**<span class="org-highlight-numbers-number">3</span>,x)
+f
+<span class="org-comment-delimiter"># </span><span class="org-comment">f.subs(x, 2) #&lt;- if x=2, what's the result of derivative</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947-Vb.png" alt="4947-Vb.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3cf460e" class="outline-4">
+<h4 id="org3cf460e"><span class="section-number-4">1.2.5</span> interpolation</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.interpolate <span class="org-keyword">import</span> interp1d
+<span class="org-variable-name">x</span> = np.arange(<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">6</span>,<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">9</span>])
+
+%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+plt.plot(x,y,<span class="org-string">'bo'</span>)
+
+<span class="org-variable-name">xp</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">100</span>)
+
+<span class="org-variable-name">y1</span> = interp1d(x,y,kind=<span class="org-string">'linear'</span>)
+plt.plot(xp,y1(xp),<span class="org-string">'r-'</span>)
+
+<span class="org-variable-name">y2</span> = interp1d(x,y,kind=<span class="org-string">'quadratic'</span>)
+plt.plot(xp,y2(xp),<span class="org-string">'k--'</span>)
+
+<span class="org-variable-name">y3</span> = interp1d(x,y,kind=<span class="org-string">'cubic'</span>)
+plt.plot(xp,y3(xp),<span class="org-string">'g:'</span>)
+</pre>
+</div>
+
+<pre class="example">
+[&lt;matplotlib.lines.Line2D at 0x7fe196977630&gt;]
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/4947LnV.png" alt="4947LnV.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgc71f414" class="outline-4">
+<h4 id="orgc71f414"><span class="section-number-4">1.2.6</span> liear regression and a polynormial regression</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<p>
+a polynormial fit
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">x</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>])
+
+<span class="org-variable-name">p1</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span> (p1)
+<span class="org-variable-name">p2</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (p2)
+<span class="org-variable-name">p3</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">3</span>)
+<span class="org-keyword">print</span> (p3)
+
+%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+plt.plot(x,y,<span class="org-string">'ro'</span>)
+<span class="org-variable-name">xp</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">100</span>)
+
+plt.plot(xp,np.polyval(p1, xp),<span class="org-string">'b-'</span>, label=<span class="org-string">'linear'</span>)
+plt.plot(xp,np.polyval(p2, xp),<span class="org-string">'r--'</span>, label=<span class="org-string">'quadratic'</span>)
+plt.plot(xp,np.polyval(p3, xp),<span class="org-string">'g:'</span>, label=<span class="org-string">'cubic'</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947Mho.png" alt="4947Mho.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgc7f93af" class="outline-4">
+<h4 id="orgc7f93af"><span class="section-number-4">1.2.7</span> nonlinear regression</h4>
+<div class="outline-text-4" id="text-1-2-7">
+<p>
+a curve fit
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">from</span> scipy.optimize <span class="org-keyword">import</span> curve_fit
+
+<span class="org-variable-name">x</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>])
+
+<span class="org-variable-name">p1</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">p2</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">2</span>)
+<span class="org-variable-name">p3</span> = np.polyfit(x,y,<span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-keyword">def</span> <span class="org-function-name">f</span>(x, a):
+    <span class="org-keyword">return</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span> * np.exp(a*x)
+
+<span class="org-variable-name">a</span> = curve_fit(f, x, y)[<span class="org-highlight-numbers-number">0</span>]
+
+%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+plt.plot(x,y,<span class="org-string">'ro'</span>)
+<span class="org-variable-name">xp</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">100</span>)
+
+plt.plot(xp,np.polyval(p1, xp),<span class="org-string">'b-'</span>, label=<span class="org-string">'linear'</span>)
+plt.plot(xp,np.polyval(p2, xp),<span class="org-string">'r--'</span>, label=<span class="org-string">'quadratic'</span>)
+plt.plot(xp,np.polyval(p3, xp),<span class="org-string">'g:'</span>, label=<span class="org-string">'cubic'</span>)
+plt.plot(xp,f(xp,a),<span class="org-string">'k-'</span>, label=<span class="org-string">'nonlinear'</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/49471Wl.png" alt="49471Wl.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgeec1a67" class="outline-4">
+<h4 id="orgeec1a67"><span class="section-number-4">1.2.8</span> differential equation</h4>
+<div class="outline-text-4" id="text-1-2-8">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.integrate <span class="org-keyword">import</span> odeint
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">solve: dy/dt= -0.4y</span>
+<span class="org-keyword">def</span> <span class="org-function-name">dydt</span>(y, t, a):
+    <span class="org-keyword">return</span> -a * y
+
+<span class="org-variable-name">a</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>
+<span class="org-variable-name">t</span>= np.linspace(<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">20</span>)
+<span class="org-variable-name">y0</span> = <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>
+<span class="org-variable-name">y</span> = odeint(dydt, y0, t, args=(a,))
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots()
+plt.plot(t, y)
+plt.xlabel(<span class="org-string">'time'</span>)
+plt.ylabel(<span class="org-string">'y'</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947D-C.png" alt="4947D-C.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org10d03a4" class="outline-4">
+<h4 id="org10d03a4"><span class="section-number-4">1.2.9</span> optimization</h4>
+<div class="outline-text-4" id="text-1-2-9">
+<p>
+\(minx_1x_4(x_1+x_2+x_3)+x_3\)  &lt;- objective function
+</p>
+
+<p>
+\(s.t.:       x_1x_2x_3x_4>=25\)  &lt;- inequality constraint
+</p>
+
+<p>
+\(x_1^2+x_2^2+x_3^2+x_4^2=40\)         &lt;- equality constraint
+</p>
+
+<p>
+\(1<=x_1,x_2,x_3,x_4<=5\)  &lt;- bounds
+</p>
+
+<p>
+\(x_0=(1,5,5,1)\) &lt;- initial guess
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.optimize <span class="org-keyword">import</span> minimize
+<span class="org-keyword">def</span> <span class="org-function-name">objective</span>(x):
+    <span class="org-variable-name">x1</span> = x[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">x2</span> = x[<span class="org-highlight-numbers-number">1</span>]
+    <span class="org-variable-name">x3</span> = x[<span class="org-highlight-numbers-number">2</span>]
+    <span class="org-variable-name">x4</span> = x[<span class="org-highlight-numbers-number">3</span>]
+    <span class="org-keyword">return</span> x1*x4*(x1+x2+x3)+x3
+
+<span class="org-keyword">def</span> <span class="org-function-name">constraint1</span>(x):
+    <span class="org-variable-name">x1</span> = x[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">x2</span> = x[<span class="org-highlight-numbers-number">1</span>]
+    <span class="org-variable-name">x3</span> = x[<span class="org-highlight-numbers-number">2</span>]
+    <span class="org-variable-name">x4</span> = x[<span class="org-highlight-numbers-number">3</span>]
+    <span class="org-keyword">return</span> x1*x2*x3*x4-<span class="org-highlight-numbers-number">25</span>.<span class="org-highlight-numbers-number">0</span>
+
+<span class="org-keyword">def</span> <span class="org-function-name">constraint2</span>(x):
+    <span class="org-variable-name">sum_sq</span> = <span class="org-highlight-numbers-number">40</span>
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">4</span>):
+        <span class="org-variable-name">sum_sq</span> = sum_sq - x[i]**<span class="org-highlight-numbers-number">2</span>
+    <span class="org-keyword">return</span> sum_sq
+
+<span class="org-variable-name">x0</span> = [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>] <span class="org-comment-delimiter"># </span><span class="org-comment">initial guess</span>
+<span class="org-keyword">print</span> (objective(x0))
+
+<span class="org-variable-name">b</span> = (<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">bnds</span> = (b, b, b, b)
+<span class="org-variable-name">con1</span> = {<span class="org-string">'type'</span>: <span class="org-string">'ineq'</span>, <span class="org-string">'fun'</span>: constraint1}
+<span class="org-variable-name">con2</span> = {<span class="org-string">'type'</span>: <span class="org-string">'eq'</span>, <span class="org-string">'fun'</span>: constraint2}
+<span class="org-variable-name">cons</span> = [con1, con2]
+
+<span class="org-variable-name">sol</span> = minimize(objective,
+               x0,
+               method=<span class="org-string">'SLSQP'</span>,
+               bounds=bnds,
+               constraints=cons)
+<span class="org-keyword">print</span> (sol)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

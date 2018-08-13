@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记:100问</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记:100问</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org98e5988">1. 100 QandA of sklearn</a>
+<ul>
+<li><a href="#org41d5cce">1.1. How to Generate Test Datasets in Python with scikit-learn</a>
+<ul>
+<li><a href="#orgc058a90">1.1.1. How to generate multi-class classification prediction test problems.</a>
+<ul>
+<li><a href="#org82eae50">1.1.1.1. Blobs Classification Problem</a></li>
+<li><a href="#org7f22c4f">1.1.1.2. Moons Classification Problem</a></li>
+<li><a href="#orgfd16829">1.1.1.3. Circles Classification Problem</a></li>
+</ul>
+</li>
+<li><a href="#org1fd823f">1.1.2. How to generate linear regression prediction test problems.</a></li>
+<li><a href="#orgb548137">1.1.3. How to generate dataset from a curve with some noise</a></li>
+</ul>
+</li>
+<li><a href="#orgcc942f5">1.2. How to check the predict accuracy of classification or clustering</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org98e5988" class="outline-2">
+<h2 id="org98e5988"><span class="section-number-2">1</span> 100 QandA of sklearn</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org41d5cce" class="outline-3">
+<h3 id="org41d5cce"><span class="section-number-3">1.1</span> How to Generate Test Datasets in Python with scikit-learn</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>How to generate multi-class classification prediction test problems.</li>
+<li>How to generate binary classification prediction test problems.</li>
+<li>How to generate linear regression prediction test problems.</li>
+</ul>
+</div>
+<div id="orgc058a90" class="outline-4">
+<h4 id="orgc058a90"><span class="section-number-4">1.1.1</span> How to generate multi-class classification prediction test problems.</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+In this section, we will look at three classification problems: blobs, moons and
+circles.
+</p>
+</div>
+<div id="org82eae50" class="outline-5">
+<h5 id="org82eae50"><span class="section-number-5">1.1.1.1</span> Blobs Classification Problem</h5>
+<div class="outline-text-5" id="text-1-1-1-1">
+<p>
+The <code>make_blobs()</code> function can be used to generate blobs of points with a
+Gaussian distribution.
+</p>
+
+<p>
+You can control how many blobs to generate and the number of samples to
+generate, as well as a host of other properties.
+</p>
+
+<p>
+The problem is suitable for linear classification problems given the linearly
+separable nature of the blobs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets.samples_generator <span class="org-keyword">import</span> make_blobs
+<span class="org-keyword">from</span> matplotlib <span class="org-keyword">import</span> pyplot
+<span class="org-keyword">from</span> pandas <span class="org-keyword">import</span> DataFrame
+<span class="org-comment-delimiter"># </span><span class="org-comment">generate 2d classification dataset</span>
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_blobs(n_samples=<span class="org-highlight-numbers-number">100</span>, centers=<span class="org-highlight-numbers-number">3</span>, n_features=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">scatter plot, dots colored by class value</span>
+<span class="org-variable-name">df</span> = DataFrame(<span class="org-builtin">dict</span>(x=X[:,<span class="org-highlight-numbers-number">0</span>], y=X[:,<span class="org-highlight-numbers-number">1</span>], label=y))
+<span class="org-variable-name">colors</span> = {<span class="org-highlight-numbers-number">0</span>:<span class="org-string">'red'</span>, <span class="org-highlight-numbers-number">1</span>:<span class="org-string">'blue'</span>, <span class="org-highlight-numbers-number">2</span>:<span class="org-string">'green'</span>}
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = pyplot.subplots()
+<span class="org-variable-name">grouped</span> = df.groupby(<span class="org-string">'label'</span>)
+<span class="org-keyword">for</span> key, group <span class="org-keyword">in</span> grouped:
+    group.plot(ax=ax, kind=<span class="org-string">'scatter'</span>, x=<span class="org-string">'x'</span>, y=<span class="org-string">'y'</span>, label=key, color=colors[key])
+pyplot.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041zgL.png" alt="25041zgL.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org7f22c4f" class="outline-5">
+<h5 id="org7f22c4f"><span class="section-number-5">1.1.1.2</span> Moons Classification Problem</h5>
+<div class="outline-text-5" id="text-1-1-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_moons
+<span class="org-keyword">from</span> matplotlib <span class="org-keyword">import</span> pyplot
+<span class="org-keyword">from</span> pandas <span class="org-keyword">import</span> DataFrame
+<span class="org-comment-delimiter"># </span><span class="org-comment">generate 2d classification dataset</span>
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_moons(n_samples=<span class="org-highlight-numbers-number">100</span>, noise=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;&lt;&lt;&lt;-HERE</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">scatter plot, dots colored by class value</span>
+<span class="org-variable-name">df</span> = DataFrame(<span class="org-builtin">dict</span>(x=X[:,<span class="org-highlight-numbers-number">0</span>], y=X[:,<span class="org-highlight-numbers-number">1</span>], label=y))
+<span class="org-variable-name">colors</span> = {<span class="org-highlight-numbers-number">0</span>:<span class="org-string">'red'</span>, <span class="org-highlight-numbers-number">1</span>:<span class="org-string">'blue'</span>}
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = pyplot.subplots()
+<span class="org-variable-name">grouped</span> = df.groupby(<span class="org-string">'label'</span>)
+<span class="org-keyword">for</span> key, group <span class="org-keyword">in</span> grouped:
+    group.plot(ax=ax, kind=<span class="org-string">'scatter'</span>, x=<span class="org-string">'x'</span>, y=<span class="org-string">'y'</span>, label=key, color=colors[key])
+pyplot.show()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgfd16829" class="outline-5">
+<h5 id="orgfd16829"><span class="section-number-5">1.1.1.3</span> Circles Classification Problem</h5>
+<div class="outline-text-5" id="text-1-1-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_circles
+<span class="org-keyword">from</span> matplotlib <span class="org-keyword">import</span> pyplot
+<span class="org-keyword">from</span> pandas <span class="org-keyword">import</span> DataFrame
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">generate 2d classification dataset</span>
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_circles(n_samples=<span class="org-highlight-numbers-number">100</span>, noise=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;&lt;&lt;&lt;-HERE</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">scatter plot, dots colored by class value</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">create a pandas.DataFrame from a dict to store dataset</span>
+<span class="org-variable-name">df</span> = DataFrame(<span class="org-builtin">dict</span>(x=X[:,<span class="org-highlight-numbers-number">0</span>], y=X[:,<span class="org-highlight-numbers-number">1</span>], label=y))
+<span class="org-variable-name">colors</span> = {<span class="org-highlight-numbers-number">0</span>:<span class="org-string">'red'</span>, <span class="org-highlight-numbers-number">1</span>:<span class="org-string">'blue'</span>}
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = pyplot.subplots()
+<span class="org-comment-delimiter">##</span>
+<span class="org-variable-name">grouped</span> = df.groupby(<span class="org-string">'label'</span>)
+<span class="org-keyword">print</span> (<span class="org-builtin">type</span>(grouped))
+<span class="org-keyword">for</span> key, group <span class="org-keyword">in</span> grouped:
+    group.plot(ax=ax, kind=<span class="org-string">'scatter'</span>, x=<span class="org-string">'x'</span>, y=<span class="org-string">'y'</span>, label=key, color=colors[key])
+pyplot.show()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041ArR.png" alt="25041ArR.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org1fd823f" class="outline-4">
+<h4 id="org1fd823f"><span class="section-number-4">1.1.2</span> How to generate linear regression prediction test problems.</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Regression is the problem of predicting a quantity given an observation.
+</p>
+
+<p>
+The make_regression() function will create a dataset with a linear relationship
+between inputs and the outputs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_regression
+<span class="org-keyword">from</span> matplotlib <span class="org-keyword">import</span> pyplot
+<span class="org-comment-delimiter"># </span><span class="org-comment">generate regression dataset</span>
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_regression(n_samples=<span class="org-highlight-numbers-number">100</span>, n_features=<span class="org-highlight-numbers-number">1</span>, noise=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">plot regression dataset</span>
+pyplot.scatter(X,y)
+pyplot.show()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgb548137" class="outline-4">
+<h4 id="orgb548137"><span class="section-number-4">1.1.3</span> How to generate dataset from a curve with some noise</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+you must specify the parameter name &#x2014; 'size' when using uniform
+distribution to generate noise
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">noise</span> = rng.uniform(size=<span class="org-highlight-numbers-number">20</span>)
+noise
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.37454012,  0.95071431,  0.73199394,  0.59865848,  0.15601864,
+0.15599452,  0.05808361,  0.86617615,  0.60111501,  0.70807258,
+0.02058449,  0.96990985,  0.83244264,  0.21233911,  0.18182497,
+0.18340451,  0.30424224,  0.52475643,  0.43194502,  0.29122914])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span> = np.linspace(-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">100</span>)
+<span class="org-keyword">print</span>(x)
+
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">y</span> = np.sin(<span class="org-highlight-numbers-number">4</span> * x) + x + rng.uniform(size=<span class="org-builtin">len</span>(x))
+
+plt.plot(x, y, <span class="org-string">'o'</span>);
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgcc942f5" class="outline-3">
+<h3 id="orgcc942f5"><span class="section-number-3">1.2</span> How to check the predict accuracy of classification or clustering</h3>
+<div class="outline-text-3" id="text-1-2">
+<ol class="org-ol">
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+</ol>
+<p>
+<a href="scipy-2017-sklearn/notebooks/08.Unsupervised_Learning-Clustering.html#orgcbb06c0">Unsupervised Learning Part 2 &#x2013; Clustering</a>
+<a href="scipy-2017-sklearn/notebooks/08.Unsupervised_Learning-Clustering.html#org2902180">comparing to true labels using confusion_matrix and accuracy_score</a>
+<a href="scipy-2017-sklearn/notebooks/08.Unsupervised_Learning-Clustering.html#orgb95ec7f">comparing to true labels using adjusted_rand_score</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

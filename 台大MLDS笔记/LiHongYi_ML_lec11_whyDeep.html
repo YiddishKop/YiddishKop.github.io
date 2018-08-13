@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-11 Why Deep</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-11 Why Deep</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2fc359b">1. Why Deep</a>
+<ul>
+<li><a href="#org4b6d4e0">1.1. Modularization</a>
+<ul>
+<li><a href="#org48a8411">1.1.1. why modularization make [less data requirement]</a></li>
+<li><a href="#org59263fd">1.1.2. Modularization &#x2014; Image</a></li>
+<li><a href="#org0166f27">1.1.3. Modularization &#x2014; Speech</a></li>
+</ul>
+</li>
+<li><a href="#orgfafae97">1.2. Universality Theorem</a></li>
+<li><a href="#orgd2e6951">1.3. Some Analogy</a>
+<ul>
+<li><a href="#orgcfb8760">1.3.1. Analogy（逻辑电路）</a></li>
+<li><a href="#org1bbfe7e">1.3.2. More Analogy</a></li>
+<li><a href="#orgd0fb88d">1.3.3. More Analogy - Experiment</a></li>
+</ul>
+</li>
+<li><a href="#org771bd1f">1.4. End-to-end Learning·「没听懂:为什么叫端到端学习」</a>
+<ul>
+<li><a href="#orge0de54b">1.4.1. End-to-end Learning Speech Recognition</a></li>
+<li><a href="#orgef0e521">1.4.2. End-to-end Learning Image Recognition</a></li>
+</ul>
+</li>
+<li><a href="#org828f6ab">1.5. Complex Task</a></li>
+<li><a href="#orgf94dfbf">1.6. Some paper about why deep</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org2fc359b" class="outline-2">
+<h2 id="org2fc359b"><span class="section-number-2">1</span> Why Deep</h2>
+<div class="outline-text-2" id="text-1">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-23-56.png" alt="screenshot_2017-06-10_20-23-56.png" />
+</p>
+</div>
+
+<p>
+应该调整，让两者参数相等： Fat+short vs. Thin+Tall
+这样作比较才有意义
+</p>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-25-38.png" alt="screenshot_2017-06-10_20-25-38.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-26-42.png" alt="screenshot_2017-06-10_20-26-42.png" />
+</p>
+</div>
+
+<p>
+注意，最后三层的比较，是相同参数下的比较。不是相同的神经元数量，是相同的参数数量。
+</p>
+</div>
+<div id="org4b6d4e0" class="outline-3">
+<h3 id="org4b6d4e0"><span class="section-number-3">1.1</span> Modularization</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<code>============</code>
+</p>
+<p>
+<img src="Why Deep/screenshot_2017-06-10_20-28-38.png" alt="screenshot_2017-06-10_20-28-38.png" />
+Deep 可以类比 模组化模组化的好处是，有些函数是可以·「共用」的，可以实现·「更高级的抽象」
+</p>
+</div>
+
+<div id="org48a8411" class="outline-4">
+<h4 id="org48a8411"><span class="section-number-4">1.1.1</span> why modularization make [less data requirement]</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+比如，我想对人群分四类：长发女，短发女，长发男，短发男。
+</p>
+
+<p>
+=======&gt; 解法一，直接做所以我需要四个二元分类器，把每一类跟其他区分开。但是由于长发男·「很少」，所以这个分类器对于长发男的·「区分能力很弱」
+</p>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-35-42.png" alt="screenshot_2017-06-10_20-35-42.png" />
+</p>
+</div>
+
+<p>
+=======&gt; 解法二，分而治之现在用·「模组化」的思想：不直接去解那个问题，而是把他·「分而治之」。
+</p>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-40-26.png" alt="screenshot_2017-06-10_20-40-26.png" />
+</p>
+</div>
+<blockquote>
+<p>
+把问题，先分成两个 basic classifier: 男生/女生分类器，长发/短发分类器。这样做的好处是:
+</p>
+<ol class="org-ol">
+<li>虽然长发男的样本很少，但是 男生的比例 并不少</li>
+<li>虽然长发男的样本很少，但是 长发的比例 并不少</li>
+</ol>
+<p>
+===&gt; 这样就规避了某一类·「样本非常少」对分类器·「能力」的消极影响
+===&gt; Each basic classifier can have sufficient training examples
+</p>
+
+<p>
+这样基本分类器的训练是不受·「少样本」影响的，而高级分类器使用·「基本分类器作为输入」，这有点类似于functional programming
+function as paramerter.所以高级分类器的能力也得以保证。
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-48-38.png" alt="screenshot_2017-06-10_20-48-38.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-49-15.png" alt="screenshot_2017-06-10_20-49-15.png" />
+</p>
+</div>
+<blockquote>
+<p>
+DeepLearning 与 functional programming 所不同的是：函数之间的嵌套关系是由NN模型自动决定的
+</p>
+
+<p>
+所以·「模组化」的精神对于深度学习来说，就是 <b>Less training data</b> and <b>unbalanced data</b>
+DeepLearning need less data!
+</p>
+
+<p>
+<b>机器学习与大数据是相反的，正是因为没有足够的数据，所以我们需要深度学习</b>
+<b>机器学习不是 brute-force method</b>
+</p>
+</blockquote>
+
+
+<p>
+利用·「模组化」思想，规避·「数据太少」的问题
+Deep Learning need <b>less training data</b>, can deal with <b>unbalanced data</b>
+</p>
+</div>
+</div>
+
+<div id="org59263fd" class="outline-4">
+<h4 id="org59263fd"><span class="section-number-4">1.1.2</span> Modularization &#x2014; Image</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+<code>======================</code>
+</p>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_20-57-57.png" alt="screenshot_2017-06-10_20-57-57.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org0166f27" class="outline-4">
+<h4 id="org0166f27"><span class="section-number-4">1.1.3</span> Modularization &#x2014; Speech</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+<code>=======================</code>
+</p>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-03-41.png" alt="screenshot_2017-06-10_21-03-41.png" />
+</p>
+</div>
+<blockquote>
+<ol class="org-ol">
+<li>The hierarchical structure of human languages</li>
+</ol>
+<p>
+人类发音的基本单位是 phoneme
+由于人类口腔发音器官的限制，同样的 phoneme 可能会有不同的发音，他会受·「前后phoneme」的影响。所以为了表达这种不同，我们会给同样的phoneme不同的model &#x2014; tri-phone
+比如相同的 uw 因为处在不同的发音环境中，所以给他们不同的model描述。一个 tri-hpone 可以有多个(一般是3个) state
+</p>
+</blockquote>
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-10-10.png" alt="screenshot_2017-06-10_21-10-10.png" />
+</p>
+</div>
+<blockquote>
+<p>
+The first stage of speech recognition
+Classification: input -&gt; acoustic feature, output -&gt; state
+acoustic feature 是什么呢？简单来说，声音讯号就是一串波形，在这个波形上取一个窗口（250ms），用一个向量来描述这个窗口中波形的特性，这就是 acoustic feature.每个窗口都‘罩’这一段声音波形，所以一整段语音就是一个 vector sequence，acoustic feature sequence.
+语音辨识第一步要做的就是 辨识每一个 vector(acoustic feature)所属于的state
+</p>
+
+<p>
+但是只有这个是没法做语音辨识系统的，下一步要把state转成phoneme，然后再把phoneme转成文字。还要考虑诸如同音异字的问题，等等。
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-14-20.png" alt="screenshot_2017-06-10_21-14-20.png" />
+</p>
+</div>
+<blockquote>
+<p>
+比较传统语音辨识与深度学习语音辨识
+Traditinary method(Only 1st step)
+Each state has a stationary distribution for acoustic features
+但是这样做不work的，一般语音都有30个左右的phoneme，随着上下文的不同你有不同的
+model，再每一个model都有3种state。总计，你有 30×30×30×3 = 8.1w 个state。而每一个state都要用一个 Gaussian mixture model 来描述，参数太多了，training
+data根本不够。怎么办呢？
+</p>
+</blockquote>
+
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-24-37.png" alt="screenshot_2017-06-10_21-24-37.png" />
+</p>
+</div>
+<blockquote>
+<p>
+传统的方法：有一些state会共用 GMM，这叫做 :Tied-state.
+什么叫不同的state共用同样的分布呢？把state类比C语言中的指针，把GMM类比C语言中的地址。不同的指针(state)可以指向相同的地址(GMM)。哪些state是共用的，这个依靠经验和语言学思想。而且有些state要共用，或不共用的说法，太粗糙了,所以有人提出·「部分共用」有些人引出一个概念：subspace GMM,也是一种模组化.
+原来是说，每一个state对应一个gaussian。现在是先把很多很多的 Gaussian 先找出来，这就是 gaussian pool。而state的infomation就是一个key，key告诉我们这个state他会从pool中挑那些gaussian。比如，state-1 choose gaussian1,3,9 from pool.
+state-2 choose gaussian1,7,9 from pool.
+但是具体states，会如何share gaussian，就要通过数据来学习出来
+</p>
+</blockquote>
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-27-31.png" alt="screenshot_2017-06-10_21-27-31.png" />
+</p>
+</div>
+<blockquote>
+<p>
+母音的发音，只受到三件事情的影响：舌头的前后位置，舌头的上下位置，嘴形。从图中可以看到，i,e,u,o,a, 这五种英文母音，i,u之间的差别仅仅是舌头的前后位置;
+i，e，a的区别仅仅是舌头的上下位置, 而图中同一位置的不同发音是由·「嘴形」的不同造成的。比如 i,y 舌头上下前后的位置都相同，不同的是·「嘴形」。
+</p>
+
+<p>
+所以人声的不同的phoneme之间是有关系的，不是 indenpendent 的。每一个hponeme都搞一个自己的model，很没有效率
+</p>
+</blockquote>
+
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-35-00.png" alt="screenshot_2017-06-10_21-35-00.png" />
+</p>
+</div>
+<blockquote>
+<p>
+DNN 处理 speech recognition
+input: one acoustic feature
+outpu: probability of each state
+这边为什么有效率呢？ 因为所有的state都共用同一个DNN
+传统的HMM-GMM, 每一个state都有一个Gaussian mixture model.
+</p>
+
+<p>
+DNN 只有一个很大的 model。
+GMM 用了很多很小的 model。
+</p>
+
+<p>
+但是两者使用的参数数量其实是差不多的，DNN牛逼并不是因为参数多/模型强，而是因为 modularization
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-44-50.png" alt="screenshot_2017-06-10_21-44-50.png" />
+</p>
+</div>
+<blockquote>
+<p>
+为什么DNN的方式更好把DNN中某一个隐含层的输出拿出来做降维，降到两维，然后画出来这里的颜色就是 i e u o a 对应的颜色。惊奇的是，图中这五种颜色的分布是和这五个母音的分布其实几乎是一样的。所以DNN比较底层的隐含层在做的事情是：当你听到某个母音时，人类是用什么·「嘴形和舌形」发音的。
+</p>
+
+<p>
+接下来的layer，才根据这个结果决定现在的发音是属于哪一个state 所以，
+lower layer 是一个人类发音的 detector。
+high layer 用同一组 detector 完成所有 phoneme 的侦测。
+</p>
+
+<p>
+这就是一种模组化。当你使用模组化的时候，你就是在·「复用」。这样的参数会比较少，整体也比较有效率。
+</p>
+</blockquote>
+
+<p>
+当你使用模组化的时候，你就是在·「复用」。这样整体的参数会比较少，整体也比较有效率。
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgfafae97" class="outline-3">
+<h3 id="orgfafae97"><span class="section-number-3">1.2</span> Universality Theorem</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-47-21.png" alt="screenshot_2017-06-10_21-47-21.png" />
+</p>
+</div>
+<blockquote>
+<p>
+However, using deep structure is more effective.
+Although shallow network can represent any function.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orgd2e6951" class="outline-3">
+<h3 id="orgd2e6951"><span class="section-number-3">1.3</span> Some Analogy</h3>
+<div class="outline-text-3" id="text-1-3">
+</div>
+<div id="orgcfb8760" class="outline-4">
+<h4 id="orgcfb8760"><span class="section-number-4">1.3.1</span> Analogy（逻辑电路）</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-50-11.png" alt="screenshot_2017-06-10_21-50-11.png" />
+</p>
+</div>
+<blockquote>
+<p>
+对函数（逻辑电路）的复用，带来更少的参数量要求，进一步带来更少的数据量要求所以深度学习，不是·「暴力搜索」式的算法，而是·「四两拨千斤」的算法。
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org1bbfe7e" class="outline-4">
+<h4 id="org1bbfe7e"><span class="section-number-4">1.3.2</span> More Analogy</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-57-27.png" alt="screenshot_2017-06-10_21-57-27.png" />
+</p>
+</div>
+<blockquote>
+<p>
+不是直接剪出右边的窗花，而是先折起来再剪
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_21-58-50.png" alt="screenshot_2017-06-10_21-58-50.png" />
+</p>
+</div>
+<blockquote>
+<p>
+这个分类，就像是把·「空间对折」一样
+</p>
+</blockquote>
+
+
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_22-06-10.png" alt="screenshot_2017-06-10_22-06-10.png" />
+</p>
+</div>
+<blockquote>
+<p>
+剪窗花：training
+画斜线的部分：positive
+没画斜线：negative
+折叠窗花：folding-space
+所以你只要在折叠窗花上略做裁剪，就可以得到复杂的窗花图案。原始空间中的非线性分类，就是折叠空间中的线性分类
+</p>
+
+<p>
+另一个角度，你在折叠窗花上戳一个洞，就会在原始窗花上看到五个洞。一笔折叠窗花上的数据，就相当于原始窗花上的五笔数据。
+</p>
+
+<p>
+Use data effectively
+</p>
+</blockquote>
+</div>
+</div>
+
+
+<div id="orgd0fb88d" class="outline-4">
+<h4 id="orgd0fb88d"><span class="section-number-4">1.3.3</span> More Analogy - Experiment</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_22-08-36.png" alt="screenshot_2017-06-10_22-08-36.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org771bd1f" class="outline-3">
+<h3 id="org771bd1f"><span class="section-number-3">1.4</span> End-to-end Learning·「没听懂:为什么叫端到端学习」</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+使用深度学习的另一个好处是可以实现·「端到端的学习」有时候要处理的问题非常的复杂，也就是要获得一个很复杂的函数。这时候要做的
+</p>
+</div>
+
+<div id="orge0de54b" class="outline-4">
+<h4 id="orge0de54b"><span class="section-number-4">1.4.1</span> End-to-end Learning Speech Recognition</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-10_22-12-35.png" alt="screenshot_2017-06-10_22-12-35.png" />
+</p>
+</div>
+<blockquote>
+<p>
+这里我快被李宏毅老师笑死了：他说，这个模型就是·「古圣先贤」研究了各种人类生理知识之后呢，搞了不知多久搞出来的生产线，简直是·「增一分太肥，减一分太瘦」，因为古圣先贤都太厉害了，卡在这个生产线卡了几十年的样子。
+</p>
+
+<p>
+直到现在也只能用DNN取代GMM,MFCC,DCT这一段从 log 部分开始做DNN
+</p>
+
+<p>
+甚至你可以从 spectrogram 部分开始做DNN
+</p>
+
+<p>
+但是DNN没法替代DFT，这个transform似乎是一个极限，再深的DNN做的事情好像也就是对DFT的模拟
+</p>
+</blockquote>
+</div>
+</div>
+
+
+
+<div id="orgef0e521" class="outline-4">
+<h4 id="orgef0e521"><span class="section-number-4">1.4.2</span> End-to-end Learning Image Recognition</h4>
+</div>
+</div>
+
+
+<div id="org828f6ab" class="outline-3">
+<h3 id="org828f6ab"><span class="section-number-3">1.5</span> Complex Task</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+<code>==========</code>
+</p>
+<ol class="org-ol">
+<li>Very similar input, different output</li>
+</ol>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-11_09-36-04.png" alt="screenshot_2017-06-11_09-36-04.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>Very different input, similar output</li>
+</ol>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-11_09-36-13.png" alt="screenshot_2017-06-11_09-36-13.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>同样的声音讯号，不同的人说出来，是很不一样的</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-11_09-39-44.png" alt="screenshot_2017-06-11_09-39-44.png" />
+</p>
+</div>
+<p>
+<img src="Why Deep/screenshot_2017-06-11_09-37-59.png" alt="screenshot_2017-06-11_09-37-59.png" />
+不同的颜色区分不同的人的发音不同的人说同样的话，在MFCC中完全就是分开的。但是在8-th隐含层的DNN中，被划分成了各种不同的·「线」相同的话语内容，被分在一起了。
+</p>
+
+<p>
+MNIST - handing write recognition
+</p>
+
+<div class="figure">
+<p><img src="Why Deep/screenshot_2017-06-11_09-42-06.png" alt="screenshot_2017-06-11_09-42-06.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf94dfbf" class="outline-3">
+<h3 id="orgf94dfbf"><span class="section-number-3">1.6</span> Some paper about why deep</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+• Deep Learning: Theoretical Motivations (Yoshua Bengio)
+• <a href="http://videolectures.net/deeplearning2015_bengio_theoretical_motivations/">http://videolectures.net/deeplearning2015_bengio_theoretical_motivations/</a>
+• Connections between physics and deep learning
+• <a href="https://www.youtube.com/watch?v=5MdSE-N0bxs">https://www.youtube.com/watch?v=5MdSE-N0bxs</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

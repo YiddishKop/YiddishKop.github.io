@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow 加载和保存深入</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow 加载和保存深入</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2ed94b0">1. A quick complete tutorial to save and restore Tensorflow models</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org3a16123">1.0.1. 1.What is a Tensorflow model?</a></li>
+<li><a href="#orge270b05">1.0.2. Saving a Tensorflow model:</a></li>
+<li><a href="#org4fbe774">1.0.3. Importing a pre-trained model:</a></li>
+<li><a href="#org357543c">1.0.4. Working with restored models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org2ed94b0" class="outline-2">
+<h2 id="org2ed94b0"><span class="section-number-2">1</span> A quick complete tutorial to save and restore Tensorflow models</h2>
+<div class="outline-text-2" id="text-1">
+<pre class="example">
+In this Tensorflow tutorial, I shall explain:
+
+1. How does a Tensorflow model look like?
+2. How to save a Tensorflow model?
+3. How to restore a Tensorflow model for prediction/transfer learning?
+4. How to work with imported pretrained models for fine-tuning and modification
+</pre>
+
+<p>
+This tutorial assumes that you have some idea about training a neural network.
+Otherwise, please follow this tutorial and come back here.
+</p>
+</div>
+
+<div id="org3a16123" class="outline-4">
+<h4 id="org3a16123"><span class="section-number-4">1.0.1</span> 1.What is a Tensorflow model?</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<p>
+After you have trained a neural network, you would want to save it for future
+use and deploying to production. So, what is a Tensorflow model? Tensorflow
+model primarily <b>contains the network design or graph and values</b> of the network
+parameters that we have trained. Hence, Tensorflow model has two main files:
+</p>
+
+<ol class="org-ol">
+<li><code>.meta</code>, Meta graph: This is a <b>protocol buffer</b> which saves the <b>complete Tensorflow</b>
+graph; i.e. all variables, operations, collections etc. This file has <code>.meta</code>
+extension.</li>
+
+<li><code>ckpt</code>, Checkpoint file: This is a <b>binary file</b> which contains <b>all the values of
+the weights, biases, gradients and all the other variables saved</b>. This file
+has an extension <code>.ckpt</code>. However, Tensorflow has changed this from version
+0.11. Now, instead of single .ckpt file, we have two files:</li>
+
+<li><code>.data</code> file is the file that contains <b>our training variables</b> and we shall
+go after it.</li>
+</ol>
+
+<pre class="example">
+mymodel.data-00000-of-00001
+mymodel.index
+</pre>
+
+<p>
+so, the whole file list produced by saver object is as shown below:
+</p>
+<pre class="example">
+checkpoint
+my_net.ckpt.data-00000-of-00001
+my_net.ckpt.index
+my_net.ckpt.meta
+</pre>
+
+
+<p>
+Along with this, Tensorflow also has a file named <code>checkpoint</code> which simply
+keeps <b>a record of latest checkpoint files</b> saved.
+</p>
+
+<p>
+the content of checkpoint file is as shown below:
+</p>
+<pre class="example">
+model_checkpoint_path: "my_net.ckpt"
+all_model_checkpoint_paths: "my_net.ckpt"
+</pre>
+</div>
+</div>
+
+<div id="orge270b05" class="outline-4">
+<h4 id="orge270b05"><span class="section-number-4">1.0.2</span> Saving a Tensorflow model:</h4>
+<div class="outline-text-4" id="text-1-0-2">
+<p>
+Let’s say, you are training a convolutional neural network for image
+classification. As a standard practice, you keep a watch on loss and accuracy
+numbers. Once you see that the network has converged, you can stop the training
+manually or you will run the training for fixed number of epochs. After the
+training is done, we want to
+</p>
+
+<p>
+<b>save all the variables and network graph to a file for future use</b>.
+</p>
+
+<p>
+So, in Tensorflow, you want to <b>save the graph and values of all the parameters</b>
+for which we shall be creating an instance of <code>tf.train.Saver()</code> class.
+</p>
+
+<p>
+<code>saver = tf.train.Saver()</code>
+</p>
+
+<p>
+Remember that Tensorflow variables are only alive inside a session. So, you have
+to save the model inside a session by calling save method on saver object you
+just created.
+</p>
+
+<p>
+<code>saver.save(sess, 'my-test-model')</code>
+</p>
+
+<p>
+Here, sess is the session object, while <b>‘my-test-model’ is the name</b> you want
+to give your model. Let’s see a complete example:
+</p>
+
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-variable-name">w1</span> = tf.Variable(tf.random_normal(shape=[<span class="org-highlight-numbers-number">2</span>]), name=<span class="org-string">'w1'</span>)
+<span class="org-variable-name">w2</span> = tf.Variable(tf.random_normal(shape=[<span class="org-highlight-numbers-number">5</span>]), name=<span class="org-string">'w2'</span>)
+<span class="org-variable-name">saver</span> = tf.train.Saver()
+<span class="org-variable-name">sess</span> = tf.Session()
+sess.run(tf.global_variables_initializer())
+saver.save(sess, <span class="org-string">'my_test_model'</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">This will save following files in Tensorflow v &gt;= 0.11</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. my_test_model.data-00000-of-00001</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. my_test_model.index</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. my_test_model.meta</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">4. checkpoint</span>
+</pre>
+</div>
+<p>
+If we are saving the model after 1000 iterations, we shall call save by passing
+the step count:
+</p>
+
+<p>
+<code>saver.save(sess, 'my_test_model',global_step=1000)</code>
+</p>
+
+<p>
+This will just append ‘ <code>-1000</code> ’ to the model name and following files will
+be created:
+</p>
+
+
+<pre class="example">
+my_test_model-1000.index
+my_test_model-1000.meta
+my_test_model-1000.data-00000-of-00001
+checkpoint
+</pre>
+
+<p>
+Let’s say, while training, we are saving our model after every 1000 iterations,
+so <code>.meta</code> file is <b>created the first time</b> (on 1000th iteration) and
+</p>
+
+<blockquote>
+<p>
+we don’t need to recreate the <code>.meta</code> file each time
+</p>
+</blockquote>
+
+<p>
+(so, we don’t save the .meta file at 2000, 3000.. or any other iteration). We
+only save the model for further iterations, as the graph will not change. Hence,
+when we don’t want to write the meta-graph we use this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">saver.save(sess, <span class="org-string">'my-model'</span>, global_step=step, write_meta_graph=<span class="org-constant">False</span>)
+</pre>
+</div>
+
+<p>
+If you want to keep only 4 latest models and want to save one model after every
+2 hours during training you can use <code>max_to_keep</code> and
+<code>keep_checkpoint_every_n_hours</code> like this.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter">#</span><span class="org-comment">saves a model every 2 hours and maximum 4 latest models are saved.</span>
+<span class="org-variable-name">saver</span> = tf.train.Saver(max_to_keep=<span class="org-highlight-numbers-number">4</span>, keep_checkpoint_every_n_hours=<span class="org-highlight-numbers-number">2</span>)
+</pre>
+</div>
+
+<p>
+Note, if we don’t specify anything in the <code>tf.train.Saver()</code>, it saves <b>all the
+variables</b>.
+</p>
+
+<blockquote>
+<p>
+What if, we don’t want to save all the variables and just some of them.
+</p>
+</blockquote>
+
+<p>
+We can specify the <code>variables/collections</code> we want to save. While creating the
+<code>tf.train.Saver</code> instance we pass it a list or a dictionary of variables that we
+want to save. Let’s look at an example:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-variable-name">w1</span> = tf.Variable(tf.random_normal(shape=[<span class="org-highlight-numbers-number">2</span>]), name=<span class="org-string">'w1'</span>)
+<span class="org-variable-name">w2</span> = tf.Variable(tf.random_normal(shape=[<span class="org-highlight-numbers-number">5</span>]), name=<span class="org-string">'w2'</span>)
+<span class="org-variable-name">saver</span> = tf.train.Saver([w1,w2]) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;---</span>
+<span class="org-variable-name">sess</span> = tf.Session()
+sess.run(tf.global_variables_initializer())
+saver.save(sess, <span class="org-string">'my_test_model'</span>,global_step=<span class="org-highlight-numbers-number">1000</span>)
+</pre>
+</div>
+<p>
+This can be used to save specific part of Tensorflow graphs when required.
+</p>
+</div>
+</div>
+
+<div id="org4fbe774" class="outline-4">
+<h4 id="org4fbe774"><span class="section-number-4">1.0.3</span> Importing a pre-trained model:</h4>
+<div class="outline-text-4" id="text-1-0-3">
+<p>
+If you want to use someone else’s pre-trained model for fine-tuning, there are
+two things you need to do:
+</p>
+
+<ol class="org-ol">
+<li><p>
+<span class="underline">Create the network</span>: You can create the network by writing python code to
+create each and every layer manually as the original model. However, if you
+think about it, we <b>had saved the network in .meta</b> file which we can use to
+recreate the network using <code>tf.train.import_xxxx()</code> function like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">saver</span> = tf.train.import_meta_graph(<span class="org-string">'my_test_model-1000.meta'</span>)
+</pre>
+</div>
+
+<p>
+Remember, <code>import_meta_graph</code> appends the network defined in <code>.meta</code> file to the
+current graph. So, this will create the graph/network for you but we still
+</p>
+
+<blockquote>
+<p>
+need to load the value of the parameters that we had trained on this graph.
+</p>
+</blockquote></li>
+
+<li><p>
+<span class="underline">Load the parameters</span>: We can <b>restore</b> the parameters of the network by
+calling restore on this saver which is an instance of <code>tf.train.Saver()</code>
+class.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+  <span class="org-variable-name">new_saver</span> = tf.train.import_meta_graph(<span class="org-string">'my_test_model-1000.meta'</span>)
+  new_saver.restore(sess, tf.train.latest_checkpoint(<span class="org-string">'./'</span>))
+</pre>
+</div>
+
+<p>
+After this, the value of tensors like <code>w1</code> and <code>w2</code> has been restored and can
+be accessed:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-variable-name">saver</span> = tf.train.import_meta_graph(<span class="org-string">'my-model-1000.meta'</span>)
+    saver.restore(sess,tf.train.latest_checkpoint(<span class="org-string">'./'</span>))
+    <span class="org-keyword">print</span>(sess.run(<span class="org-string">'w1:0'</span>))
+<span class="org-comment-delimiter"># </span><span class="org-comment">Model has been restored. Above statement will print the saved value of w1.</span>
+</pre>
+</div>
+
+<p>
+So, now you have understood how saving and importing works for a Tensorflow
+model. In the next section, I have described a practical usage of above to
+load any pre-trained model.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="org357543c" class="outline-4">
+<h4 id="org357543c"><span class="section-number-4">1.0.4</span> Working with restored models</h4>
+<div class="outline-text-4" id="text-1-0-4">
+<p>
+Now that you have understood how to save and restore Tensorflow models, Let’s
+develop a practical guide to restore any pre-trained model and use it for
+prediction, fine-tuning or further training. Whenever you are working with
+Tensorflow, you define a graph which is fed examples(training data) and some
+hyperparameters like learning rate, global step etc. It’s a standard practice
+to feed all the training data and hyperparameters using placeholders. Let’s
+build a small network using placeholders and save it. Note that when the network
+is saved, values of the placeholders are not saved.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Prepare to feed input, i.e. feed_dict and placeholders</span>
+<span class="org-variable-name">w1</span> = tf.placeholder(<span class="org-string">"float"</span>, name=<span class="org-string">"w1"</span>)
+<span class="org-variable-name">w2</span> = tf.placeholder(<span class="org-string">"float"</span>, name=<span class="org-string">"w2"</span>)
+<span class="org-variable-name">b1</span>= tf.Variable(<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>,name=<span class="org-string">"bias"</span>)
+<span class="org-variable-name">feed_dict</span> ={w1:<span class="org-highlight-numbers-number">4</span>,w2:<span class="org-highlight-numbers-number">8</span>}
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Define a test operation that we will restore</span>
+<span class="org-variable-name">w3</span> = tf.add(w1,w2)
+<span class="org-variable-name">w4</span> = tf.multiply(w3,b1,name=<span class="org-string">"op_to_restore"</span>)
+<span class="org-variable-name">sess</span> = tf.Session()
+sess.run(tf.global_variables_initializer())
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Create a saver object which will save all the variables</span>
+<span class="org-variable-name">saver</span> = tf.train.Saver()
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Run the operation by feeding input</span>
+<span class="org-keyword">print</span> sess.run(w4,feed_dict)
+<span class="org-comment-delimiter">#</span><span class="org-comment">Prints 24 which is sum of (w1+w2)*b1</span>
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Now, save the graph</span>
+saver.save(sess, <span class="org-string">'my_test_model'</span>,global_step=<span class="org-highlight-numbers-number">1000</span>)
+</pre>
+</div>
+<p>
+Now, when we want to restore it, we not only have to restore the graph and
+weights, but also prepare a new feed_dict that will
+</p>
+
+<blockquote>
+<p>
+feed the new training data to the network.
+</p>
+</blockquote>
+
+<p>
+We can get reference to these saved operations and placeholder variables via
+<code>graph.get_tensor_by_name()</code> method.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter">#</span><span class="org-comment">How to access saved variable/Tensor/placeholders</span>
+<span class="org-variable-name">w1</span> = graph.get_tensor_by_name(<span class="org-string">"w1:0"</span>)
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">How to access saved operation</span>
+<span class="org-variable-name">op_to_restore</span> = graph.get_tensor_by_name(<span class="org-string">"op_to_restore:0"</span>)
+</pre>
+</div>
+
+<p>
+If we just want to run the same network with different data, you can simply pass
+the new data via <code>feed_dict</code> to the network.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-variable-name">sess</span>=tf.Session()
+<span class="org-comment-delimiter">#</span><span class="org-comment">First let's load meta graph and restore weights</span>
+<span class="org-variable-name">saver</span> = tf.train.import_meta_graph(<span class="org-string">'my_test_model-1000.meta'</span>)
+saver.restore(sess,tf.train.latest_checkpoint(<span class="org-string">'./'</span>))
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Now, let's access and create placeholders variables and</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">create feed-dict to feed new data</span>
+
+<span class="org-variable-name">graph</span> = tf.get_default_graph()
+<span class="org-variable-name">w1</span> = graph.get_tensor_by_name(<span class="org-string">"w1:0"</span>)
+<span class="org-variable-name">w2</span> = graph.get_tensor_by_name(<span class="org-string">"w2:0"</span>)
+<span class="org-variable-name">feed_dict</span> ={w1:<span class="org-highlight-numbers-number">13</span>.<span class="org-highlight-numbers-number">0</span>,w2:<span class="org-highlight-numbers-number">17</span>.<span class="org-highlight-numbers-number">0</span>}
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Now, access the op that you want to run.</span>
+<span class="org-variable-name">op_to_restore</span> = graph.get_tensor_by_name(<span class="org-string">"op_to_restore:0"</span>)
+
+<span class="org-keyword">print</span> sess.run(op_to_restore,feed_dict)
+<span class="org-comment-delimiter">#</span><span class="org-comment">This will print 60 which is calculated</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">using new values of w1 and w2 and saved value of b1.</span>
+</pre>
+</div>
+
+<p>
+What if you want to add more operations to the graph by adding more layers and
+then train it. Of course you can do that too. See here:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-variable-name">sess</span>=tf.Session()
+<span class="org-comment-delimiter">#</span><span class="org-comment">First let's load meta graph and restore weights</span>
+<span class="org-variable-name">saver</span> = tf.train.import_meta_graph(<span class="org-string">'my_test_model-1000.meta'</span>)
+saver.restore(sess,tf.train.latest_checkpoint(<span class="org-string">'./'</span>))
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Now, let's access and create placeholders variables and</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">create feed-dict to feed new data</span>
+
+<span class="org-variable-name">graph</span> = tf.get_default_graph()
+<span class="org-variable-name">w1</span> = graph.get_tensor_by_name(<span class="org-string">"w1:0"</span>)
+<span class="org-variable-name">w2</span> = graph.get_tensor_by_name(<span class="org-string">"w2:0"</span>)
+<span class="org-variable-name">feed_dict</span> ={w1:<span class="org-highlight-numbers-number">13</span>.<span class="org-highlight-numbers-number">0</span>,w2:<span class="org-highlight-numbers-number">17</span>.<span class="org-highlight-numbers-number">0</span>}
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Now, access the op that you want to run.</span>
+<span class="org-variable-name">op_to_restore</span> = graph.get_tensor_by_name(<span class="org-string">"op_to_restore:0"</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Add more to the current graph</span>
+<span class="org-variable-name">add_on_op</span> = tf.multiply(op_to_restore,<span class="org-highlight-numbers-number">2</span>)
+
+<span class="org-keyword">print</span> sess.run(add_on_op,feed_dict)
+<span class="org-comment-delimiter">#</span><span class="org-comment">This will print 120.</span>
+</pre>
+</div>
+<p>
+But, can you restore part of the old graph and add-on to that for fine-tuning ?
+Of-course you can, just access the appropriate operation by
+<code>graph.get_tensor_by_name()</code> method and build graph on top of that. Here is a
+real world example.
+</p>
+
+
+<p>
+Here we:
+</p>
+<ol class="org-ol">
+<li>load a vgg pre-trained network using meta graph</li>
+<li>change the number of outputs to 2 in the last layer for fine-tuning with new
+data.</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">saver</span> = tf.train.import_meta_graph(<span class="org-string">'vgg.meta'</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">Access the graph</span>
+<span class="org-variable-name">graph</span> = tf.get_default_graph()
+<span class="org-comment-delimiter">## </span><span class="org-comment">Prepare the feed_dict for feeding data for fine-tuning</span>
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Access the appropriate output for fine-tuning</span>
+<span class="org-variable-name">fc7</span>= graph.get_tensor_by_name(<span class="org-string">'fc7:0'</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">use this if you only want to change gradients of the last layer</span>
+<span class="org-variable-name">fc7</span> = tf.stop_gradient(fc7) <span class="org-comment-delimiter"># </span><span class="org-comment">It's an identity function</span>
+<span class="org-variable-name">fc7_shape</span>= fc7.get_shape().as_list()
+
+<span class="org-variable-name">new_outputs</span>=<span class="org-highlight-numbers-number">2</span>
+<span class="org-variable-name">weights</span> = tf.Variable(tf.truncated_normal([fc7_shape[<span class="org-highlight-numbers-number">3</span>], num_outputs], stddev=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>))
+<span class="org-variable-name">biases</span> = tf.Variable(tf.constant(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, shape=[num_outputs]))
+<span class="org-variable-name">output</span> = tf.matmul(fc7, weights) + biases
+<span class="org-variable-name">pred</span> = tf.nn.softmax(output)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Now, you run this with fine-tuning data in sess.run()</span>
+</pre>
+</div>
+
+<p>
+Hopefully, this gives you very clear understanding of how Tensorflow models are
+saved and restored. Please feel free to share your questions or doubts in the
+comments section.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

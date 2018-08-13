@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:53 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记05:监督学习之分类问题2</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记05:监督学习之分类问题2</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdd8b75d">1. Supervised Learning Part 2 &#x2013; Regression Analysis</a>
+<ul>
+<li>
+<ul>
+<li><a href="#orgb2f8a67">1.0.1. create dataset from a sine curve</a></li>
+</ul>
+</li>
+<li><a href="#orgb1ac9a5">1.1. underfitting: Linear Regression is too simple</a>
+<ul>
+<li><a href="#org3de6ccb">1.1.1. splitting dataset to training and testing</a></li>
+<li><a href="#orgf85b6f5">1.1.2. create ML model by <code>estimator.fit(X_train,y_train)</code></a></li>
+<li><a href="#org8bb0b35">1.1.3. get the <code>coef</code> and <code>intercept</code> of fitting line</a></li>
+<li><a href="#org65c065f">1.1.4. plot the fitting line</a></li>
+<li><a href="#orgffdd271">1.1.5. plot the predict data points of training and testing</a></li>
+<li><a href="#org70bacfe">1.1.6. evaluate the MSE-score of prediction</a></li>
+</ul>
+</li>
+<li><a href="#orgdda46be">1.2. change to a more complex model: KNeighborsRegression</a>
+<ul>
+<li><a href="#orge66e66f">1.2.1. get the ML model</a></li>
+<li><a href="#orgafa96bd">1.2.2. perfectly correct prediction for training dataset</a></li>
+<li><a href="#orgb66798c">1.2.3. the score of prediction on testing dataset</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org751480b">2. EXERCISE</a></li>
+<li><a href="#org4021ae2">3. Misc tools</a>
+<ul>
+<li><a href="#org6574ed2">3.1. scikit-learn</a>
+<ul>
+<li><a href="#org269fc10">3.1.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+</pre>
+</div>
+
+<div id="orgdd8b75d" class="outline-2">
+<h2 id="orgdd8b75d"><span class="section-number-2">1</span> Supervised Learning Part 2 &#x2013; Regression Analysis</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In regression we are trying to predict a <b>continuous output variable</b> &#x2013; in
+contrast to the nominal variables we were predicting in the previous
+classification examples.
+</p>
+</div>
+
+<div id="orgb2f8a67" class="outline-4">
+<h4 id="orgb2f8a67"><span class="section-number-4">1.0.1</span> create dataset from a sine curve</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<p>
+Let's start with a simple toy example with one feature dimension (explanatory
+variable) and one target variable. We will <b>create a dataset out of a sine curve
+with some noise</b>:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span> = np.linspace(-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">100</span>)
+<span class="org-keyword">print</span>(x)
+
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">y</span> = np.sin(<span class="org-highlight-numbers-number">4</span> * x) + x + rng.uniform(size=<span class="org-builtin">len</span>(x))
+plt.plot(x, y, <span class="org-string">'o'</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041QGV.png" alt="25041QGV.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb1ac9a5" class="outline-3">
+<h3 id="orgb1ac9a5"><span class="section-number-3">1.1</span> underfitting: Linear Regression is too simple</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The first model that we will introduce is the so-called <b>simple linear
+regression</b>. Here, we want to fit a line to the data, which
+</p>
+
+<p>
+One of the simplest models again is a linear one, that simply tries to predict
+the data as lying on a line. One way to find such a line is <b>LinearRegression</b>
+(also known as <b>Ordinary Least Squares (OLS) regression</b>). The interface for
+LinearRegression is exactly the same as for the classifiers before, only that y
+now contains float values, instead of classes.
+</p>
+
+<p>
+As we remember, the scikit-learn API requires us to provide the target variable
+(y) as a 1-dimensional array; scikit-learn's API expects the samples (X) in form
+a 2-dimensional array &#x2013; even though it may only consist of 1 feature. Thus, let
+us convert the 1-dimensional x NumPy array into an X array with 2 axes:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">'Before: '</span>, x.shape)
+<span class="org-variable-name">X</span> = x[:, np.newaxis] <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- from (100,) to (100,1)</span>
+<span class="org-keyword">print</span>(<span class="org-string">'After: '</span>, X.shape)
+<span class="org-keyword">print</span>(X)
+</pre>
+</div>
+</div>
+
+<div id="org3de6ccb" class="outline-4">
+<h4 id="org3de6ccb"><span class="section-number-4">1.1.1</span> splitting dataset to training and testing</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Again, we start by splitting our dataset into a training (75%) and a test set
+(25%):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X, y, test_size=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>, random_state=<span class="org-highlight-numbers-number">42</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgf85b6f5" class="outline-4">
+<h4 id="orgf85b6f5"><span class="section-number-4">1.1.2</span> create ML model by <code>estimator.fit(X_train,y_train)</code></h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Next, we use the learning algorithm implemented in LinearRegression to fit a
+regression model to the training data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> LinearRegression
+<span class="org-variable-name">regressor</span> = LinearRegression()
+regressor.fit(X_train, y_train)
+</pre>
+</div>
+
+<pre class="example">
+LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+
+</pre>
+
+<p>
+​ After fitting to the training data, we paramerterized a linear regression model
+with the following values.
+</p>
+</div>
+</div>
+
+<div id="org8bb0b35" class="outline-4">
+<h4 id="org8bb0b35"><span class="section-number-4">1.1.3</span> get the <code>coef</code> and <code>intercept</code> of fitting line</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+Note that, you can do this ONLY after execute <code>regressor.fit()</code> method.
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">'Weight coefficients: '</span>, regressor.coef_)
+<span class="org-keyword">print</span>(<span class="org-string">'y-axis intercept: '</span>, regressor.intercept_)
+</pre>
+</div>
+
+<p>
+Since our regression model is a linear one, the relationship between the target
+variable (y) and the feature variable (x) is defined as
+</p>
+
+<p>
+\(y = weight \times x + \text{intercept}\).
+</p>
+</div>
+</div>
+
+<div id="org65c065f" class="outline-4">
+<h4 id="org65c065f"><span class="section-number-4">1.1.4</span> plot the fitting line</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+Plugging in the min and max values into thos equation, we can plot the
+regression fit to our training data:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">min_pt</span> = X.<span class="org-builtin">min</span>() * regressor.coef_[<span class="org-highlight-numbers-number">0</span>] + regressor.intercept_
+<span class="org-variable-name">max_pt</span> = X.<span class="org-builtin">max</span>() * regressor.coef_[<span class="org-highlight-numbers-number">0</span>] + regressor.intercept_
+plt.plot([X.<span class="org-builtin">min</span>(), X.<span class="org-builtin">max</span>()], [min_pt, max_pt])
+plt.plot(X_train, y_train, <span class="org-string">'o'</span>);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041dQb.png" alt="25041dQb.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgffdd271" class="outline-4">
+<h4 id="orgffdd271"><span class="section-number-4">1.1.5</span> plot the predict data points of training and testing</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Similar to the estimators for classification in the previous notebook, we use
+the predict method to predict the target variable. And we expect these predicted
+values to fall onto the line that we plotted previously:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- get the predict labels</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">It's obviously that the predict value is on the line.</span>
+
+<span class="org-variable-name">y_pred_train</span> = regressor.predict(X_train)
+
+plt.plot(X_train, y_train, <span class="org-string">'o'</span>, label=<span class="org-string">"data"</span>)
+plt.plot(X_train, y_pred_train, <span class="org-string">'o'</span>, label=<span class="org-string">"prediction"</span>)
+plt.plot([X.<span class="org-builtin">min</span>(), X.<span class="org-builtin">max</span>()], [min_pt, max_pt], label=<span class="org-string">'fit'</span>)
+plt.legend(loc=<span class="org-string">'best'</span>)
+
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.legend.Legend at 0x7f9c4a74dbe0&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/25041qah.png" alt="25041qah.png" />
+</p>
+</div>
+
+<p>
+As we can see in the plot above, the line is able to capture the general slope
+of the data, but not many details.
+</p>
+
+<p>
+Next, let's try the test set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">y_pred_test</span> = regressor.predict(X_test)
+
+plt.plot(X_test, y_test, <span class="org-string">'o'</span>, label=<span class="org-string">"data"</span>)
+plt.plot(X_test, y_pred_test, <span class="org-string">'o'</span>, label=<span class="org-string">"prediction"</span>)
+plt.plot([X.<span class="org-builtin">min</span>(), X.<span class="org-builtin">max</span>()], [min_pt, max_pt], label=<span class="org-string">'fit'</span>)
+plt.legend(loc=<span class="org-string">'best'</span>);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/250413kn.png" alt="250413kn.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org70bacfe" class="outline-4">
+<h4 id="org70bacfe"><span class="section-number-4">1.1.6</span> evaluate the MSE-score of prediction</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<p>
+Again, scikit-learn provides an easy way to evaluate the prediction
+quantitatively using the score method. For regression tasks, this is the R2
+score. Another popular way would be the <code>Mean Squared Error (MSE)</code>. As its name
+implies, the MSE is simply the average squared difference over the predicted and
+actual target values
+</p>
+
+<p>
+\(MSE = \frac{1}{n} \sum_{i=1}^{n} (\text{predicted}_i - \text{true}_i)^2\)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">regressor.score(X_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.79943214050796851
+
+</pre>
+
+<p>
+EXERCISE: Add a feature containing sin(4x) to X and redo the fit. Visualize the
+predictions with this new richer, yet linear, model.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgdda46be" class="outline-3">
+<h3 id="orgdda46be"><span class="section-number-3">1.2</span> change to a more complex model: KNeighborsRegression</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+As for classification, we can also use a <code>neighbor based method for regression</code>.
+We can simply take the output of the nearest point, or we could average several
+nearest points. This method is less popular for regression than for
+classification, but still a good baseline.
+</p>
+</div>
+
+
+<div id="orge66e66f" class="outline-4">
+<h4 id="orge66e66f"><span class="section-number-4">1.2.1</span> get the ML model</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.neighbors <span class="org-keyword">import</span> KNeighborsRegressor
+<span class="org-variable-name">kneighbor_regression</span> = KNeighborsRegressor(n_neighbors=<span class="org-highlight-numbers-number">1</span>)
+kneighbor_regression.fit(X_train, y_train)
+
+</pre>
+</div>
+
+<pre class="example">
+KNeighborsRegressor(algorithm='auto', leaf_size=30, metric='minkowski',
+metric_params=None, n_jobs=1, n_neighbors=1, p=2,
+weights='uniform')
+</pre>
+</div>
+</div>
+
+<div id="orgafa96bd" class="outline-4">
+<h4 id="orgafa96bd"><span class="section-number-4">1.2.2</span> perfectly correct prediction for training dataset</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Again, let us look at the behavior on training and test set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">y_pred_train</span> = kneighbor_regression.predict(X_train)
+plt.plot(X_train, y_train, <span class="org-string">'o'</span>, label=<span class="org-string">"data"</span>, markersize=<span class="org-highlight-numbers-number">10</span>)
+plt.plot(X_train, y_pred_train, <span class="org-string">'s'</span>, label=<span class="org-string">"prediction"</span>, markersize=<span class="org-highlight-numbers-number">4</span>)
+plt.legend(loc=<span class="org-string">'best'</span>);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041Evt.png" alt="25041Evt.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb66798c" class="outline-4">
+<h4 id="orgb66798c"><span class="section-number-4">1.2.3</span> the score of prediction on testing dataset</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+On the training set, we do a perfect job: each point is its own nearest
+neighbor!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">y_pred_test</span> = kneighbor_regression.predict(X_test)
+plt.plot(X_test, y_test, <span class="org-string">'o'</span>, label=<span class="org-string">"data"</span>, markersize=<span class="org-highlight-numbers-number">8</span>)
+plt.plot(X_test, y_pred_test, <span class="org-string">'s'</span>, label=<span class="org-string">"prediction"</span>, markersize=<span class="org-highlight-numbers-number">4</span>)
+plt.legend(loc=<span class="org-string">'best'</span>);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041R5z.png" alt="25041R5z.png" />
+</p>
+</div>
+
+<p>
+On the test set, we also do a better job of capturing the variation, but our
+estimates look much messier than before. Let us look at the R2 score:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">kneighbor_regression.score(X_test, y_test)
+
+</pre>
+</div>
+
+<pre class="example">
+0.91662930224679484
+
+</pre>
+
+<blockquote>
+<p>
+UNDERFITTING: Much better than before! Here, the linear model(linear regression)
+was not a good fit for our problem; it was <b>lacking in complexity</b> and thus
+under-fit our data.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org751480b" class="outline-2">
+<h2 id="org751480b"><span class="section-number-2">2</span> EXERCISE</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EXERCISE: Compare the KNeighborsRegressor and LinearRegression on the boston
+housing dataset. You can load the dataset using <code>sklearn.datasets.load_boston</code>.
+You can learn about the dataset by reading the DESCR attribute.
+</p>
+</div>
+</div>
+
+<div id="org4021ae2" class="outline-2">
+<h2 id="org4021ae2"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org6574ed2" class="outline-3">
+<h3 id="org6574ed2"><span class="section-number-3">3.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="org269fc10" class="outline-4">
+<h4 id="org269fc10"><span class="section-number-4">3.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

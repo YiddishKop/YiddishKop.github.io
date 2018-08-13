@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-24-2 Ensemble Learning</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-24-2 Ensemble Learning</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbe5fc82">1. Ensemble Learning</a>
+<ul>
+<li><a href="#orge6a0b66">1.1. Framework of Ensemble</a></li>
+<li><a href="#org53f9dbb">1.2. Ensemble: Bagging</a></li>
+<li><a href="#org29fd652">1.3. Ensemble: Boosting</a>
+<ul>
+<li><a href="#org125fa7f">1.3.1. Framework of Boosting</a></li>
+<li><a href="#orga09f26f">1.3.2. How to obtain different classifiers</a></li>
+<li><a href="#orge6eb255">1.3.3. Idea of Adaboost</a></li>
+<li><a href="#orge1248d5">1.3.4. How to re-weighting u1</a></li>
+<li><a href="#org353bda2">1.3.5. Algo for AdaBoost</a></li>
+<li><a href="#org8b3d78b">1.3.6. Toy Example</a></li>
+<li><a href="#org7c81c96">1.3.7. Math background of Adaboost</a></li>
+<li><a href="#org9bd2a77">1.3.8. 奇怪的现象</a></li>
+<li><a href="#orgf60798c">1.3.9. Boosting and Bagging</a></li>
+<li><a href="#orgbacab9c">1.3.10. General formulation of Boosting</a></li>
+<li><a href="#org282a3f4">1.3.11. Gradient Boosting</a></li>
+<li><a href="#org920e057">1.3.12. ft 应该是多少</a></li>
+<li><a href="#orgaf4bcf3">1.3.13. αt 应该是多少</a></li>
+<li><a href="#org5d2ada4">1.3.14. Cool Demo</a></li>
+</ul>
+</li>
+<li><a href="#org7aaa354">1.4. Ensemble: stacking</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgbe5fc82" class="outline-2">
+<h2 id="orgbe5fc82"><span class="section-number-2">1</span> Ensemble Learning</h2>
+<div class="outline-text-2" id="text-1">
+<pre class="example">
+Introduction
+- We are almost at the end of the semester/final competition.
+- https://inclass.kaggle.com/c/ml2016-cyber-security-attack-defender/leaderboard
+- https://www.kaggle.com/c/outbrain-click-prediction/leaderboard
+- https://www.kaggle.com/c/transfer-learning-on-stack-exchange-tags/leaderboard
+- You already developed some algorithms and codes. Lazy to modify them.
+- Ensemble: improving your machine with little modification
+</pre>
+</div>
+
+<div id="orge6a0b66" class="outline-3">
+<h3 id="orge6a0b66"><span class="section-number-3">1.1</span> Framework of Ensemble</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+战法牧，必须每一个都不一样。
+</p>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-36-10.png" alt="screenshot_2017-06-19_10-36-10.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org53f9dbb" class="outline-3">
+<h3 id="org53f9dbb"><span class="section-number-3">1.2</span> Ensemble: Bagging</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-37-43.png" alt="screenshot_2017-06-19_10-37-43.png" />
+</p>
+</div>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_10-38-48.png" alt="screenshot_2017-06-19_10-38-48.png" />
+之间讲过 where error come from:
+</p>
+<ol class="org-ol">
+<li>bias</li>
+<li>variance</li>
+</ol>
+
+<pre class="example">
+simple model: big bias, small variance
+complex model : small bias, big variance
+</pre>
+
+<pre class="example">
+   我们可以通过把 [many complex models] 的结果 *平均* 起来，获得 [small variance]
+   这样可以提高泛化能力（generalization）
+</pre>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-44-07.png" alt="screenshot_2017-06-19_10-44-07.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-44-31.png" alt="screenshot_2017-06-19_10-44-31.png" />
+</p>
+</div>
+
+<pre class="example">
+regression     -&gt; average
+classification -&gt; voting
+只有当单个模型的能力很强，很容易 overfitting 的时候 Bagging
+才是有帮助的。
+
+[注意] NN 是很不容易 overfitting
+[注意] DT 是  很容易 overfitting
+</pre>
+
+<p>
+Decision Tree
+</p>
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_10-47-24.png" alt="screenshot_2017-06-19_10-47-24.png" />
+<b>DT 不仅仅是只能切水平 or 垂直的线，可以切很复杂的线</b>
+</p>
+<pre class="example">
+但是 DT 在实际使用的时候有很多参数需要使用启发式方法 Heuristic 来解决：
+
+&gt;&gt;&gt; Heuristic
+-----------------------
+1. num of branches
+2. branching criteria
+3. termination criteria
+4. base hypothesis
+-----------------------
+</pre>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_10-54-03.png" alt="screenshot_2017-06-19_10-54-03.png" />
+用 DT 剪影出初音未来
+<a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2015_2/theano/miku">http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2015_2/theano/miku</a>
+(1st column: x, 2nd column: y, 3rd column: output (1 or 0) )
+</p>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_10-55-28.png" alt="screenshot_2017-06-19_10-55-28.png" />
+深度为 20 的 DT 就完美了
+</p>
+
+<p>
+DT 是很容易做到 error = 0% 的效果。
+</p>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-56-46.png" alt="screenshot_2017-06-19_10-56-46.png" />
+</p>
+</div>
+
+<pre class="example">
+为了解决 DT 太容易 overfitting 的问题，用 Bagging
+&gt;&gt;&gt; RF = Bagging(DTs)
+-----------------------------------------
+1. Resampling training data
+2. Randomly restrict features
+3. Randomly restrict questions
+以此保证每棵树 data,feature,question 都不一样。
+-----------------------------------------
+</pre>
+
+<pre class="example">
+- Decision tree:
+- Easy to achieve 0% error rate on training data
+- If each training example has its own leaf
+- Random forest: Bagging of decision tree
+- Resampling training data is not sufficient
+- Randomly restrict the features/questions used in each split
+- Out-of-bag validation for bagging
+- Using RF = f2+f4 to test x1
+- Using RF = f2+f3 to test x2   .| Out-of-bag (OOB) error:
+- Using RF = f1+f4 to test x3   .| Good error estimation
+- Using RF = f1+f3 to test x4   .| of testing set
+</pre>
+
+<p>
+如果用 out-of-bag 方法验证的话，就不需要再切出额外的 validation set
+</p>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-55-28.png" alt="screenshot_2017-06-19_10-55-28.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_11-04-34.png" alt="screenshot_2017-06-19_11-04-34.png" />
+</p>
+</div>
+
+<pre class="example">
+注意:
+Bagging 的目标并不是让你在 training data 上的表现得到提升，他只是提升 generalization 的
+'让你在 training data 上的表现得到提升' 这件事情是由每一个 DT 决定的。
+
+eg, Depth = 5 的 DT 无法 fit 初音，Bagging 很多 5-depth DT 变成 RF 之后还是无法 fit.
+</pre>
+
+<pre class="example">
+
+: | Bagging-num of DT ↑  | variance-error ↓  | smoothness ↑  | overfitting ↓  |
+: |                      | bias-error =      | fittness =    |                |
+: |----------------------+-------------------+---------------+----------------|
+: | RF-num of DT ↑       | variance-error ↓  | smoothness ↑  | overfitting ↓  |
+: |                      | bias-error =      | fittness =    |                |
+: |----------------------+-------------------+---------------+----------------|
+: | DT-depth ↑           | variance-error ↑  | smoothness =  | overfitting ↑  |
+: |                      | bias-error =      | fittness ↑    |                |
+
+</pre>
+
+<p>
+Bagging 100 棵 DT 得到的函数的图像，对比 1 棵 DT 的函数的图像是【更平滑】的。
+</p>
+
+<pre class="example">
+总结 Bagging 只是提升 smoothness, 不提升 fitness
+
+</pre>
+</div>
+</div>
+
+<div id="org29fd652" class="outline-3">
+<h3 id="org29fd652"><span class="section-number-3">1.3</span> Ensemble: Boosting</h3>
+<div class="outline-text-3" id="text-1-3">
+<pre class="example">
+Improving Weak Classifiers
+Boosting 的目标跟 Bagging 是【相反的】
+Bagging 的目标是： 维持 fitness, 提升函数 smoothness, 维持 bias-error, 降低 variance-error, 降低 overfitting
+Bagging : parallel and independent
+Boosting : sequentially
+</pre>
+</div>
+
+<div id="org125fa7f" class="outline-4">
+<h4 id="org125fa7f"><span class="section-number-4">1.3.1</span> Framework of Boosting</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_11-57-13.png" alt="screenshot_2017-06-19_11-57-13.png" />
+Boosting 的框架是一种【不断补强】的框架，这就要求
+</p>
+<ol class="org-ol">
+<li>f is diversity</li>
+<li>framework is sequencial</li>
+</ol>
+</div>
+</div>
+
+<div id="orga09f26f" class="outline-4">
+<h4 id="orga09f26f"><span class="section-number-4">1.3.2</span> How to obtain different classifiers</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<pre class="example">
+为了保证获取到不同的分类器，可以用以下措施：
+1. 从【数据集】中放回取样形成新的子数据集用来训练不同的分类器
+2. 给不同的【数据点】以不同的权重－－相当于【模拟其出现次数】，0.4 就是这个点出现 0.4 次
+   2 就是这个点出现 2 次。这样不同的点不同的权重，就可以获得不同的分类器。
+   那么新的数据点的表达方式就从 (x1,y1) ---&gt; (x1,y1,u1)
+   其实改变数据点的权重就相当于改变其出现次数 ---&gt; 相当于改变数据集的 distribution_
+3. 2 中会产生不同的 loss-fn, 因为每个点出现次数不同了，所以 loss-fn 计算所有点出
+   错之和，也应该根据这个点【出现次数】来相应增加他 error 的比重
+
+</pre>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_11-59-56.png" alt="screenshot_2017-06-19_11-59-56.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orge6eb255" class="outline-4">
+<h4 id="orge6eb255"><span class="section-number-4">1.3.3</span> Idea of Adaboost</h4>
+<div class="outline-text-4" id="text-1-3-3">
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-11-27.png" alt="screenshot_2017-06-19_12-11-27.png" />
+</p>
+</div>
+
+<pre class="example">
+&gt;&gt;&gt; 如何产生【互补】的效果
+让 f2 的训练集是 f1 没有看过的并且在 f1 上表现很差的数据
+
+&gt;&gt;&gt; 如何找到让 f1 表现很差的数据
+调整 f1 的训练集数据点的 weight: u1 --&gt; u2, 用 u2 去训练 f2.
+ppt 上 u_1^n : 第 '1' 个分类器的训练集中的第 'n' 个 data
+
+&gt;&gt;&gt; 新的衡量分类器在某个数据集表现好坏的标准：ε
+ε1 = 1 号分类器有错的数据点的 weight 之和 / 1 号分类器所有的数据点的 weight 之和
+ε1 总是 &lt; 0.5 的，可以保证这一点，为甚么呢？ 如果他大于 0.5 我就把他贰元分类的输出结果
+反过来，就保证他又是 &lt; 0.5 的了。
+
+目标是，让 u2 在 1 号分类器上的 ε = 0.5
+(刚才分析过 ε 永远 &lt;= 0.5)取其最差情况就是 0.5, 接近 random -- 瞎猜。
+&gt;&gt;&gt; 如何调整 u1 成 u2 呢？
+u2 = 让 u1 中做错的数据权重变大，u1 中做对的数据权重变小
+u1 right: u2 &lt;- u1*d1
+u1 wrong: u2 &lt;- u1/d1
+d1 = sqrt((1-ε1)/ε1)
+
+</pre>
+</div>
+</div>
+<div id="orge1248d5" class="outline-4">
+<h4 id="orge1248d5"><span class="section-number-4">1.3.4</span> How to re-weighting u1</h4>
+<div class="outline-text-4" id="text-1-3-4">
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-27-50.png" alt="screenshot_2017-06-19_12-27-50.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-28-52.png" alt="screenshot_2017-06-19_12-28-52.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-34-03.png" alt="screenshot_2017-06-19_12-34-03.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-36-04.png" alt="screenshot_2017-06-19_12-36-04.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org353bda2" class="outline-4">
+<h4 id="org353bda2"><span class="section-number-4">1.3.5</span> Algo for AdaBoost</h4>
+<div class="outline-text-4" id="text-1-3-5">
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-39-30.png" alt="screenshot_2017-06-19_12-39-30.png" />
+</p>
+</div>
+
+<p>
+T: 找 T 个弱鸡分类器
+</p>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-43-28.png" alt="screenshot_2017-06-19_12-43-28.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_12-44-54.png" alt="screenshot_2017-06-19_12-44-54.png" />
+</p>
+</div>
+
+<p>
+如何整合这个 T 个分类器呢？民主政治：每人投一票（分类器的权重），然后加总计算，看【加总之后结果的正负号】就可以得到贰元结果。精英政治：每个人按照自己的错误率的某个函数 αt 来给不同的票数，余同。
+</p>
+</div>
+</div>
+
+
+<div id="org8b3d78b" class="outline-4">
+<h4 id="org8b3d78b"><span class="section-number-4">1.3.6</span> Toy Example</h4>
+<div class="outline-text-4" id="text-1-3-6">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_12-53-28.png" alt="screenshot_2017-06-19_12-53-28.png" />
+改变 weight 其实就相当于 改变出现次数，也就相当于改变分布（distribution）
+</p>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-34-13.png" alt="screenshot_2017-06-19_13-34-13.png" />
+注意每次搞出一个 f ,都要记录下其对应 α，他会是 f 的权重，最后总和所有 f 的时候，要用到。
+</p>
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_13-35-16.png" alt="screenshot_2017-06-19_13-35-16.png" />
+</p>
+</div>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-36-28.png" alt="screenshot_2017-06-19_13-36-28.png" />
+三个 f 把整个平面分成 6 块，每一块的判定结果，都是三个 f 的输出的权重和的符号
+</p>
+</div>
+</div>
+
+
+<div id="org7c81c96" class="outline-4">
+<h4 id="org7c81c96"><span class="section-number-4">1.3.7</span> Math background of Adaboost</h4>
+<div class="outline-text-4" id="text-1-3-7">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-39-40.png" alt="screenshot_2017-06-19_13-39-40.png" />
+As we have more and more ft (T increases), H(x) achieves smaller
+and smaller error rate on training data.
+证明：num of ft ^^^ ===&gt; error-rate of H(x) ↓
+</p>
+
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-41-53.png" alt="screenshot_2017-06-19_13-41-53.png" />
+绿色式子有一个 upbound 也就是蓝色划线式子
+</p>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-44-08.png" alt="screenshot_2017-06-19_13-44-08.png" />
+如果能证明 Zt+1 随着 t 越来越大，他越来越小的话，就可以证明这个 error-rate 的 upbound 越来越小。
+</p>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_13-44-35.png" alt="screenshot_2017-06-19_13-44-35.png" />
+随着 error-rate 的 upbound 越来越小，error-rate 最终就会变成 0
+</p>
+
+<pre class="example">
+注意： 我们可以 boosting weak classifiers
+我们能否 boosting a boosted weak classifier 么？
+很显然，不行，boosting 是通过不断更新每个样本点的权重 u 来做的。
+而更新权重 ul &lt;- ul-1*d or ul &lt;- ul-1/d
+d = sqrt((1-ε)/ε）
+boosting weak classifier 本身就是 error-rate = 0
+嵌套 boost, 就会让 d 变成 无穷大， 所以 boosting 的对象只能是 weak classifier
+</pre>
+</div>
+</div>
+
+
+
+<div id="org9bd2a77" class="outline-4">
+<h4 id="org9bd2a77"><span class="section-number-4">1.3.8</span> 奇怪的现象</h4>
+<div class="outline-text-4" id="text-1-3-8">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_15-19-30.png" alt="screenshot_2017-06-19_15-19-30.png" />
+boosting 5 个 classifier 已经让 error-rate 为 0 了。
+boosting &gt;5 个 classifier 会让 margin 越来越大。也就是 adaboost 即使在 error-rate 为 0 时，还是会使劲让
+margin 更大。
+</p>
+
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_15-20-35.png" alt="screenshot_2017-06-19_15-20-35.png" />
+Adaboost 虽然没有明确的最小化某个函数，但是他确实让 upbound 这个表达式越来越小。
+</p>
+</div>
+</div>
+
+<div id="orgf60798c" class="outline-4">
+<h4 id="orgf60798c"><span class="section-number-4">1.3.9</span> Boosting and Bagging</h4>
+<div class="outline-text-4" id="text-1-3-9">
+<p>
+Bagging  -&gt; random forest
+Boosting -&gt; Adaboost
+</p>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_10-55-28.png" alt="screenshot_2017-06-19_10-55-28.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_11-04-34.png" alt="screenshot_2017-06-19_11-04-34.png" />
+</p>
+</div>
+<p>
+s<img src="Ensemble Learning/screenshot_2017-06-19_15-26-07.png" alt="screenshot_2017-06-19_15-26-07.png" />
+可以看到：
+</p>
+
+<pre class="example">
+&gt;&gt;&gt; Bagging and Boosting
+---------------------------------------------------------------------------
+Bagging 只是降低 overfitting 增加函数 smoothness, Bagging 之后的模型的能力没有增强
+Boosting 没有增加函数 smoothness, 但是 Boosting 之后模型的能力却加强了
+这也符合 Boosting 的特点－－所有的 classifer 都是互补的
+---------------------------------------------------------------------------
+</pre>
+
+<pre class="example">
+&gt;&gt;&gt; Bagging
+. | Bagging-num of DT ↑  | variance-error ↓  | smoothness ↑  | overfitting ↓     |
+. |                      | bias-error =      | fittness =    | power of model =  |
+. |----------------------+-------------------+---------------+-------------------|
+. | RF-num of DT ↑       | variance-error ↓  | smoothness ↑  | overfitting ↓     |
+. |                      | bias-error =      | fittness =    | power of model =  |
+. |----------------------+-------------------+---------------+-------------------|
+. | DT-depth ↑           | variance-error ↑  | smoothness =  | overfitting ↑     |
+. |                      | bias-error =      | fittness ↑    | power of model ↑  |
+</pre>
+
+
+<pre class="example">
+&gt;&gt;&gt; Boosting
+
+. | Boosting-num of f ↑  | variance-error = | smoothness ↑  | overfitting ↑     |
+. |                      | bias-error ↓     | fittness ↑    | power of model ↑  |
+. |----------------------+------------------+---------------+-------------------|
+. | Adaboost-num of f ↑  | variance-error = | smoothness ↑  | overfitting ↑     |
+. |                      | bias-error ↓     | fittness ↑    | power of model ↑  |
+. |----------------------+------------------+---------------+-------------------|
+. | power of f =         | variance-error = | smoothness =  | overfitting =     |
+. |                      | bias-error =     | fittness =    | power of model =  |
+
+</pre>
+</div>
+</div>
+
+
+<div id="orgbacab9c" class="outline-4">
+<h4 id="orgbacab9c"><span class="section-number-4">1.3.10</span> General formulation of Boosting</h4>
+<div class="outline-text-4" id="text-1-3-10">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_15-44-02.png" alt="screenshot_2017-06-19_15-44-02.png" />
+看似单个 classifier 没有 loss-fn, 但是整体看统合后的模型 g(x) 是有 loss-fn 的。定这个 loss-fn 可以自主定义。比如这里使用 Σexp(-y<sup>*</sup>g(x))
+</p>
+</div>
+</div>
+
+<div id="org282a3f4" class="outline-4">
+<h4 id="org282a3f4"><span class="section-number-4">1.3.11</span> Gradient Boosting</h4>
+<div class="outline-text-4" id="text-1-3-11">
+<p>
+<img src="Ensemble Learning/screenshot_2017-06-19_15-49-58.png" alt="screenshot_2017-06-19_15-49-58.png" />
+因为之前通过推导已经得到过 gt 与 gt-1 的关系，是一种类似递归的关系，而回忆 GD 是如何优化 w 的，发现 GD 方法最后给出的表达式，也是这样的关系。所以，只要这两项（红方框）是方向相同的即可。
+</p>
+</div>
+</div>
+<div id="org920e057" class="outline-4">
+<h4 id="org920e057"><span class="section-number-4">1.3.12</span> ft 应该是多少</h4>
+<div class="outline-text-4" id="text-1-3-12">
+<pre class="example">
+那怎么找一个 ft 与 上面那个红方框具有 same direction 呢？
+把所有的 ft 与 所有的 exp 都各自组成向量，同方向就代表我希望
+他们两个向量的内积越大越好，内积展开出来就是
+Σexp(...)(y)ft
+maximize 这个和式就代表 尽量让上图两个红方框 具有相同的方向
+
+</pre>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_15-54-27.png" alt="screenshot_2017-06-19_15-54-27.png" />
+</p>
+</div>
+
+<pre class="example">
+    每次做 adaboost 的时候，每次都会给 sample 乘以这样的一个 weight.
+    循环到 t 次时，每一个 smaple 累积下来都扩大了 ∏exp(xxx) 倍了。
+    我们现在要找一个 ft,他能够 minize training data 上的 error.
+    每一个 data 都用这样的 weight(t 次累乘).
+
+    所以你会发现，如果用 Gradient Boosting 的想法，你定义的 loss-fn 就是
+    刚才的 exp(xxx) 的话。你找出来的 ft,他其实就是 adaboost 里面找出来的 ft.
+
+    今天用 Gradient boosting,他是一个更 general 的想法。因为，你可以更改
+    各种不同的 loss-fn.
+
+    从另一个角度可以看出，Adaboost 其实就是在 minized 那个 exp(xxx) 的 loss-fn
+
+</pre>
+</div>
+</div>
+
+
+<div id="orgaf4bcf3" class="outline-4">
+<h4 id="orgaf4bcf3"><span class="section-number-4">1.3.13</span> αt 应该是多少</h4>
+<div class="outline-text-4" id="text-1-3-13">
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_15-48-18.png" alt="screenshot_2017-06-19_15-48-18.png" />
+</p>
+</div>
+
+<pre class="example">
+    利用 Gradient descent 来优化 loss-fn,
+    为了确定 αt,最理想的方法是【穷举】所有可能的取值，看哪个会让 loss-fn
+    最小。 但是既然已经有了 ft,不如直接复用 ft:
+    我就看，固定 ft 的前提下，αt 取什么值可以让 loss-fn 最小。
+
+    解 αt 看哪个 αt 可以让 loss-fn 的微分是 0 即可。
+
+</pre>
+</div>
+</div>
+
+<div id="org5d2ada4" class="outline-4">
+<h4 id="org5d2ada4"><span class="section-number-4">1.3.14</span> Cool Demo</h4>
+<div class="outline-text-4" id="text-1-3-14">
+<ul class="org-ul">
+<li><a href="http://arogozhnikov.github.io/2016/07/05/gradient_boosting_playground.html">http://arogozhnikov.github.io/2016/07/05/gradient_boosting_playground.html</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="org7aaa354" class="outline-3">
+<h3 id="org7aaa354"><span class="section-number-3">1.4</span> Ensemble: stacking</h3>
+<div class="outline-text-3" id="text-1-4">
+<pre class="example">
+Average Vote  : 每人持一票
+Majority Vote : 每人持票数不等
+
+不是人来决定谁持票多少，
+而是机器学习之后决定每个人的持票数目
+
+</pre>
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_16-19-03.png" alt="screenshot_2017-06-19_16-19-03.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Ensemble Learning/screenshot_2017-06-19_16-21-39.png" alt="screenshot_2017-06-19_16-21-39.png" />
+</p>
+</div>
+
+<p>
+把四个人的模型的输出，共同组成一个 4 维度向量－－一个新的样本点，然后输入给一个 classifier 然后根据标签值和误差，学习出每个人的 weight
+</p>
+
+<p>
+但是这种模型，一定要注意： 把 Training Data 分成两份，一个拿来 train 前面的四种模型，一个拿来 train 最后的 'Final Classifier'.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

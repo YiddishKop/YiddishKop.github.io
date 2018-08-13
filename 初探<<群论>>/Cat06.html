@@ -1,0 +1,1326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 06</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 06</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#cat-6.1-functors">Cat 6.1 Functors</a>
+<ul>
+<li><a href="#motivation-from-pattern-to-category-to-functor">Motivation: From pattern to category to Functor</a></li>
+<li><a href="#functors">Functors</a>
+<ul>
+<li><a href="#other-things-should-keepped-in-mind.">3 other things should keepped in mind.</a></li>
+<li><a href="#two-important-definition-of-functor-on-hom-set">Two important definition of functor on hom-set</a></li>
+<li><a href="#two-kinds-of-important-functors">Two kinds of important Functors</a></li>
+</ul>
+</li>
+<li><a href="#application-of-functor-in-programming">application of functor in programming</a>
+<ul>
+<li><a href="#application-1-type-constructor.">application 1 : type constructor.</a></li>
+<li><a href="#application-2-mappings-between-function">application 2 : mappings between function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cat-6.2-functors-in-programming">Cat 6.2 Functors in programming</a>
+<ul>
+<li><a href="#checking-functor-preserving-structure">Checking Functor preserving structure</a>
+<ul>
+<li><a href="#means-replace-with-each-other">"=" means replace with each other</a></li>
+<li><a href="#inline-vs.refactory">inline vs. refactory</a></li>
+<li><a href="#check-functor-preserving-identity">Check Functor preserving identity</a></li>
+<li><a href="#check-functor-preserving-composition">Check Functor preserving composition</a></li>
+<li><a href="#something-about-the-functor-in-haskell">Something about the Functor in Haskell</a></li>
+</ul>
+</li>
+<li><a href="#a-general-functor-in-hasekll-lifting">A general Functor in Hasekll: lifting</a></li>
+<li><a href="#todo"><span class="todo TODO">TODO</span> </a>
+<ul>
+<li><a href="#functor-example1-list-fmap">Functor example1 : List + fmap</a></li>
+<li><a href="#functor-example2-reader-fmap">Functor example2 : Reader + fmap</a></li>
+<li><a href="#pattern-match-in-haskell-and-scala">Pattern match in Haskell and Scala</a></li>
+</ul>
+</li>
+<li><a href="#intuition-functor-is-container">Intuition functor is container</a>
+<ul>
+<li><a href="#function-is-data-data-is-function">Function is Data, Data is Function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org2a17e2f" class="outline-2">
+<h2 id="cat-6.1-functors"><a id="org2a17e2f"></a>Cat 6.1 Functors</h2>
+<div class="outline-text-2" id="text-cat-6.1-functors">
+</div>
+
+<div id="org469cfff" class="outline-3">
+<h3 id="motivation-from-pattern-to-category-to-functor"><a id="org469cfff"></a>Motivation: From pattern to category to Functor</h3>
+<div class="outline-text-3" id="text-motivation-from-pattern-to-category-to-functor">
+<p>
+Functors is really really important, all the previous lecture are the
+introduction to Fuctors.
+</p>
+
+<p>
+Mathmatisian will tell you what's important is natural transformations
+that you need functors in order to define natural transformation.
+</p>
+
+<p>
+<b>What is really universal construction about</b>, it's able to define what
+it means to be like a perfect embodiment of an idea, eg. how do we
+define a product? we have infinite possibilities to define a product,
+how do we pick one. If this product exists, it's actually unique or
+<b>unique up to a unique isomorphism</b>.
+</p>
+
+<p>
+And we have <b>2 types of Universal construction</b> that one for product and
+for Coproduct: projection and injection.
+</p>
+
+<p>
+what is Functor? In mathematics, you have 2 categories, Functor is a
+mapping from one to another. when we talked product and coproduct, I
+used a little loose language about saying, we now have leaned 4 pattern
+for GOOGLE to search: 1. terminal object 2. initial object 3. product 4.
+coproduct
+</p>
+
+<p>
+All your life is doing pattern matching, so you will not protest when we
+refer to it first, but In Category you need first define what is your
+<b>pattern</b> when you want to do pattern matching in a Category, <b>pattern</b>
+has to have a <b>structure</b>. What's "to have a structure" mean? <b>Category</b>
+itself is actually a definition of a <b>structure</b> &#x2014; just combination of
+dots and arrows.
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ul class="org-ul">
+<li>category is a structure</li>
+<li>pattern is a structure</li>
+<li>pattern is category</li>
+</ul>
+</blockquote>
+
+<p>
+Being able to recognize one category(pattern) inside of another category
+is the definition of pattern recognition. and category tell us how to
+formalize patten recognition.
+</p>
+
+<blockquote>
+<p>
+pattern like product and coproduct are just exmaples of limits and
+colimits, which will come in the letter lectures after we introduce
+the natual transformation.
+</p>
+</blockquote>
+
+<p>
+So category to category, by recognition, yes, this is what we want,
+<b>Functors</b>.
+</p>
+
+<p>
+we can think one category as a pattern or model and map it into another
+category and we recognize a match for this model or embed this model
+inside another category.
+</p>
+</div>
+</div>
+
+<div id="org565d1fc" class="outline-3">
+<h3 id="functors"><a id="org565d1fc"></a>Functors</h3>
+<div class="outline-text-3" id="text-functors">
+<p>
+Definition of Functor have layers of clause, do it one by one
+</p>
+
+<p>
+If you map one category to another category, you really do: 1. map
+objects - since objects form a set , so this map is also a mapping of
+sets, what is mapping of set &#x2014; function! functions can be
+non/surjective or non/injective, and <b>all we have known about functions
+can be translated into one part of the definition of the factor</b>
+</p>
+
+<p>
+Mapping preserve structure, sets have no structure(ONLY a bunch of
+elements), no structure at all.
+</p>
+
+<p>
+by the way, because no structure in sets, it's hard to implement set
+from the point of view of computer hardware, because computer hardware
+is actually has structure everywhere. Using structured things to
+represent no-structured thing is hard.
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ul class="org-ul">
+<li>category embodies structure</li>
+<li>set has no structure</li>
+<li>category embodies lack of structure</li>
+</ul>
+</blockquote>
+
+<p>
+<b>How to represent set by category? or same way asking how to implement
+set by category?</b> Discrete category, is a category that has no
+morphism(arrow) other than the identity morphism. because once you have
+arrows you have structure, so we must have a category with no sturcture
+in-side to implement a set.
+</p>
+
+<p>
+we have talked about category of sets, which object is represented by
+set.
+</p>
+
+<p>
+Now, lets take ONLY one set and make it as a category, this can be done
+with discrete category.
+</p>
+
+<p>
+<b>If we want to preserve structure, we must mapping arrows</b>
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ul class="org-ul">
+<li>arrow have structure;</li>
+<li>mapping preserve structure;</li>
+<li>we want to preserve structure;</li>
+<li>we must mapping arrows</li>
+</ul>
+</blockquote>
+
+<p>
+titter :), also we have Hom-set, remember that? Hom-set is set of
+arrows, so mapping between arrows, is mapping between sets, what is
+mapping between sets &#x2014; functions
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ul class="org-ul">
+<li>arrow have structure;</li>
+<li>mapping preserve structure;</li>
+<li>we want to preserve structure;</li>
+<li>we must mapping arrows</li>
+<li>hom-set is set of arrows</li>
+<li>mapping arrows is mapping hom-sets is mapping sets</li>
+<li>mapping between sets is functions</li>
+</ul>
+</blockquote>
+
+<p>
+So, Functor is really a huge potentially number separate functins.
+</p>
+
+<p>
+titter :) again, Now, go on talking about <b>presvering structure</b>, what
+else something related to a structure in category &#x2014; <b>composition</b>!
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ul class="org-ul">
+<li>composition have structure</li>
+<li>want to preserve structure</li>
+<li>mapping preverse structure</li>
+<li>we must mapping composition</li>
+</ul>
+</blockquote>
+
+<p>
+seriously, :| , now the one key important point comes, what is really
+"preverse strcuture" mean? what are functor, what are not functor?
+</p>
+
+<p>
+there so many mappings between one category hom-set to another category
+hom-set, ONLY the mappings between C(a,b) and C(Fa,Fb) who can satisfy:
+</p>
+
+<p>
+<code>F(g*f) = Fg * Ff</code>
+</p>
+
+<p>
+is Functor, and mapping after composition is equall to composition after
+mapping is what we called "<b>preserve the structure</b>".
+</p>
+
+<blockquote>
+<p>
+preserve structure &lt;=&gt; mp after comp = comp after mp
+</p>
+</blockquote>
+
+<p>
+which means that 'F' preserve the composition relation of the orignial
+how-sets.
+</p>
+
+<p>
+seriously, :| again, one more thing &#x2014; identity which is also arrow,
+should be preserve,and the same thing with above:
+</p>
+
+<p>
+if and only if those mappings between C(a,a) and C(Fa,Fa) satisfy:
+</p>
+
+<p>
+<code>Fid_a = id_Fa</code>
+</p>
+
+<p>
+is Functor.
+</p>
+
+<blockquote>
+<p>
+Summarize: Functor is this kind of <b>mapping</b> of objects and morphisms
+that <b>preserve</b> the composition and identity
+</p>
+</blockquote>
+</div>
+
+<div id="orgb118f1b" class="outline-4">
+<h4 id="other-things-should-keepped-in-mind."><a id="orgb118f1b"></a>3 other things should keepped in mind.</h4>
+<div class="outline-text-4" id="text-other-things-should-keepped-in-mind.">
+<p>
+keep in mind that,
+</p>
+
+<ol class="org-ol">
+<li>many morphism in orginal map to one morphism in target category is
+OK. because Functor is mappings, also means that he is functions,
+functions may shrink things, may collapse things, many:1 is function,
+right! it's OK. And any other attricute we talked about functions, is
+also suited for Functors. Functors doesn't have to be surjective or
+injective. But you CAN NOT destroy the connection(arrow) of original
+category.</li>
+
+<li>Functors can collapse the objects, like 30 objects in original but 3
+objects in target category.</li>
+
+<li>EndoFunctor : original Category and target category are <b>same</b> one(no
+reqiurement that they should be different categories)</li>
+</ol>
+</div>
+</div>
+
+<div id="orgec67a99" class="outline-4">
+<h4 id="two-important-definition-of-functor-on-hom-set"><a id="orgec67a99"></a>Two important definition of functor on hom-set</h4>
+<div class="outline-text-4" id="text-two-important-definition-of-functor-on-hom-set">
+<blockquote>
+<p>
+
+</p>
+
+<p>
+#+BEGIN_QUOTE
+  <b>Faithfull Functor</b> is injective on <b>hom-set</b> &lt;&lt; <b>Full Functor</b> is
+  surjective on <b>hom-set</b> &lt;&lt; this two defnition ONLY related to
+  home-set, not objects.
+</p>
+</blockquote>
+<p>
+#+END_QUOTE
+</p>
+</div>
+</div>
+
+<div id="orgbaeb471" class="outline-4">
+<h4 id="two-kinds-of-important-functors"><a id="orgbaeb471"></a>Two kinds of important Functors</h4>
+<div class="outline-text-4" id="text-two-kinds-of-important-functors">
+<ol class="org-ol">
+<li>Picking Functors: A functor just "picking" object from target
+category:</li>
+</ol>
+
+<p>
+arrows in this picture above, is two Functors, keep attention.
+</p>
+
+<p>
+this is something like functions of singleton set
+</p>
+
+<ol class="org-ol">
+<li>Constant Funtors(Δc): All collapse to black hole</li>
+</ol>
+
+<p>
+arrows in this picture above, are Functors, keep attention.
+</p>
+
+<ol class="org-ol">
+<li>EndoFunctor : original Category and target category are <b>same</b> one(no
+reqiurement that they should be different categories) In scala and
+Haskell, Functors are EndoFunctors, because they are all summed to
+ONLY have one category.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="org46374ad" class="outline-3">
+<h3 id="application-of-functor-in-programming"><a id="org46374ad"></a>application of functor in programming</h3>
+<div class="outline-text-3" id="text-application-of-functor-in-programming">
+</div>
+
+<div id="org13f5db5" class="outline-4">
+<h4 id="application-1-type-constructor."><a id="org13f5db5"></a>application 1 : type constructor.</h4>
+<div class="outline-text-4" id="text-application-1-type-constructor.">
+<pre class="example">
+Mabe a
+</pre>
+
+<pre class="example">
+new cate:      Maybe a            Maybe b
+                  ^                   ^ 
+                  .                   . 
+                  .Maybe              .Maybe
+                  .                   . 
+                  .                   . 
+original cate:    a                   b
+</pre>
+
+<p>
+Functor is a mapping between whole types, yes, <b>type constructor</b>.
+</p>
+
+<pre class="example">
+List[A]
+</pre>
+
+<p>
+<b><code>List</code></b> is a Functor, he is a type constructor, which mapping from
+category <b>A</b> to category <b>List[A]</b>
+</p>
+
+<pre class="example">
+Option[A]
+</pre>
+
+<p>
+<b><code>Option</code></b> is a Functor, he is a type constructor, which mapping from
+category <b>A</b> to category <b>Option[A]</b>
+</p>
+
+<p>
+This is only one use of functor, just mapping the objects(type). Functor
+can also mapping morphism
+</p>
+</div>
+</div>
+
+<div id="org4b057c9" class="outline-4">
+<h4 id="application-2-mappings-between-function"><a id="org4b057c9"></a>application 2 : mappings between function</h4>
+<div class="outline-text-4" id="text-application-2-mappings-between-function">
+<p>
+Indeed, functor can be a mapping between (mapping of type) and (mapping
+of type constructor)
+</p>
+
+<pre class="example">
+fmap::(a-&gt;b) -&gt; (Maybe a -&gt; Maybe b)
+</pre>
+
+<pre class="example">
+new cate:       Maybe a ----------&gt;Maybe b
+                   ^        ^          ^ 
+                   .        .          . 
+                   .Maybe   .fmap      .Maybe
+                   .        .          . 
+                   .        .          . 
+original cate:     a ---------------&gt;  b
+</pre>
+
+<p>
+in an abstract way of commutative graph:
+</p>
+
+<p>
+when programming haskell ,we are straying from mathematics. Let's
+<b>define</b> a Functor: the definition below is an abstract Functor, or we
+define the template.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Just</span> a
+<span class="org-haskell-definition">fmap</span> <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b)
+<span class="org-haskell-definition">fmap</span> f <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-definition">fmap</span> f (<span class="org-haskell-constructor">Just</span> x) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> (f x)
+</pre>
+</div>
+
+<p>
+This is a typical way of implementing functors, <b>the functor usually has
+somthing of type <code>a</code> inside</b>, then you can apply this function to the
+inside of of a functor, in a moment I'll talk about this next lecture.
+</p>
+
+<p>
+Instresting, professor ask a question: <code>fmap f Nothing = ?</code> can be
+somthing else other than Nothing? then he says something about the
+polymorphism:
+</p>
+
+<blockquote>
+<p>
+Can it be something "it's Nothing unless A is integer."
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+ad-hot polymorphism: for Integer do one thing, for non-Integer do
+other things.
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+because kinds of polymorphism supported by Haskell is limited, so
+there is more restriction here we can do.
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org421f445" class="outline-2">
+<h2 id="cat-6.2-functors-in-programming"><a id="org421f445"></a>Cat 6.2 Functors in programming</h2>
+<div class="outline-text-2" id="text-cat-6.2-functors-in-programming">
+<p>
+the last episode of previous lecture, we talked about the two important
+use of Functors:mapping obj and mapping functions
+</p>
+
+<p>
+now we must make sure that the Functor should preserve the structure:
+composition and identity
+</p>
+
+<p>
+It's a pity that Haskell compiler CANNOT check this two things, you must
+take a paper and draw some thing to guarantee that.
+</p>
+</div>
+
+<div id="orgbecb62c" class="outline-3">
+<h3 id="checking-functor-preserving-structure"><a id="orgbecb62c"></a>Checking Functor preserving structure</h3>
+<div class="outline-text-3" id="text-checking-functor-preserving-structure">
+<blockquote>
+<p>
+TARGET: [ ] 1. fmap id = id [ ] 2. fmap (g/f) = fmap g / fmap f
+</p>
+</blockquote>
+</div>
+
+<div id="org3da829e" class="outline-4">
+<h4 id="means-replace-with-each-other"><a id="org3da829e"></a>"=" means replace with each other</h4>
+<div class="outline-text-4" id="text-means-replace-with-each-other">
+<p>
+notice that 1st id is the orignial 2nd is for target category, and
+symbol <b>=</b> means <b>equal</b> as it is in math, What is <b>"function equal"</b>
+means, yes it's means that <b>they can replace with each other on two sids
+of "="</b>, when you find somewhere one is called, you can replace directly
+by the other one, means they are actually the same thing.
+</p>
+</div>
+</div>
+
+<div id="org1bd2587" class="outline-4">
+<h4 id="inline-vs.refactory"><a id="org1bd2587"></a>inline vs. refactory</h4>
+<div class="outline-text-4" id="text-inline-vs.refactory">
+<ul class="org-ul">
+<li>professor says that macro in C++ is an example of <b>inline</b>;</li>
+<li>replace equal method between each other <b>refactory</b></li>
+<li>inline and refactory in imperative language is difficult; but in
+functional language is not so annoy</li>
+</ul>
+</div>
+</div>
+
+<div id="org167c05a" class="outline-4">
+<h4 id="check-functor-preserving-identity"><a id="org167c05a"></a>Check Functor preserving identity</h4>
+<div class="outline-text-4" id="text-check-functor-preserving-identity">
+<blockquote>
+<p>
+TARGET: identity [ ] 1. fmap id = id - [ ] 1. fmap id Nothing =
+Nothing - [ ] 2. fmap id (Just x) = Just x [-] 2. fmap (g/f) = fmap g
+/ fmap f
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+PROVE TARGET
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-operator">//</span> fmap is the general name <span class="org-haskell-keyword">of</span> <span class="org-haskell-constructor">Functor</span> <span class="org-haskell-keyword">in</span> <span class="org-haskell-constructor">Haskell</span>
+<span class="org-haskell-operator">//</span> f here is the function <span class="org-haskell-keyword">of</span> original category
+<span class="org-haskell-operator">//</span> we now need to justify the identity<span class="org-haskell-constructor">:</span> fmap id <span class="org-haskell-operator">=</span> id
+<span class="org-haskell-operator">//</span> <span class="org-haskell-keyword">if</span> we want to <span class="org-haskell-keyword">do</span> this, we need to ensure
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">|</span> <span class="org-haskell-constructor">Just</span> a
+<span class="org-haskell-definition">fmap</span> <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b)
+<span class="org-haskell-definition">fmap</span> f <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-definition">fmap</span> f (<span class="org-haskell-constructor">Just</span> x) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> (f x)
+
+<span class="org-haskell-definition">id</span> x <span class="org-haskell-operator">=</span> x
+
+<span class="org-haskell-operator">//</span> also x <span class="org-haskell-operator">=</span> id x
+<span class="org-haskell-operator">//</span> id <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-operator">//</span> fmap f <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+
+<span class="org-haskell-definition">fmap</span> id <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+
+<span class="org-haskell-operator">//</span> fmap id <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span> <span class="org-haskell-operator">=</span> id <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-operator">//</span> fmap id (<span class="org-haskell-constructor">Just</span> x) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span>(id x) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> x
+</pre>
+</div>
+
+<p>
+So you can see that from code block above
+</p>
+
+<blockquote>
+<p>
+TARGET: identity [x] 1. fmap id = id - [x] 1.1 fmap id Nothing =
+Nothing - [x] 1.2 fmap id (Just x) = Just x [ ] 2. fmap (g/f) = fmap g
+/ fmap f
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+tips: keep in mind that, "=" in quotion block above , is as it is in
+mathematic, means equal
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org382ef71" class="outline-4">
+<h4 id="check-functor-preserving-composition"><a id="org382ef71"></a>Check Functor preserving composition</h4>
+<div class="outline-text-4" id="text-check-functor-preserving-composition">
+<p>
+same with above, skipped here. then professor refer to <b>polymorphism</b>
+again, that "you can get ensurement for free of the <b>composition</b> by
+<b>polymorphism</b> in hasekll"
+</p>
+
+<p>
+here are some reference to blogs about <b>profunctor</b>: 1.
+<a href="http://igstan.ro/posts/2013-10-31-contravariant-functors-an-intuition.html">contravariant
+Functors - An Intuition</a> 2.
+<a href="http://igstan.ro/posts/2013-10-31-contravariant-functors-an-intuition.html">profunctor
+and polymorphism</a>
+</p>
+</div>
+</div>
+
+<div id="orgdbd0f17" class="outline-4">
+<h4 id="something-about-the-functor-in-haskell"><a id="orgdbd0f17"></a>Something about the Functor in Haskell</h4>
+<div class="outline-text-4" id="text-something-about-the-functor-in-haskell">
+<p>
+when you define a Functor in Haskell, you think you truely get a
+functor, but you will find not that. Because in the next lecture you
+will most of the stuff you come up with is automatically a functor, like
+algebraic datatypes, it's automatically a functor.
+</p>
+
+<p>
+Functor have his laws(preserve structure:mapping objects/functions, keep
+the composition and identity). While monad also has its own laws.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org7ad2d70" class="outline-3">
+<h3 id="a-general-functor-in-hasekll-lifting"><a id="org7ad2d70"></a>A general Functor in Hasekll: lifting</h3>
+<div class="outline-text-3" id="text-a-general-functor-in-hasekll-lifting">
+<p>
+why called lifting ,a picture to illustrate this, it's just some like
+higher-level of obstraction.
+</p>
+
+<p>
+<code>fmap</code> shown above in code block is a <b>higher order polymorphic
+function</b>: it takes a function and produce another function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">fmap</span> <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (<span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Maybe</span> b)
+</pre>
+</div>
+
+<p>
+You'll see a different kind of polymorphism in which depending on what
+your parameters is, in this case the functor, you will get a different
+implementation of a function &#x2014; fmap in this case.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">clss</span> <span class="org-haskell-constructor">Eq</span> a <span class="org-haskell-keyword">where</span>
+  (<span class="org-haskell-operator">==</span>) <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Bool</span>
+</pre>
+</div>
+
+<p>
+This is an ad-hoc polymorphism, which is parameterized here by "a" type,
+but with functors we have a slightly bigger problem, because functors
+are not parameterized by types, functors are actually type constructors.
+</p>
+
+<p>
+If we want to define a functor we have to define it as a class, give the
+name( we don't need to specify it's a type or a type constructors)
+because the next line we'll show the proper code, and compiler will know
+that.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-keyword">where</span>
+  fmap <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (fa<span class="org-haskell-operator">-&gt;</span>fb) <span class="org-haskell-operator">//</span> by this line, compiler will know f is a functor(<span class="org-haskell-keyword">type</span> constructor)
+</pre>
+</div>
+
+<p>
+In <code>fa-&gt;fb</code>, a is a type, then f can take type as parameter, so f is a
+functor(type constructor). And <code>fmap:: (a-&gt;b)</code> will imply that this
+<b>fmap</b> is a <b>polymorphic function</b> because it works for any way a and b.
+By the way this is slightly like the Function1 class in scala,and when
+we extends from Function1:
+</p>
+</div>
+</div>
+
+<div id="org99e3000" class="outline-3">
+<h3 id="todo"><a id="org99e3000"></a><span class="todo TODO">TODO</span> </h3>
+<div class="outline-text-3" id="text-todo">
+<p>
+<b>In programming, what is a functor: it's just a type constructor that
+support fmap.</b>
+</p>
+</div>
+
+<div id="org1932e15" class="outline-4">
+<h4 id="functor-example1-list-fmap"><a id="org1932e15"></a>Functor example1 : List + fmap</h4>
+<div class="outline-text-4" id="text-functor-example1-list-fmap">
+<p>
+In this sense, many <code>collection</code> with <code>map</code> function build in as API is
+a <b>Functor</b>:
+</p>
+
+<pre class="example">
+val c = List(1,2,3,4)
+c.Map(a =&gt; a + 10) // List(11,12,13,14)
+</pre>
+
+<p>
+let's go back to the code about a list, of previous lecture:
+</p>
+
+<p>
+<code>data List a = Nil | cons a (List a)</code> It is so <b>self-explanatory</b> , and
+give a <b>recursive</b> definition of <code>List</code> &gt; - "what is a List" &gt; - "it's
+empty or concate a value with a List"
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-keyword">where</span> <span class="org-haskell-operator">//</span> abstract <span class="org-haskell-keyword">class</span>
+  fmap <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (fa<span class="org-haskell-operator">-&gt;</span>fb) <span class="org-haskell-operator">//</span> here f is a <span class="org-haskell-keyword">type</span> constructor
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">|</span> cons a (<span class="org-haskell-constructor">List</span> a) <span class="org-haskell-operator">//</span> <span class="org-haskell-constructor">List</span> is a <span class="org-haskell-keyword">type</span> constructor
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">List</span> <span class="org-haskell-keyword">where</span>
+  fmap g <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span>
+  fmap g (cons head tail) <span class="org-haskell-operator">=</span> cons (g head) (fmap g tail) <span class="org-haskell-operator">//</span> funny
+</pre>
+</div>
+
+<p>
+last 3 line of code is just the <b>pattern match</b> function, something like
+scala <b>case match clause</b>. So, you can see somthing like
+<code>cons head tail</code>. And, <code>head</code> and <code>tail</code> are two variables used in
+pattern match clause, will be directly assign proper value when matched.
+</p>
+
+<pre class="example">
+def fn(lst: List[Int]) = lst match{
+  case Nil =&gt; println("empty")
+  case head :: tail =&gt; println("head: " + head + ", tail: " + tail)
+}
+</pre>
+
+<p>
+Note that , <code>fmap g tail</code> is a recursive funtion using again <code>fmap g</code>
+</p>
+
+<p>
+this code above is the map API of List, and map of List is just one
+implementation of fmap.
+</p>
+</div>
+</div>
+
+<div id="org96b6337" class="outline-4">
+<h4 id="functor-example2-reader-fmap"><a id="org96b6337"></a>Functor example2 : Reader + fmap</h4>
+<div class="outline-text-4" id="text-functor-example2-reader-fmap">
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Reader</span> r a <span class="org-haskell-operator">=</span> r<span class="org-haskell-operator">-&gt;</span>a
+</pre>
+</div>
+
+<p>
+type construnctor can be an <b>"Symbol"</b> itself: &gt; 1. List[Int]: List
+construct List[Int] from Int &gt; 2. Option[Int]: Option construct
+Option[Int] from Int &gt; 3. Seq[Int]: Seq construct Seq[Int] from Int
+</p>
+
+<p>
+<code>List</code>,=Option=,=Seq=, are all <b>Characters</b>; but type constructor also
+can be "Symbol", like <code>-&gt;</code>,==&gt;=,=::=,=+:=, and even more we use
+<b>char-type-constructor</b> as <b>prefix</b>, here we can use
+<b>symbol-type-constructor</b> as <b>infix</b>:
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ol class="org-ol">
+<li>=&gt;[Int,Int]: =&gt; constuct Function[Int,Int] from Int,Int</li>
+<li>::[Int,List[Int]]: :: construct List[Int] from Int,List[Int]</li>
+<li>+:[Int,Seq[Int]]: +: construct Seq[Int] from Int,Seq[Int]</li>
+</ol>
+</blockquote>
+
+<p>
+another problem, <b>we never talk about two parameter type constuctor</b>,
+yes,but we can just fix one type and say we only care about the second,
+like we can do that in partial applied function.
+</p>
+
+<blockquote>
+<p>
+
+</p>
+
+<ol class="org-ol">
+<li>Int =&gt; : is a type constructor on Int</li>
+<li>Int :: : is a type constructor on List[Int]</li>
+<li>Int +: : is a type constructor on Seq[Int]</li>
+</ol>
+</blockquote>
+
+<pre class="example">
+(a-&gt;b) -&gt; (Fa-&gt;Fb)
+is same with
+((a-&gt;b) -&gt; Fa) -&gt; Fb
+F &lt;=&gt; r-&gt;
+(a-&gt;b) -&gt; (r-&gt;a) -&gt; (r-&gt;b)
+</pre>
+
+<p>
+In scala, Function1[+A,-B] is just a two parameter type constructor, it
+will reduce to one type constructor when fix first parameter:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">haskell</th>
+<th scope="col" class="org-left">scala</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">a -&gt; b</td>
+<td class="org-left">Function1[+A,-B]</td>
+</tr>
+
+<tr>
+<td class="org-left">a -&gt; = F</td>
+<td class="org-left">Function1[\_,-B] = F</td>
+</tr>
+
+<tr>
+<td class="org-left">F b</td>
+<td class="org-left">F[-B]</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+then <code>Reader r</code> is our Functor.
+</p>
+
+<p>
+This is like curry or partial applied function, you have 2
+arguments(must be 2 parameter list in scala),you fix one argument and it
+becomes a function of one argument here.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-keyword">where</span> <span class="org-haskell-operator">//</span> abstract <span class="org-haskell-keyword">class</span>
+  fmap <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (fa<span class="org-haskell-operator">-&gt;</span>fb) <span class="org-haskell-operator">//</span> here f is a <span class="org-haskell-keyword">type</span> constructor
+
+<span class="org-haskell-keyword">type</span> <span class="org-haskell-type">Reader</span> r a <span class="org-haskell-operator">=</span> r <span class="org-haskell-operator">-&gt;</span> a <span class="org-haskell-operator">//</span> 'r <span class="org-haskell-operator">-&gt;</span><span class="org-warning">'</span><span class="org-string"> is a type constructor</span>
+
+<span class="org-haskell-definition">fmap</span> <span class="org-haskell-operator">::</span> (a <span class="org-haskell-operator">-&gt;</span> b) <span class="org-haskell-operator">-&gt;</span> (r<span class="org-haskell-operator">-&gt;</span> a) <span class="org-haskell-operator">-&gt;</span> (r<span class="org-haskell-operator">-&gt;</span> b)
+<span class="org-haskell-operator">//</span> h is (a<span class="org-haskell-operator">-&gt;</span>b); g is (r<span class="org-haskell-operator">-&gt;</span>a)
+<span class="org-haskell-definition">fmap</span> h g <span class="org-haskell-operator">=</span> h <span class="org-haskell-operator">*</span> g <span class="org-haskell-operator">=</span> (<span class="org-haskell-operator">*</span>) h g <span class="org-haskell-operator">//</span> this you get a function<span class="org-haskell-constructor">:</span> r <span class="org-haskell-operator">-&gt;</span> b
+<span class="org-haskell-operator">//</span> fmap <span class="org-haskell-operator">=</span> <span class="org-haskell-operator">*</span> 
+</pre>
+</div>
+
+<p>
+fmap h g = h * g = (/) h g then fmap = /
+</p>
+
+<p>
+<b>this is function, you only have parameter h and g, so in your function
+body(all things after '=') should use and ONLY use this two parameters.</b>
+</p>
+
+<p>
+you can compare these two Functor
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-keyword">class</span> <span class="org-haskell-type">Functor</span> f <span class="org-haskell-keyword">where</span> <span class="org-haskell-operator">//</span> abstract <span class="org-haskell-keyword">class</span>
+  fmap <span class="org-haskell-operator">::</span> (a<span class="org-haskell-operator">-&gt;</span>b) <span class="org-haskell-operator">-&gt;</span> (fa<span class="org-haskell-operator">-&gt;</span>fb) <span class="org-haskell-operator">//</span> here f is a <span class="org-haskell-keyword">type</span> constructor
+
+<span class="org-haskell-keyword">data</span> <span class="org-haskell-type">List</span> a <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">|</span> cons a (<span class="org-haskell-constructor">List</span> a) <span class="org-haskell-operator">//</span> <span class="org-haskell-constructor">List</span> is a <span class="org-haskell-keyword">type</span> constructor
+
+<span class="org-haskell-keyword">instance</span> <span class="org-haskell-type">Functor</span> <span class="org-haskell-type">List</span> <span class="org-haskell-keyword">where</span>
+  fmap h <span class="org-haskell-constructor">Nil</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nil</span>
+  fmap h (cons head tail) <span class="org-haskell-operator">=</span> cons (h head) (fmap h tail) <span class="org-haskell-operator">//</span> funny
+</pre>
+</div>
+
+<p>
+serious :| , you must keep in mind that when you are ambiguous with code
+above, that is all the chars occur in the codes are type variable,
+<b>don't think them as value</b>, then you can understantd: 1. why <code>r-&gt;b</code> =
+<code>h * g</code> 2. why <code>h (cons head tail)</code> is pattern match.
+</p>
+</div>
+</div>
+
+<div id="org250ff71" class="outline-4">
+<h4 id="pattern-match-in-haskell-and-scala"><a id="org250ff71"></a>Pattern match in Haskell and Scala</h4>
+<div class="outline-text-4" id="text-pattern-match-in-haskell-and-scala">
+<pre class="example">
+fmap h Nil = Nil
+fmap h (cons head tail) = cons (h head) (fmap h tail) // funny
+</pre>
+
+<p>
+pattern match in Haskell is something like code above, which in scala we
+must use case match clause, so you know that why in scala <b>case clause
+is also a function in scala</b>, it's truly imitate the stype and principle
+of the Haskell.
+</p>
+
+<blockquote>
+<p>
+pattern match in haskell used like function pattern match in scala &#x2014;
+case clause also can be used like function
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="org68aaf99" class="outline-3">
+<h3 id="intuition-functor-is-container"><a id="org68aaf99"></a>Intuition functor is container</h3>
+<div class="outline-text-3" id="text-intuition-functor-is-container">
+<p>
+The intuition is that a <b>functor</b> when it's acting on some type, it
+actually encapsuated the values of this type,it somehow hide them, the
+<b>functor</b> has this type's instance inside. Something has other things
+inside is usually called a <b>container</b>, so I like to think of <b>functors</b>
+as <b>containers</b>, eg <code>List</code>, <code>Seq</code>, <code>Array</code>, <code>Option</code> etc.
+</p>
+
+<p>
+And what does it mean to apply a function to a functor or container, it
+means just open this container, look at the stuff that's inside the
+container and apply the function to content of the container(functor)
+</p>
+
+<p>
+The most important about Functor is <b>you can apply a function to what it
+contains</b>, but Functor *dese not provide you a way of retrieving(search
+and get, so in scala it's not recommanded to use get() method of Future)
+this value*, that's not part of the definition of a Functor, so you
+don't know whether this value is there or is not there, all you know is
+that you can operat on it. Functor is some like a radioactive thing, you
+can take a gloves to operate on it, but you never take it out, you'll
+die.
+</p>
+
+<blockquote>
+<p>
+Functor: - can operate on - no retrieving
+</p>
+</blockquote>
+</div>
+
+<div id="orgc38d92a" class="outline-4">
+<h4 id="function-is-data-data-is-function"><a id="orgc38d92a"></a>Function is Data, Data is Function</h4>
+<div class="outline-text-4" id="text-function-is-data-data-is-function">
+<p>
+<b>What is actually a List, What List is on the ground?</b> you know that, *
+Boolean can be memoized. * List/String can not be memoized.
+</p>
+
+<p>
+List can have inifinite elements, we may ask how was List represeted
+inside the computer? OK, it is <b>represented by function</b>. It just
+produce elements, but function can also produce element. Refer to List,
+what you know is just a symbol "List", and you give some values as
+initialization, like <code>List(1,2,3)</code>, then you ask value by given
+loacation like <code>l(2)</code>, so: * <code>List(1,2,3)</code> is just giving the domain of
+function * <code>l(2)</code> is just calling function by giving an input
+</p>
+
+<p>
+so, <b>List is Function,and Function is a general List</b>
+</p>
+
+<p>
+good reference:
+</p>
+
+<p>
+<a href="https://www.atlassian.com/blog/archives/scala-types-of-a-higher-kind">type
+constructor using in function</a>
+</p>
+
+<p>
+From the link to graphic, we can see that: &gt; * List[\_] is (<i>-&gt;</i>) &gt; *
+Map[/,/] or Function1[/,/] is (<i>-&gt;</i>-&gt;/) &gt; / Map[Int,\_] or
+Function1[Int,\_] is (<i>-&gt;</i>) &gt; * Functor[F[\_]] is ((<i>-&gt;</i>)-&gt;*)
+</p>
+
+<p>
+<code>*-&gt;*</code> This says: given one type, produce another. For instance, given
+String produce the type List[String]. All the type constructor list
+above, can apply partially: <b>Map[Int,\_] or Function1[Int,\_] is (<i>-&gt;</i>)</b>
+</p>
+
+<p>
+Everything in haskell, is just thunk, there is no hard core distinction,
+then what function type is in category theory actually, you'll see that
+function type is just an exponential data type.
+</p>
+
+<p>
+so, <b>Functin is just a exponential data type</b>
+</p>
+
+<blockquote>
+<p>
+Many data: "may or" is sum type; collection is product type; function
+is exponential type;
+</p>
+</blockquote>
+
+<pre class="example">
+(a-&gt;b) -&gt; (Fa-&gt;Fb)
+</pre>
+
+<ol class="org-ol">
+<li>F = List : is a container(functor) implemented by product-datatype</li>
+<li>F = r -&gt; : is a container(functor) implemented by
+exponential-datetype</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

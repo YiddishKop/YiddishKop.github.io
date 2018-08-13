@@ -1,0 +1,1095 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pandas-笔记2</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Pandas-笔记2</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org42be17f">1. Apply, part-VI</a>
+<ul>
+<li><a href="#orgcedc124">1.1. define some complex computation</a>
+<ul>
+<li><a href="#org56ba606">1.1.1. mathematical operation on Series is element-wise</a></li>
+<li><a href="#org4111506">1.1.2. apply user-defined function on Series</a></li>
+<li><a href="#org8e3f7c7">1.1.3. apply user-defined function on DataFrame, column-wise</a></li>
+<li><a href="#orge732ef5">1.1.4. xxx</a></li>
+<li><a href="#orgf16ce4f">1.1.5. apply user-defined function on DataFrame, row-wise</a></li>
+</ul>
+</li>
+<li><a href="#org513700e">1.2. Titanic data statistics</a>
+<ul>
+<li><a href="#orgaa84ff4">1.2.1. read in data from seaborn dataset</a></li>
+<li><a href="#orgaf2eb38">1.2.2. sum up the missing value of each column</a></li>
+<li><a href="#orge6bbe56">1.2.3. filter out the rows which has a non_NaN value in column 'embark_town'</a></li>
+<li><a href="#orga098dde">1.2.4. sum up the missing value of each row</a></li>
+<li><a href="#orgda1a4fd">1.2.5. sum up the number of differnt numbers of each row</a></li>
+<li><a href="#orgb43379a">1.2.6. sum up the prop_complete of differnt numbers of each row</a></li>
+</ul>
+</li>
+<li><a href="#orge8d74e8">1.3. pandas filter vs. numpy filter</a></li>
+<li><a href="#org5330c54">1.4. how to count the number of "True" of a boolean list</a></li>
+<li><a href="#orgb3db74c">1.5. how to count the number of specified value in a column</a></li>
+<li><a href="#org4aa3914">1.6. pd.isnull() =&gt; boolean Series</a></li>
+<li><a href="#orgc29cc32">1.7. do some exercise, for fun</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org42be17f" class="outline-2">
+<h2 id="org42be17f"><span class="section-number-2">1</span> Apply, part-VI</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>Apply</b>, this will happens at the time like:
+</p>
+<ul class="org-ul">
+<li>if you're pivoting tables, but that's not enough to clean your data.</li>
+<li>for each row of your data, you want to perform a more complex calculation,
+other than adding two columns or calculate the mean of the row.</li>
+</ul>
+
+<p>
+Then, you can <code>def</code> the function you want, then using <code>apply(funcName)</code> on
+Series(row/column)
+</p>
+
+<p>
+Note that, <code>mathOperation(Series) =&gt; Series</code> is very important for
+<b>combination</b>, it keeps entry-type and exit-type the same.
+</p>
+</div>
+
+<div id="orgcedc124" class="outline-3">
+<h3 id="orgcedc124"><span class="section-number-3">1.1</span> define some complex computation</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+<span class="org-keyword">def</span> <span class="org-function-name">my_function</span>():
+      <span class="org-comment-delimiter"># </span><span class="org-comment">indent 4 spaces</span>
+      <span class="org-comment-delimiter"># </span><span class="org-comment">function code</span>
+      <span class="org-keyword">pass</span>
+
+<span class="org-keyword">def</span> <span class="org-function-name">my_sq</span>(x):
+      <span class="org-doc">"""squares a given value</span>
+<span class="org-doc">      """</span>
+      <span class="org-keyword">return</span> x**<span class="org-highlight-numbers-number">2</span>
+
+<span class="org-keyword">def</span> <span class="org-function-name">avg_2</span>(x, y):
+      <span class="org-doc">"""calcuate average of 2 numbers</span>
+<span class="org-doc">      """</span>
+      <span class="org-keyword">return</span> (x+y)/<span class="org-highlight-numbers-number">2</span>
+
+<span class="org-keyword">print</span> ( my_sq(<span class="org-highlight-numbers-number">2</span>) )
+<span class="org-keyword">print</span> ( my_sq(<span class="org-highlight-numbers-number">4</span>) )
+<span class="org-keyword">print</span> ( avg_2(<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">9</span>) )
+</pre>
+</div>
+
+<pre class="example">
+4
+16
+6.5
+
+</pre>
+</div>
+
+<div id="org56ba606" class="outline-4">
+<h4 id="org56ba606"><span class="section-number-4">1.1.1</span> mathematical operation on Series is element-wise</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">df</span> = pd.DataFrame({
+    <span class="org-string">'a'</span> : [<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">30</span>],
+    <span class="org-string">'b'</span> : [<span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">30</span>, <span class="org-highlight-numbers-number">40</span>]
+    })
+<span class="org-keyword">print</span> ( df )
+<span class="org-keyword">print</span> ( df[<span class="org-string">'a'</span>] ** <span class="org-highlight-numbers-number">2</span>) <span class="org-comment-delimiter">## </span><span class="org-comment">element-wise squaring</span>
+</pre>
+</div>
+
+<pre class="example">
+a   b
+0  10  20
+1  20  30
+2  30  40
+0    100
+1    400
+2    900
+Name: a, dtype: int64
+
+</pre>
+</div>
+</div>
+
+<div id="org4111506" class="outline-4">
+<h4 id="org4111506"><span class="section-number-4">1.1.2</span> apply user-defined function on Series</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Apply on the Series is default <code>element-wise</code> operation.
+</p>
+
+<pre class="example">
+.    |  a |
+.    +----+
+.    | 10 |  .  apply ( my_sq ) ---&gt;  my_sq( 10 )  ,  my_sq( 20 )  ,  my_sq( 30 )
+.    | 20 |
+.    | 30 |
+.                                     \---------/     \---------/     \---------/
+.                                            |              |              |
+.                                            v              |              |
+.                                         100.0             |              |
+.              a new Series               400.0  &lt;----------+              |
+.          with shape = (3,)              900.0  &lt;-------------------------+
+
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( df[<span class="org-string">'a'</span>] )
+<span class="org-keyword">print</span> ( df[<span class="org-string">'a'</span>].<span class="org-builtin">apply</span>(my_sq)) <span class="org-comment-delimiter">## </span><span class="org-comment">apply function ~my_sq~ element-wise</span>
+</pre>
+</div>
+
+<pre class="example">
+0    10
+1    20
+2    30
+Name: a, dtype: int64
+0    100
+1    400
+2    900
+Name: a, dtype: int64
+
+</pre>
+</div>
+</div>
+
+<div id="org8e3f7c7" class="outline-4">
+<h4 id="org8e3f7c7"><span class="section-number-4">1.1.3</span> apply user-defined function on DataFrame, column-wise</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+apply on the DataFrame is default <code>column-wise</code> operation.
+</p>
+
+<p>
+What actually happends when you do <code>apply</code> on an <code>df</code>, it's default <b>apply
+the function on each column</b>, means the column is passed into the 1st
+argument of the function.
+</p>
+
+<pre class="example">
+.    |   |  a |  b |                                  |  a |                   |  b |
+.    +---+----+----+                                  +----+                   +----+
+.    | 0 | 10 | 20 |  .  apply ( avg_3 ) ---&gt;  avg_3( | 10 | )     ,    avg_3( | 20 | )
+.    | 1 | 20 | 30 |                                  | 20 |                   | 30 |
+.    | 2 | 30 | 40 |                                  | 30 |                   | 40 |
+.                                              \-------------/          \-------------/
+.                                                     |                        |
+.                                                     v                        |
+.                                                   20.0                       |
+.                       a new Series                30.0  &lt;--------------------+
+.                 with shape = (2,)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">print_me</span>(x):
+    <span class="org-keyword">print</span>(x)
+df.<span class="org-builtin">apply</span>(print_me)
+</pre>
+</div>
+
+<pre class="example">
+0    10
+1    20
+2    30
+Name: a, dtype: int64
+0    20
+1    30
+2    40
+Name: b, dtype: int64
+
+</pre>
+</div>
+</div>
+
+<div id="orge732ef5" class="outline-4">
+<h4 id="orge732ef5"><span class="section-number-4">1.1.4</span> xxx</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">avg_3</span>(x, y, z):
+    <span class="org-doc">"""avg of 3 numbers</span>
+<span class="org-doc">    """</span>
+    <span class="org-keyword">return</span> (x+y+z)/<span class="org-highlight-numbers-number">3</span>
+
+df.<span class="org-builtin">apply</span>(avg_3)  <span class="org-comment-delimiter"># </span><span class="org-comment">wrong</span>
+</pre>
+</div>
+
+<pre class="example">
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/tmp/babel-32610Fla/python-32610oRZ", line 6, in &lt;module&gt;
+    df.apply(avg_3)  # wrong
+  File "/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/pandas/core/frame.py", line 4262, in apply
+    ignore_failures=ignore_failures)
+  File "/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/pandas/core/frame.py", line 4358, in _apply_standard
+    results[i] = func(v)
+TypeError: ("avg_3() missing 2 required positional arguments: 'y' and 'z'", 'occurred at index a')
+
+</pre>
+
+<p>
+This caused some error, what actually happends when you do <code>apply</code> on an <code>df</code>, it's default <b>apply the function on each column</b>,
+means the column is passed into the 1st argument of the function.
+</p>
+
+<pre class="example">
+.    |   |  a |  b |                                  |  a |                   |  b |
+.    +---+----+----+                                  +----+                   +----+
+.    | 0 | 10 | 20 |  .  apply ( avg_3 ) ---&gt;  avg_3( | 10 | )     ,    avg_3( | 20 | )
+.    | 1 | 20 | 30 |                                  | 20 |                   | 30 |
+.    | 2 | 30 | 40 |                                  | 30 |                   | 40 |
+.                                              \-------------/          \-------------/
+.                                                     |                        |
+.                                                     v                        |
+.                                                   20.0                       |
+.                       a new Series                30.0  &lt;--------------------+
+.                 with shape = (2,)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">avg_3</span>(col):
+    <span class="org-doc">"""avg of 3 numbers</span>
+<span class="org-doc">    """</span>
+    <span class="org-variable-name">x</span>=col[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">y</span>=col[<span class="org-highlight-numbers-number">1</span>]
+    <span class="org-variable-name">z</span>=col[<span class="org-highlight-numbers-number">2</span>]
+    <span class="org-keyword">return</span> (x+y+z)/<span class="org-highlight-numbers-number">3</span>
+
+<span class="org-variable-name">avg_result</span> = df.<span class="org-builtin">apply</span>(avg_3)  <span class="org-comment-delimiter"># </span><span class="org-comment">right</span>
+<span class="org-keyword">print</span> ( df )
+<span class="org-keyword">print</span> ( avg_result )
+<span class="org-keyword">print</span> ( avg_result.shape )
+<span class="org-keyword">print</span> ( <span class="org-builtin">type</span>(avg_result) )
+</pre>
+</div>
+
+<pre class="example">
+a   b
+0  10  20
+1  20  30
+2  30  40
+a    20.0
+b    30.0
+dtype: float64
+(2,)
+&lt;class 'pandas.core.series.Series'&gt;
+
+</pre>
+</div>
+</div>
+
+<div id="orgf16ce4f" class="outline-4">
+<h4 id="orgf16ce4f"><span class="section-number-4">1.1.5</span> apply user-defined function on DataFrame, row-wise</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+add parameter <code>axis = 1</code> in the <code>apply</code> will give you the row-wise operation.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">avg_2</span>(row):
+    <span class="org-doc">"""avg of 3 numbers</span>
+<span class="org-doc">    """</span>
+    <span class="org-variable-name">x</span>=row[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">y</span>=row[<span class="org-highlight-numbers-number">1</span>]
+    <span class="org-keyword">return</span> (x+y)/<span class="org-highlight-numbers-number">2</span>
+<span class="org-variable-name">row_avg</span> = df.<span class="org-builtin">apply</span>(avg_2, axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span> ( df )
+<span class="org-keyword">print</span> ( row_avg )
+</pre>
+</div>
+
+<pre class="example">
+a   b
+0  10  20
+1  20  30
+2  30  40
+0    15.0
+1    25.0
+2    35.0
+dtype: float64
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org513700e" class="outline-3">
+<h3 id="org513700e"><span class="section-number-3">1.2</span> Titanic data statistics</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="orgaa84ff4" class="outline-4">
+<h4 id="orgaa84ff4"><span class="section-number-4">1.2.1</span> read in data from seaborn dataset</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org4e6d179"><span class="org-keyword">import</span> seaborn <span class="org-keyword">as</span> sns
+<span class="org-variable-name">titanic</span> = sns.load_dataset(<span class="org-string">'titanic'</span>)
+<span class="org-keyword">print</span> ( titanic )
+titanic.info()
+</pre>
+</div>
+
+<pre class="example">
+survived  pclass     sex   age  sibsp  parch      fare embarked   class  \
+0           0       3    male  22.0      1      0    7.2500        S   Third
+1           1       1  female  38.0      1      0   71.2833        C   First
+2           1       3  female  26.0      0      0    7.9250        S   Third
+3           1       1  female  35.0      1      0   53.1000        S   First
+4           0       3    male  35.0      0      0    8.0500        S   Third
+5           0       3    male   NaN      0      0    8.4583        Q   Third
+6           0       1    male  54.0      0      0   51.8625        S   First
+7           0       3    male   2.0      3      1   21.0750        S   Third
+8           1       3  female  27.0      0      2   11.1333        S   Third
+9           1       2  female  14.0      1      0   30.0708        C  Second
+10          1       3  female   4.0      1      1   16.7000        S   Third
+11          1       1  female  58.0      0      0   26.5500        S   First
+12          0       3    male  20.0      0      0    8.0500        S   Third
+13          0       3    male  39.0      1      5   31.2750        S   Third
+14          0       3  female  14.0      0      0    7.8542        S   Third
+15          1       2  female  55.0      0      0   16.0000        S  Second
+16          0       3    male   2.0      4      1   29.1250        Q   Third
+17          1       2    male   NaN      0      0   13.0000        S  Second
+18          0       3  female  31.0      1      0   18.0000        S   Third
+19          1       3  female   NaN      0      0    7.2250        C   Third
+20          0       2    male  35.0      0      0   26.0000        S  Second
+21          1       2    male  34.0      0      0   13.0000        S  Second
+22          1       3  female  15.0      0      0    8.0292        Q   Third
+23          1       1    male  28.0      0      0   35.5000        S   First
+24          0       3  female   8.0      3      1   21.0750        S   Third
+25          1       3  female  38.0      1      5   31.3875        S   Third
+26          0       3    male   NaN      0      0    7.2250        C   Third
+27          0       1    male  19.0      3      2  263.0000        S   First
+28          1       3  female   NaN      0      0    7.8792        Q   Third
+29          0       3    male   NaN      0      0    7.8958        S   Third
+..        ...     ...     ...   ...    ...    ...       ...      ...     ...
+861         0       2    male  21.0      1      0   11.5000        S  Second
+862         1       1  female  48.0      0      0   25.9292        S   First
+863         0       3  female   NaN      8      2   69.5500        S   Third
+864         0       2    male  24.0      0      0   13.0000        S  Second
+865         1       2  female  42.0      0      0   13.0000        S  Second
+866         1       2  female  27.0      1      0   13.8583        C  Second
+867         0       1    male  31.0      0      0   50.4958        S   First
+868         0       3    male   NaN      0      0    9.5000        S   Third
+869         1       3    male   4.0      1      1   11.1333        S   Third
+870         0       3    male  26.0      0      0    7.8958        S   Third
+871         1       1  female  47.0      1      1   52.5542        S   First
+872         0       1    male  33.0      0      0    5.0000        S   First
+873         0       3    male  47.0      0      0    9.0000        S   Third
+874         1       2  female  28.0      1      0   24.0000        C  Second
+875         1       3  female  15.0      0      0    7.2250        C   Third
+876         0       3    male  20.0      0      0    9.8458        S   Third
+877         0       3    male  19.0      0      0    7.8958        S   Third
+878         0       3    male   NaN      0      0    7.8958        S   Third
+879         1       1  female  56.0      0      1   83.1583        C   First
+880         1       2  female  25.0      0      1   26.0000        S  Second
+881         0       3    male  33.0      0      0    7.8958        S   Third
+882         0       3  female  22.0      0      0   10.5167        S   Third
+883         0       2    male  28.0      0      0   10.5000        S  Second
+884         0       3    male  25.0      0      0    7.0500        S   Third
+885         0       3  female  39.0      0      5   29.1250        Q   Third
+886         0       2    male  27.0      0      0   13.0000        S  Second
+887         1       1  female  19.0      0      0   30.0000        S   First
+888         0       3  female   NaN      1      2   23.4500        S   Third
+889         1       1    male  26.0      0      0   30.0000        C   First
+890         0       3    male  32.0      0      0    7.7500        Q   Third
+
+       who  adult_male deck  embark_town alive  alone
+0      man        True  NaN  Southampton    no  False  
+1    woman       False    C    Cherbourg   yes  False  
+2    woman       False  NaN  Southampton   yes   True
+3    woman       False    C  Southampton   yes  False
+4      man        True  NaN  Southampton    no   True
+5      man        True  NaN   Queenstown    no   True
+6      man        True    E  Southampton    no   True
+7    child       False  NaN  Southampton    no  False
+8    woman       False  NaN  Southampton   yes  False
+9    child       False  NaN    Cherbourg   yes  False
+10   child       False    G  Southampton   yes  False
+11   woman       False    C  Southampton   yes   True
+12     man        True  NaN  Southampton    no   True
+13     man        True  NaN  Southampton    no  False
+14   child       False  NaN  Southampton    no   True
+15   woman       False  NaN  Southampton   yes   True
+16   child       False  NaN   Queenstown    no  False
+17     man        True  NaN  Southampton   yes   True
+18   woman       False  NaN  Southampton    no  False
+19   woman       False  NaN    Cherbourg   yes   True
+20     man        True  NaN  Southampton    no   True
+21     man        True    D  Southampton   yes   True
+22   child       False  NaN   Queenstown   yes   True
+23     man        True    A  Southampton   yes   True
+24   child       False  NaN  Southampton    no  False
+25   woman       False  NaN  Southampton   yes  False
+26     man        True  NaN    Cherbourg    no   True
+27     man        True    C  Southampton    no  False
+28   woman       False  NaN   Queenstown   yes   True
+29     man        True  NaN  Southampton    no   True
+..     ...         ...  ...          ...   ...    ...
+861    man        True  NaN  Southampton    no  False
+862  woman       False    D  Southampton   yes   True
+863  woman       False  NaN  Southampton    no  False
+864    man        True  NaN  Southampton    no   True
+865  woman       False  NaN  Southampton   yes   True
+866  woman       False  NaN    Cherbourg   yes  False
+867    man        True    A  Southampton    no   True
+868    man        True  NaN  Southampton    no   True
+869  child       False  NaN  Southampton   yes  False
+870    man        True  NaN  Southampton    no   True
+871  woman       False    D  Southampton   yes  False
+872    man        True    B  Southampton    no   True
+873    man        True  NaN  Southampton    no   True
+874  woman       False  NaN    Cherbourg   yes  False
+875  child       False  NaN    Cherbourg   yes   True
+876    man        True  NaN  Southampton    no   True
+877    man        True  NaN  Southampton    no   True
+878    man        True  NaN  Southampton    no   True
+879  woman       False    C    Cherbourg   yes  False
+880  woman       False  NaN  Southampton   yes  False
+881    man        True  NaN  Southampton    no   True
+882  woman       False  NaN  Southampton    no   True
+883    man        True  NaN  Southampton    no   True
+884    man        True  NaN  Southampton    no   True
+885  woman       False  NaN   Queenstown    no  False
+886    man        True  NaN  Southampton    no   True
+887  woman       False    B  Southampton   yes   True
+888  woman       False  NaN  Southampton    no  False
+889    man        True    C    Cherbourg   yes   True
+890    man        True  NaN   Queenstown    no   True
+
+[891 rows x 15 columns]
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 15 columns):
+survived       891 non-null int64
+pclass         891 non-null int64
+sex            891 non-null object
+age            714 non-null float64
+sibsp          891 non-null int64
+parch          891 non-null int64
+fare           891 non-null float64
+embarked       889 non-null object
+class          891 non-null category
+who            891 non-null object
+adult_male     891 non-null bool
+deck           203 non-null category
+embark_town    889 non-null object
+alive          891 non-null object
+alone          891 non-null bool
+dtypes: bool(2), category(2), float64(2), int64(4), object(5)
+memory usage: 80.6+ KB
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/tmp/babel-2374654r/python-23746Z2m", line 5, in &lt;module&gt;
+    nullor = np.array([True, False, False, True])
+NameError: name 'np' is not defined
+</pre>
+</div>
+</div>
+
+<div id="orgaf2eb38" class="outline-4">
+<h4 id="orgaf2eb38"><span class="section-number-4">1.2.2</span> sum up the missing value of each column</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+sum up the number of <code>NaN</code> of each column, return a Series of shape <code>(rowNum,)</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+<span class="org-comment-delimiter"># </span><span class="org-comment">count missing values</span>
+<span class="org-keyword">def</span> <span class="org-function-name">count_missing</span>(vec):
+    <span class="org-variable-name">null_vec</span> = pd.isnull(vec)
+    <span class="org-variable-name">null_count</span> = np.<span class="org-builtin">sum</span>(null_vec)
+    <span class="org-keyword">return</span> ( null_count )
+
+<span class="org-keyword">def</span> <span class="org-function-name">prop_missing</span>(vec):
+    <span class="org-variable-name">num</span> = count_missing(vec)
+    <span class="org-variable-name">dem</span> = vec.size
+    <span class="org-keyword">return</span> num / dem
+
+<span class="org-keyword">def</span> <span class="org-function-name">prop_complete</span>(vec):
+    <span class="org-keyword">return</span> <span class="org-highlight-numbers-number">1</span> - prop_missing(vec)
+
+<span class="org-variable-name">nan_item_number</span> = titanic.<span class="org-builtin">apply</span>(count_missing)
+<span class="org-keyword">print</span> ( nan_item_number )
+</pre>
+</div>
+
+<pre class="example">
+survived         0
+pclass           0
+sex              0
+age            177
+sibsp            0
+parch            0
+fare             0
+embarked         2
+class            0
+who              0
+adult_male       0
+deck           688
+embark_town      2
+alive            0
+alone            0
+dtype: int64
+&lt;class 'pandas.core.series.Series'&gt;
+</pre>
+</div>
+</div>
+
+<div id="orge6bbe56" class="outline-4">
+<h4 id="orge6bbe56"><span class="section-number-4">1.2.3</span> filter out the rows which has a non_NaN value in column 'embark_town'</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+summary: pandas has a kind of filter same with numpy filter
+pandas has a another filter, which numpy dosn't has
+</p>
+
+<blockquote>
+<p>
+<code>[df].loc[boolSeries, :]</code>  will get the all rows whose the item in <code>boolSeries</code> column is True
+<code>[df].loc[:, boolSeries]</code>  will get the all columns whose the item in <code>boolSeries</code> row is True
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">nan_row</span> = titanic.loc[pd.isnull( titanic[<span class="org-string">'embark_town'</span>]), :]
+<span class="org-keyword">print</span> ( nan_row )
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orga098dde" class="outline-4">
+<h4 id="orga098dde"><span class="section-number-4">1.2.4</span> sum up the missing value of each row</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">number_nan_in_row</span> = titanic.<span class="org-builtin">apply</span>( count_missing, axis=<span class="org-highlight-numbers-number">1</span> ) <span class="org-comment-delimiter"># </span><span class="org-comment">count each row, how many NaN</span>
+<span class="org-keyword">print</span> ( number_nan_in_row )
+</pre>
+</div>
+
+<pre class="example">
+0      1
+1      0
+2      1
+3      0
+4      1
+5      2
+6      0
+7      1
+8      1
+9      1
+10     0
+11     0
+12     1
+13     1
+14     1
+15     1
+16     1
+17     2
+18     1
+19     2
+20     1
+21     0
+22     1
+23     0
+24     1
+25     1
+26     2
+27     0
+28     2
+29     2
+      ..
+861    1
+862    0
+863    2
+864    1
+865    1
+866    1
+867    0
+868    2
+869    1
+870    1
+871    0
+872    0
+873    1
+874    1
+875    1
+876    1
+877    1
+878    2
+879    0
+880    1
+881    1
+882    1
+883    1
+884    1
+885    1
+886    1
+887    0
+888    2
+889    0
+890    1
+Length: 891, dtype: int64
+</pre>
+</div>
+</div>
+
+<div id="orgda1a4fd" class="outline-4">
+<h4 id="orgda1a4fd"><span class="section-number-4">1.2.5</span> sum up the number of differnt numbers of each row</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">number_nan_in_row</span> = titanic.<span class="org-builtin">apply</span>( count_missing, axis=<span class="org-highlight-numbers-number">1</span> ) <span class="org-comment-delimiter"># </span><span class="org-comment">count each row, how many NaN</span>
+<span class="org-keyword">print</span> ( number_nan_in_row.value_counts() )
+</pre>
+</div>
+
+<pre class="example">
+1    549
+0    182
+2    160
+dtype: int64
+
+</pre>
+</div>
+</div>
+
+<div id="orgb43379a" class="outline-4">
+<h4 id="orgb43379a"><span class="section-number-4">1.2.6</span> sum up the prop_complete of differnt numbers of each row</h4>
+<div class="outline-text-4" id="text-1-2-6">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">number_nan_in_row</span> = titanic.<span class="org-builtin">apply</span>( prop_complete, axis=<span class="org-highlight-numbers-number">1</span> ) <span class="org-comment-delimiter"># </span><span class="org-comment">count each row, how many NaN</span>
+<span class="org-keyword">print</span> ( number_nan_in_row.value_counts() )
+</pre>
+</div>
+
+<pre class="example">
+0.933333    549
+1.000000    182
+0.866667    160
+dtype: int64
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orge8d74e8" class="outline-3">
+<h3 id="orge8d74e8"><span class="section-number-3">1.3</span> pandas filter vs. numpy filter</h3>
+<div class="outline-text-3" id="text-1-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">pandas has 2 kinds of filter</th>
+<th scope="col" class="org-left">numpy has 1 kinds of filter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">loc_filter: <code>df.loc[mask, mask]</code></td>
+<td class="org-left">arr_filter: <code>arr[mask]</code></td>
+</tr>
+
+<tr>
+<td class="org-left">df_filter:  <code>df[mask]</code></td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+mask: is some boolean operation on DataFram/npArray/Series
+</p>
+
+<p>
+summary: pandas has a kind of filter same with numpy filter
+pandas has a another filter, which numpy dosn't has
+</p>
+
+<blockquote>
+<p>
+<code>[df].loc[boolSeries, :]</code> will get the rows whose the item in <code>boolSeries</code>
+column is True
+</p>
+
+<p>
+<code>[df].loc[:, boolSeries]</code> will get the columns whose the item in <code>boolSeries</code>
+row is True
+</p>
+</blockquote>
+
+<pre class="example">
+.
+.   ~titanic . loc [ pd.isnull( df['b'] ), : ]~
+.
+.      |   |    a |   b   |   c |  d |   e |
+.      |---+------+-------+-----+----+-----|
+.      | 0 |    2 |   3   |  23 | 87 | 199 |
+.  &gt;&gt;&gt; | 1 |  231 | *NaN* | 989 | 98 |  63 | &lt;&lt;&lt;        | 1 |  231 | NaN | 989 | 98 |  63 |
+.      | 2 | 1250 | 111   | 231 | 22 | 233 |            | 3 |   89 | NaN |  11 |  8 |   9 |
+.  &gt;&gt;&gt; | 3 |   89 | *NaN* |  11 |  8 |   9 | &lt;&lt;&lt;                          ^
+.      | 4 |    1 |  23   |  29 |  9 |   0 |                              |
+.                    |                                                    |
+.                    |                                                    |
+.                    |                                                    |
+.                    |                | False  |                          |
+.                    |                | *True* |                          |
+.     pd.isnull(     v     )  ===&gt;    | False  |                          |
+.                                     | *True* |                          |
+.                                     | False  |                          |
+.                                         |                               |
+.                                         |                               |
+.                                         |                               |
+.                          pd . loc [     v  ,  :   ]   ------------------+
+.
+
+</pre>
+</div>
+</div>
+
+<div id="org5330c54" class="outline-3">
+<h3 id="org5330c54"><span class="section-number-3">1.4</span> how to count the number of "True" of a boolean list</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+<code>np.sum</code> will default return the number of True of a given np-array.
+</p>
+<div class="org-src-container">
+<pre class="src src-python" id="orge8424d5"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">nullor</span> = np.array([<span class="org-constant">True</span>, <span class="org-constant">True</span>, <span class="org-constant">False</span>, <span class="org-constant">True</span>])
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(nullor) ) <span class="org-comment-delimiter"># </span><span class="org-comment">return 3</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgb3db74c" class="outline-3">
+<h3 id="orgb3db74c"><span class="section-number-3">1.5</span> how to count the number of specified value in a column</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+can ONLY use the numpy.
+</p>
+<ol class="org-ol">
+<li>create a mask: <code>mask = arr == specifiedVal</code></li>
+<li>using the filter syntax sugar: <code>bool_arr = arr[mask]</code></li>
+<li>using the <code>sum</code> method: <code>np.sum(bool_arr)</code></li>
+</ol>
+</div>
+</div>
+
+<div id="org4aa3914" class="outline-3">
+<h3 id="org4aa3914"><span class="section-number-3">1.6</span> pd.isnull() =&gt; boolean Series</h3>
+<div class="outline-text-3" id="text-1-6">
+<pre class="example">
+.                 |   a |
+.                 |-----|         |------|
+.                 |   1 |         | False|
+.                 | NaN |.........| True |
+.     pd.isnull ( | 237 | ) ===&gt;  | False|
+.                 |  12 |         | False|
+.                 | NaN |.........| True |
+.                 |  29 |         | False|
+.
+.     ~pd.isnull~ accepy a array-like object, return a same shape boolean array-like object.
+.                 all the ~NaN~ will map to ~True~.
+
+</pre>
+</div>
+</div>
+
+<div id="orgc29cc32" class="outline-3">
+<h3 id="orgc29cc32"><span class="section-number-3">1.7</span> do some exercise, for fun</h3>
+<div class="outline-text-3" id="text-1-7">
+<div class="org-src-container">
+<pre class="src src-python" id="org2b876ab"><span class="org-keyword">from</span> numpy <span class="org-keyword">import</span> NaN
+<span class="org-keyword">def</span> <span class="org-function-name">comp_2</span>(vec):
+    <span class="org-variable-name">null_vec</span> = pd.isnull(vec)
+    <span class="org-variable-name">null_num</span> = np.<span class="org-builtin">sum</span>(null_vec)
+    <span class="org-variable-name">num</span> = vec.size
+    <span class="org-keyword">return</span> null_num / num
+
+<span class="org-keyword">def</span> <span class="org-function-name">number_2</span>(vec):
+    <span class="org-variable-name">null_vec</span> = pd.isnull(vec)
+    <span class="org-variable-name">null_num</span> = np.<span class="org-builtin">sum</span>(null_vec)
+    <span class="org-keyword">return</span> null_num
+
+<span class="org-variable-name">dfxxx</span> = pd.DataFrame({
+    <span class="org-string">'a'</span> : [<span class="org-highlight-numbers-number">1</span>, NaN, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, NaN],
+    <span class="org-string">'b'</span> : [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">33</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, NaN],
+    <span class="org-string">'c'</span> : [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">23</span>, NaN, NaN, NaN, NaN],
+})
+
+
+<span class="org-variable-name">num_null_series</span> = dfxxx.<span class="org-builtin">apply</span>(comp_2, axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span> ( num_null_series )
+</pre>
+</div>
+
+<pre class="example">
+0    0.000000
+1    0.333333
+2    0.333333
+3    0.333333
+4    0.333333
+5    1.000000
+dtype: float64
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:53 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记15:性能矩阵与模型评价</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记15:性能矩阵与模型评价</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd62e7ba">1. Model Evaluation, Scoring Metrics, and Dealing with Imbalanced Classes</a>
+<ul>
+<li><a href="#orgf0ef6aa">1.1. beyond the default evaluation of the model</a>
+<ul>
+<li><a href="#org5f9ced8">1.1.1. how to know which class are hard to predict in classification problem: method-1</a></li>
+<li><a href="#org099612b">1.1.2. how to know which class are hard to predict in classification problem: method-2</a>
+<ul>
+<li><a href="#org002f401">1.1.2.1. threshold and TPR FPR</a></li>
+</ul>
+</li>
+<li><a href="#orge461e9b">1.1.3. why method-2 is better for imbalance class and asymmetric cost</a>
+<ul>
+<li><a href="#org8c393ea">1.1.3.1. accuracy is NOT good evaluation way for imbalance datasets</a></li>
+<li><a href="#org4b2a430">1.1.3.2. ROC Curves is better for imbalanced datasets</a></li>
+<li><a href="#org3ccc905">1.1.3.3. interpretation of auc and roc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6128252">2. Built-In and custom scoring functions</a></li>
+<li><a href="#org3af98ad">3. Misc tools</a>
+<ul>
+<li><a href="#org481769b">3.1. scikit-learn</a>
+<ul>
+<li><a href="#org43fd283">3.1.1. ML models by now</a></li>
+</ul>
+</li>
+<li><a href="#orge7aa2c0">3.2. statistics</a>
+<ul>
+<li><a href="#org177b848">3.2.1. coefficient of determination</a>
+<ul>
+<li><a href="#org06f8902">3.2.1.1. R^2 and degrees of freedom</a></li>
+<li><a href="#org9632a1e">3.2.1.2. R^2 and confidence interval</a></li>
+<li><a href="#orgb1d94a4">3.2.1.3. R^2 and hypothesis test</a></li>
+<li><a href="#org7a91cce">3.2.1.4. R^2 and significance</a></li>
+<li><a href="#org08a691b">3.2.1.5. SSR and SSE</a></li>
+</ul>
+</li>
+<li><a href="#orgd059163">3.2.2. auc and roc curve</a>
+<ul>
+<li><a href="#org66e7e82">3.2.2.1. study another plot</a></li>
+<li><a href="#org1c6399d">3.2.2.2. means of each point in the plot</a></li>
+<li><a href="#org4ad903c">3.2.2.3. representation</a></li>
+<li><a href="#orgd084e4c">3.2.2.4. threshold and TPR FPR</a></li>
+<li><a href="#org3e6b6c9">3.2.2.5. which fact will affect the ROC curve</a></li>
+<li><a href="#orge731c29">3.2.2.6. why roc is better than misclassification rate</a></li>
+<li><a href="#org62c7496">3.2.2.7. 3 more benifits of roc curve</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgd62e7ba" class="outline-2">
+<h2 id="orgd62e7ba"><span class="section-number-2">1</span> Model Evaluation, Scoring Metrics, and Dealing with Imbalanced Classes</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="orgf0ef6aa" class="outline-3">
+<h3 id="orgf0ef6aa"><span class="section-number-3">1.1</span> beyond the default evaluation of the model</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+In the previous notebook, we already went into some detail on how to <b>evaluate a
+model</b> and how to pick the best model(pick the best model means pick the best
+parameters).
+</p>
+
+<p>
+So far, we assumed that we were given a performance measure, <b>a measure of the
+quality of the model</b>. What measure one should use is <b>not always obvious</b>,
+though. The default scores in scikit-learn are
+</p>
+
+<ul class="org-ul">
+<li><b>accuracy for classification</b>, which is the fraction of correctly classified samples,</li>
+<li><b>r2 for regression</b>, with is the coefficient of determination.</li>
+</ul>
+
+<p>
+These are reasonable default choices in many scenarious; however, depending on
+our task, these are not always the definitive or recommended choices.
+</p>
+
+<p>
+Let's take look at classification in more detail, going back to the application
+of classifying handwritten digits. So, how about training a classifier and
+walking through the different ways we can evaluate it? Scikit-learn has many
+helpful methods in the <code>sklearn.metrics</code> module that can help us with this task:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+np.set_printoptions(precision=<span class="org-highlight-numbers-number">2</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-keyword">from</span> sklearn.svm <span class="org-keyword">import</span> LinearSVC
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = digits.data, digits.target
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X, y,
+                                                    random_state=<span class="org-highlight-numbers-number">1</span>,
+                                                    stratify=y,
+                                                    test_size=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">25</span>)
+<span class="org-variable-name">classifier</span> = LinearSVC(random_state=<span class="org-highlight-numbers-number">1</span>).fit(X_train, y_train)
+<span class="org-variable-name">y_test_pred</span> = classifier.predict(X_test)
+<span class="org-keyword">print</span>(<span class="org-string">"Accuracy: {}"</span>.<span class="org-builtin">format</span>(classifier.score(X_test, y_test)))
+</pre>
+</div>
+</div>
+
+<div id="org5f9ced8" class="outline-4">
+<h4 id="org5f9ced8"><span class="section-number-4">1.1.1</span> how to know which class are hard to predict in classification problem: method-1</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+By two tools:
+</p>
+<ul class="org-ul">
+<li>matshow(2d-ndarray)</li>
+<li>confusion_matrix(true_value_array, predict_value_array)</li>
+</ul>
+
+<p>
+Here, we predicted 95.3% of samples correctly. For multi-class problems, it is
+often interesting to know <b>which of the classes are hard to predict</b>, <b>and which
+are easy, or which classes get confused</b>. One way to get more information about
+misclassifications is the <code>confusion_matrix</code>, which shows for each true class,
+how frequent a given predicted outcome is.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics <span class="org-keyword">import</span> confusion_matrix
+confusion_matrix(y_test, y_test_pred)
+</pre>
+</div>
+
+<pre class="example">
+array([[44,  0,  0,  0,  1,  0,  0,  0,  0,  0],
+[ 0, 45,  0,  0,  0,  0,  0,  0,  1,  0],
+[ 0,  1, 43,  0,  0,  0,  0,  0,  0,  0],
+[ 0,  0,  0, 45,  0,  0,  0,  0,  0,  1],
+[ 0,  2,  0,  0, 41,  0,  0,  1,  0,  1],
+[ 0,  1,  0,  0,  0, 42,  1,  0,  0,  2],
+[ 0,  0,  0,  0,  0,  1, 44,  0,  0,  0],
+[ 0,  1,  0,  0,  1,  0,  0, 42,  1,  0],
+[ 0,  4,  0,  1,  0,  0,  0,  0, 37,  1],
+[ 0,  0,  0,  0,  0,  0,  0,  0,  0, 45]])
+</pre>
+
+<p>
+A plot is sometimes more readable:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.matshow(confusion_matrix(y_test, y_test_pred), cmap=<span class="org-string">"Blues"</span>)
+plt.colorbar(shrink=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>)
+plt.xticks(<span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">10</span>))
+plt.yticks(<span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">10</span>))
+plt.xlabel(<span class="org-string">"Predicted label"</span>)
+plt.ylabel(<span class="org-string">"True label"</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041E4L.png" alt="25041E4L.png" />
+</p>
+</div>
+
+<p>
+We can see that most entries are on the diagonal, which means that we predicted
+nearly all samples correctly. The off-diagonal entries show us that many eights
+were classified as ones, and that nines are likely to be confused with many
+other classes.
+</p>
+</div>
+</div>
+
+<div id="org099612b" class="outline-4">
+<h4 id="org099612b"><span class="section-number-4">1.1.2</span> how to know which class are hard to predict in classification problem: method-2</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+By one tool:
+</p>
+<ul class="org-ul">
+<li>classification_report(true_label_array, predict_label_array)</li>
+</ul>
+
+<p>
+Another useful function is the <code>classification_report</code> which provides:
+</p>
+<ul class="org-ul">
+<li><b>precision</b>,</li>
+<li><b>recall</b>,</li>
+<li><b>fscore</b></li>
+<li><b>support</b></li>
+</ul>
+<p>
+for all classes.
+</p>
+
+<p>
+Precision is how many of the predictions for a class are actually that class.
+With :
+</p>
+<ul class="org-ul">
+<li>TP,"true positive"</li>
+<li>FP,"false positive"</li>
+<li>TN,"true negative"</li>
+<li>FN,"false negative"</li>
+</ul>
+
+<p>
+repectively:
+</p>
+
+<p>
+Precision = TP / (TP + FP)
+</p>
+
+<p>
+Recall is how many of the true positives were recovered:
+</p>
+
+<p>
+Recall = TP / (TP + FN)
+</p>
+
+<p>
+F1-score is the geometric average of precision and recall:
+</p>
+
+<p>
+F1 = 2 x (precision x recall) / (precision + recall)
+</p>
+
+<p>
+The values of all these values above are in the closed interval [0, 1], where 1
+means a perfect score.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics <span class="org-keyword">import</span> classification_report
+<span class="org-keyword">print</span>(classification_report(y_test, y_test_pred))
+</pre>
+</div>
+</div>
+
+<div id="org002f401" class="outline-5">
+<h5 id="org002f401"><span class="section-number-5">1.1.2.1</span> threshold and TPR FPR</h5>
+<div class="outline-text-5" id="text-1-1-2-1">
+<p>
+threshold = 0.5
+</p>
+
+<div class="figure">
+<p><img src="Misc tools/screenshot_2018-06-13_01-32-51.png" alt="screenshot_2018-06-13_01-32-51.png" />
+</p>
+</div>
+
+<p>
+all predicted probability &gt; threshold, predict it positive;
+all predicted probability &lt; threshold, predict it negative;
+</p>
+
+<p>
+this means that :
+</p>
+
+<p>
+all red pixels to the right of the line are correct predictions;
+all blue pixels to the left of the line are correct predictions;
+</p>
+
+<p>
+accuracy rate = correct predictions %
+</p>
+
+<p>
+[真正经，原本正经，你判断他是正经的]
+TPR = (red region on right of threshold) / whole red region
+TPR = TP / (TP + NF) = 真正 / (真正+假负)
+TPR = recall
+</p>
+
+<p>
+[假正经，原本不正经，你判断他是正经的]
+FPR = (blue region on right of threshold) / whole blue region
+FPR = FP / (FP + TN) = 假正 / (假正+真负)
+</p>
+</div>
+</div>
+</div>
+
+<div id="orge461e9b" class="outline-4">
+<h4 id="orge461e9b"><span class="section-number-4">1.1.3</span> why method-2 is better for imbalance class and asymmetric cost</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+These metrics are helpful in two particular cases that come up often in practice:
+</p>
+
+<ul class="org-ul">
+<li>Imbalanced classes, that is one class might be much more frequent than the other.</li>
+<li>Asymmetric costs, that is one kind of error is much more "costly" than the other.</li>
+</ul>
+
+<p>
+Let's have a look at 1. first. Say we have a class imbalance of 1:9, which is
+rather mild (think about ad-click-prediction where maybe 0.001% of ads might be
+clicked):
+</p>
+</div>
+
+<div id="org8c393ea" class="outline-5">
+<h5 id="org8c393ea"><span class="section-number-5">1.1.3.1</span> accuracy is NOT good evaluation way for imbalance datasets</h5>
+<div class="outline-text-5" id="text-1-1-3-1">
+<div class="org-src-container">
+<pre class="src src-ipython">np.bincount(y) / y.shape[<span class="org-highlight-numbers-number">0</span>]
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.1,  0.1])
+
+</pre>
+
+<p>
+As a toy example, let's say we want to classify the digits three against all
+other digits:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = <span class="org-variable-name">digits.data</span>, digits.target == <span class="org-highlight-numbers-number">3</span>
+</pre>
+</div>
+
+<p>
+Now we run cross-validation on a classifier to see how well it does:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> cross_val_score
+<span class="org-keyword">from</span> sklearn.svm <span class="org-keyword">import</span> SVC
+cross_val_score(SVC(), X, y)
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.9,  0.9,  0.9])
+
+</pre>
+
+<p>
+Our classifier is 90% accurate. Is that good? Or bad? Keep in mind that 90% of
+the data is "not three". So let's see how well a dummy classifier does, that
+always predicts the most frequent class:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.dummy <span class="org-keyword">import</span> DummyClassifier
+cross_val_score(DummyClassifier(<span class="org-string">"most_frequent"</span>), X, y)
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.9,  0.9,  0.9])
+
+</pre>
+
+<p>
+Also 90% (as expected)! So one might thing that means our classifier is not very
+good, it doesn't to better than a simple strategy that doesn't even look at the
+data. That would be judging too quickly, though.
+</p>
+
+<p>
+<b>Accuracy is simply not a good way to evaluate classifiers for imbalanced
+datasets</b>!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.bincount(y) / y.shape[<span class="org-highlight-numbers-number">0</span>]
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.9,  0.1])
+
+</pre>
+</div>
+</div>
+
+<div id="org4b2a430" class="outline-5">
+<h5 id="org4b2a430"><span class="section-number-5">1.1.3.2</span> ROC Curves is better for imbalanced datasets</h5>
+<div class="outline-text-5" id="text-1-1-3-2">
+<p>
+A much better measure is using the so-called <b>ROC</b> (Receiver operating
+characteristics) curve. A <b>roc-curve</b> <b>works with uncertainty outputs of a
+classifier</b>, say the "decision_function" of the SVC we trained above. Instead
+of making a cut-off at zero(one threshold) and looking at classification
+outcomes, it looks at every possible cut-off(every possible thresholds) and
+records how many true positive predictions there are, and how many false
+positive predictions there are.
+</p>
+
+<p>
+The following plot compares the roc curve of three parameter settings of our
+classifier on the "three vs rest" task.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics <span class="org-keyword">import</span> roc_curve, roc_auc_score
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X, y, random_state=<span class="org-highlight-numbers-number">42</span>)
+<span class="org-keyword">for</span> gamma <span class="org-keyword">in</span> [.<span class="org-highlight-numbers-number">01</span>, .<span class="org-highlight-numbers-number">05</span>, <span class="org-highlight-numbers-number">1</span>]:
+    plt.xlabel(<span class="org-string">"False Positive Rate"</span>)
+    plt.ylabel(<span class="org-string">"True Positive Rate (recall)"</span>)
+    <span class="org-variable-name">svm</span> = SVC(gamma=gamma).fit(X_train, y_train)
+    <span class="org-variable-name">decision_function</span> = svm.decision_function(X_test)
+    <span class="org-variable-name">fpr</span>, <span class="org-variable-name">tpr</span>, <span class="org-variable-name">_</span> = roc_curve(y_test, decision_function)
+    <span class="org-variable-name">acc</span> = svm.score(X_test, y_test) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- accuracy_score</span>
+    <span class="org-variable-name">auc</span> = roc_auc_score(y_test, svm.decision_function(X_test)) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- auc score</span>
+    plt.plot(fpr, tpr, label=<span class="org-string">"acc:%.2f auc:%.2f"</span> % (acc, auc), linewidth=<span class="org-highlight-numbers-number">3</span>)
+    plt.legend(loc=<span class="org-string">"best"</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041RCS.png" alt="25041RCS.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3ccc905" class="outline-5">
+<h5 id="org3ccc905"><span class="section-number-5">1.1.3.3</span> interpretation of auc and roc</h5>
+<div class="outline-text-5" id="text-1-1-3-3">
+<p>
+With a very <b>small decision threshold</b>, there will be <b>few</b> false positives,
+but also <b>few</b> false negatives, while with a very high threshold, both true
+positive rate and false positive rate will be high.
+</p>
+
+<p>
+So in general, the curve will be from the lower left to the upper right. A
+diagonal line reflects chance performance, while the goal is to be as much in
+the top left corner as possible. This means giving a <b>higher
+decision_function</b> value to all positive samples than to any negative sample.
+</p>
+
+<p>
+In this sense, this curve only considers the <b>ranking of the positive and
+negative samples, not the actual value</b>. As you can see from the curves and
+the accuracy values in the legend, even though all classifiers have the same
+accuracy, 89%, which is even lower than the dummy classifier, one of them has
+a perfect roc curve, while one of them performs on chance level.
+</p>
+
+<p>
+For doing grid-search and cross-validation, we usually want to condense our
+model evaluation into a single number. A good way to do this with the roc curve
+is to use the area under the curve (AUC). We can simply use this in
+<code>cross_val_score</code> by <code>specifying scoring="roc_auc"</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> cross_val_score
+cross_val_score(SVC(), X, y, scoring=<span class="org-string">"roc_auc"</span>)
+</pre>
+</div>
+
+<pre class="example">
+array([ 1.,  1.,  1.])
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org6128252" class="outline-2">
+<h2 id="org6128252"><span class="section-number-2">2</span> Built-In and custom scoring functions</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+There are many more scoring methods available, which are useful for different
+kinds of tasks. You can find them in the "SCORERS" dictionary. The only
+documentation explains all of them.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.metrics.scorer <span class="org-keyword">import</span> SCORERS
+<span class="org-keyword">print</span>(SCORERS.keys())
+</pre>
+</div>
+
+<p>
+It is also possible to <b>define your own scoring metric</b>. Instead of a string,
+you can provide a <b>callable</b> to as <b>scoring parameter</b>, that is an object with a
+<span class="underline"><span class="underline">call</span></span> method or a function. It needs to take :
+</p>
+<ol class="org-ol">
+<li>a model,</li>
+<li>a test-set features X_test</li>
+<li>a test-set labels y_test</li>
+<li>return a float.</li>
+</ol>
+
+<p>
+Higher floats are taken to mean better models.
+</p>
+
+<p>
+Let's reimplement the standard accuracy score:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">def</span> <span class="org-function-name">my_accuracy_scoring</span>(est, X, y):
+    <span class="org-keyword">return</span> np.mean(est.predict(X) == y)
+cross_val_score(SVC(), X, y, scoring=my_accuracy_scoring)
+
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.9,  0.9,  0.9])
+
+</pre>
+
+<p>
+In previous sections, we typically used the accuracy measure to evaluate
+the performance of our classifiers. A related measure that we haven't talked
+about, yet, is the <b>average-per-class accuracy (APCA)</b>. As we remember, the
+accuracy is defined as ​
+</p>
+
+<p>
+\(ACC = \frac{TP+TN}{n}\)
+​
+where <b>n</b> is the total number of samples. This can be generalized to
+​
+\[ACC =  \frac{T}{n},\]
+​
+where <b>T</b> is the number of all correct predictions in multi-class settings.
+</p>
+
+
+<div class="figure">
+<p><img src="figures/average-per-class.png" alt="average-per-class.png" />
+</p>
+</div>
+
+<p>
+Exercise:
+Given the following arrays of "true" class labels and predicted class
+labels, can you implement a function that uses the accuracy measure to
+compute the average-per-class accuracy as shown below?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">y_true</span> = np.array([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>])
+<span class="org-variable-name">y_pred</span> = np.array([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>])
+confusion_matrix(y_true, y_pred)
+
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 2, 0],
+[1, 2, 2],
+[0, 0, 2]])
+</pre>
+</div>
+</div>
+
+<div id="org3af98ad" class="outline-2">
+<h2 id="org3af98ad"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org481769b" class="outline-3">
+<h3 id="org481769b"><span class="section-number-3">3.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="org43fd283" class="outline-4">
+<h4 id="org43fd283"><span class="section-number-4">3.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits *</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS *</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report  *</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC  *</li>
+<li>from sklearn.svm import SVC   *</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+<div id="orge7aa2c0" class="outline-3">
+<h3 id="orge7aa2c0"><span class="section-number-3">3.2</span> statistics</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="org177b848" class="outline-4">
+<h4 id="org177b848"><span class="section-number-4">3.2.1</span> coefficient of determination</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+coefficient determination or called r-square(related to <b>SSR</b>), used to evalute the regression
+error, is a companion concept of square error or called <b>SSE</b> which is used to evalute the
+classification error .
+</p>
+
+<p>
+R^2 = The proportion of the variation in Y being explained by the variation in X
+</p>
+
+<p>
+The larger R^2 the better our regression model
+</p>
+
+<p>
+It's a measure of that strength of the relationship between x and y.
+</p>
+</div>
+
+<div id="org06f8902" class="outline-5">
+<h5 id="org06f8902"><span class="section-number-5">3.2.1.1</span> R^2 and degrees of freedom</h5>
+<div class="outline-text-5" id="text-3-2-1-1">
+<p>
+R^2 affected by degrees of freedom, <a href="https://www.youtube.com/watch?v=4otEcA3gjLk">see this</a>, and the LinTianXuan lecture
+</p>
+</div>
+</div>
+
+<div id="org9632a1e" class="outline-5">
+<h5 id="org9632a1e"><span class="section-number-5">3.2.1.2</span> R^2 and confidence interval</h5>
+<div class="outline-text-5" id="text-3-2-1-2">
+<p>
+<a href="https://www.youtube.com/watch?v=VvlqA-iO2HA">see this</a>
+</p>
+</div>
+</div>
+
+<div id="orgb1d94a4" class="outline-5">
+<h5 id="orgb1d94a4"><span class="section-number-5">3.2.1.3</span> R^2 and hypothesis test</h5>
+<div class="outline-text-5" id="text-3-2-1-3">
+<p>
+<a href="https://www.youtube.com/watch?v=VvlqA-iO2HA">see this</a>
+</p>
+
+<p>
+Can we infer a relationship between
+</p>
+
+<p>
+<b>Number of medas won by a country</b>
+</p>
+
+<p>
+and
+</p>
+
+<ol class="org-ol">
+<li>the country's latitude</li>
+<li>the country's average elevation</li>
+<li>the country's population</li>
+</ol>
+
+<p>
+number of medals = \(\beta_0+\beta_1(latitude_i)+\beta_2(elevation_i) + \beta_3(logpopulation_i)\)
+</p>
+</div>
+</div>
+
+<div id="org7a91cce" class="outline-5">
+<h5 id="org7a91cce"><span class="section-number-5">3.2.1.4</span> R^2 and significance</h5>
+<div class="outline-text-5" id="text-3-2-1-4">
+<p>
+<a href="https://www.youtube.com/watch?v=VvlqA-iO2HA">see this</a>
+</p>
+</div>
+</div>
+
+<div id="org08a691b" class="outline-5">
+<h5 id="org08a691b"><span class="section-number-5">3.2.1.5</span> SSR and SSE</h5>
+<div class="outline-text-5" id="text-3-2-1-5">
+<p>
+why we need SSR or SSE, they are concepts related with variance of a continuous
+random variable
+</p>
+
+<p>
+related URL:
+<a href="https://stats.stackexchange.com/questions/133465/finding-the-mean-and-variance-from-pdf">https://stats.stackexchange.com/questions/133465/finding-the-mean-and-variance-from-pdf</a>
+</p>
+
+<blockquote>
+<p>
+Third, the definition of the variance of a continuous random variable \(Var(X)\)
+is \(Var(X) = E[(X-\mu)^2] = \int_{-\infty}^{\infty}{(x-\mu)^2 f(x) dx}\), as
+detailed here. Again, you only need to solve for the integral in the support.
+Alternatively, it is sometimes easier to rely on the equivalent expression
+\(Var(X) = E[(X-\mu)^2] = E[X^2] - (E[X])^2\), where the first term is \(E[X^2] =
+\int_{-\infty}^{\infty}{x^2 f(x) dx}\) (see the definition of the expectation in
+the second paragraph) and the second term is \((E[X])^2 = \mu^2\).
+</p>
+</blockquote>
+
+<p>
+see the (x - mu)^2, this is the SST.
+</p>
+
+<p>
+what we want to do is weigh the SST(which is fixed when given a dataset each y_i
+is fixed, the mean of dataset is fixed) coming more from the predict error, or the distance from mean
+</p>
+
+<p>
+the larger the SSR, the smaller the SSE, the better the model is
+</p>
+
+
+<div class="figure">
+<p><img src="Misc tools/screenshot_2018-06-12_21-38-43.png" alt="screenshot_2018-06-12_21-38-43.png" />
+</p>
+</div>
+
+<p>
+separate the distance between <b>true value</b> and <b>mean of true values</b> (<code>Y_i</code> to
+<code>mean(Y_i)</code>) into two components: explained deviation and unexplained deviation:
+</p>
+
+<ul class="org-ul">
+<li>\(\hat{Y_i}-\bar{Y}\) predict - mean: explained deviation : sum square to SSR</li>
+<li>\(Y_i-\hat{Y_i}\) true - predict: unexplained deviation: sum square to SSE</li>
+</ul>
+
+
+<p>
+\(Y_i\) : the true y-value of a point <b>i</b>
+</p>
+
+<p>
+\(\bar{Y}\) : the mean of all true y-values of data points
+</p>
+
+<p>
+\(\hat{Y_i}\) : the predict y-value of data point <b>i</b>
+</p>
+
+<p>
+\(SSR=\sum(\hat{Y_i}-\bar{Y})^2\)  : sum of square due to regression
+</p>
+
+<p>
+\(SSE=\sum(Y_i-\hat{Y_i})^2\)  : sum of square due to error
+</p>
+
+<p>
+\(SST=SSR+SSE=\sum(Y_i-\bar{Y})^2\) : sum of square due to total
+</p>
+
+
+<p>
+\(R^2=SSR/SST\)
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgd059163" class="outline-4">
+<h4 id="orgd059163"><span class="section-number-4">3.2.2</span> auc and roc curve</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+<a href="https://www.youtube.com/watch?v=OAl6eAyP-yo">https://www.youtube.com/watch?v=OAl6eAyP-yo</a>
+</p>
+
+<p>
+An roc curve is a commonly used way to visualize the <b>performace</b> of a
+binary classifier.
+</p>
+
+<p>
+Roc curve is a TRP against FRP plot, with a direction of axes shown below:
+</p>
+
+
+<div class="figure">
+<p><img src="Misc tools/screenshot_2018-06-13_01-54-31.png" alt="screenshot_2018-06-13_01-54-31.png" />
+</p>
+</div>
+<blockquote>
+<p>
+. ^ large TRP
+. |
+. |
+. |
+. |
+. +--------&#x2013;&#x2014;&gt;
+.                large FRP
+</p>
+</blockquote>
+
+
+<p>
+roc curve:
+</p>
+<ul class="org-ul">
+<li>y axix: True Positive Rate</li>
+<li>x axix: False Positive Rate</li>
+</ul>
+
+<p>
+what we want is high TRP and low FRP, so we expect the roc curve has expansion
+direction to <b>up left coner</b> as far as possible.
+</p>
+</div>
+
+<div id="org66e7e82" class="outline-5">
+<h5 id="org66e7e82"><span class="section-number-5">3.2.2.1</span> study another plot</h5>
+<div class="outline-text-5" id="text-3-2-2-1">
+<p>
+example one:
+<img src="Misc tools/screenshot_2018-06-13_01-07-06.png" alt="screenshot_2018-06-13_01-07-06.png" />
+</p>
+
+<p>
+Let's see the whole plot (not the up-left coner roc curve) for whether a paper
+admitted by journal:
+</p>
+<ul class="org-ul">
+<li>x-axis: predicted probabilities</li>
+<li>y-axis: count of observations</li>
+<li>pixel: each pixel represent a paper</li>
+<li>blue and red: are the true label distribution of a paper(rejected or
+admitted)</li>
+</ul>
+</div>
+</div>
+
+<div id="org1c6399d" class="outline-5">
+<h5 id="org1c6399d"><span class="section-number-5">3.2.2.2</span> means of each point in the plot</h5>
+</div>
+<div id="org4ad903c" class="outline-5">
+<h5 id="org4ad903c"><span class="section-number-5">3.2.2.3</span> representation</h5>
+<div class="outline-text-5" id="text-3-2-2-3">
+<p>
+example one:
+<img src="Misc tools/screenshot_2018-06-13_01-07-06.png" alt="screenshot_2018-06-13_01-07-06.png" />
+</p>
+
+<p>
+(0.1, 10) means :
+</p>
+<ol class="org-ol">
+<li>(the axis shows) there are 10 papers which you predict an admission
+probability of 0.1</li>
+<li>(the region where this point locate in shows) the true status for all 10 papers was
+negative</li>
+</ol>
+
+<p>
+example two:
+</p>
+
+<div class="figure">
+<p><img src="Misc tools/screenshot_2018-06-13_01-24-05.png" alt="screenshot_2018-06-13_01-24-05.png" />
+</p>
+</div>
+
+
+<p>
+(0.5, 10) means :
+</p>
+<ol class="org-ol">
+<li>(the axis shows) there are 20(10 blue, 10 red) papers which you predict an
+admission probability of 0.1</li>
+<li>(the region where this point locate in shows) the true status is that 10
+papers was negative, 10 was positive.</li>
+</ol>
+</div>
+</div>
+
+<div id="orgd084e4c" class="outline-5">
+<h5 id="orgd084e4c"><span class="section-number-5">3.2.2.4</span> threshold and TPR FPR</h5>
+<div class="outline-text-5" id="text-3-2-2-4">
+<p>
+threshold = 0.5
+</p>
+
+<div class="figure">
+<p><img src="Misc tools/screenshot_2018-06-13_01-32-51.png" alt="screenshot_2018-06-13_01-32-51.png" />
+</p>
+</div>
+
+<p>
+all predicted probability &gt; threshold, predict it positive;
+all predicted probability &lt; threshold, predict it negative;
+</p>
+
+<p>
+this means that :
+</p>
+
+<p>
+all red pixels to the right of the line are correct predictions;
+all blue pixels to the left of the line are correct predictions;
+</p>
+
+<p>
+accuracy rate = correct predictions %
+</p>
+
+<p>
+[真正经，原本正经，你判断他是正经的]
+TPR = (red region on right of threshold) / whole red region
+TPR = TP / (TP + NF) = 真正 / (真正+假负)
+TPR = recall
+</p>
+
+<p>
+[假正经，原本不正经，你判断他是正经的]
+FPR = (blue region on right of threshold) / whole blue region
+FPR = FP / (FP + TN) = 假正 / (假正+真负)
+</p>
+</div>
+</div>
+
+<div id="org3e6b6c9" class="outline-5">
+<h5 id="org3e6b6c9"><span class="section-number-5">3.2.2.5</span> which fact will affect the ROC curve</h5>
+<div class="outline-text-5" id="text-3-2-2-5">
+<p>
+ROC curve is a plot of the TPR on the y-axis versus the FPR on the x-axis,
+for <b>every possible threshold</b>
+</p>
+
+<p>
+One threshold only related to a fix TPR and FPR pair.
+</p>
+
+<p>
+Each pair of true positive and true negative distribution form one roc curve;
+</p>
+
+<p>
+Each choice of threshold on certain pair of distribution form a point of
+this roc curve;
+</p>
+
+<p>
+The larger <b>predicted probability distance</b> (the x-axis shows the predicted
+probabilities by our model) between this pair distribution,
+===&gt; the more roc curve expand to up left coner,
+===&gt; the <b>more area</b> of AUC(area under the curve),
+===&gt; the <b>better</b> the model is.
+</p>
+
+<p>
+<img src="Misc%20tools/screenshot_2018-06-13_02-10-05.png" alt="screenshot_2018-06-13_02-10-05.png" /> <img src="Misc tools/screenshot_2018-06-13_01-39-58.png" alt="screenshot_2018-06-13_01-39-58.png" /> <img src="Misc tools/screenshot_2018-06-13_02-09-20.png" alt="screenshot_2018-06-13_02-09-20.png" />
+</p>
+</div>
+</div>
+
+<div id="orge731c29" class="outline-5">
+<h5 id="orge731c29"><span class="section-number-5">3.2.2.6</span> why roc is better than misclassification rate</h5>
+<div class="outline-text-5" id="text-3-2-2-6">
+<p>
+Roc curve visualize ALL possible thresholds.
+misclassification rate only take s SINGLE threshold
+</p>
+</div>
+</div>
+
+<div id="org62c7496" class="outline-5">
+<h5 id="org62c7496"><span class="section-number-5">3.2.2.7</span> 3 more benifits of roc curve</h5>
+<div class="outline-text-5" id="text-3-2-2-7">
+<ol class="org-ol">
+<li>better for imbalanced dataset. because it will doesn't change how the
+roc curve is generated. roc only care about the '<b>RATE</b>'</li>
+
+<li>can do multiple classification by 'one vs. all' approach, and you may
+should draw 3 curvers instead of 1.
+<ul class="org-ul">
+<li>1st curve: class 1(possitive) vs classes 2 and 3(negative);</li>
+<li>2nd curve: class 2(possitive) vs classes 1 and 3(negative);</li>
+<li>3rd curve: class 3(possitive) vs classes 1 and 2(negative);</li>
+</ul></li>
+
+<li>can do minimize FPR or maximize TPR
+<ol class="org-ol">
+<li>minimize FPR: VIP clients admission</li>
+<li>maximize TPR: AIDS testing</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

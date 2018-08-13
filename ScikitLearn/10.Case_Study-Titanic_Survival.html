@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记09:案例学习-泰坦尼克号幸存者</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记09:案例学习-泰坦尼克号幸存者</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org45b426e">1. Case Study - Titanic Survival</a>
+<ul>
+<li><a href="#org09117b4">1.1. Feature Extraction</a></li>
+<li><a href="#org3efa6ec">1.2. What Are Features?</a>
+<ul>
+<li><a href="#orgba4ec57">1.2.1. Numerical Features</a></li>
+<li><a href="#orgf2c915c">1.2.2. Categorical Features</a>
+<ul>
+<li><a href="#org4266c23">1.2.2.1. It's bad to give categorical feature the numberical encoding</a></li>
+<li><a href="#org378fa8f">1.2.2.2. two kinds of categorical feature encoding strategy</a></li>
+</ul>
+</li>
+<li><a href="#org3c40d45">1.2.3. Using the <code>DictVectorizer</code> to encode Categorical features</a></li>
+<li><a href="#org7c48665">1.2.4. Derived Features</a></li>
+</ul>
+</li>
+<li><a href="#org82cb0c7">1.3. Combining Numerical and Categorical Features</a></li>
+</ul>
+</li>
+<li><a href="#orge5db1a5">2. Misc tools</a>
+<ul>
+<li><a href="#orga1d4d50">2.1. Scikit-leanr</a>
+<ul>
+<li><a href="#orgc164905">2.1.1. ML models by now</a></li>
+<li><a href="#orgd504228">2.1.2. ML fn of this note</a></li>
+<li><a href="#org8c83830">2.1.3. DictVectorizer</a></li>
+<li><a href="#orgd2a238d">2.1.4. Imputer</a></li>
+</ul>
+</li>
+<li><a href="#org43f74c8">2.2. pandas</a>
+<ul>
+<li><a href="#org674bfd6">2.2.1. pd.get_dummies</a>
+<ul>
+<li><a href="#orgc8cd0c6">2.2.1.1. from string to one-hot encoding</a></li>
+<li><a href="#orgf9d8b01">2.2.1.2. from dict to one-hot encoding</a></li>
+<li><a href="#orga7d809f">2.2.1.3. from boolean-like column to one-hot encoding</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orga11a8f8">2.3. numpy</a>
+<ul>
+<li><a href="#org1610798">2.3.1. np.isnan()</a></li>
+<li><a href="#orgb874aa3">2.3.2. np.any()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org45b426e" class="outline-2">
+<h2 id="org45b426e"><span class="section-number-2">1</span> Case Study - Titanic Survival</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org09117b4" class="outline-3">
+<h3 id="org09117b4"><span class="section-number-3">1.1</span> Feature Extraction</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Here we will talk about an important piece of machine learning: the extraction
+of quantitative features from data. By the end of this section you will
+</p>
+
+<ul class="org-ul">
+<li>Know how features are extracted from real-world data.</li>
+<li>See an example of extracting numerical features from textual data</li>
+</ul>
+
+<p>
+In addition, we will go over several basic tools within scikit-learn which can
+be used to accomplish the above tasks.
+</p>
+</div>
+</div>
+
+<div id="org3efa6ec" class="outline-3">
+<h3 id="org3efa6ec"><span class="section-number-3">1.2</span> What Are Features?</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="orgba4ec57" class="outline-4">
+<h4 id="orgba4ec57"><span class="section-number-4">1.2.1</span> Numerical Features</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Recall that data in scikit-learn is expected to be in two-dimensional arrays, of
+size <code>n_samples × n_features</code>.
+</p>
+
+<p>
+Previously, we looked at the iris dataset, which has 150 samples and 4 features
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_iris
+<span class="org-variable-name">iris</span> = load_iris()
+<span class="org-keyword">print</span>(iris.data.shape)
+</pre>
+</div>
+
+<p>
+These features are:
+</p>
+
+<ul class="org-ul">
+<li>sepal length in cm</li>
+<li>sepal width in cm</li>
+<li>petal length in cm</li>
+<li>petal width in cm</li>
+</ul>
+
+<p>
+Numerical features such as these are pretty straightforward: each sample
+contains a list of floating-point numbers corresponding to the features
+</p>
+</div>
+</div>
+
+<div id="orgf2c915c" class="outline-4">
+<h4 id="orgf2c915c"><span class="section-number-4">1.2.2</span> Categorical Features</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+What if you have categorical features? For example, imagine there is data on the
+color of each iris:
+</p>
+
+<p>
+color in [red, blue, purple]
+</p>
+</div>
+
+<div id="org4266c23" class="outline-5">
+<h5 id="org4266c23"><span class="section-number-5">1.2.2.1</span> It's bad to give categorical feature the numberical encoding</h5>
+<div class="outline-text-5" id="text-1-2-2-1">
+<p>
+You might be tempted to assign numbers to these features,
+</p>
+
+<p>
+i.e.
+</p>
+<ul class="org-ul">
+<li>red=1,</li>
+<li>blue=2,</li>
+<li>purple=3</li>
+</ul>
+
+<p>
+<b>but in general this is a bad idea</b>. Estimators tend to operate under the
+assumption that there is a numerical relationship lie on numberical features ,
+so, for example,
+</p>
+
+<ul class="org-ul">
+<li><b>1 and 2 are more alike than 1 and 3</b>,</li>
+<li><b>1 + 2 = 3</b></li>
+<li>etc.</li>
+</ul>
+
+<p>
+and this is often not the case for categorical features.
+</p>
+</div>
+</div>
+
+<div id="org378fa8f" class="outline-5">
+<h5 id="org378fa8f"><span class="section-number-5">1.2.2.2</span> two kinds of categorical feature encoding strategy</h5>
+<div class="outline-text-5" id="text-1-2-2-2">
+<ul class="org-ul">
+<li><b>nominal categorical feature</b> : In fact, the example above is a subcategory
+of "categorical" features, namely, "<b>nominal</b>" features. Nominal features
+<b>don't imply an order</b>.</li>
+<li><b>ordinal categorical feature</b> : are categorical features that <b>do imply an
+order</b>. An example of ordinal features would be T-shirt sizes, e.g., <b>XL &gt;
+L &gt; M &gt; S</b>.</li>
+</ul>
+
+<p>
+One work-around for parsing <b>nominal</b> features into a format that prevents the
+classification algorithm from asserting an order is the so-called <b>one-hot
+encoding</b> representation. Here, we give each category its own dimension.
+</p>
+
+<p>
+The enriched iris feature set would hence be in this case:
+</p>
+
+<ul class="org-ul">
+<li>sepal length in cm</li>
+<li>sepal width in cm</li>
+<li>petal length in cm</li>
+<li>petal width in cm</li>
+<li>color=purple (1.0 or 0.0)</li>
+<li>color=blue (1.0 or 0.0)</li>
+<li>color=red (1.0 or 0.0)</li>
+</ul>
+
+<p>
+Note that using many of these categorical features may result in data which is
+better represented as a sparse matrix, as we'll see with the text classification
+example below.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3c40d45" class="outline-4">
+<h4 id="org3c40d45"><span class="section-number-4">1.2.3</span> Using the <code>DictVectorizer</code> to encode Categorical features</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+When the source data is encoded has a list of dicts where the values are either
+strings names for categories or numerical values, you can use the
+<code>DictVectorizer</code> class to compute the boolean expansion of the categorical
+features while leaving the numerical features unimpacted:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">measurements</span> = [
+    {<span class="org-string">'city'</span>: <span class="org-string">'Dubai'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">33</span>.},
+    {<span class="org-string">'city'</span>: <span class="org-string">'London'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">12</span>.},
+    {<span class="org-string">'city'</span>: <span class="org-string">'San Francisco'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">18</span>.},
+]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction <span class="org-keyword">import</span> DictVectorizer
+<span class="org-variable-name">vec</span> = DictVectorizer()
+vec
+</pre>
+</div>
+
+<pre class="example">
+DictVectorizer(dtype=&lt;class 'numpy.float64'&gt;, separator='=', sort=True,
+sparse=True)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">vec.fit_transform(measurements).toarray()
+</pre>
+</div>
+
+<pre class="example">
+array([[  1.,   0.,   0.,  33.],
+[  0.,   1.,   0.,  12.],
+[  0.,   0.,   1.,  18.]])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">vec.get_feature_names()
+</pre>
+</div>
+
+<pre class="example">
+['city=Dubai', 'city=London', 'city=San Francisco', 'temperature']
+
+</pre>
+</div>
+</div>
+
+<div id="org7c48665" class="outline-4">
+<h4 id="org7c48665"><span class="section-number-4">1.2.4</span> Derived Features</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+Another common feature type are derived features, where some pre-processing
+step is applied to the data to generate features that are somehow more
+informative. Derived features may be based in <b>feature extraction</b> and
+<b>dimensionality reduction</b> (such as PCA or manifold learning), may be linear or
+nonlinear combinations of features (such as in polynomial regression), or may
+be some more sophisticated transform of the features.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org82cb0c7" class="outline-3">
+<h3 id="org82cb0c7"><span class="section-number-3">1.3</span> Combining Numerical and Categorical Features</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+As an example of how to work with both categorical and numerical data, we will
+perform survival predicition for the passengers of the HMS Titanic.
+</p>
+
+<p>
+We will use a version of the Titanic (titanic3.xls) from here. We converted the
+.xls to .csv for easier manipulation but left the data is otherwise unchanged.
+</p>
+
+<p>
+We need to read in all the lines from the (titanic3.csv) file, set aside the
+keys from the first line, and find our labels (who survived or died) and data
+(attributes of that person). Let's look at the keys and some corresponding
+example lines.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+
+<span class="org-variable-name">titanic</span> = pd.read_csv(os.path.join(<span class="org-string">'datasets'</span>, <span class="org-string">'titanic3.csv'</span>))
+<span class="org-keyword">print</span>(titanic.columns)
+</pre>
+</div>
+
+<p>
+Here is a broad description of the keys and what they mean:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">pclass</td>
+<td class="org-left">Passenger Class</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(1 = 1st; 2 = 2nd; 3 = 3rd)</td>
+</tr>
+
+<tr>
+<td class="org-left">survival</td>
+<td class="org-left">Survival</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(0 = No; 1 = Yes)</td>
+</tr>
+
+<tr>
+<td class="org-left">name</td>
+<td class="org-left">Name</td>
+</tr>
+
+<tr>
+<td class="org-left">sex</td>
+<td class="org-left">Sex</td>
+</tr>
+
+<tr>
+<td class="org-left">age</td>
+<td class="org-left">Age</td>
+</tr>
+
+<tr>
+<td class="org-left">sibsp</td>
+<td class="org-left">Number of Siblings/Spouses Aboard</td>
+</tr>
+
+<tr>
+<td class="org-left">parch</td>
+<td class="org-left">Number of Parents/Children Aboard</td>
+</tr>
+
+<tr>
+<td class="org-left">ticket</td>
+<td class="org-left">Ticket Number</td>
+</tr>
+
+<tr>
+<td class="org-left">fare</td>
+<td class="org-left">Passenger Fare</td>
+</tr>
+
+<tr>
+<td class="org-left">cabin</td>
+<td class="org-left">Cabin</td>
+</tr>
+
+<tr>
+<td class="org-left">embarked</td>
+<td class="org-left">Port of Embarkation</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(C = Cherbourg; Q = Queenstown; S = Southampton)</td>
+</tr>
+
+<tr>
+<td class="org-left">boat</td>
+<td class="org-left">Lifeboat</td>
+</tr>
+
+<tr>
+<td class="org-left">body</td>
+<td class="org-left">Body Identification Number</td>
+</tr>
+
+<tr>
+<td class="org-left">home.dest</td>
+<td class="org-left">Home/Destination</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+In general, it looks like name, sex, cabin, embarked, boat, body, and homedest
+may be candidates for categorical features, while the rest appear to be
+numerical features. We can also look at the first couple of rows in the dataset
+to get a better understanding:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">titanic.head()
+</pre>
+</div>
+
+<pre class="example">
+pclass  survived                                             name     sex  \
+0       1         1                    Allen, Miss. Elisabeth Walton  female
+1       1         1                   Allison, Master. Hudson Trevor    male
+2       1         0                     Allison, Miss. Helen Loraine  female
+3       1         0             Allison, Mr. Hudson Joshua Creighton    male
+4       1         0  Allison, Mrs. Hudson J C (Bessie Waldo Daniels)  female
+
+age  sibsp  parch  ticket      fare    cabin embarked boat   body  \
+0  29.0000      0      0   24160  211.3375       B5        S    2    NaN
+1   0.9167      1      2  113781  151.5500  C22 C26        S   11    NaN
+2   2.0000      1      2  113781  151.5500  C22 C26        S  NaN    NaN
+3  30.0000      1      2  113781  151.5500  C22 C26        S  NaN  135.0
+4  25.0000      1      2  113781  151.5500  C22 C26        S  NaN    NaN
+
+home.dest
+0                     St Louis, MO
+1  Montreal, PQ / Chesterville, ON
+2  Montreal, PQ / Chesterville, ON
+3  Montreal, PQ / Chesterville, ON
+4  Montreal, PQ / Chesterville, ON
+</pre>
+
+<p>
+We clearly want to discard the "boat" and "body" columns for any classification
+into survived vs not survived as they already contain this information. The name
+is unique to each person (probably) and also non-informative. For a first try,
+we will use "pclass", "sibsp", "parch", "fare" and "embarked" as our features:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">print(type(titanic))                 #&lt;- DataFrame</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">print(type(titanic.survived))        #&lt;- Series</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">print(type(titanic.survived.values)) #&lt;- ndarray</span>
+<span class="org-variable-name">labels</span> = titanic.survived.values
+<span class="org-variable-name">features</span> = titanic[[<span class="org-string">'pclass'</span>, <span class="org-string">'sex'</span>, <span class="org-string">'age'</span>, <span class="org-string">'sibsp'</span>, <span class="org-string">'parch'</span>, <span class="org-string">'fare'</span>, <span class="org-string">'embarked'</span>]]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">features.head()
+
+</pre>
+</div>
+
+<pre class="example">
+pclass     sex      age  sibsp  parch      fare embarked
+0       1  female  29.0000      0      0  211.3375        S
+1       1    male   0.9167      1      2  151.5500        S
+2       1  female   2.0000      1      2  151.5500        S
+3       1    male  30.0000      1      2  151.5500        S
+4       1  female  25.0000      1      2  151.5500        S
+</pre>
+
+<p>
+The data now contains only useful features, but they are not in a format that
+the machine learning algorithms can understand. We need to transform the strings
+"male" and "female" into binary variables that indicate the gender, and
+similarly for "embarked". We can do that using the pandas get_dummies function:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">pd.get_dummies(features).head()
+</pre>
+</div>
+
+<pre class="example">
+pclass      age  sibsp  parch      fare  sex_female  sex_male  embarked_C  \
+0       1  29.0000      0      0  211.3375           1         0           0
+1       1   0.9167      1      2  151.5500           0         1           0
+2       1   2.0000      1      2  151.5500           1         0           0
+3       1  30.0000      1      2  151.5500           0         1           0
+4       1  25.0000      1      2  151.5500           1         0           0
+
+embarked_Q  embarked_S
+0           0           1
+1           0           1
+2           0           1
+3           0           1
+4           0           1
+</pre>
+
+<p>
+This transformation successfully encoded the string columns. However, one might
+argue that the class is also a categorical variable. We can explicitly list the
+columns to encode using the columns parameter, and include pclass:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">features_dummies</span> = pd.get_dummies(features, columns=[<span class="org-string">'pclass'</span>, <span class="org-string">'sex'</span>, <span class="org-string">'embarked'</span>])
+features_dummies.head(n=<span class="org-highlight-numbers-number">16</span>)
+
+</pre>
+</div>
+
+<pre class="example">
+age  sibsp  parch      fare  pclass_1  pclass_2  pclass_3  sex_female  \
+0   29.0000      0      0  211.3375         1         0         0           1
+1    0.9167      1      2  151.5500         1         0         0           0
+2    2.0000      1      2  151.5500         1         0         0           1
+3   30.0000      1      2  151.5500         1         0         0           0
+4   25.0000      1      2  151.5500         1         0         0           1
+5   48.0000      0      0   26.5500         1         0         0           0
+6   63.0000      1      0   77.9583         1         0         0           1
+7   39.0000      0      0    0.0000         1         0         0           0
+8   53.0000      2      0   51.4792         1         0         0           1
+9   71.0000      0      0   49.5042         1         0         0           0
+10  47.0000      1      0  227.5250         1         0         0           0
+11  18.0000      1      0  227.5250         1         0         0           1
+12  24.0000      0      0   69.3000         1         0         0           1
+13  26.0000      0      0   78.8500         1         0         0           1
+14  80.0000      0      0   30.0000         1         0         0           0
+15      NaN      0      0   25.9250         1         0         0           0
+
+sex_male  embarked_C  embarked_Q  embarked_S
+0          0           0           0           1
+1          1           0           0           1
+2          0           0           0           1
+3          1           0           0           1
+4          0           0           0           1
+5          1           0           0           1
+6          0           0           0           1
+7          1           0           0           1
+8          0           0           0           1
+9          1           1           0           0
+10         1           1           0           0
+11         0           1           0           0
+12         0           1           0           0
+13         0           0           0           1
+14         1           0           0           1
+15         1           0           0           1
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">data</span> = features_dummies.values
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+np.isnan(data).<span class="org-builtin">any</span>()
+
+</pre>
+</div>
+
+<pre class="example">
+True
+
+</pre>
+
+<p>
+With all of the hard data loading work out of the way, evaluating a classifier
+on this data becomes straightforward. Setting up the simplest possible model, we
+want to see what the simplest score can be with <code>DummyClassifier</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-keyword">from</span> sklearn.preprocessing <span class="org-keyword">import</span> Imputer
+<span class="org-variable-name">train_data</span>, <span class="org-variable-name">test_data</span>, <span class="org-variable-name">train_labels</span>, <span class="org-variable-name">test_labels</span> = train_test_split(
+    data, labels, random_state=<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">imp</span> = Imputer()
+imp.fit(train_data)
+<span class="org-variable-name">train_data_finite</span> = imp.transform(train_data)
+<span class="org-variable-name">test_data_finite</span> = imp.transform(test_data)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.isnan(train_data_finite).<span class="org-builtin">any</span>()
+
+</pre>
+</div>
+
+<pre class="example">
+False
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.dummy <span class="org-keyword">import</span> DummyClassifier
+
+<span class="org-variable-name">clf</span> = DummyClassifier(<span class="org-string">'most_frequent'</span>)
+clf.fit(train_data_finite, train_labels)
+<span class="org-keyword">print</span>(<span class="org-string">"Prediction accuracy: %f"</span>
+      % clf.score(test_data_finite, test_labels))
+
+</pre>
+</div>
+
+<p>
+EXERCISE: Try executing the above classification, using LogisticRegression and
+RandomForestClassifier instead of DummyClassifier Does selecting a different
+subset of features help?
+</p>
+</div>
+</div>
+</div>
+
+<div id="orge5db1a5" class="outline-2">
+<h2 id="orge5db1a5"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="orga1d4d50" class="outline-3">
+<h3 id="orga1d4d50"><span class="section-number-3">2.1</span> Scikit-leanr</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="orgc164905" class="outline-4">
+<h4 id="orgc164905"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+</ol>
+</blockquote>
+</div>
+</div>
+
+<div id="orgd504228" class="outline-4">
+<h4 id="orgd504228"><span class="section-number-4">2.1.2</span> ML fn of this note</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<ol class="org-ol">
+<li>using DictVectorizer
+vec.get_feature_names()</li>
+</ol>
+<p>
+from sklearn.feature_extraction import DictVectorizer
+vec = DictVectorizer()
+vec.fit_transform(measurements).toarray()
+</p>
+
+
+<p>
+np.isnan(data).any()
+</p>
+
+
+<p>
+print(type(titanic))                 #&lt;- DataFrame
+print(type(titanic.survived))        #&lt;- Series
+print(type(titanic.survived.values)) #&lt;- ndarray
+</p>
+</div>
+</div>
+
+<div id="org8c83830" class="outline-4">
+<h4 id="org8c83830"><span class="section-number-4">2.1.3</span> DictVectorizer</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction <span class="org-keyword">import</span> DictVectorizer
+<span class="org-variable-name">measurements</span> = [
+    {<span class="org-string">'city'</span>: <span class="org-string">'Dubai'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">33</span>.},
+    {<span class="org-string">'city'</span>: <span class="org-string">'London'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">12</span>.},
+    {<span class="org-string">'city'</span>: <span class="org-string">'San Francisco'</span>, <span class="org-string">'temperature'</span>: <span class="org-highlight-numbers-number">18</span>.},
+] <span class="org-comment-delimiter"># </span><span class="org-comment">an array of dicts</span>
+<span class="org-variable-name">dv</span> = DictVectorizer()
+<span class="org-variable-name">vec</span> = dv.fit_transform(measurements).toarray()
+vec
+</pre>
+</div>
+
+<pre class="example">
+array([[  1.,   0.,   0.,  33.],
+[  0.,   1.,   0.,  12.],
+[  0.,   0.,   1.,  18.]])
+</pre>
+
+<blockquote>
+<p>
+.
+.               string value:            numerical value:
+.                do one-hot encoding       do nothing
+.              -------------------&#x2013;&#x2014;  --------------&#x2013;&#x2014;
+.              {'city': 'Dubai',         'temperature': 33.},
+.              {'city': 'London',        'temperature': 12.},
+.              {'city': 'San Francisco', 'temperature': 18.},
+.
+.
+.
+.           one-hot encoding for 'city'   no encoding for 'temperature'
+.                 ---------&#x2013;&#x2014;              &#x2013;
+.       array([[  1.,   0.,   0.,             33.],
+.              [  0.,   1.,   0.,             12.],
+.              [  0.,   0.,   1.,             18.]])
+.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orgd2a238d" class="outline-4">
+<h4 id="orgd2a238d"><span class="section-number-4">2.1.4</span> Imputer</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+<a href="http://scikit-learn.org/stable/modules/preprocessing.html#imputation-of-missing-values">http://scikit-learn.org/stable/modules/preprocessing.html#imputation-of-missing-values</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">Imputer(missing_values=&#8217;NaN&#8217;,   <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- what's a missing value in original ndarray</span>
+        strategy=&#8217;mean&#8217;,        <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- with what value should missing_values change</span>
+        axis=<span class="org-highlight-numbers-number">0</span>,                 <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- 0: strategy on column; 1: strategy on row;</span>
+        verbose=<span class="org-highlight-numbers-number">0</span>,
+        copy=<span class="org-constant">True</span>)              <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- False: do change in original ndarray;</span>
+                                <span class="org-comment-delimiter">#   </span><span class="org-comment">True: do change on a copy.</span>
+</pre>
+</div>
+
+
+<p>
+Note that, the place holder like 'NaN' or 'blank' with their value specified
+in 'fitting' process NOT the 'transform' process.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.preprocessing <span class="org-keyword">import</span> Imputer
+<span class="org-variable-name">imp</span> = Imputer(missing_values=<span class="org-string">'NaN'</span>, strategy=<span class="org-string">'mean'</span>, axis=<span class="org-highlight-numbers-number">0</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">get 'nan' of each column</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- for col_1, nan=(1+5)/2=3;</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- for col_2, nan=(2+3+6)/3=3.66666667;</span>
+imp.fit(np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>],[np.nan, <span class="org-highlight-numbers-number">3</span>],[<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]]))
+
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt; error, must same shape with ndarray passed into fit</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">after_imp = imp.transform(np.array([[np.nan, np.nan, 3],[4,5,np.nan],[7,8,9]]))</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">change 'nan' of each column</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- for col_1, nan=3;</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- for col_2, nan=3.66666667;</span>
+<span class="org-variable-name">after_imp</span> = imp.transform(np.array([[np.nan, np.nan],[<span class="org-highlight-numbers-number">4</span>,np.nan],[<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>]]))
+after_imp
+</pre>
+</div>
+
+<pre class="example">
+array([[ 3.        ,  3.66666667],
+[ 4.        ,  3.66666667],
+[ 7.        ,  8.        ]])
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org43f74c8" class="outline-3">
+<h3 id="org43f74c8"><span class="section-number-3">2.2</span> pandas</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="org674bfd6" class="outline-4">
+<h4 id="org674bfd6"><span class="section-number-4">2.2.1</span> pd.get_dummies</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">declaration of ~pandas.get_dummies()~</span>
+pandas.get_dummies(data,
+                   prefix=<span class="org-constant">None</span>,
+                   prefix_sep=<span class="org-string">'_'</span>,
+                   dummy_na=<span class="org-constant">False</span>,
+                   columns=<span class="org-constant">None</span>,
+                   sparse=<span class="org-constant">False</span>,
+                   drop_first=<span class="org-constant">False</span>,
+                   dtype=<span class="org-constant">None</span>)
+</pre>
+</div>
+<p>
+Convert categorical variable into dummy/indicator variables
+</p>
+</div>
+<div id="orgc8cd0c6" class="outline-5">
+<h5 id="orgc8cd0c6"><span class="section-number-5">2.2.1.1</span> from string to one-hot encoding</h5>
+<div class="outline-text-5" id="text-2-2-1-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+<span class="org-variable-name">s</span> = pd.Series(<span class="org-builtin">list</span>(<span class="org-string">'abcdaa'</span>))
+<span class="org-variable-name">gd</span> = pd.get_dummies(s)
+gd
+</pre>
+</div>
+
+<pre class="example">
+a  b  c  d
+0  1  0  0  0
+1  0  1  0  0
+2  0  0  1  0
+3  0  0  0  1
+4  1  0  0  0
+5  1  0  0  0
+</pre>
+</div>
+</div>
+
+<div id="orgf9d8b01" class="outline-5">
+<h5 id="orgf9d8b01"><span class="section-number-5">2.2.1.2</span> from dict to one-hot encoding</h5>
+<div class="outline-text-5" id="text-2-2-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">df</span> = pd.DataFrame({<span class="org-string">'A'</span>:[<span class="org-string">'a'</span>,<span class="org-string">'b'</span>,<span class="org-string">'c'</span>], <span class="org-string">'B'</span>:[<span class="org-string">'b'</span>,<span class="org-string">'a'</span>,<span class="org-string">'c'</span>], <span class="org-string">'C'</span>:[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>]})
+df
+</pre>
+</div>
+
+<pre class="example">
+A  B  C
+0  a  b  1
+1  b  a  2
+2  c  c  3
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">gd</span> = pd.get_dummies(df)
+gd
+</pre>
+</div>
+
+<pre class="example">
+C  A_a  A_b  A_c  B_a  B_b  B_c
+0  1    1    0    0    0    1    0
+1  2    0    1    0    1    0    0
+2  3    0    0    1    0    0    1
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">gd</span> = pd.get_dummies(df[<span class="org-string">'A'</span>], drop_first=<span class="org-constant">True</span>)
+gd
+</pre>
+</div>
+</div>
+</div>
+<div id="orga7d809f" class="outline-5">
+<h5 id="orga7d809f"><span class="section-number-5">2.2.1.3</span> from boolean-like column to one-hot encoding</h5>
+<div class="outline-text-5" id="text-2-2-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+<span class="org-variable-name">df</span> = pd.DataFrame({<span class="org-string">'A'</span>:[<span class="org-string">'good'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'good'</span>]})
+<span class="org-variable-name">col</span> = pd.get_dummies(df[<span class="org-string">'A'</span>])
+col
+</pre>
+</div>
+
+<pre class="example">
+bad  good
+0    0     1
+1    1     0
+2    1     0
+3    1     0
+4    0     1
+</pre>
+
+<p>
+Here we need to drop the fist column, to get a 0/1 representation:
+</p>
+
+<ul class="org-ul">
+<li>1: good</li>
+<li>2: bad</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">df</span> = pd.DataFrame({<span class="org-string">'A'</span>:[<span class="org-string">'good'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'bad'</span>,<span class="org-string">'good'</span>]})
+<span class="org-variable-name">col</span> = pd.get_dummies(df[<span class="org-string">'A'</span>], drop_first=<span class="org-constant">True</span>)
+<span class="org-variable-name">df</span>[<span class="org-string">'A_dum'</span>] = col
+df
+</pre>
+</div>
+
+<pre class="example">
+A  A_dum
+0  good      1
+1   bad      0
+2   bad      0
+3   bad      0
+4  good      1
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="orga11a8f8" class="outline-3">
+<h3 id="orga11a8f8"><span class="section-number-3">2.3</span> numpy</h3>
+<div class="outline-text-3" id="text-2-3">
+</div>
+<div id="org1610798" class="outline-4">
+<h4 id="org1610798"><span class="section-number-4">2.3.1</span> np.isnan()</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">declaration of numpy.isnan</span>
+numpy.isnan(x,                   <span class="org-comment-delimiter"># </span><span class="org-comment">array_like, input array</span>
+            /,
+            out=<span class="org-constant">None</span>,
+            *,
+            where=<span class="org-constant">True</span>,          <span class="org-comment-delimiter"># </span><span class="org-comment">array_like, optional, Values of True</span>
+                                 <span class="org-comment-delimiter"># </span><span class="org-comment">indicate to calculate the ufunc at that</span>
+                                 <span class="org-comment-delimiter"># </span><span class="org-comment">position, values of False indicate to leave</span>
+                                 <span class="org-comment-delimiter"># </span><span class="org-comment">the value in the output alone.</span>
+            casting=<span class="org-string">'same_kind'</span>,
+            order=<span class="org-string">'K'</span>,
+            dtype=<span class="org-constant">None</span>,
+            subok=<span class="org-constant">True</span>[, signature, extobj])
+</pre>
+</div>
+<p>
+Test element-wise for NaN and return result as a boolean array.
+</p>
+</div>
+</div>
+
+<div id="orgb874aa3" class="outline-4">
+<h4 id="orgb874aa3"><span class="section-number-4">2.3.2</span> np.any()</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+<code>np.any(a,)</code> means <code>np.is_there_True_exist_along_the_given_axis()</code>
+</p>
+
+<p>
+Test whether any array element along a given axis evaluates to True. Returns
+single boolean unless axis is not None
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">numpy.<span class="org-builtin">any</span>(a,
+          axis=<span class="org-constant">None</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">None: for all elements;</span>
+                     <span class="org-comment-delimiter"># </span><span class="org-comment">0: along column;</span>
+                     <span class="org-comment-delimiter"># </span><span class="org-comment">1: along row</span>
+          out=<span class="org-constant">None</span>,
+          keepdims=&lt;<span class="org-keyword">class</span> <span class="org-string">'numpy._globals._NoValue'</span>&gt;)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">boolarr</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">1</span>).reshape((<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">3</span>))
+<span class="org-keyword">print</span>(boolarr)
+<span class="org-variable-name">has_true_all</span> = np.<span class="org-builtin">any</span>(boolarr&gt;<span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">print</span>(has_true_all)
+<span class="org-variable-name">has_true_row</span> = np.<span class="org-builtin">any</span>(boolarr&gt;<span class="org-highlight-numbers-number">5</span>, axis=<span class="org-highlight-numbers-number">0</span>)
+<span class="org-keyword">print</span>(has_true_row)
+<span class="org-variable-name">has_true_col</span> = np.<span class="org-builtin">any</span>(boolarr&gt;<span class="org-highlight-numbers-number">5</span>, axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span>(has_true_col)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 15:06 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MLDS 作业报告-2: Sentiment Analysis</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">MLDS 作业报告-2: Sentiment Analysis</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org97075c8">作业说明</a>
+<ul>
+<li><a href="#orge829511">个人理解</a></li>
+</ul>
+</li>
+<li><a href="#org128a981">技术说明</a>
+<ul>
+<li><a href="#org4d1a9b2">语义分析难点</a></li>
+<li><a href="#orge540405">解决思路步骤</a></li>
+<li><a href="#org5f3aa4e">RNN, LSTM, GRU</a>
+<ul>
+<li><a href="#org52311f5">3-Layer Unrolled Network</a></li>
+<li><a href="#org53c29d8">RNN 网络训练难点: 梯度消失和梯度爆炸</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf1931d6">项目代码</a>
+<ul>
+<li><a href="#orgb2178e5">数据准备</a>
+<ul>
+<li><a href="#org11e32cf">定义 token_to_string 逆向函数</a></li>
+</ul>
+</li>
+<li><a href="#org9739208">图构造</a>
+<ul>
+<li><a href="#orgf523c8b">获取 Sequential 模型对象</a></li>
+<li><a href="#orga306bdb">优化器</a></li>
+<li><a href="#orgd871432">编译模型</a></li>
+</ul>
+</li>
+<li><a href="#org66431ef">适配模型(训练模型)</a></li>
+<li><a href="#org54d78ca">评测模型</a></li>
+<li><a href="#orgdd56f70">模型上线预测</a>
+<ul>
+<li><a href="#orgefcd8fb">设置阈值获取确定结果</a></li>
+<li><a href="#org98e4f06">展示预测错误样本</a></li>
+</ul>
+</li>
+<li><a href="#orge348c92">自造数据进行预测</a>
+<ul>
+<li><a href="#org4670a9b">获取 embedding 权重</a></li>
+<li><a href="#org89699b4">通过 embedding 检测单词相似性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org97075c8" class="outline-2">
+<h2 id="org97075c8">作业说明</h2>
+<div class="outline-text-2" id="text-org97075c8">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Course</th>
+<th scope="col" class="org-left">Semester</th>
+<th scope="col" class="org-left">HW,Link</th>
+<th scope="col" class="org-left">Task</th>
+<th scope="col" class="org-left">Dataset</th>
+<th scope="col" class="org-left">size</th>
+<th scope="col" class="org-left">sample_num</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html">MLDS</a></td>
+<td class="org-left">2017 Spring HW2</td>
+<td class="org-left"><a href="https://docs.google.com/presentation/d/1cHvTd0jM3VuJV7UsNAzDP1yDYvQfA8ceSp4RQoozPiI/edit#slide=id.g32281735ac_0_105">作业链接</a></td>
+<td class="org-left">HW2 Sentiment Analysis</td>
+<td class="org-left"><a href="https://www.kaggle.com/utathya/imdb-review-dataset">IMDB reviews</a></td>
+<td class="org-left">81MB</td>
+<td class="org-left">50,000</td>
+</tr>
+</tbody>
+</table>
+
+<ol class="org-ol">
+<li>本次作业数据来自 IMDB  电影评价,语言为英文,且都带有标签;</li>
+<li>2.5w training data, 2.5w testing data</li>
+<li>模型无限制</li>
+</ol>
+</div>
+
+<div id="orge829511" class="outline-3">
+<h3 id="orge829511">个人理解</h3>
+<div class="outline-text-3" id="text-orge829511">
+<blockquote>
+<p>
+这个模型其实在网上非常多的实现, 我想加点难度 &#x2014; 从网上爬取更多的无标签数据,
+与现有标签一起做 Semi-Supervised Learning.
+</p>
+</blockquote>
+<p>
+分析如下:
+</p>
+
+<p>
+<b>Sentiment Aanlysis + Semi-Supervised Learning</b>
+</p>
+
+<p>
+Semi-Supervised Learning, 经典算法包括:
+</p>
+<ul class="org-ul">
+<li>EM,</li>
+<li>Self-training,</li>
+<li>entropy based regularization,</li>
+<li>Semi-SVM</li>
+<li>RNN(with unlabeled data pretrained an auto-encoder)</li>
+</ul>
+
+<p>
+<span class="underline">网上抓取 10w 无标签数据可以与 auto-encoder 结合用来对 RNN 进行预训练</span> , 获取权重 W 的 initial value(如果需要的话), 然后再通过 20w 带标签数据真正训练 RNN.
+语义分析是 Seq2Seq learning 中的 many-to-one 问题, 适合用 RNN 做基础网络结构.
+RNN可以被视为一个编码器, 通过编码器我们得到一个 code , 比较 code 和 label 训练这个编码器。
+</p>
+</div>
+</div>
+</div>
+
+<div id="org128a981" class="outline-2">
+<h2 id="org128a981">技术说明</h2>
+<div class="outline-text-2" id="text-org128a981">
+</div>
+<div id="org4d1a9b2" class="outline-3">
+<h3 id="org4d1a9b2">语义分析难点</h3>
+<div class="outline-text-3" id="text-org4d1a9b2">
+<ol class="org-ol">
+<li><p>
+语义能被一个词改变
+</p>
+<blockquote>
+<p>
+这电影非常好 &lt;====&gt;  这电影非常不好
+</p>
+</blockquote>
+
+<p>
+一个非常 <b>积极</b> 的语义, 否定置前 ,就应该归类为 <b>负面</b> 语义。我们如何能教一个神经网络做到这个.
+</p></li>
+
+<li>NN 无法直接处理句子,需要进行编码</li>
+<li>句子长度不定</li>
+<li>句子内涵语义,需要考虑上下文关系(context or time)</li>
+</ol>
+</div>
+</div>
+
+<div id="orge540405" class="outline-3">
+<h3 id="orge540405">解决思路步骤</h3>
+<div class="outline-text-3" id="text-orge540405">
+<p>
+为了解决上面的问题:
+</p>
+
+<ul class="org-ul">
+<li>首先我们需要将原始文本单词转化为所谓的 <code>令牌</code> 整数值(tokenizer), 这些 token 只是他们在整个 vocabulary 中所处的位置;</li>
+<li>然后我们将这些整数转换成 embedding space 实值向量</li>
+<li>然后我们输入这些 embedding-vectors 给 RNN</li>
+<li>获得输出然后压扁 &#x2014; 使用Sigmoid-function给我们一个0.0和1.0之间的值</li>
+</ul>
+
+<p>
+具体步骤图示如下:
+</p>
+<pre class="example">
+&lt;一段评语&gt;                                     &lt;一列整数值&gt;
+ TEXT ---------- vocabulary indices --------&gt; TOKENS
+                \------------------/            |
+                                                |
+                                                |
+                                               /
+                                               | words similar meannings
+                                               |       similar embeddings
+                                               \
+                                                |
+                                                |
+                                                v  &lt;一列向量&gt;
+                                RNN --------- EMBEDDING
+                                 |
+                                 |
+                                 |
+                             Summarize &lt;一个向量&gt;
+                                 |
+                                 |
+                                 |
+                          1 Full NN Layer
+                                 |
+                                 |
+                              ---+---
+                              |     |
+                              |     |
+                              v     v
+                            0.0     1.0 &lt;一个数值&gt;
+
+                       negative     positive
+</pre>
+
+<p>
+Tokenize:
+</p>
+
+<p>
+<b>造</b>, 选取前 1000(合适数目即可,这里是 1000) 个最多出现的单词 occur times 顺序造字典 <code>{单词:索引}</code>. <b>查</b>, 每个句子对照自己的单词和上面的字典找出所有单词的索引.
+一个句子 =&gt; 一个同样长度的 list of indices. <b>补</b>, 根据(高斯匹配所有句子长度)指定
+*2*σ 处的数值作为 token size, 所有 list of indices 以此多截少补所有句子 =&gt; 相同
+*长度的 list of indices.
+</p>
+
+
+<p class="verse">
+Emebedding:<br />
+<br />
+&#xa0;从 <code>token: [32, 452, 2323, 1, ...., 23]</code> 到 embedding:<br />
+<br />
+&#xa0;[ [.23, .1, .03, .2, .091, .01, .01, .04]<br />
+&#xa0;&#xa0;&#xa0;[.30, .6, .05, .1, .001, .01, .09, .12]<br />
+&#xa0;&#xa0;&#xa0;[.23, .1, .11, .2, .011, .03, .02, .17]<br />
+&#xa0;&#xa0;&#xa0;[.27, .3, .13, .5, .009, .01, .09, .13]<br />
+&#xa0;&#xa0;&#xa0;[.08, .9, .03, .7, .002, .07, .09, .03] ]<br />
+<br />
+</p>
+</div>
+</div>
+
+<div id="org5f3aa4e" class="outline-3">
+<h3 id="org5f3aa4e">RNN, LSTM, GRU</h3>
+<div class="outline-text-3" id="text-org5f3aa4e">
+<ul class="org-ul">
+<li>RNN 的基本结构是可重复执行的 block(更复杂的 neuron unit)</li>
+
+<li>略微复杂的(3 gates) <b>LSTM</b> (Long-Short-Term-Memory) 和稍微简单些的(2 gates) <b>GRU</b></li>
+
+<li>在文献中实验表明LSTM和GRU有大致相似的性能</li>
+</ul>
+
+<pre class="example">
+new state = old state + current input
+
+    |           |             |
+    |           |             |
+    |           |             |
+    |           |             |
+    v           v             v
+
+"not good"  = "not"       + "good"
+</pre>
+
+<p>
+新的值取决于旧值和当前输入。例如,我们最近看到的 “不” 这个词和当前输入 “好”,
+构成一个新的值&#x2014;“不好”, 负面情绪。
+</p>
+
+
+<div class="figure">
+<p><img src="images/20_recurrent_unit.png" alt="20_recurrent_unit.png" />
+</p>
+</div>
+
+
+<blockquote>
+<p>
+注意: Keras 版本的 GRU mem-cell 在每个 sequence 开始都会被初始化为 0
+</p>
+</blockquote>
+</div>
+
+<div id="org52311f5" class="outline-4">
+<h4 id="org52311f5">3-Layer Unrolled Network</h4>
+<div class="outline-text-4" id="text-org52311f5">
+<p>
+这里选择使用 3 层 RNN + 1 层 FNN 的结构
+</p>
+</div>
+</div>
+
+<div id="org53c29d8" class="outline-4">
+<h4 id="org53c29d8">RNN 网络训练难点: 梯度消失和梯度爆炸</h4>
+<div class="outline-text-4" id="text-org53c29d8">
+<pre class="example">
+    意思是说, RNN 的 error surface, 非平即陡, 走着走着 w 的下一个 update 就飞出去了.
+    造成这种问题的原因不是 [NN Vanishing Gradient] 中的 sigmoid active function
+    原因. 因为 RNN 即使换成 ReLU 这个问题也依旧存在, 而且 RNN 从来不适用 ReLU, 因为即便
+    不考虑这个问题, 在 RNN 上使用 ReLU 的效果也不如 sigmoid.
+</pre>
+
+<p>
+对治方法:
+</p>
+<ol class="org-ol">
+<li>clipping</li>
+<li>LSTM(only for gridient vanishing)</li>
+</ol>
+
+<p>
+<a href="%E6%8A%80%E6%9C%AF%E8%AF%B4%E6%98%8E/screenshot_2018-08-08_06-01-57.png">errro surface of RNN</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgf1931d6" class="outline-2">
+<h2 id="orgf1931d6">项目代码</h2>
+<div class="outline-text-2" id="text-orgf1931d6">
+</div>
+<div id="orgb2178e5" class="outline-3">
+<h3 id="orgb2178e5">数据准备</h3>
+<div class="outline-text-3" id="text-orgb2178e5">
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">from</span> scipy.spatial.distance <span class="org-keyword">import</span> cdist
+<span class="org-keyword">from</span> tensorflow.python.keras.models <span class="org-keyword">import</span> Sequential
+<span class="org-keyword">from</span> tensorflow.python.keras.layers <span class="org-keyword">import</span> Dense, GRU, Embedding
+<span class="org-keyword">from</span> tensorflow.python.keras.optimizers <span class="org-keyword">import</span> Adam
+<span class="org-keyword">from</span> tensorflow.python.keras.preprocessing.text <span class="org-keyword">import</span> Tokenizer
+<span class="org-keyword">from</span> tensorflow.python.keras.preprocessing.sequence <span class="org-keyword">import</span> pad_sequences
+<span class="org-keyword">import</span> imdb
+imdb.maybe_download_and_extract()
+<span class="org-variable-name">x_train_text</span>, <span class="org-variable-name">y_train</span> = imdb.load_data(train=<span class="org-constant">True</span>)
+<span class="org-variable-name">x_test_text</span>, <span class="org-variable-name">y_test</span> = imdb.load_data(train=<span class="org-constant">False</span>)
+<span class="org-keyword">print</span>(<span class="org-string">"Train-set size: "</span>, <span class="org-builtin">len</span>(x_train_text))
+<span class="org-keyword">print</span>(<span class="org-string">"Test-set size:  "</span>, <span class="org-builtin">len</span>(x_test_text))
+</pre>
+</div>
+
+<pre class="example">
+Train-set size:  25000
+Test-set size:   25000
+</pre>
+
+<p>
+可以挑出其中一个评论看看:
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">data_text</span> = x_train_text + x_test_text
+x_train_text[<span class="org-highlight-numbers-number">1</span>]
+</pre>
+</div>
+
+<pre class="example">
+'A simple comment...&lt;br /&gt;&lt;br /&gt;What can I say... this is a wonderful film that
+I can watch over and over. It is definitely one of the top ten comedies made.
+With a great cast, Jack Lemmon and Walter Matthau wording a perfect script by
+Neil Simon, based on his play.&lt;br /&gt;&lt;br /&gt;It is real to life situation done
+perfectly. If you have digital cable, one gets the menu on bottom of screen to
+give what is on. It usually gives this film ***% stars but in reality it
+deserves **** stars. If you really watch this film, one can tell that it will be
+as funny and fresh a hundred years from now.'
+</pre>
+
+<p>
+这个样本翻译成中文大概是这样的:
+</p>
+
+<pre class="example">
+“.......我还能说什么....这是一部精彩绝伦的电影,可以名列十大喜剧。...
+............................... 如果你真的去看的话, 你会发现这部电影能够火一百
+年。”
+</pre>
+
+<p>
+毫无疑问, 他应该是 "正面" 语义, 标签应该是 <span class="underline">1</span> .
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">y_train[<span class="org-highlight-numbers-number">1</span>]
+</pre>
+</div>
+<p>
+1.0
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Tokenizer</span>
+<span class="org-variable-name">num_words</span> = <span class="org-highlight-numbers-number">10000</span>
+<span class="org-variable-name">tokenizer</span> = Tokenizer(num_words=num_words)
+
+%%time
+tokenizer.fit_on_texts(data_text)
+<span class="org-keyword">if</span> num_words <span class="org-keyword">is</span> <span class="org-constant">None</span>:
+    <span class="org-variable-name">num_words</span> = <span class="org-builtin">len</span>(tokenizer.word_index)
+tokenizer.word_index
+</pre>
+</div>
+
+<pre class="example">
+
+{'the': 1,
+ 'and': 2,
+ 'a': 3,
+ 'of': 4,
+ 'to': 5,
+ 'is': 6,
+ 'br': 7,
+ 'in': 8,
+ 'it': 9,
+ 'i': 10,
+ ...
+ ...
+ ...
+ ...
+ 'political': 991,
+ 'fairly': 992,
+ 'reasons': 993,
+ 'leading': 994,
+ 'portrayed': 995,
+ 'spent': 996,
+ 'telling': 997,
+ 'cover': 998,
+ 'outside': 999,
+ 'wasted': 1000,
+ ...}
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x_train_tokens</span> = tokenizer.texts_to_sequences(x_train_text)
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">x_train_text[<span class="org-highlight-numbers-number">1</span>]
+</pre>
+</div>
+
+<pre class="example">
+'A simple comment...&lt;br /&gt;&lt;br /&gt;What can I say... this is a wonderful film that
+I can watch over and over. It is definitely one of the top ten comedies made.
+With a great cast, Jack Lemmon and Walter Matthau wording a perfect script by
+Neil Simon, based on his play.&lt;br /&gt;&lt;br /&gt;It is real to life situation done
+perfectly. If you have digital cable, one gets the menu on bottom of screen to
+give what is on. It usually gives this film ***% stars but in reality it
+deserves **** stars. If you really watch this film, one can tell that it will
+be as funny and fresh a hundred years from now.'
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.array(x_train_tokens[<span class="org-highlight-numbers-number">1</span>])
+</pre>
+</div>
+<p>
+array([   3,  591,  929,    7,    7,   48,   67,   10,  131,   11,    6,
+          3,  393,   19,   12,   10,   67,  103,  121,    2,  121,    9,
+          6,  406,   27,    4,    1,  342,  713, 1317,   90,   16,    3,
+         78,  174,  694, 4910,    2, 2556, 3599,    3,  399,  227,   31,
+       4033, 2628,  441,   20,   24,  288,    7,    7,    9,    6,  144,
+          5,  114,  871,  221,  922,   43,   22,   25, 3639, 1897,   27,
+        217,    1, 9206,   20, 1306,    4,  258,    5,  197,   48,    6,
+         20,    9,  631,  411,   11,   19,  405,   18,    8,  614,    9,
+       1003,  405,   43,   22,   62,  103,   11,   19,   27,   67,  380,
+         12,    9,   80,   26,   14,  152,    2, 1451,    3, 2997,  153,
+         36,  146])
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x_test_tokens</span> = tokenizer.texts_to_sequences(x_test_text)
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">num_tokens</span> = [<span class="org-builtin">len</span>(tokens) <span class="org-keyword">for</span> tokens <span class="org-keyword">in</span> x_train_tokens + x_test_tokens]
+<span class="org-variable-name">num_tokens</span> = np.array(num_tokens)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">np.mean(num_tokens)
+np.<span class="org-builtin">max</span>(num_tokens)
+
+<span class="org-variable-name">max_tokens</span> = np.mean(num_tokens) + <span class="org-highlight-numbers-number">2</span> * np.std(num_tokens)
+<span class="org-variable-name">max_tokens</span> = <span class="org-builtin">int</span>(max_tokens)
+max_tokens
+
+np.<span class="org-builtin">sum</span>(num_tokens &lt; max_tokens) / <span class="org-builtin">len</span>(num_tokens)
+<span class="org-variable-name">pad</span> = <span class="org-string">'pre'</span>
+<span class="org-variable-name">x_train_pad</span> = pad_sequences(x_train_tokens, maxlen=max_tokens,
+                           padding=pad, truncating=pad)
+<span class="org-variable-name">x_test_pad</span> = pad_sequences(x_test_tokens, maxlen=max_tokens,
+                          padding=pad, truncating=pad)
+</pre>
+</div>
+</div>
+
+<div id="org11e32cf" class="outline-4">
+<h4 id="org11e32cf">定义 token_to_string 逆向函数</h4>
+<div class="outline-text-4" id="text-org11e32cf">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">idx</span> = tokenizer.word_index
+<span class="org-variable-name">inverse_map</span> = <span class="org-builtin">dict</span>(<span class="org-builtin">zip</span>(idx.values(), idx.keys()))
+<span class="org-keyword">def</span> <span class="org-function-name">tokens_to_string</span>(tokens):
+    <span class="org-variable-name">words</span> = [inverse_map[token] <span class="org-keyword">for</span> token <span class="org-keyword">in</span> tokens <span class="org-keyword">if</span> token != <span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">text</span> = <span class="org-string">" "</span>.join(words)
+    <span class="org-keyword">return</span> text
+</pre>
+</div>
+
+<p>
+例如,这是原始文本:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">x_train_text[<span class="org-highlight-numbers-number">1</span>]
+</pre>
+</div>
+
+<pre class="example">
+'A simple comment...&lt;br /&gt;&lt;br /&gt;What can I say... this is a wonderful film that
+I can watch over and over. It is definitely one of the top ten comedies made.
+With a great cast, Jack Lemmon and Walter Matthau wording a perfect script by
+Neil Simon, based on his play.&lt;br /&gt;&lt;br /&gt;It is real to life situation done
+perfectly. If you have digital cable, one gets the menu on bottom of screen to
+give what is on. It usually gives this film ***% stars but in reality it
+deserves **** stars. If you really watch this film, one can tell that it will
+be as funny and fresh a hundred years from now.'
+</pre>
+
+<p>
+这是去掉 html tags 之后的问题
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">tokens_to_string(x_train_tokens[<span class="org-highlight-numbers-number">1</span>])
+</pre>
+</div>
+
+<pre class="example">
+'a simple comment br br what can i say this is a wonderful film that i can
+watch over and over it is definitely one of the top ten comedies made with a
+great cast jack lemmon and walter matthau a perfect script by neil simon based
+on his play br br it is real to life situation done perfectly if you have
+digital cable one gets the menu on bottom of screen to give what is on it
+usually gives this film stars but in reality it deserves stars if you really
+watch this film one can tell that it will be as funny and fresh a hundred years
+from now'
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org9739208" class="outline-3">
+<h3 id="org9739208">图构造</h3>
+<div class="outline-text-3" id="text-org9739208">
+<p>
+按照以下步骤建图:
+</p>
+
+<ol class="org-ol">
+<li>创建图首:
+<ol class="org-ol">
+<li>输入</li>
+<li>输出</li>
+</ol></li>
+<li>创建图中:
+<ol class="org-ol">
+<li>一神: layers' weights and bias</li>
+<li>两函: err_fn, loss_fn</li>
+<li>三器: initializer, optimizer, saver</li>
+</ol></li>
+<li>创建图尾:
+<ol class="org-ol">
+<li>精度计算,</li>
+<li>模型评估</li>
+</ol></li>
+</ol>
+</div>
+
+<div id="orgf523c8b" class="outline-4">
+<h4 id="orgf523c8b">获取 Sequential 模型对象</h4>
+<div class="outline-text-4" id="text-orgf523c8b">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">model</span> = Sequential()
+
+<span class="org-variable-name">embedding_size</span> = <span class="org-highlight-numbers-number">8</span>
+model.add(Embedding(input_dim= num_words,
+                    output_dim= embedding_size,
+                    input_length= max_tokens,
+                    name=<span class="org-string">'layer_embedding'</span>))
+model.add(GRU(units=<span class="org-highlight-numbers-number">16</span>, return_sequences=<span class="org-constant">True</span>))
+model.add(GRU(units=<span class="org-highlight-numbers-number">8</span>, return_sequences=<span class="org-constant">True</span>))
+model.add(GRU(units=<span class="org-highlight-numbers-number">4</span>))
+model.add(Dense(<span class="org-highlight-numbers-number">1</span>, activation=<span class="org-string">'sigmoid'</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orga306bdb" class="outline-4">
+<h4 id="orga306bdb">优化器</h4>
+<div class="outline-text-4" id="text-orga306bdb">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">optimizer</span> = Adam(lr=<span class="org-highlight-numbers-number">1e</span>-<span class="org-highlight-numbers-number">3</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgd871432" class="outline-4">
+<h4 id="orgd871432">编译模型</h4>
+<div class="outline-text-4" id="text-orgd871432">
+<div class="org-src-container">
+<pre class="src src-ipython">model.<span class="org-builtin">compile</span>(loss=<span class="org-string">'binary_crossentropy'</span>,
+              optimizer=optimizer,
+              metrics=[<span class="org-string">'accuracy'</span>])
+</pre>
+</div>
+
+<pre class="example">
+WARNING:tensorflow:From
+/home/magnus/anaconda3/envs/tf-gpu/lib/python3.6/site-packages/tensorflow/python/keras/_impl/keras/backend.py:1557:
+calling reduce_mean (from tensorflow.python.ops.math_ops) with keep_dims is
+deprecated and will be removed in a future version. Instructions for updating:
+keep_dims is deprecated, use keepdims instead
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">model.summary()
+</pre>
+</div>
+
+<pre class="example">
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+layer_embedding (Embedding)  (None, 544, 8)            80000
+_________________________________________________________________
+gru_1 (GRU)                  (None, None, 16)          1200
+_________________________________________________________________
+gru_2 (GRU)                  (None, None, 8)           600
+_________________________________________________________________
+gru_3 (GRU)                  (None, 4)                 156
+_________________________________________________________________
+dense_1 (Dense)              (None, 1)                 5
+=================================================================
+Total params: 81,961
+Trainable params: 81,961
+Non-trainable params: 0
+_________________________________________________________________
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org66431ef" class="outline-3">
+<h3 id="org66431ef">适配模型(训练模型)</h3>
+<div class="outline-text-3" id="text-org66431ef">
+<div class="org-src-container">
+<pre class="src src-ipython">%%time
+model.fit(x_train_pad, y_train,
+          validation_split=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, epochs=<span class="org-highlight-numbers-number">3</span>, batch_size=<span class="org-highlight-numbers-number">64</span>)
+</pre>
+</div>
+
+<pre class="example">
+Train on 23750 samples, validate on 1250 samples
+Epoch 1/3
+23750/23750 [==============================]23750/23750 [==============================] - 464s 20ms/step - loss: 0.6517 - acc: 0.6002 - val_loss: 0.6218 - val_acc: 0.6752
+
+Epoch 2/3
+23750/23750 [==============================]23750/23750 [==============================] - 447s 19ms/step - loss: 0.4292 - acc: 0.8102 - val_loss: 0.6701 - val_acc: 0.6512
+
+Epoch 3/3
+23750/23750 [==============================]23750/23750 [==============================] - 445s 19ms/step - loss: 0.3092 - acc: 0.8765 - val_loss: 0.3182 - val_acc: 0.8752
+
+CPU times: user 35min 19s, sys: 2min 41s, total: 38min
+Wall time: 22min 37s
+&lt;tensorflow.python.keras._impl.keras.callbacks.History at 0x7ff79f0d6cf8&gt;
+</pre>
+</div>
+</div>
+
+<div id="org54d78ca" class="outline-3">
+<h3 id="org54d78ca">评测模型</h3>
+<div class="outline-text-3" id="text-org54d78ca">
+<div class="org-src-container">
+<pre class="src src-ipython">%%time
+<span class="org-variable-name">result</span> = model.evaluate(x_test_pad, y_test)
+</pre>
+</div>
+
+<pre class="example">
+25000/25000 [==============================]25000/25000 [==============================] - 175s 7ms/step
+
+CPU times: user 2min 59s, sys: 340 ms, total: 2min 59s
+Wall time: 2min 55s
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">"Accuracy: {0:.2%}"</span>.<span class="org-builtin">format</span>(result[<span class="org-highlight-numbers-number">1</span>]))
+</pre>
+</div>
+
+<pre class="example">
+Accuracy: 86.71%
+</pre>
+</div>
+</div>
+
+<div id="orgdd56f70" class="outline-3">
+<h3 id="orgdd56f70">模型上线预测</h3>
+<div class="outline-text-3" id="text-orgdd56f70">
+<div class="org-src-container">
+<pre class="src src-ipython">%%time
+<span class="org-variable-name">y_pred</span> = model.predict(x=x_test_pad[<span class="org-highlight-numbers-number">0</span>:<span class="org-highlight-numbers-number">1000</span>])
+<span class="org-variable-name">y_pred</span> = y_pred.T[<span class="org-highlight-numbers-number">0</span>]
+</pre>
+</div>
+
+<pre class="example">
+CPU times: user 7.01 s, sys: 0 ns, total: 7.01 s
+Wall time: 6.88 s
+</pre>
+</div>
+
+
+<div id="orgefcd8fb" class="outline-4">
+<h4 id="orgefcd8fb">设置阈值获取确定结果</h4>
+<div class="outline-text-4" id="text-orgefcd8fb">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">cls_pred</span> = np.array([<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span> <span class="org-keyword">if</span> p&gt;<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span> <span class="org-keyword">else</span> <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span> <span class="org-keyword">for</span> p <span class="org-keyword">in</span> y_pred])
+<span class="org-variable-name">cls_true</span> = np.array(y_test[<span class="org-highlight-numbers-number">0</span>:<span class="org-highlight-numbers-number">1000</span>])
+<span class="org-variable-name">incorrect</span> = np.where(cls_pred != cls_true)
+<span class="org-variable-name">incorrect</span> = incorrect[<span class="org-highlight-numbers-number">0</span>]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org98e4f06" class="outline-4">
+<h4 id="org98e4f06">展示预测错误样本</h4>
+<div class="outline-text-4" id="text-org98e4f06">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-builtin">len</span>(incorrect)
+</pre>
+</div>
+
+<pre class="example">
+121
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">idx</span> = incorrect[<span class="org-highlight-numbers-number">0</span>]
+idx
+</pre>
+</div>
+
+<pre class="example">
+13
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">text</span> = x_test_text[idx]
+text
+</pre>
+</div>
+
+<pre class="example">
+'I would like to start by saying I can only hope that the makers of this movie
+and it\'s sister film The Intruder (directed by the great unheralded stylist
+auteur that is Jopi Burnama) know in their hearts just how much pleasure they
+have brought to me and my friends in the sleepy north eastern town of
+Jarrow.&lt;br /&gt;&lt;br /&gt;From the opening pre credit sequence which manages to drag
+ever so slightly despite containing a man crashing through a window on a
+motorbike, the pitiless destruction of a silence lab, the introduction of one
+of the most simultaneously annoying and anaemic bad guys in movie history and
+costume design that Jean Paul Gautier would find ott and garish. Make no
+mistake; this is a truly unique experience. Early highlight - an explosion (get
+used to it, plenty more where that came from!) followed by a close up of our
+chubby heroine and the most hilarious line reading of the word "dad" in living
+memory. And then... the theme song...&lt;br /&gt;&lt;br /&gt;Yeah, this deserves its own
+paragraph. Sung by AJ, written by people who really should wish to remain
+anonymous, it makes the songs written for the Rocky films sound like Schubert.
+This is crap 80\'s hero motivation narcissism at an all time high, with choice
+lyrics such as "its only me and you, its come down to the wire" and much talk
+of having to "cross the line" (it\'ll make sense in time - our hero cares
+little for the boundaries of bona fida police work) abounding. Not to mention
+the Indonesian Supremes cooing the film\'s title seductively. At this point
+anyone wishing to switch off officially has no pulse.&lt;br /&gt;&lt;br /&gt;Our hero is
+Semitic cop Peter Goldson (essayed brilliantly by Intruder star Peter
+O\'Brien), the "stabilizer" of the title. The man\'s bull in a china shop
+approach to crime fighting and particularly his less than inconspicuous
+undercover work truly leaves much to be desired, but he is without question an
+entertaining guide through the mean streets of downtown Jakarta, with local
+sleaze ball connection Captain Johnny in tow, as well as Peter\'s own waste of
+space partner in fashion crime Sylvia Nash, who does little. So many
+highlights, so little time - the "slide please" arrogance of Peter\'s not all
+too convincingly argued case against chief baddie Greg Rainmaker (Intruder fans
+will know hirsute slimy bastard Craig Gavin as the monstrous John White -
+helluva name eh? No! Oh well...), the x marks the spot location map stupidity,
+our hero taking horrible advantage of heroine Tina Probost during a moment of
+weakness on her behalf, the latter turning up at a sting operation dressed like
+a member of a particularly flamboyant dancing troop. And believe me that barely
+covers it.&lt;br /&gt;&lt;br /&gt;There wasn\'t even time to go into the plot revolving
+around the hunt for a drug detection system and a kidnapped professor with an
+alarming but commendable amount of national pride. Or our hero turning up at a
+funeral dressed as if an extra on Boogie Nights. Or the absolutely hysterical
+craic between Captain Johnny and Goldson - two guys have never made more heavy
+weather of buddy buddy shtick than these clowns. The trowel was possibly too
+subtle me thinks.&lt;br /&gt;&lt;br /&gt;Ah it tails off people, and you never thought
+scenes of wanton destruction and general mayhem could be so unbelievably
+boring, but the character interaction is stupendous, the dialogue truly
+priceless and the incompetence on show somehow endearing. Oh and the shoes
+people - watch out for the shoes!'
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">y_pred[idx]
+</pre>
+</div>
+
+<pre class="example">
+0.08332923
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">cls_true[idx]
+</pre>
+</div>
+
+<pre class="example">
+1.0
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orge348c92" class="outline-3">
+<h3 id="orge348c92">自造数据进行预测</h3>
+<div class="outline-text-3" id="text-orge348c92">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">text1</span> = <span class="org-string">"This movie is fantastic! I really like it because it is so good!"</span>
+<span class="org-variable-name">text2</span> = <span class="org-string">"Good movie!"</span>
+<span class="org-variable-name">text3</span> = <span class="org-string">"Maybe I like this movie."</span>
+<span class="org-variable-name">text4</span> = <span class="org-string">"Meh ..."</span>
+<span class="org-variable-name">text5</span> = <span class="org-string">"If I were a drunk teenager then this movie might be good."</span>
+<span class="org-variable-name">text6</span> = <span class="org-string">"Bad movie!"</span>
+<span class="org-variable-name">text7</span> = <span class="org-string">"Not a good movie!"</span>
+<span class="org-variable-name">text8</span> = <span class="org-string">"This movie really sucks! Can I get my money back please?"</span>
+<span class="org-variable-name">texts</span> = [text1, text2, text3, text4, text5, text6, text7, text8]
+<span class="org-variable-name">tokens</span> = tokenizer.texts_to_sequences(texts)
+<span class="org-variable-name">tokens_pad</span> = pad_sequences(tokens, maxlen=max_tokens,
+                           padding=pad, truncating=pad)
+tokens_pad.shape
+</pre>
+</div>
+
+<pre class="example">
+(8, 544)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">model.predict(tokens_pad)
+array([[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">868934</span>  ],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">72526425</span>],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">33099633</span>],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">49190348</span>],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3054021</span> ],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">14959489</span>],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5235635</span> ],
+       [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">21565402</span>]], dtype=float32)
+<span class="org-variable-name">layer_embedding</span> = model.get_layer(<span class="org-string">'layer_embedding'</span>)
+</pre>
+</div>
+</div>
+
+<div id="org4670a9b" class="outline-4">
+<h4 id="org4670a9b">获取 embedding 权重</h4>
+<div class="outline-text-4" id="text-org4670a9b">
+<p>
+用来计算某个/某几个单词的 embedding 进行比较, 看 embedding 是否做的足够好:
+</p>
+<pre class="example">
+ "good"                   "great"
+   |                         |
+   |                         |
+   |                         |
+   |tokenizer                |tokenizer
+   |(include padding)        |(include padding)
+   |                         |
+   |                         |
+   v                         v
+[0,0,...,]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">weights_embedding</span> = layer_embedding.get_weights()[<span class="org-highlight-numbers-number">0</span>]
+weights_embedding.shape
+</pre>
+</div>
+
+<pre class="example">
+(10000, 8)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">token_good</span> = tokenizer.word_index[<span class="org-string">'good'</span>]
+token_good
+</pre>
+</div>
+
+<pre class="example">
+49
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">token_great</span> = tokenizer.word_index[<span class="org-string">'great'</span>]
+token_great
+</pre>
+</div>
+
+<pre class="example">
+78
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">weights_embedding[token_good]
+</pre>
+</div>
+
+<pre class="example">
+array([0.86528164, 0.6867993 , 0.4362397 , 0.66128314, 0.11546915,
+       0.94507647, 0.32628497, 0.535881  ], dtype=float32)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">weights_embedding[token_great]
+</pre>
+</div>
+
+<pre class="example">
+array([ 1.0691622 ,  1.124244  , -0.04477464, -0.05861434,  0.16965319,
+        1.2626944 ,  0.76136374, -0.00998422], dtype=float32)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">token_bad</span> = tokenizer.word_index[<span class="org-string">'bad'</span>]
+<span class="org-variable-name">token_horrible</span> = tokenizer.word_index[<span class="org-string">'horrible'</span>]
+weights_embedding[token_bad]
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.31903917,  0.53934103,  1.3727672 ,  1.4083829 ,  0.8475107 ,
+       -0.22946651,  0.0251075 ,  0.77032244], dtype=float32)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">weights_embedding[token_horrible]
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.47915924,  0.12226178,  0.90192014,  0.742338  ,  0.58730644,
+        0.32736972, -0.17633988,  1.3744307 ], dtype=float32)
+</pre>
+</div>
+</div>
+
+<div id="org89699b4" class="outline-4">
+<h4 id="org89699b4">通过 embedding 检测单词相似性</h4>
+<div class="outline-text-4" id="text-org89699b4">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">def</span> <span class="org-function-name">print_sorted_words</span>(word, metric=<span class="org-string">'cosine'</span>):
+    <span class="org-variable-name">token</span> = tokenizer.word_index[word]
+    <span class="org-variable-name">embedding</span> = weights_embedding[token]
+    <span class="org-variable-name">distances</span> = cdist(weights_embedding, [embedding],
+                      metric=metric).T[<span class="org-highlight-numbers-number">0</span>]
+    <span class="org-variable-name">sorted_index</span> = np.argsort(distances)
+    <span class="org-variable-name">sorted_distances</span> = distances[sorted_index]
+    <span class="org-variable-name">sorted_words</span> = [inverse_map[token] <span class="org-keyword">for</span> token <span class="org-keyword">in</span> sorted_index
+                    <span class="org-keyword">if</span> token != <span class="org-highlight-numbers-number">0</span>]
+    <span class="org-keyword">def</span> <span class="org-function-name">_print_words</span>(words, distances):
+        <span class="org-keyword">for</span> word, distance <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(words, distances):
+            <span class="org-keyword">print</span>(<span class="org-string">"{0:.3f} - {1}"</span>.<span class="org-builtin">format</span>(distance, word))
+    <span class="org-variable-name">k</span> = <span class="org-highlight-numbers-number">10</span>
+    <span class="org-keyword">print</span>(<span class="org-string">"Distance from '{0}':"</span>.<span class="org-builtin">format</span>(word))
+    _print_words(sorted_words[<span class="org-highlight-numbers-number">0</span>:k], sorted_distances[<span class="org-highlight-numbers-number">0</span>:k])
+    <span class="org-keyword">print</span>(<span class="org-string">"..."</span>)
+    _print_words(sorted_words[-k:], sorted_distances[-k:])
+</pre>
+</div>
+
+<p>
+显示与 "great" 在 embedding space 中余弦距离最小的单词.
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">print_sorted_words(<span class="org-string">'great'</span>, metric=<span class="org-string">'cosine'</span>)
+</pre>
+</div>
+
+<pre class="example">
+Distance from 'great':
+0.000 - great
+0.016 - touching
+0.017 - arguments
+0.025 - nevertheless
+0.031 - elmer
+0.032 - 8
+0.036 - ritter
+0.037 - juliet
+0.041 - randy
+0.045 - afterward
+...
+1.057 - rubbish
+1.060 - dull
+1.064 - disappointing
+1.069 - unlikeable
+1.078 - uninspired
+1.083 - lacks
+1.188 - worst
+1.225 - waste
+1.247 - awful
+1.282 - terrible
+</pre>
+
+<p>
+显示与 "worst" 在 embedding space 中余弦距离最小的单词.
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">print_sorted_words(<span class="org-string">'worst'</span>, metric=<span class="org-string">'cosine'</span>)
+</pre>
+</div>
+
+<pre class="example">
+Distance from 'worst':
+0.000 - worst
+0.047 - embarrassingly
+0.053 - terrible
+0.094 - retarded
+0.095 - poor
+0.095 - stereotyping
+0.096 - uninspired
+0.099 - awful
+0.100 - severed
+0.108 - lacks
+...
+1.167 - restraint
+1.168 - available
+1.176 - foremost
+1.188 - great
+1.193 - mesmerizing
+1.222 - highly
+1.229 - exploration
+1.239 - delightful
+1.268 - wonderfully
+1.323 - 7
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

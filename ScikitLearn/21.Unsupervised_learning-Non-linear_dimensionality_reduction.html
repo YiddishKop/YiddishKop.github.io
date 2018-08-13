@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记20:非监督学习-非线性降维</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记20:非监督学习-非线性降维</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org0a0dcfe">1. Manifold Learning</a>
+<ul>
+<li><a href="#org513e23d">1.1. PCA vs. Manifold learning</a>
+<ul>
+<li><a href="#org9ec5c91">1.1.1. weakness of PCA</a></li>
+<li><a href="#orgb9f412c">1.1.2. Manifold learning: overcome PCA</a></li>
+</ul>
+</li>
+<li><a href="#orgafdb0a7">1.2. Manifold learning on the digits data</a>
+<ul>
+<li><a href="#org605b843">1.2.1. preview the digit image</a></li>
+<li><a href="#org0800ff2">1.2.2. visualize all digit images after pca mapping</a></li>
+<li><a href="#orgd8b8718">1.2.3. visualize all digit images after T-SNE mapping</a></li>
+<li><a href="#orgfb42831">1.2.4. general steps to do clustering and visualize by pca or tsne</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org1347a70">2. Exercise</a></li>
+<li><a href="#org356717d">3. Misc tools</a>
+<ul>
+<li><a href="#orgdf14b01">3.1. scikit-learn</a>
+<ul>
+<li><a href="#orgc80982e">3.1.1. ML models by now</a></li>
+</ul>
+</li>
+<li><a href="#org8846ff9">3.2. Matplotlib</a>
+<ul>
+<li><a href="#orgbd753ce">3.2.1. module by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org16f5788">4. code snippet</a>
+<ul>
+<li><a href="#orgacaa0d9">4.1. how to draw one digt in one subplot</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+</pre>
+</div>
+
+<div id="org0a0dcfe" class="outline-2">
+<h2 id="org0a0dcfe"><span class="section-number-2">1</span> Manifold Learning</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org513e23d" class="outline-3">
+<h3 id="org513e23d"><span class="section-number-3">1.1</span> PCA vs. Manifold learning</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="org9ec5c91" class="outline-4">
+<h4 id="org9ec5c91"><span class="section-number-4">1.1.1</span> weakness of PCA</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+One weakness of PCA is that it <b>cannot detect non-linear features</b>. A set of
+algorithms known as <b>Manifold Learning</b> have been developed to address this
+deficiency. A canonical dataset used in <b>Manifold learning</b> is the <b>S-curve</b>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_s_curve
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_s_curve(n_samples=<span class="org-highlight-numbers-number">1000</span>)
+<span class="org-keyword">from</span> mpl_toolkits.mplot3d <span class="org-keyword">import</span> Axes3D
+<span class="org-variable-name">ax</span> = plt.axes(projection=<span class="org-string">'3d'</span>)
+ax.scatter3D(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], X[:, <span class="org-highlight-numbers-number">2</span>], c=y)
+ax.view_init(<span class="org-highlight-numbers-number">10</span>, -<span class="org-highlight-numbers-number">60</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199fTM.png" alt="3199fTM.png" />
+</p>
+</div>
+
+<p>
+This is a 2-dimensional dataset embedded in three dimensions, but it is embedded
+in such a way that PCA cannot discover the underlying data orientation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.decomposition <span class="org-keyword">import</span> PCA
+<span class="org-variable-name">X_pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>).fit_transform(X)
+plt.scatter(X_pca[:, <span class="org-highlight-numbers-number">0</span>], X_pca[:, <span class="org-highlight-numbers-number">1</span>], c=y);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199sdS.png" alt="3199sdS.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb9f412c" class="outline-4">
+<h4 id="orgb9f412c"><span class="section-number-4">1.1.2</span> Manifold learning: overcome PCA</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Manifold learning algorithms, however, available in the <code>sklearn.manifold</code>
+submodule, are able to recover the underlying 2-dimensional manifold:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.manifold <span class="org-keyword">import</span> Isomap
+<span class="org-variable-name">iso</span> = Isomap(n_neighbors=<span class="org-highlight-numbers-number">15</span>, n_components=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-variable-name">X_iso</span> = iso.fit_transform(X)
+plt.scatter(X_iso[:, <span class="org-highlight-numbers-number">0</span>], X_iso[:, <span class="org-highlight-numbers-number">1</span>], c=y);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/31995nY.png" alt="31995nY.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgafdb0a7" class="outline-3">
+<h3 id="orgafdb0a7"><span class="section-number-3">1.2</span> Manifold learning on the digits data</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="org605b843" class="outline-4">
+<h4 id="org605b843"><span class="section-number-4">1.2.1</span> preview the digit image</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+We can apply manifold learning techniques to much higher dimensional datasets,
+for example the digits data that we saw before:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>),
+                         subplot_kw={<span class="org-string">'xticks'</span>:(), <span class="org-string">'yticks'</span>: ()})
+<span class="org-keyword">for</span> ax, img <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes.ravel(), digits.images):
+    ax.imshow(img, interpolation=<span class="org-string">"none"</span>, cmap=<span class="org-string">"gray"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/31996hr.png" alt="31996hr.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="org0800ff2" class="outline-4">
+<h4 id="org0800ff2"><span class="section-number-4">1.2.2</span> visualize all digit images after pca mapping</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<blockquote>
+<p>
+    8*8
+&#x2026;&#x2026;..
+&#x2026;&#x2026;..
+&#x2026;&#x2026;..              1*1
+&#x2026;&#x2026;..  -&#x2014;pca-&#x2014;&gt; .  -&#x2014;&gt; draw as one point on 2d image to see
+&#x2026;&#x2026;..                        whether or not we can separate different digits
+&#x2026;&#x2026;..
+&#x2026;&#x2026;..
+&#x2026;&#x2026;..
+</p>
+</blockquote>
+
+<p>
+We can visualize the dataset using a linear technique, such as PCA. We saw this
+already provides some intuition about the data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">build a PCA model</span>
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>)
+pca.fit(digits.data)
+<span class="org-comment-delimiter"># </span><span class="org-comment">transform the digits data onto the first two principal components</span>
+<span class="org-variable-name">digits_pca</span> = pca.transform(digits.data)
+<span class="org-comment-delimiter"># </span><span class="org-comment">setup 10 colors, each color for each digit from 0 ~ 9</span>
+<span class="org-variable-name">colors</span> = [<span class="org-string">"#476A2A"</span>, <span class="org-string">"#7851B8"</span>, <span class="org-string">"#BD3430"</span>, <span class="org-string">"#4A2D4E"</span>, <span class="org-string">"#875525"</span>,
+          <span class="org-string">"#A83683"</span>, <span class="org-string">"#4E655E"</span>, <span class="org-string">"#853541"</span>, <span class="org-string">"#3A3120"</span>,<span class="org-string">"#535D8E"</span>]
+<span class="org-comment-delimiter"># </span><span class="org-comment">setup figsize, x,y limitation</span>
+plt.figure(figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">10</span>))
+plt.xlim(digits_pca[:, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">min</span>(), digits_pca[:, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">max</span>() + <span class="org-highlight-numbers-number">1</span>)
+plt.ylim(digits_pca[:, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">min</span>(), digits_pca[:, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">max</span>() + <span class="org-highlight-numbers-number">1</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">using pca mapping result of each digit image smaple as index;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">using label of each digit image as text you want to draw.</span>
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(digits.data)):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">actually plot the digits as text instead of using scatter</span>
+    plt.text(digits_pca[i, <span class="org-highlight-numbers-number">0</span>],                 <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the x-axis given by model pca</span>
+             digits_pca[i, <span class="org-highlight-numbers-number">1</span>],                 <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the y-axis given by model pca</span>
+             <span class="org-builtin">str</span>(digits.target[i]),            <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the digit we want to draw</span>
+             color = colors[digits.target[i]], <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- use the true label(0~9) as index of colors array</span>
+             fontdict={<span class="org-string">'weight'</span>: <span class="org-string">'bold'</span>, <span class="org-string">'size'</span>: <span class="org-highlight-numbers-number">9</span>}
+    )
+plt.xlabel(<span class="org-string">"first principal component"</span>)
+plt.ylabel(<span class="org-string">"second principal component"</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Hsx.png" alt="3199Hsx.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgd8b8718" class="outline-4">
+<h4 id="orgd8b8718"><span class="section-number-4">1.2.3</span> visualize all digit images after T-SNE mapping</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Using a more powerful, nonlinear techinque can provide much better
+visualizations, though. Here, we are using the <b>t-SNE</b> manifold learning method:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.manifold <span class="org-keyword">import</span> TSNE
+<span class="org-variable-name">tsne</span> = TSNE(random_state=<span class="org-highlight-numbers-number">42</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">use fit_transform instead of fit, as TSNE has no transform method:</span>
+<span class="org-variable-name">digits_tsne</span> = tsne.fit_transform(digits.data)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">from</span> sklearn.manifold <span class="org-keyword">import</span> TSNE
+<span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-keyword">from</span> sklearn.decomposition <span class="org-keyword">import</span> PCA
+<span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_s_curve
+<span class="org-keyword">from</span> mpl_toolkits.mplot3d <span class="org-keyword">import</span> Axes3D
+<span class="org-keyword">from</span> sklearn.manifold <span class="org-keyword">import</span> Isomap
+
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_s_curve(n_samples=<span class="org-highlight-numbers-number">1000</span>)
+<span class="org-variable-name">X_pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>).fit_transform(X)
+<span class="org-variable-name">iso</span> = Isomap(n_neighbors=<span class="org-highlight-numbers-number">15</span>, n_components=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-variable-name">X_iso</span> = iso.fit_transform(X)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">build a PCA model</span>
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>)
+pca.fit(digits.data)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">transform the digits data onto the first two principal components</span>
+<span class="org-variable-name">digits_pca</span> = pca.transform(digits.data)
+<span class="org-variable-name">colors</span> = [<span class="org-string">"#476A2A"</span>, <span class="org-string">"#7851B8"</span>, <span class="org-string">"#BD3430"</span>, <span class="org-string">"#4A2D4E"</span>, <span class="org-string">"#875525"</span>,
+          <span class="org-string">"#A83683"</span>, <span class="org-string">"#4E655E"</span>, <span class="org-string">"#853541"</span>, <span class="org-string">"#3A3120"</span>,<span class="org-string">"#535D8E"</span>]
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">build a TSNE obj</span>
+<span class="org-variable-name">tsne</span> = TSNE(random_state=<span class="org-highlight-numbers-number">42</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">use fit_transform instead of fit, as TSNE has no transform method:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">get 2d data points after tsne mapping</span>
+<span class="org-variable-name">digits_tsne</span> = tsne.fit_transform(digits.data)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">set figsize, x,y limitation</span>
+plt.figure(figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">10</span>))
+plt.xlim(digits_tsne[:, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">min</span>(), digits_tsne[:, <span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">max</span>() + <span class="org-highlight-numbers-number">1</span>)
+plt.ylim(digits_tsne[:, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">min</span>(), digits_tsne[:, <span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">max</span>() + <span class="org-highlight-numbers-number">1</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">using tsne mapping result of each digit image smaple as index;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">using label of each digit image as text you want to draw.</span>
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(digits.data)):
+    plt.text(digits_tsne[i, <span class="org-highlight-numbers-number">0</span>],                <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the x-axis given by model tsne</span>
+             digits_tsne[i, <span class="org-highlight-numbers-number">1</span>],                <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the y-axis given by model tsne</span>
+             <span class="org-builtin">str</span>(digits.target[i]),            <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- the digit we want to draw</span>
+             color = colors[digits.target[i]], <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- use the true label(0~9) as index of colors array</span>
+             fontdict={<span class="org-string">'weight'</span>: <span class="org-string">'bold'</span>, <span class="org-string">'size'</span>: <span class="org-highlight-numbers-number">9</span>})
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199HIC.png" alt="3199HIC.png" />
+</p>
+</div>
+
+<p>
+t-SNE has a somewhat <b>longer runtime</b> that other manifold learning algorithms, but
+the <b>result is quite striking</b>. Keep in mind that this algorithm is purely
+unsupervised, and does not know about the class labels. Still it is able to
+separate the classes very well (though the classes four, one and nine have been
+split into multiple groups).
+</p>
+</div>
+</div>
+
+<div id="orgfb42831" class="outline-4">
+<h4 id="orgfb42831"><span class="section-number-4">1.2.4</span> general steps to do clustering and visualize by pca or tsne</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+Here, just use PCA as example to show
+</p>
+<blockquote>
+<p>
+model
+</p>
+<hr />
+<ol class="org-ol">
+<li>build a PCA model,
+<ol class="org-ol">
+<li>build obj: pca_obj = PCA()</li>
+<li>obj -&gt; model: pca = pca_obj.fit(X_train)</li>
+</ol></li>
+</ol>
+
+<p>
+transform
+</p>
+<hr />
+<ol class="org-ol">
+<li>transform the digits by PCA
+<ol class="org-ol">
+<li>pca_data = pca.transform(X_train)</li>
+</ol></li>
+</ol>
+
+<p>
+setup plot attr
+</p>
+<hr />
+<ol class="org-ol">
+<li>setup 10 colors, each color for each digit from 0 ~ 9
+<ol class="org-ol">
+<li>colors = ['', '', &#x2026;, '']</li>
+</ol></li>
+<li>setup figsize, x,y limitation
+<ol class="org-ol">
+<li>plt.figure(figsize=(10,10))</li>
+</ol></li>
+</ol>
+
+<p>
+draw digits
+</p>
+<hr />
+<ol class="org-ol">
+<li>using pca mapping result of each digit image smaple as index; using label
+of each digit image as text you want to draw: for i in len(digits.data()): plt.text(&#x2026;.
+<ol class="org-ol">
+<li>the x-axis given by model pca
+<ul class="org-ul">
+<li>pca_data[:,0]</li>
+</ul></li>
+<li>the y-axis given by model pca
+<ul class="org-ul">
+<li>pca_data[:,1]</li>
+</ul></li>
+<li>the digit we want to draw
+<ul class="org-ul">
+<li>str = digits.target[i]</li>
+</ul></li>
+<li>use the true label(0~9) as index of colors array
+<ul class="org-ul">
+<li>c = colors[digits.target[i]]</li>
+</ul></li>
+</ol></li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="org1347a70" class="outline-2">
+<h2 id="org1347a70"><span class="section-number-2">2</span> Exercise</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EXERCISE:
+</p>
+<ul class="org-ul">
+<li>Compare the results of applying isomap to the digits dataset to the results
+of PCA and t-SNE. Which result do you think looks best?</li>
+<li>Given how well t-SNE separated the classes, one might be tempted to use this
+processing for classification. Try training a K-nearest neighbor classifier
+on digits data transformed with t-SNE, and compare to the accuracy on using
+the dataset without any transformation.</li>
+</ul>
+</div>
+</div>
+
+<div id="org356717d" class="outline-2">
+<h2 id="org356717d"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="orgdf14b01" class="outline-3">
+<h3 id="orgdf14b01"><span class="section-number-3">3.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="orgc80982e" class="outline-4">
+<h4 id="orgc80982e"><span class="section-number-4">3.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import make_moons</li>
+<li>from sklearn.datasets import make_circles</li>
+<li>from sklearn.datasets import make_s_curve *</li>
+<li>from mpl_toolkits.mplot3d import Axes3D *</li>
+<li>from sklearn.datasets import make_regression</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits</li>
+<li>from sklearn.datasets import load_breast_cancer</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.model_selection import learning_curve</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.feature_selection import SelectPercentile</li>
+<li>from sklearn.feature_selection import f_classif</li>
+<li>from sklearn.feature_selection import f_regression</li>
+<li>from sklearn.feature_selection import chi2</li>
+<li>from sklearn.feature_selection import SelectFromModel</li>
+<li>from sklearn.feature_selection import RFE</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.linear_model import Ridge</li>
+<li>from sklearn.linear_model import Lasso</li>
+<li>from sklearn.linear_model import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.cluster import DBSCAN</li>
+<li>from sklearn.cluster import AgglomerativeClustering</li>
+<li>from scipy.cluster.hierarchy import linkage</li>
+<li>from scipy.cluster.hierarchy import dendrogram</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.tree import DecisionTreeRegressor</li>
+<li>from sklearn.ensemble import RandomForestClassifier</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor</li>
+<li>from sklearn.decomposition import PCA *</li>
+<li>from sklearn.manifold import TSNE  *</li>
+<li>from sklearn.manifold import Isomap  *</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="org8846ff9" class="outline-3">
+<h3 id="org8846ff9"><span class="section-number-3">3.2</span> Matplotlib</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="orgbd753ce" class="outline-4">
+<h4 id="orgbd753ce"><span class="section-number-4">3.2.1</span> module by now</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<blockquote>
+<p>
+from mpl_toolkits.mplot3d import Axes3D *
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org16f5788" class="outline-2">
+<h2 id="org16f5788"><span class="section-number-2">4</span> code snippet</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="orgacaa0d9" class="outline-3">
+<h3 id="orgacaa0d9"><span class="section-number-3">4.1</span> how to draw one digt in one subplot</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">5</span>, figsize=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>),
+                         subplot_kw={<span class="org-string">'xticks'</span>:(), <span class="org-string">'yticks'</span>: ()})
+<span class="org-keyword">for</span> ax, img <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes.ravel(), digits.images):
+    ax.imshow(img, interpolation=<span class="org-string">"none"</span>, cmap=<span class="org-string">"gray"</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-29 Language Modeling by RNN</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-29 Language Modeling by RNN</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9111e19">1. Language Modeling by RNN</a>
+<ul>
+<li><a href="#org30e9f36">1.1. what is LM and its Application</a></li>
+<li><a href="#orgdd7b93e">1.2. N-gram: LM 传统做法（不用 NN）</a></li>
+<li><a href="#org995e620">1.3. NN-based LM</a></li>
+<li><a href="#org5f0bc1b">1.4. RNN-based LM</a></li>
+<li><a href="#orgf003661">1.5. 为甚么 RNN-based LM 更好</a>
+<ul>
+<li><a href="#orgaaba7e1">1.5.1. 数据不足对传统方法的冲击及应对方法</a></li>
+<li><a href="#orgddaf78a">1.5.2. 比 smoothing 更好的方法：matrix factorization</a></li>
+<li><a href="#org764ee85">1.5.3. matrix factorization 优点 1: 估算 0 值</a></li>
+<li><a href="#org3875935">1.5.4. matrix factorization 优点 2: 保留相似单词的推理</a></li>
+<li><a href="#orgd9a4b70">1.5.5. 用 NN 来实现 matrix factorization</a></li>
+<li><a href="#org20db015">1.5.6. 用 RNN 来实现 matrix factorization</a></li>
+</ul>
+</li>
+<li><a href="#orge16243a">1.6. Class-based LM</a></li>
+<li><a href="#org078ff94">1.7. Soft Word Class</a></li>
+<li><a href="#org95b8de3">1.8. RNN-based LM + Embedding Layer</a></li>
+<li><a href="#orgb44fda1">1.9. Character-based LM</a></li>
+<li><a href="#orgde76d17">1.10. CNN for ML</a></li>
+<li><a href="#orga169ced">1.11. Neural Turing Machine for LM</a></li>
+<li><a href="#orgeb3045a">1.12. Reference</a>
+<ul>
+<li><a href="#org87d0dc7">1.12.1. To learn more</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org9111e19" class="outline-2">
+<h2 id="org9111e19"><span class="section-number-2">1</span> Language Modeling by RNN</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+[作业 1]
+</p>
+</div>
+<div id="org30e9f36" class="outline-3">
+<h3 id="org30e9f36"><span class="section-number-3">1.1</span> what is LM and its Application</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-26-50.png" alt="screenshot_2017-06-25_17-26-50.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>language model 是什么？估计一个句子（一串单词组成）的出现概率：P(w1,w2,w3,&#x2026;,wn)</li>
+
+<li>有什么应用？
+<ol class="org-ol">
+<li>语音辨识中 <span class="underline">发音相同但是内容不同</span> 就需要概率来选择</li>
+<li>句子生成中 中多合格的句子中选择语法最合理的, 也需要概率</li>
+<li>chat-bot 中机器从眾多句子中选择一个，也需要概率</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="orgdd7b93e" class="outline-3">
+<h3 id="orgdd7b93e"><span class="section-number-3">1.2</span> N-gram: LM 传统做法（不用 NN）</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+核心公式是：
+</p>
+
+<pre class="example">
+P(w1,w2,w3,...,wn) = P(w1|start)P(w2|w1)P(w3|w2)...
+</pre>
+
+<p>
+计算 P(wn|wn-1)方法是：查 dataset 中单词数目
+</p>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-26-59.png" alt="screenshot_2017-06-25_17-26-59.png" />
+</p>
+</div>
+
+<pre class="example">
+1. 有可能你要估计概率的句子，根本没有在 dataset 中出现过，怎么办？
+   把整个句子拆开，拆成：
+   2-gram:  P(w3|w2) or
+   3-gram:  P(w3|w2,w1) or
+
+2. 2-gram 就是只考虑某个单词跟前一个单词出现的概率：
+   P(w2|w1) P(wn|wn-1)
+
+3. 在统计每个 gram 出现的概率，相乘即可
+</pre>
+</div>
+</div>
+
+<div id="org995e620" class="outline-3">
+<h3 id="org995e620"><span class="section-number-3">1.3</span> NN-based LM</h3>
+<div class="outline-text-3" id="text-1-3">
+<pre class="example">
+核心公式是：
+P(w1,w2,w3,...,wn) = P(w1|start)P(w2|w1)P(w3|w2)...
+计算 P(wn|wn-1)方法是：
+通过训练 NN 来来预测下一个单词的概率，
+input: one-hot(wn-1), output: P(w2|w1)
+</pre>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-09.png" alt="screenshot_2017-06-25_17-27-09.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>collect data</li>
+<li>learn 一个 NN, predict next word</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-17.png" alt="screenshot_2017-06-25_17-27-17.png" />
+</p>
+</div>
+
+<pre class="example">
+1. 与传统的【查单词数算概率】的方法计算 P(w2|w1) 概率的区别
+   采用一个 NN 来输出 P(w2|w1)
+
+2. NN-based LM 采用一个 NN 来预测下列内容：
+   1) 收集一堆 data, 训练一个 NN 用来预测【下一个单词】
+   2) NN.input  = one-hot encoding of a word
+      NN.output = 十万维向量（词典有多长向量就多长），向量每一位都是概率值
+   eg. 对于 P(w2|w1) 来说
+       input w1, output w2 的概率
+</pre>
+</div>
+</div>
+
+<div id="org5f0bc1b" class="outline-3">
+<h3 id="org5f0bc1b"><span class="section-number-3">1.4</span> RNN-based LM</h3>
+<div class="outline-text-3" id="text-1-4">
+<pre class="example">
+核心公式是：
+P(w1,w2,w3,...,wn) = P(w1)P(w2|w1)P(w3|w2,w1)P(w4|w3,w2,w1)...
+
+计算 P(wn|wn-1,wn-2,...)方法是：
+通过训练 RNN 来来预测下一个单词的概率，
+
+- input: one-hot(wn-1), result of last RNN hn-1
+- output: P(wn|wn-1,wn-2,...)
+</pre>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-25.png" alt="screenshot_2017-06-25_17-27-25.png" />
+</p>
+</div>
+<pre class="example">
+1. 与 NN-based model 差别
+   NN-based model  只看了【前一个单词】，就预测下一个单词的出现概率，相当于
+                   P(w2|w1), P(w3|w2), P(w4|w3)
+   RNN-based model 是看了【前面出现的所有单词】，才预测下一个：
+                   P(w2|w1), P(w3|w2,w1), P(w4|w3,w2,w1)
+</pre>
+
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-35.png" alt="screenshot_2017-06-25_17-27-35.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf003661" class="outline-3">
+<h3 id="orgf003661"><span class="section-number-3">1.5</span> 为甚么 RNN-based LM 更好</h3>
+<div class="outline-text-3" id="text-1-5">
+</div>
+<div id="orgaaba7e1" class="outline-4">
+<h4 id="orgaaba7e1"><span class="section-number-4">1.5.1</span> 数据不足对传统方法的冲击及应对方法</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-42.png" alt="screenshot_2017-06-25_17-27-42.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>传统方法的弊端：由于传统方法计算 P(w2|w1) 是通过【查单词数】的方法来估算，所以这对数据集要求很高。</li>
+<li>什么是 data sparsity:
+否则就会出现很多概率为 0 的 P(wn|wn-1) 这种现象叫做：data sparsity</li>
+<li>怎么解决？language model smoothing
+永远不要给 P(wn|wn-1) = 0.
+凡是 data set 中没有的，都给定一个概率 0.0001</li>
+</ol>
+</div>
+</div>
+
+<div id="orgddaf78a" class="outline-4">
+<h4 id="orgddaf78a"><span class="section-number-4">1.5.2</span> 比 smoothing 更好的方法：matrix factorization</h4>
+<div class="outline-text-4" id="text-1-5-2">
+<p>
+&gt;&gt;&gt; 公共技巧：出现 sparsity 想到什么
+</p>
+<hr />
+<p>
+出现 sparsity 想到用 matrix factorization 来填充 0 点。
+</p>
+<hr />
+</div>
+</div>
+
+<div id="org764ee85" class="outline-4">
+<h4 id="org764ee85"><span class="section-number-4">1.5.3</span> matrix factorization 优点 1: 估算 0 值</h4>
+<div class="outline-text-4" id="text-1-5-3">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-50.png" alt="screenshot_2017-06-25_17-27-50.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>history vocabulary 必须是维度相同的向量，因为要计算两者的内积</li>
+<li>v 和 h 都是向量，其中 history 是行, vocabulary 是列。而表格中的值都是 P(vocabulary|history), 来自于通过【查单词数】的方法得到的值。</li>
+<li>由于数据集可能不够大，所以有很多值是没有统计到的 &#x2014; 0.</li>
+<li>我们仅仅使用【有值的数据】通过 minimize loss-fn 得到所有的 v 向量和 h 向量。使得 v • h ≈ n</li>
+<li>得到 v 和 h 之后就可以通过 v•h 来估算那些原来值为 0 的那些格子。</li>
+</ol>
+</div>
+</div>
+
+<div id="org3875935" class="outline-4">
+<h4 id="org3875935"><span class="section-number-4">1.5.4</span> matrix factorization 优点 2: 保留相似单词的推理</h4>
+<div class="outline-text-4" id="text-1-5-4">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-27-58.png" alt="screenshot_2017-06-25_17-27-58.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>这种方法的好处：保留部分 vocabulary 之间的相似性的计算结果：
+<span class="underline">如果 cat 能 jump, cat 和 dog 很像，那么 dog 也能 jump.</span>
+cat 和 dog 之间的相似性，被保留并被【推理】</li>
+<li>要求：每一列的概率和应该为 1
+P(all v| dog) = 1</li>
+</ol>
+</div>
+</div>
+
+<div id="orgd9a4b70" class="outline-4">
+<h4 id="orgd9a4b70"><span class="section-number-4">1.5.5</span> 用 NN 来实现 matrix factorization</h4>
+<div class="outline-text-4" id="text-1-5-5">
+<p>
+Matrix Factorization 是可以写成一个 NN .
+matrix factorization 写成 NN 之后，该如何满足【每一列的概率和为 1】的要求。
+</p>
+<p>
+<img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-05.png" alt="screenshot_2017-06-25_17-28-05.png" />
+考虑用 softmax 来满足【每一列的概率和为 1】的要求。
+</p>
+<ol class="org-ol">
+<li>input layer 是 one-hot encoding 编码的 history。既然是 history 就跟 P(w2|w1)的‘|’后面那个有关，如果是 2-gram, 那么这个 one-hot 向量的长度就是 N= len(vocabulary).
+如果是 3-gram, 那么这个 one-hot 向量的长度就是 N*N.
+这一层相当于对某个 history 进行选择。</li>
+
+<li>获得这个 history 的向量：被选中的那个 history(eg. dog) 才会通过 hdog 权重产生 hiden-layer: hdog 向量</li>
+
+<li>hdog layer(就是 hdog 向量) 会与一个矩阵做内积(这个矩阵就是所有的 v 向量组成的). 输出的就是一个数值，但这个数值可能不是概率。</li>
+
+<li>所以 step 3) 的结果需要经过一个 softmax 转换，转换之后的值就可以看做是
+P(ran|dog) P(cried|dog)</li>
+
+<li>把这个跟训练集数据做 minimize cross-entropy</li>
+</ol>
+
+
+<p>
+&gt;&gt;&gt; 为甚么要使用 NN 来实现这个 matrix factorization?
+</p>
+<hr />
+<p>
+因为 NN 版的 matrix factorization <span class="underline">参数更少</span> ：
+&#x2026;&#x2026;&#x2026;&#x2026;传统方法&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;..
+num of history    = |h|;
+num of vocabulary = |v|;
+2-gram, num of P(v|h)  = |v|*|h|
+3-gram, num of P(v|h)  = |v|*|h|*|h|
+&#x2026;&#x2026;&#x2026;&#x2026;NN 实现&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;..
+[qqq 这里没听懂]
+可以手动指定 h 向量和 v 向量的维度， 所以参数更少
+</p>
+<hr />
+</div>
+</div>
+<div id="org20db015" class="outline-4">
+<h4 id="org20db015"><span class="section-number-4">1.5.6</span> 用 RNN 来实现 matrix factorization</h4>
+<div class="outline-text-4" id="text-1-5-6">
+<p>
+为甚么用 RNN 来实现，因为参数比 NN 还少。
+</p>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-13.png" alt="screenshot_2017-06-25_17-28-13.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li><p>
+如果 history 很长，那么 NN 和传统方法都很无力如果要考虑前 t 个词汇，那么有多少种可能的组合呢？需要考虑词汇顺序
+</p>
+<pre class="example">
+|v|^t
+如果 vocabulary = 10w:
+
+</pre>
+<p>
+<del>传统方法</del>   传统方法需要计算 10w * 10w<sup>t</sup> 个 P(v|h)
+<del>NN-based</del>  one-hot encoding 是 10w<sup>t</sup> 维度
+</p></li>
+
+<li>[qqq]RNN-based model 使用最后一个 RNN 的 输出作为整个序列（history)的代表。传统方法和 NN-based 方法对于 history 的表示 跟 |v| 和 |h| 都有关而 RNN 中
+P(wt+1|wt,wt-1,wt-2&#x2026;.,w1) -&gt; P(wt+1|ht)
+'|' 后面那一串向量就只用一个 ht 向量表示剩下的绿色部分跟 <a href="#orgd9a4b70">hdog vector</a> 后面的 softmax 等等一样。这个参数就节省太多了。</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orge16243a" class="outline-3">
+<h3 id="orge16243a"><span class="section-number-3">1.6</span> Class-based LM</h3>
+<div class="outline-text-3" id="text-1-6">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-21.png" alt="screenshot_2017-06-25_17-28-21.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-29.png" alt="screenshot_2017-06-25_17-28-29.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-36.png" alt="screenshot_2017-06-25_17-28-36.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org078ff94" class="outline-3">
+<h3 id="org078ff94"><span class="section-number-3">1.7</span> Soft Word Class</h3>
+<div class="outline-text-3" id="text-1-7">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-44.png" alt="screenshot_2017-06-25_17-28-44.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-50.png" alt="screenshot_2017-06-25_17-28-50.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org95b8de3" class="outline-3">
+<h3 id="org95b8de3"><span class="section-number-3">1.8</span> RNN-based LM + Embedding Layer</h3>
+<div class="outline-text-3" id="text-1-8">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-28-58.png" alt="screenshot_2017-06-25_17-28-58.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="orgb44fda1" class="outline-3">
+<h3 id="orgb44fda1"><span class="section-number-3">1.9</span> Character-based LM</h3>
+<div class="outline-text-3" id="text-1-9">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-29-05.png" alt="screenshot_2017-06-25_17-29-05.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-29-13.png" alt="screenshot_2017-06-25_17-29-13.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-29-31.png" alt="screenshot_2017-06-25_17-29-31.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-29-46.png" alt="screenshot_2017-06-25_17-29-46.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="orgde76d17" class="outline-3">
+<h3 id="orgde76d17"><span class="section-number-3">1.10</span> CNN for ML</h3>
+<div class="outline-text-3" id="text-1-10">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-29-53.png" alt="screenshot_2017-06-25_17-29-53.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="orga169ced" class="outline-3">
+<h3 id="orga169ced"><span class="section-number-3">1.11</span> Neural Turing Machine for LM</h3>
+<div class="outline-text-3" id="text-1-11">
+
+<div class="figure">
+<p><img src="Language Modeling by RNN/screenshot_2017-06-25_17-30-06.png" alt="screenshot_2017-06-25_17-30-06.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgeb3045a" class="outline-3">
+<h3 id="orgeb3045a"><span class="section-number-3">1.12</span> Reference</h3>
+<div class="outline-text-3" id="text-1-12">
+<p>
+For Large Output Layer
+• Factorization of the Output Layer
+• Mikolov Tomáš: Statistical Language Models based on Neural Networks.
+PhD thesis, Brno University of Technology, 2012. (chapter 3.4.2)
+• <a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2015/NN%20Lecture/">http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2015/NN Lecture/</a>
+RNNLM.ecm.mp4/index.html
+•••Noise Contrastive Estimation (NCE)
+• X. Chen, X. Liu, M. J. F. Gales and P. C. Woodland, "Recurrent neural
+network language model training with noise contrastive estimation for
+speech recognition,“ ICASSP, 2015
+• B. Zoph , A. Vaswani, J. May, and K. Knight, “Simple, Fast Noise-Contrastive
+Estimation for Large RNN Vocabularies” , NAACL, 2016
+Hierarachical Softmax
+• F Morin, Y Bengio, “Hierarchical Probabilistic Neural Network Language
+Model”, Aistats, 2005
+Blog••posts:
+<a href="http://sebastianruder.com/word-embeddings-softmax/index.html">http://sebastianruder.com/word-embeddings-softmax/index.html</a>
+<a href="http://cpmarkchang.logdown.com/posts/276263--hierarchical">http://cpmarkchang.logdown.com/posts/276263--hierarchical</a>-
+probabilistic-neural-networks-neural-network-language-model
+</p>
+</div>
+
+<div id="org87d0dc7" class="outline-4">
+<h4 id="org87d0dc7"><span class="section-number-4">1.12.1</span> To learn more</h4>
+<div class="outline-text-4" id="text-1-12-1">
+<p>
+• M. Sundermeyer, H. Ney and R. Schlüter, From Feedforward
+to Recurrent LSTM Neural Networks for Language Modeling,
+in IEEE/ACM Transactions on Audio, Speech, and Language
+Processing, vol. 23, no. 3, pp. 517-529, 2015.
+• Kazuki Irie, Zoltan Tuske, Tamer Alkhouli, Ralf Schluter,
+Hermann Ney, “LSTM, GRU, Highway and a Bit of Attention:
+An Empirical Overview for Language Modeling in Speech
+Recognition”, Interspeech, 2016
+• Ke Tran, Arianna Bisazza, Christof Monz, Recurrent Memory
+Networks for Language Modeling, NAACL, 2016
+• Jianpeng Cheng, Li Dong and Mirella Lapata, Long Short-
+Term Memory-Networks for Machine Reading, arXiv
+preprint, 2016
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

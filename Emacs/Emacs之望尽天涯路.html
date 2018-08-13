@@ -1,0 +1,1736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-13 一 00:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs之望尽天涯路</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="css/site.css" >
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Emacs之望尽天涯路</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6177671">org mode</a>
+<ul>
+<li><a href="#org2ae8d5b">org-agenda is your friend</a></li>
+<li><a href="#org4ba34f3">what should be in org agenda view?</a></li>
+<li><a href="#orga093083">when you start to do a task in the org-agenda view ,dont foget to clock in with pomodoro</a></li>
+<li><a href="#org2a4040c">weekly review and adjust th priority of todo items and weekly archive done items</a></li>
+<li><a href="#org9bd02d8">keep an eye on what you have spent on each day, each week and each month</a></li>
+<li><a href="#org759f1af">demonstration the usage of org capture</a></li>
+<li><a href="#orga92943d">vinum extension in chrom to select txt</a></li>
+<li><a href="#org33ce71f">a few tips</a></li>
+<li><a href="#org4def2d5">org agenda .+1w and +1w</a></li>
+<li><a href="#org6a65061">add tags to org-agenda</a></li>
+<li><a href="#orgdeae908">use follow-mode to see different TODO tasks in different files</a></li>
+<li><a href="#orgc86c701">how to customize the agenda view</a></li>
+<li><a href="#orgb414675">how to set tags/ todo-items/ and drawers for a org file?</a></li>
+<li><a href="#org71f7387">how to add note to a branch of org file</a></li>
+<li><a href="#orgb1fb1d8">how to clutter up your org file, archive?</a></li>
+<li><a href="#orgbdc5840">how to archive to different org file?</a></li>
+<li><a href="#org16ba9aa">STARTED timer in org</a></li>
+<li><a href="#org58e3414">automatic logging of status changes</a>
+<ul>
+<li><a href="#orgcf592f2">Goal: get a logbook entry whenever a TODO keyword chenges</a></li>
+<li><a href="#org0b030e0">Goal: log a "CLOSED" timestamp when something is done</a></li>
+<li><a href="#orgb60dca8">Goal: log a note with a timestamp every time something is rescheduled</a></li>
+</ul>
+</li>
+<li><a href="#org64f85b3">how to add CLOCKING drawer automatically when clock in/out?</a></li>
+<li><a href="#org0ac3a10">Function: the :PROPERTIES: drawer</a>
+<ul>
+<li><a href="#orgaeb11f5">Goal: you dont want to create a log entry every time a repeating task is done</a></li>
+</ul>
+</li>
+<li><a href="#orgc9489a4">how to setup a template for reading books in org file</a></li>
+<li><a href="#org422a692">[tips] org-agenda view can match TAGS/PROP/TODO</a></li>
+<li><a href="#org7902b3c">Function ordered tasks</a>
+<ul>
+<li><a href="#orgdf3f34c">Goal: task should be completed one after one</a></li>
+</ul>
+</li>
+<li><a href="#orgbb75712">Column view in org</a>
+<ul>
+<li><a href="#orge9eda44">Goal: show your org file in columns</a></li>
+<li><a href="#org9e1ea03">Recipe : define columns that</a></li>
+</ul>
+</li>
+<li><a href="#org17d59ea">Effort estimates</a>
+<ul>
+<li><a href="#org9ced1d4">Goal: Estimate the effort that your task will need</a></li>
+<li><a href="#org4206e70">Recipe: effort estimates are stored in a property</a></li>
+</ul>
+</li>
+<li><a href="#org27e5bdd">Rating the importance of org TODO items</a></li>
+<li><a href="#org82280e1">Linking to other items in actual file</a></li>
+<li><a href="#orgc7805af">linking to other items somewhere in the world</a></li>
+<li><a href="#orgc63ffa6">Attachments</a></li>
+<li><a href="#orgbf46a17">Priority</a></li>
+<li><a href="#orgf142e24">Export</a></li>
+<li><a href="#org871f921">Advanced org export</a></li>
+<li><a href="#org3e5dc68">Publish org to extenal server(like bolg)</a></li>
+<li><a href="#org42f9f3a">Reporting clock time in org</a></li>
+<li><a href="#org049d7d3">Advanced clocktable</a></li>
+<li><a href="#org57093b9">Capture column view</a></li>
+<li><a href="#org6af0ef1">Bulk agenda actions</a></li>
+<li><a href="#orgc4fb2f4">Tacking Habit</a></li>
+<li><a href="#orgad5e732">Tables in org</a>
+<ul>
+<li><a href="#org34f62e2">Organize reference material in tables</a></li>
+</ul>
+</li>
+<li><a href="#orgdab4062">Code Snippets in OrgMode</a></li>
+<li><a href="#org50e7753">Table of contents in org         :Export:Table of Content:</a>
+<ul>
+<li><a href="#org48d77fb">choose the depth of TOC</a></li>
+<li><a href="#orgf49cebf">choose the location of TOC</a></li>
+<li><a href="#orge40e376">generate a list of tables or listing</a></li>
+</ul>
+</li>
+<li><a href="#orgf9ca7ad">Org-babel with programming</a>
+<ul>
+<li><a href="#org30cb8ff">Calculation using a formula</a></li>
+<li><a href="#org8a8dd0a">python in org-babel</a></li>
+<li><a href="#org91c3633">Interactive with python</a></li>
+<li><a href="#org222d5a4">Running Test</a></li>
+<li><a href="#orgf0ea4f9">Defining unittest tests</a></li>
+<li><a href="#org5593ba3">Making TestHelloWorld.py</a></li>
+<li><a href="#org844eb8c">Running all tests</a></li>
+<li><a href="#orga6a06c1">Add reference link in source block</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<nav id='navbar'>
+<div class='container'>
+<ul>
+<li><a href='https://yiddishkop.github.io/'>Home</a></li>
+<li><a href='#'>FP</a></li>
+<li><a href='#'>DataScience</a></li>
+<li><a href='#'>Spark</a></li>
+<li><a href='#'>CS</a></li>
+<li><a href='#'>论文撰写</a></li>
+<li><a href='#'>Life</a></li>
+<li><a href='https://yiddishkop.github.io/YIDDI_reme/resume_of_webpage_cn.html'>About</a></li>
+</ul>
+</div>
+</nav>
+
+<p>
+恭喜经历了 <b>方生方死,死而又生,生而复死</b> 的过程后, 你还能坚挺下来, 其实 Emacs 也是人造的并没有那么神奇,能"望尽天涯路"说明自己对 "Emacs 是什么" 这个哲学问题已经有自己的答案了, 我认为既然已经来到这个阶段, 最重要的事情就是每天使用 Emacs, 而
+org-mode 毫无疑问是最佳入口. 这个过程只要把 org-mode 及其 ecosystem 深入了解下即可(也并不容易). 这个过程你对 Emacs 只会有一个感觉:
+</p>
+
+<blockquote>
+<p>
+鸡肋鸡肋, 弃之可惜, 食之无味.
+</p>
+</blockquote>
+
+<div id="org6177671" class="outline-2">
+<h2 id="org6177671">org mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ORG">ORG</span></span></h2>
+<div class="outline-text-2" id="text-org6177671">
+</div>
+<div id="org2ae8d5b" class="outline-3">
+<h3 id="org2ae8d5b">org-agenda is your friend</h3>
+<div class="outline-text-3" id="text-org2ae8d5b">
+<p>
+Never start to do anything before looking at the agenda view. why agenda
+matters? every successful people almost have a secret who will organize your
+time and maximize the value of your time. this is the key to long term
+success. remember how many time you waste on wechat
+</p>
+</div>
+</div>
+
+<div id="org4ba34f3" class="outline-3">
+<h3 id="org4ba34f3">what should be in org agenda view?</h3>
+<div class="outline-text-3" id="text-org4ba34f3">
+<ol class="org-ol">
+<li>important and emergency things goes first, they got A priority, along with
+important and not evergency tasks.</li>
+<li>a few habits to keep you update to date. good habit always makes you a good person.</li>
+<li>Like: health, reading, blogging, family and friendship</li>
+</ol>
+</div>
+</div>
+<div id="orga093083" class="outline-3">
+<h3 id="orga093083">when you start to do a task in the org-agenda view ,dont foget to clock in with pomodoro</h3>
+<div class="outline-text-3" id="text-orga093083">
+<ol class="org-ol">
+<li>this way you could track your time and effect.</li>
+<li>all the goodness of the pomodoro technicals</li>
+</ol>
+</div>
+</div>
+
+<div id="org2a4040c" class="outline-3">
+<h3 id="org2a4040c">weekly review and adjust th priority of todo items and weekly archive done items</h3>
+<div class="outline-text-3" id="text-org2a4040c">
+<p>
+you need only one gtd.org file, and many files in org agendafiles.
+</p>
+</div>
+</div>
+
+<div id="org9bd02d8" class="outline-3">
+<h3 id="org9bd02d8">keep an eye on what you have spent on each day, each week and each month</h3>
+<div class="outline-text-3" id="text-org9bd02d8">
+<p>
+show it in my gtd.org file
+</p>
+</div>
+</div>
+<div id="org759f1af" class="outline-3">
+<h3 id="org759f1af">demonstration the usage of org capture</h3>
+<div class="outline-text-3" id="text-org759f1af">
+<ol class="org-ol">
+<li>capture a todo with priority and tags.</li>
+<li>capture a chrome links for later reading.</li>
+<li>capture a task with a source code file</li>
+</ol>
+</div>
+</div>
+<div id="orga92943d" class="outline-3">
+<h3 id="orga92943d">vinum extension in chrom to select txt&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Chrome">Chrome</span>&#xa0;<span class="vimium">vimium</span></span></h3>
+<div class="outline-text-3" id="text-orga92943d">
+<p>
+i know that now, vimer prefer using "/" searching and locating cursor to
+moveing cursor to locate. Likely in vinum extension of chrome, user should
+use "/" to locate and switch to <b>visual-mode</b> to select and <code>y</code> to copy
+</p>
+</div>
+</div>
+<div id="org33ce71f" class="outline-3">
+<h3 id="org33ce71f">a few tips</h3>
+<div class="outline-text-3" id="text-org33ce71f">
+<ol class="org-ol">
+<li>embed pdf links to todo items such that you could easily access them.</li>
+<li>insert the current chrome tab into place</li>
+<li>learn GTD method now!</li>
+</ol>
+</div>
+</div>
+<div id="org4def2d5" class="outline-3">
+<h3 id="org4def2d5">org agenda .+1w and +1w</h3>
+<div class="outline-text-3" id="text-org4def2d5">
+<p>
+the big diff between <code>.+1w</code> and <code>+1w</code> is <b>when is the next time to do this task</b>
+</p>
+<ul class="org-ul">
+<li><code>.+1w</code> means planning next schedule-time according to the <b>finished time</b></li>
+<li><code>+1w</code>  means planning next schedule-time according to the <b>last schedule time</b></li>
+
+<li><code>+1w</code>  will set the schedule-time to the <b>same day of a week</b>.</li>
+<li><code>.+1w</code> will set the <b>same time-gap</b> between two schedule-time.</li>
+</ul>
+</div>
+</div>
+<div id="org6a65061" class="outline-3">
+<h3 id="org6a65061">add tags to org-agenda</h3>
+<div class="outline-text-3" id="text-org6a65061">
+<p>
+<code>C-c C-q</code> to add tags for current branch of org file
+</p>
+</div>
+</div>
+<div id="orgdeae908" class="outline-3">
+<h3 id="orgdeae908">use follow-mode to see different TODO tasks in different files</h3>
+<div class="outline-text-3" id="text-orgdeae908">
+<p>
+<code>F</code> when in <b>week-agenda-view</b>, we can dinamically see them in source file by
+press <code>F</code> by this method, we can jump directly to that file where current
+task located.
+</p>
+</div>
+</div>
+<div id="orgc86c701" class="outline-3">
+<h3 id="orgc86c701">how to customize the agenda view</h3>
+<div class="outline-text-3" id="text-orgc86c701">
+<ol class="org-ol">
+<li><code>C-c a</code> enter agenda-view, and press <code>C</code> to enter customize-view.</li>
+<li>every node has 4 items: value menu, access key, description, component</li>
+<li><code>value menu</code> has 3 choose items
+<ul class="org-ul">
+<li><code>single command</code> means locate a single char in agenda-view and type it will get the results</li>
+<li><code>prefix</code> means locate a single char in agenda-view and type it will enter another choose-view
+<ul class="org-ul">
+<li><code>access key</code> must contain the prefix char</li>
+</ul></li>
+<li><code>command series</code> means locate a single char in agenda-view and will give many group of results</li>
+</ul></li>
+<li><code>access key</code> hot key for typing to choose this view</li>
+<li><code>description</code> a text for describe this view</li>
+<li><code>component</code> contains some matching conditions and matching form</li>
+</ol>
+</div>
+</div>
+<div id="orgb414675" class="outline-3">
+<h3 id="orgb414675">how to set tags/ todo-items/ and drawers for a org file?</h3>
+<div class="outline-text-3" id="text-orgb414675">
+<ol class="org-ol">
+<li><code>#+SEQ_TODO</code></li>
+<li><code>#+TAGS</code></li>
+<li>drawers start with a line <code>:&lt;DRAWERNAME&gt;:</code> end with next line <code>:END:</code>
+<ol class="org-ol">
+<li>customize <code>org-log-into-drawer</code> to LOGBOOK</li>
+<li><code>C-c C-z</code> to add a note in this branch of org file, you can note everything
+when you do this task.</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="org71f7387" class="outline-3">
+<h3 id="org71f7387">how to add note to a branch of org file</h3>
+<div class="outline-text-3" id="text-org71f7387">
+<p>
+<code>C-c C-z</code> will add a LOGBOOK drawer in this branch, and you can note anything
+when you do this task.
+</p>
+</div>
+</div>
+<div id="orgb1fb1d8" class="outline-3">
+<h3 id="orgb1fb1d8">how to clutter up your org file, archive?</h3>
+<div class="outline-text-3" id="text-orgb1fb1d8">
+<ol class="org-ol">
+<li><code>#+ARCHIVE: &lt;filename&gt;.org::</code> set archive file for local file</li>
+</ol>
+</div>
+</div>
+<div id="orgbdc5840" class="outline-3">
+<h3 id="orgbdc5840">how to archive to different org file?</h3>
+<div class="outline-text-3" id="text-orgbdc5840">
+<ol class="org-ol">
+<li>in a branch of org file, <code>:ARCHIVE: &lt;filename&gt;.org::* &lt;Father-node-name&gt;</code></li>
+<li><p>
+eg
+</p>
+<div class="org-src-container">
+<pre class="src src-org"><span class="org-org-level-1">* Books</span>
+<span class="org-org-special-keyword">:PROPERTIES:</span>
+<span class="org-org-special-keyword">:ARCHIVE:</span> <span class="org-org-property-value">track-books.org::* Read books</span>
+<span class="org-org-special-keyword">:END:</span>
+</pre>
+</div></li>
+<li><code>* &lt;Father-node-name&gt;</code> indicate the father node name in archive file</li>
+</ol>
+</div>
+</div>
+<div id="org16ba9aa" class="outline-3">
+<h3 id="org16ba9aa">STARTED timer in org&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TIMER">TIMER</span></span></h3>
+<div class="outline-text-3" id="text-org16ba9aa">
+<p>
+In spacemacs, many org related commands are lead by hotkey <code>,</code>
+includes <b>timer</b> <b>priority</b> <b>tag</b> <b>archive</b> <b>capture</b> <b>Drawer</b> <b>sparse-tree</b> <b>pomodoro</b>
+</p>
+<ol class="org-ol">
+<li><code>,I</code> record the start time of this org branch</li>
+<li><code>,O</code> record the end time of this org branch</li>
+<li><code>C-c C-x &lt;tab&gt;</code> record the start time of this org branch</li>
+<li><code>C-c C-x C-o</code>   record the end time of this org branch</li>
+</ol>
+</div>
+</div>
+<div id="org58e3414" class="outline-3">
+<h3 id="org58e3414">automatic logging of status changes&#xa0;&#xa0;&#xa0;<span class="tag"><span class="LOG">LOG</span></span></h3>
+<div class="outline-text-3" id="text-org58e3414">
+</div>
+<div id="orgcf592f2" class="outline-4">
+<h4 id="orgcf592f2">Goal: get a logbook entry whenever a TODO keyword chenges</h4>
+<div class="outline-text-4" id="text-orgcf592f2">
+<div class="org-src-container">
+<pre class="src src-org"><span class="org-org-meta-line">#+SEQ_TODO:TODO(t@/!)</span>
+t - hotkey assigned to that TODO keyword
+@ - log a timestamp and note when this is entered
+! - log a timestamp when you leave that keyword
+</pre>
+</div>
+<p>
+the configuration of TODO should be:
+</p>
+<blockquote>
+</blockquote>
+</div>
+</div>
+<div id="org0b030e0" class="outline-4">
+<h4 id="org0b030e0">Goal: log a "CLOSED" timestamp when something is done</h4>
+<div class="outline-text-4" id="text-org0b030e0">
+<p>
+customize variable <code>org-log-done</code>
+</p>
+</div>
+</div>
+<div id="orgb60dca8" class="outline-4">
+<h4 id="orgb60dca8">Goal: log a note with a timestamp every time something is rescheduled</h4>
+<div class="outline-text-4" id="text-orgb60dca8">
+<p>
+customize variable <code>org-log-reschedule</code>
+</p>
+</div>
+</div>
+</div>
+<div id="org64f85b3" class="outline-3">
+<h3 id="org64f85b3">how to add CLOCKING drawer automatically when clock in/out?&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TIMER">TIMER</span></span></h3>
+<div class="outline-text-3" id="text-org64f85b3">
+<p>
+add <code>'(org-clock-into-drawer "CLOCKING")</code>
+</p>
+</div>
+</div>
+<div id="org0ac3a10" class="outline-3">
+<h3 id="org0ac3a10">Function: the :PROPERTIES: drawer</h3>
+<div class="outline-text-3" id="text-org0ac3a10">
+<p>
+the :PROPERTIES: drawer stores task specific settings and user defined attributes.
+<b>Important</b> : the :PROPERTIES: drawer must immediately follow the headline!
+</p>
+</div>
+<div id="orgaeb11f5" class="outline-4">
+<h4 id="orgaeb11f5">Goal: you dont want to create a log entry every time a repeating task is done</h4>
+<div class="outline-text-4" id="text-orgaeb11f5">
+<p>
+recipe: define a :LOGGING: property with value nil
+matching properties in agenda views is possible too.
+</p>
+</div>
+</div>
+</div>
+<div id="orgc9489a4" class="outline-3">
+<h3 id="orgc9489a4">how to setup a template for reading books in org file&#xa0;&#xa0;&#xa0;<span class="tag"><span class="PROPERTY">PROPERTY</span>&#xa0;<span class="DRAWER">DRAWER</span></span></h3>
+<div class="outline-text-3" id="text-orgc9489a4">
+<div class="org-src-container">
+<pre class="src src-org"><span class="org-org-level-1">* </span><span class="org-org-todo">SOMEDAY</span><span class="org-org-level-1"> %^{Author} - %^{Title}</span>
+<span class="org-org-special-keyword">:PROPERTIES:</span>
+<span class="org-org-special-keyword">:PAGES:</span> <span class="org-org-property-value">%^{Pages}</span>
+<span class="org-org-special-keyword">:GENRE:</span> <span class="org-org-property-value">%^{Genre}</span>
+<span class="org-org-special-keyword">:END:</span>
+
+- Recommended by %^{recommended by}
+<span class="org-org-special-keyword">:LOGBOOK:</span>
+- Added: %U
+<span class="org-org-special-keyword">:END:</span>
+
+</pre>
+</div>
+</div>
+</div>
+<div id="org422a692" class="outline-3">
+<h3 id="org422a692">[tips] org-agenda view can match TAGS/PROP/TODO</h3>
+<div class="outline-text-3" id="text-org422a692">
+<p>
+so, TAGS PROP TODO can be searched as an index.
+you should orgnize your PROP properly.
+you can search PROP like <code>&lt;PROP-ITEM&gt;=XX</code>
+</p>
+</div>
+</div>
+<div id="org7902b3c" class="outline-3">
+<h3 id="org7902b3c">Function ordered tasks</h3>
+<div class="outline-text-3" id="text-org7902b3c">
+</div>
+<div id="orgdf3f34c" class="outline-4">
+<h4 id="orgdf3f34c">Goal: task should be completed one after one</h4>
+<div class="outline-text-4" id="text-orgdf3f34c">
+<p>
+Recipe: define an :ORDERED: property with value 't'
+Toggle the :ORDERED: with <code>C-c C-x o</code>
+Customizing variables:
+'(org-enforce-todo-dependencies t)
+'(org-track-ordered-property-with-tag t)
+More customization:
+org-agenda-dim-blocked-tasks
+org-enforce-todo-checkbox-dependencies
+</p>
+</div>
+</div>
+</div>
+<div id="orgbb75712" class="outline-3">
+<h3 id="orgbb75712">Column view in org</h3>
+<div class="outline-text-3" id="text-orgbb75712">
+</div>
+<div id="orge9eda44" class="outline-4">
+<h4 id="orge9eda44">Goal: show your org file in columns</h4>
+</div>
+<div id="org9e1ea03" class="outline-4">
+<h4 id="org9e1ea03">Recipe : define columns that</h4>
+<div class="outline-text-4" id="text-org9e1ea03">
+<p>
+<code>#+COLUMNS: %7TODO(To Do) %58ITEM(Task)...</code>
+Column view can set locally with the :COLUMNS: property in a property drawer
+Show column view <code>C-c C-x C-c</code>
+Leave view <code>q</code>
+</p>
+</div>
+</div>
+</div>
+<div id="org17d59ea" class="outline-3">
+<h3 id="org17d59ea">Effort estimates&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EFFORT">EFFORT</span></span></h3>
+<div class="outline-text-3" id="text-org17d59ea">
+</div>
+<div id="org9ced1d4" class="outline-4">
+<h4 id="org9ced1d4">Goal: Estimate the effort that your task will need</h4>
+</div>
+<div id="org4206e70" class="outline-4">
+<h4 id="org4206e70">Recipe: effort estimates are stored in a property</h4>
+<div class="outline-text-4" id="text-org4206e70">
+<p>
+setup: add definition to head of org file
+</p>
+<p>
+<code>#+PROPERTY: Effort_ALL 0:05 0:10 0:15 0:20 0:30 1:00 2:00 4:00 6:00</code>
+<code>#+PROPERTY: Rating_ALL + ++ +++ ++++ +++++</code>
+and then possible values. add this to column view with
+<code>%8Effort(Effort){:}</code>
+. The {:} menas sum up times.
+Increase Effort : <code>Shift -&gt;</code>
+Decrease Effort : <code>Shift &lt;-</code>
+</p>
+</div>
+</div>
+</div>
+<div id="org27e5bdd" class="outline-3">
+<h3 id="org27e5bdd">Rating the importance of org TODO items&#xa0;&#xa0;&#xa0;<span class="tag"><span class="RATING">RATING</span></span></h3>
+<div class="outline-text-3" id="text-org27e5bdd">
+<p>
+setup: add definition to head of org file
+</p>
+<p>
+press <code>C-c C-x C-c</code> to enter org column view
+step into the unit-box of "Rating", and press
+<code>Shift &lt;-</code> <code>Shift -&gt;</code>
+to give the Rating to certain org branch
+</p>
+</div>
+</div>
+<div id="org82280e1" class="outline-3">
+<h3 id="org82280e1">Linking to other items in actual file&#xa0;&#xa0;&#xa0;<span class="tag"><span class="LINK">LINK</span></span></h3>
+<div class="outline-text-3" id="text-org82280e1">
+<p>
+Goal:     Link to other items in the actual file
+Recipe:   A link looks like that
+\[\[ target\]\]
+<a href="#org7902b3c">Function ordered tasks</a>
+Targets:
+A headline - <b>link name should identical with head name</b>
+<b>Any place</b> in the document with a <code>#+NAME: &lt;target name&gt;</code>
+An item with a <code>:CUSTOM_ID: &lt;ID&gt;</code> in <code>:PROPERTIES:</code>, with <code>[[#&lt;ID&gt;]</code>
+Special:
+Radio targets that look like this <a id="org68dfda8">target</a> create links ont the fly
+Key combinations:
+Edit links with <code>C-c C-l</code>
+Follow link with <code>C-c C-o</code>
+Return to previous position <code>C-c &amp;</code>
+</p>
+</div>
+</div>
+<div id="orgc7805af" class="outline-3">
+<h3 id="orgc7805af">linking to other items somewhere in the world&#xa0;&#xa0;&#xa0;<span class="tag"><span class="LINK">LINK</span></span></h3>
+<div class="outline-text-3" id="text-orgc7805af">
+<p>
+Goal:     link to other items some where in the world
+Recipe:   \[\[XXXX\]\]
+<a href="#org68dfda8">Target</a>:   protocol:location
+[[<a href="file:///home/yiddi/">file:///home/yiddi/</a>&#x2026;]
+[[<a href="http://www.youtube.com">http://www.youtube.com</a>]
+[[<i>nil</i> Jones]
+Special:
+Linking to items with an ID property
+ID is an UUID that you can create with
+<code>M-x org-id-get-create</code>
+Customizing:
+copy the code from the video description to
+the end of your ~/.emacs file
+org-id-locations-file stores in what file
+orgmode should look for IDS
+</p>
+</div>
+</div>
+<div id="orgc63ffa6" class="outline-3">
+<h3 id="orgc63ffa6">Attachments&#xa0;&#xa0;&#xa0;<span class="tag"><span class="ATTACH">ATTACH</span></span></h3>
+<div class="outline-text-3" id="text-orgc63ffa6">
+<ul class="org-ul">
+<li>Goal
+Attach some files to your task</li>
+<li><p>
+Recipe
+Call the attachment system with <code>C-c C-a</code>
+</p>
+<ul class="org-ul">
+<li>s : set a specific directory for task attachment</li>
+<li>l : inherit the attachment directory to the children of task</li>
+</ul>
+<p>
+The attachments are usually stored under <b>./data/</b> and then a
+structure based on the ID property
+</p>
+<ul class="org-ul">
+<li>a : attach file with the method configured in org-attach-method</li>
+<li>c : attach file by copying</li>
+<li>m : attach file by moving(deletes original file)</li>
+<li>l : attach file by creating a hard link</li>
+<li>y : attach file by creating a symbolic link</li>
+<li>o : open attachment, if more than one ask for the name</li>
+<li>O : open attachment in emacs</li>
+<li>f : open the tasks attachment directory</li>
+<li>F : open th tasks attachment directory by dired in emacs</li>
+<li>d : select and delete a single attachment</li>
+<li>D : delete all attachments</li>
+<li>n : create a new attachment</li>
+<li>z : synchronize the task with its attachment directory</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="orgbf46a17" class="outline-3">
+<h3 id="orgbf46a17">Priority&#xa0;&#xa0;&#xa0;<span class="tag"><span class="PRIORITY">PRIORITY</span></span></h3>
+<div class="outline-text-3" id="text-orgbf46a17">
+<p>
+set priority of org branch
+org-mode priority are usually ABC
+you can change them by a configuration line:
+</p>
+</div>
+</div>
+<div id="orgf142e24" class="outline-3">
+<h3 id="orgf142e24">Export&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXPORT">EXPORT</span></span></h3>
+<div class="outline-text-3" id="text-orgf142e24">
+<p>
+Export org files to HTML or PDF
+<code>C-c C-e</code>
+customization:
+Setting <code>org-file-apps</code> determines the application to open files.
+Add a line with <code>#+OPTIONS:</code> to fine tune the output
+d:t    show the contents of drawers
+\n:t   perserve line breaks
+p:t    Export planing information(SCHEDULE/DEADLINE)
+todo:t Include TODO keywords into exprorted text
+</p>
+</div>
+</div>
+<div id="org871f921" class="outline-3">
+<h3 id="org871f921">Advanced org export&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXPORT">EXPORT</span></span></h3>
+<div class="outline-text-3" id="text-org871f921">
+<p>
+by <code>M-x customize-group</code> choose <code>org-export</code> you can customize many items.
+or
+by add some text head of org file:
+</p>
+<hr />
+<p>
++AUTHOR: name the author of the document
++TITLE: to define a title
++SUBTITLE: to define a subtitle
++DESCRIPTION: produces meta data, no output by default
++BEAMER_THEME: select a beamer theme, goolge for "latex beamer themes" to get an idea what is avaible
++BEAMER_FONT_THEME: select a font for the beamer slides
+</p>
+<hr />
+<p>
+followed by <code>#+OPTIONS:</code>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">option</td>
+<td class="org-left">what does it do?</td>
+</tr>
+
+<tr>
+<td class="org-left">toc</td>
+<td class="org-left">enable table of contents</td>
+</tr>
+
+<tr>
+<td class="org-left">^</td>
+<td class="org-left">enable sub/superscripting</td>
+</tr>
+
+<tr>
+<td class="org-left">tags</td>
+<td class="org-left">export tags</td>
+</tr>
+
+<tr>
+<td class="org-left">f</td>
+<td class="org-left">export footnotes</td>
+</tr>
+
+<tr>
+<td class="org-left">\n</td>
+<td class="org-left">toggle line break preservation</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">toggle line bread preservation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>
+Even if org-mode offers several export backends, your file si ususally defined for one sepcial
+backend.
+The beamer backend is nice for standardized outline slides, but its lacking of desing and images.
+SO there is a good chance that your presentation is boring.
+<b>Book recommondation: Garr Reynolds - Presentation Zen</b>
+</p>
+</div>
+</div>
+<div id="org3e5dc68" class="outline-3">
+<h3 id="org3e5dc68">Publish org to extenal server(like bolg)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXPORT">EXPORT</span></span></h3>
+<div class="outline-text-3" id="text-org3e5dc68">
+<ol class="org-ol">
+<li>Customize your web server
+Enable user directory public_html (eg. On Debian 8 this is done as root user by)</li>
+<li><p>
+Customize your ~/.emacs file
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">setq</span> org-publish-project-alist
+      '((<span class="org-string">"org"</span>
+         <span class="org-builtin">:base-directory</span> <span class="org-string">"~/org/"</span>
+         <span class="org-builtin">:publishing-directory</span> <span class="org-string">"~/public_html"</span>
+         <span class="org-builtin">:publishing-function</span> org-html-publish-to-html
+         <span class="org-builtin">:section-numbers</span> nil
+         <span class="org-builtin">:with-toc</span> nil
+         )))
+</pre>
+</div></li>
+<li>Try the export function
+<ul class="org-ul">
+<li>Open your webbrouser and go to <a href="http://loacalhost/~joe/">http://loacalhost/~joe/</a></li>
+<li>Call the export dispatcher with C-c C-e</li>
+<li>Press "P" for Publish</li>
+<li>Choose what to publish</li>
+</ul></li>
+<li>Additional information
+OrgMode is keeping timestamps of the exported files in ~/.org-timestamps/
+delete this directory if you delete public_html, otherwise only files
+changed since the last run will be exported</li>
+</ol>
+</div>
+</div>
+<div id="org42f9f3a" class="outline-3">
+<h3 id="org42f9f3a">Reporting clock time in org&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TIMER">TIMER</span>&#xa0;<span class="CLOCK_TABLE">CLOCK_TABLE</span></span></h3>
+<div class="outline-text-3" id="text-org42f9f3a">
+<ol class="org-ol">
+<li>Gereral info on dynamic blocks
+<ul class="org-ul">
+<li>A dynamic block calls a function to create content dynamically</li>
+<li>A dynamic block starts with a line <code>#+BEGIN: name</code>
+<ul class="org-ul">
+<li>The name is the name of function to call</li>
+</ul></li>
+<li>A dynamic block can have <code>:parameters</code>
+<ul class="org-ul">
+<li>Parameters are written as <code>:parameter1 value1</code></li>
+</ul></li>
+<li>A dynamic block ends with a line <code>#+END:</code></li>
+<li>Some predefined functions are available
+<ul class="org-ul">
+<li><b>clocktable</b> to build a time accounting table</li>
+<li><b>columnview</b> do capture a columnview inside a document</li>
+</ul></li>
+</ul></li>
+<li>Building a clock table
+<ul class="org-ul">
+<li>We add a clock table to it:
+<ul class="org-ul">
+<li>position on the headline and press <code>C-c C-x C-r</code></li>
+<li>adjust <code>:scope</code> for the scope : subree,file,file-with-archives &#x2026; etc.</li>
+<li>adjust depth by changing <code>:maxlevel</code></li>
+</ul></li>
+<li>Update the table at any time with C-c C-c
+<ul class="org-ul">
+<li>Cursor needs to be on the line with <code>#+BEGIN:</code></li>
+<li>You will see the time of the latest update in the caption line</li>
+</ul></li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="org049d7d3" class="outline-3">
+<h3 id="org049d7d3">Advanced clocktable</h3>
+<div class="outline-text-3" id="text-org049d7d3">
+<p>
+Add <b>some config</b> at the end of <code>#+BEGIN: clocktable...</code>
+</p>
+<ul class="org-ul">
+<li>Use <code>:block thismonth</code> to show a block of time for a month
+<ul class="org-ul">
+<li>move forward with type <code>Shift -&gt;</code> immediately after <code>:block thismonth</code></li>
+<li>move backward with <code>Shift &lt;-</code> immediately after <code>:block thismonth</code></li>
+</ul></li>
+<li>Use <code>:step week</code> to show weekly values</li>
+<li>Use <code>:tstart</code> and <code>:tend</code> to specify a time range
+<ul class="org-ul">
+<li>Date specifiers inside double quotes "&lt;2017-2-28&gt;"(you must type in by org-time-stamp)</li>
+<li>org-time-stamp ususally <code>,.</code> or <code>C-c .</code></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="org57093b9" class="outline-3">
+<h3 id="org57093b9">Capture column view&#xa0;&#xa0;&#xa0;<span class="tag"><span class="COLUMN_VIEW">COLUMN_VIEW</span></span></h3>
+<div class="outline-text-3" id="text-org57093b9">
+<p>
+Goal: export column-view (to another file)
+</p>
+
+<p>
+"Since column view is just an overlay over a buffer, it cannot be
+exported or printed directly" (The org menual)
+</p>
+
+<ul class="org-ul">
+<li>But you can create a dynamic block with a column view</li>
+<li>Place your cursor where you want the block to be and press <code>C-c C-x i</code></li>
+<li>You will be asked for a value of the parameter <code>:id</code>
+<ul class="org-ul">
+<li>local : uses the tree in which the block is located</li>
+<li>global : uses all headings in the file</li>
+<li>"path-to-file" : uses the whole file</li>
+<li>"ID" : uses the subtree with this :ID: property</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="org6af0ef1" class="outline-3">
+<h3 id="org6af0ef1">Bulk agenda actions&#xa0;&#xa0;&#xa0;<span class="tag"><span class="AGENDA">AGENDA</span></span></h3>
+<div class="outline-text-3" id="text-org6af0ef1">
+<ol class="org-ol">
+<li><p>
+Setting marks in agenda view
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Key</td>
+<td class="org-left">Action</td>
+</tr>
+
+<tr>
+<td class="org-left">m</td>
+<td class="org-left">mark entry at point</td>
+</tr>
+
+<tr>
+<td class="org-left">u</td>
+<td class="org-left">unmakr entry at point</td>
+</tr>
+
+<tr>
+<td class="org-left">*</td>
+<td class="org-left">makr all entries</td>
+</tr>
+
+<tr>
+<td class="org-left">U</td>
+<td class="org-left">unmark all entries</td>
+</tr>
+
+<tr>
+<td class="org-left">M-m</td>
+<td class="org-left">toggle mark at point</td>
+</tr>
+
+<tr>
+<td class="org-left">M-*</td>
+<td class="org-left">toggle all marks</td>
+</tr>
+
+<tr>
+<td class="org-left">%</td>
+<td class="org-left">mark enties base don a regular expression</td>
+</tr>
+</tbody>
+</table></li>
+<li>Bulk actions in agenda view
+<ul class="org-ul">
+<li>Call for bulk actions by pressing <code>B</code>
+<ul class="org-ul">
+<li>then choose what action to preform</li>
+<li>after the action is performed the marks are removed</li>
+<li>you can toggle persistent marks with *</li>
+</ul></li>
+<li>Archiving entries
+<ul class="org-ul">
+<li><code>$</code> archive all marked entries to their archive files</li>
+<li><code>A</code> archive entries by moving them to their reprctive siblings</li>
+</ul></li>
+</ul></li>
+<li><p>
+Bulk actions: Change and refile entries
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Key</td>
+<td class="org-left">Meaning</td>
+</tr>
+
+<tr>
+<td class="org-left">t</td>
+<td class="org-left">change TODO state</td>
+</tr>
+
+<tr>
+<td class="org-left">+</td>
+<td class="org-left">Add a tag to all selected entries</td>
+</tr>
+
+<tr>
+<td class="org-left">-</td>
+<td class="org-left">remove a tag from all selected entries</td>
+</tr>
+
+<tr>
+<td class="org-left">f</td>
+<td class="org-left">apply a function to marked entries.see menual for details</td>
+</tr>
+
+<tr>
+<td class="org-left">r</td>
+<td class="org-left">prompt for a single refile <a href="#org68dfda8">target</a> and move all entries</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+</div>
+</div>
+<div id="orgc4fb2f4" class="outline-3">
+<h3 id="orgc4fb2f4">Tacking Habit&#xa0;&#xa0;&#xa0;<span class="tag"><span class="AGENDA">AGENDA</span>&#xa0;<span class="HABIT">HABIT</span></span></h3>
+<div class="outline-text-3" id="text-orgc4fb2f4">
+<ol class="org-ol">
+<li>what is a habit?
+Habits are recurring tasks that you do frequently. Examples:
+<ul class="org-ul">
+<li>Brush your teeth everyday</li>
+<li>Water your plants in the house every second day</li>
+<li>Go to gym every week</li>
+</ul></li>
+<li>Once habit are really <b>installed</b> in your brain you dont need
+a remainder to do them</li>
+<li>Prerequisites to track habits
+<ul class="org-ul">
+<li>You need to enable the <b>habits module</b> in org-modules
+<ul class="org-ul">
+<li><code>M-x customize-variable</code> then <code>org-modules</code></li>
+</ul></li>
+<li>Your habit is a recurring item with a TODO keyword representing an "open" state</li>
+<li>You need to define a property <b>STYLE: habit</b></li>
+<li>The syntax for repetitions is a bit different:
+<b>'.2d/3d' means you do the task at least every three days, at most every days</b></li>
+<li>Important: Logging of changes to DONE needs do be enbaled
+<ul class="org-ul">
+<li><b>when you mark the current occurence done dont kill the log entry with C-c C-k!</b></li>
+</ul></li>
+</ul></li>
+<li>Real life example
+<ul class="org-ul">
+<li>Play the bass for 10min everyday
+<ul class="org-ul">
+<li>recurring task with repetition interval '.+1d'</li>
+<li>Style "habit" defined as a property</li>
+</ul></li>
+<li>Play guitar every 3rd day at least, better every 2nd day
+<ul class="org-ul">
+<li>recurring task with repetition interval '.+2d/3d'</li>
+<li>Style "habit" defined as a property</li>
+</ul></li>
+</ul></li>
+<li>How does a habit look in an angenda view?
+<ul class="org-ul">
+<li>looks like a scheduled task, but with a block graph at the end.
+<ul class="org-ul">
+<li>The "!" marks the actual date</li>
+<li>Every "*" marks a completed task on that day</li>
+<li>Background color meanning:
+<ul class="org-ul">
+<li>Blue: task was to be done yet on that day</li>
+<li>Green: task could have been done on that day</li>
+<li>Yellow: task will be overdue the next day</li>
+<li>Red: task is overdue on that day</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Additional tips
+<ol class="org-ol">
+<li>customize <code>org-habit-show-habits-only-for-today</code> if you want to
+see habits that are not due today</li>
+<li>Habit tracking tracks just the successful completion of your habit
+so, if you use it like we did in our example define another task
+to track your progress</li>
+<li>Once a habit is successfully installed(usually around 3 weeks)
+you could also delete the habit tracking task</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="orgad5e732" class="outline-3">
+<h3 id="orgad5e732">Tables in org&#xa0;&#xa0;&#xa0;<span class="tag"><span class="TABLE">TABLE</span></span></h3>
+<div class="outline-text-3" id="text-orgad5e732">
+</div>
+<div id="org34f62e2" class="outline-4">
+<h4 id="org34f62e2">Organize reference material in tables</h4>
+<div class="outline-text-4" id="text-org34f62e2">
+<ul class="org-ul">
+<li>Separate columns with "|"</li>
+<li>Start rows with "|-" and press <code>tab</code></li>
+<li>Move columns with <code>Alt &lt;-</code> or <code>Alt -&gt;</code>
+<ul class="org-ul">
+<li>spacemacs: <code>Alt h/j/k/l</code> move column/row up/down/left/right</li>
+</ul></li>
+<li>Delete/insert column with <code>Alt shift &lt;-</code>  <code>Alt shift -&gt;</code>
+<ul class="org-ul">
+<li>spacemacs: <code>Alt shift h/j/k/l</code> insert/delete column/row</li>
+</ul></li>
+<li>Insert a horizontal line with <code>Ctrl c -</code></li>
+<li>Define constants with <code>#+CONSTANTS:</code></li>
+<li>Define forumulas <code>#+TBLFM:</code>
+<ul class="org-ul">
+<li>Columns referenced by <code>$</code> column-num</li>
+<li>Rows referenced by <code>@</code> row-num</li>
+</ul></li>
+<li>eg.</li>
+</ul>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">curr</th>
+<th scope="col" class="org-left">new</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">Board</th>
+<th scope="col" class="org-left">System</th>
+<th scope="col" class="org-left">CPU</th>
+<th scope="col" class="org-left">BIOS</th>
+<th scope="col" class="org-left">BIOS</th>
+<th scope="col" class="org-left">action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">1.15.0</td>
+<td class="org-left">update</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="orgdab4062" class="outline-3">
+<h3 id="orgdab4062">Code Snippets in OrgMode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="CODE">CODE</span></span></h3>
+<div class="outline-text-3" id="text-orgdab4062">
+<p>
+Programming in org SRC block,
+</p>
+<ul class="org-ul">
+<li>we can use <code>&lt;s &lt;tab&gt;</code> to create this block automatically.</li>
+<li>when code in that block, we can use <code>,'</code> to enter a <b>special-edit-window</b> and
+use <code>,c</code> to commit it.</li>
+<li>we also can add <b>line-num</b> and <b>reference</b> to that block, by just add <code>-n</code> and
+<code>-r</code> to end of the <code>#+BEGIN_SRC</code> line.</li>
+<li>we can ref to certain line by add <code>(ref: &lt;ref-name&gt;)</code> to end of that line.
+and <code>C-c C-l</code> to link to that <code>&lt;ref-name&gt;</code></li>
+<li><p>
+eg.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span class="linenr">1: </span><span class="org-type">@bottle.route</span>(<span class="org-string">'/'</span>):
+<span class="linenr">2: </span><span class="org-keyword">def</span> <span class="org-function-name">blog_index</span>():
+<span class="linenr">3: </span>   <span class="org-variable-name">cookie</span> = bottle.request.get_cookie(<span class="org-string">"session"</span>)
+<span id="coderef-username" class="coderef-off"><span class="linenr">4: </span>   <span class="org-variable-name">username</span> = sessions.get_username(cookie)</span>
+<span class="linenr">5: </span>   <span class="org-keyword">if</span> <span class="org-keyword">not</span> username:
+<span class="linenr">6: </span>       <span class="org-variable-name">username</span> = <span class="org-string">"Unknown"</span>
+<span class="linenr">7: </span>   <span class="org-comment-delimiter"># </span><span class="org-comment">snip</span>
+<span class="linenr">8: </span>   <span class="org-keyword">return</span> bottle.template(<span class="org-string">'blog_template'</span>, <span class="org-builtin">dict</span>(username=username))
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+<div id="org50e7753" class="outline-3">
+<h3 id="org50e7753">Table of contents in org         :Export:Table of Content:</h3>
+<div class="outline-text-3" id="text-org50e7753">
+<p>
+TOC is normally inserted directly <b>before the headline of the file</b>.
+</p>
+</div>
+<div id="org48d77fb" class="outline-4">
+<h4 id="org48d77fb">choose the depth of TOC</h4>
+<div class="outline-text-4" id="text-org48d77fb">
+<pre class="example">
+---------------------
+#+OPTIONS: toc:2
+#+OPTIONS: toc:nil  (no TOC)
+---------------------
+</pre>
+</div>
+</div>
+<div id="orgf49cebf" class="outline-4">
+<h4 id="orgf49cebf">choose the location of TOC</h4>
+<div class="outline-text-4" id="text-orgf49cebf">
+<pre class="example">
+---------------------
+#+OPTIONS: toc:nil  (no default TOC)
+#+TOC: headlines 2  (insert TOC here, with two headline levels)
+---------------------
+</pre>
+</div>
+</div>
+<div id="orge40e376" class="outline-4">
+<h4 id="orge40e376">generate a list of tables or listing</h4>
+<div class="outline-text-4" id="text-orge40e376">
+<p>
+you can also add a TOC to all the <b>tables</b> created in your org files
+</p>
+<pre class="example">
+---------------------
+#+TOC: listings     (build a list of listing)
+#+TOC: tables       (build a list of tables)
+---------------------
+</pre>
+</div>
+</div>
+</div>
+<div id="orgf9ca7ad" class="outline-3">
+<h3 id="orgf9ca7ad">Org-babel with programming&#xa0;&#xa0;&#xa0;<span class="tag"><span class="org">org</span>&#xa0;<span class="babel">babel</span></span></h3>
+<div class="outline-text-3" id="text-orgf9ca7ad">
+</div>
+<div id="org30cb8ff" class="outline-4">
+<h4 id="org30cb8ff">Calculation using a formula</h4>
+<div class="outline-text-4" id="text-org30cb8ff">
+<p>
+<a href="http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html#sec-15">Emacs org-mode example and cookbook</a>
+</p>
+
+<p>
+<code>:exports</code> will export the source-code and result
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">times_two</span>(x):
+    <span class="org-variable-name">y</span> = x*<span class="org-highlight-numbers-number">2</span>
+    <span class="org-keyword">return</span> y
+<span class="org-keyword">print</span> times_two(<span class="org-highlight-numbers-number">5</span>)
+</pre>
+</div>
+
+<hr />
+<div class="org-src-container">
+<pre class="src src-java"><span class="org-keyword">public</span> <span class="org-keyword">class</span> <span class="org-type">HelloWorld</span> {
+    <span class="org-keyword">public</span> <span class="org-keyword">static</span> <span class="org-type">void</span> <span class="org-function-name">main</span>(<span class="org-type">String</span>[] <span class="org-variable-name">args</span>) {
+        System.out.println(<span class="org-string">"hello,world"</span>);
+    }
+}
+</pre>
+</div>
+
+<pre class="example">
+hello,world
+
+</pre>
+<hr />
+<table id="orgf532bd8" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">airmass</th>
+<th scope="col" class="org-right">zenith_seeing</th>
+<th scope="col" class="org-right">delivered_seeing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">0.95</td>
+<td class="org-right">1.1119612</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.0</td>
+<td class="org-right">1.1704854</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.1</td>
+<td class="org-right">1.2875340</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.2</td>
+<td class="org-right">1.4045825</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> delsee
+</pre>
+</div>
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">x</span>, <span class="org-variable-name">y</span>, <span class="org-variable-name">z</span> = <span class="org-builtin">zip</span>(*delsee)
+<span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-variable-name">axes</span> = fig.add_subplot(<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>)
+axes.plot(y, z, marker=<span class="org-string">'o'</span>)
+fig.savefig(fname)
+<span class="org-keyword">return</span> fname
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org8a8dd0a" class="outline-4">
+<h4 id="org8a8dd0a">python in org-babel</h4>
+<div class="outline-text-4" id="text-org8a8dd0a">
+<p>
+<a href="file:///home/yiddi/Documents/org-notes/Python/python-x.html">file:///home/yiddi/Documents/org-notes/Python/python-x.html</a>
+</p>
+</div>
+</div>
+<div id="org91c3633" class="outline-4">
+<h4 id="org91c3633">Interactive with python</h4>
+<div class="outline-text-4" id="text-org91c3633">
+<p>
+Contents:
+23.1 Using an org-mode table in python
+23.2 Plotting with python
+</p>
+<hr />
+<p>
+23.1 Using an org-mode table in python
+</p>
+
+<table id="org75955fc" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">airmass</th>
+<th scope="col" class="org-right">zenith_seeing</th>
+<th scope="col" class="org-right">delivered_seeing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">0.95</td>
+<td class="org-right">1.1119612</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.0</td>
+<td class="org-right">1.1704854</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.1</td>
+<td class="org-right">1.2875340</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.2</td>
+<td class="org-right">1.4045825</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> delsee
+</pre>
+</div>
+
+<p>
+23.2 Plotting with python
+</p>
+
+<p>
+This:
+</p>
+
+<table id="orgae8dd51" border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">airmass</th>
+<th scope="col" class="org-right">zenith_seeing</th>
+<th scope="col" class="org-right">delivered_seeing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">0.95</td>
+<td class="org-right">1.1119612</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.0</td>
+<td class="org-right">1.1704854</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.1</td>
+<td class="org-right">1.2875340</td>
+</tr>
+
+<tr>
+<td class="org-right">1.3</td>
+<td class="org-right">1.2</td>
+<td class="org-right">1.4045825</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-python">
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">x</span>, <span class="org-variable-name">y</span>, <span class="org-variable-name">z</span> = <span class="org-builtin">zip</span>(*delsee)
+<span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-variable-name">axes</span> = fig.add_subplot(<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>)
+axes.plot(y, z, marker=<span class="org-string">'o'</span>)
+fig.savefig(fname)
+<span class="org-keyword">return</span> fname
+
+</pre>
+</div>
+</div>
+</div>
+<div id="org222d5a4" class="outline-4">
+<h4 id="org222d5a4">Running Test</h4>
+<div class="outline-text-4" id="text-org222d5a4">
+<p>
+You can run the doctests from with org-mode with this bash code snippet:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org30472e6">python -m doctest test_HelloWorld.txt <span class="org-highlight-numbers-number">2</span>&gt;&amp;<span class="org-highlight-numbers-number">1</span>
+<span class="org-builtin">true</span>
+</pre>
+</div>
+
+<p>
+If the test succeeds, it will produce no output
+</p>
+</div>
+</div>
+
+<div id="orgf0ea4f9" class="outline-4">
+<h4 id="orgf0ea4f9">Defining unittest tests</h4>
+<div class="outline-text-4" id="text-orgf0ea4f9">
+<p>
+Define the unit test like any other piece of python code:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4d45684"><span class="org-keyword">class</span> <span class="org-type">TestFoo</span>(unittest.TestCase):
+    <span class="org-keyword">def</span> <span class="org-function-name">test_foo</span>(<span class="org-keyword">self</span>):
+        <span class="org-variable-name">greeter</span> = HelloWorld(<span class="org-string">'foo'</span>)
+        <span class="org-keyword">self</span>.assertEqual(greeter.who, <span class="org-string">'foo'</span>)
+</pre>
+</div>
+</div>
+</div>
+<div id="org5593ba3" class="outline-4">
+<h4 id="org5593ba3">Making TestHelloWorld.py</h4>
+<div class="outline-text-4" id="text-org5593ba3">
+<p>
+Define the main testing module like this:
+</p>
+</div>
+</div>
+
+<div id="org844eb8c" class="outline-4">
+<h4 id="org844eb8c">Running all tests</h4>
+<div class="outline-text-4" id="text-org844eb8c">
+<p>
+Use this bash source block to run all tests:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org70049f2">python -m doctest test_HelloWorld.py <span class="org-highlight-numbers-number">2</span>&gt;&amp;<span class="org-highlight-numbers-number">1</span>
+</pre>
+</div>
+<p>
+The output looks like this:
+</p>
+
+<p>
+python TestHelloWorld.py 2&gt;&amp;1
+test_HelloWorld.txt
+Doctest: test_HelloWorld.txt &#x2026; ok
+test_foo (<span class="underline"><span class="underline">main</span></span>.TestFoo) &#x2026; ok
+</p>
+
+<hr />
+<p>
+Ran 2 tests in 0.004s
+</p>
+
+<p>
+OK
+</p>
+</div>
+</div>
+
+<div id="orga6a06c1" class="outline-4">
+<h4 id="orga6a06c1">Add reference link in source block</h4>
+<div class="outline-text-4" id="text-orga6a06c1">
+<p>
+官方名字: code line label:
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(<span class="org-keyword">defun</span> <span class="org-function-name">yiddi/test</span> ()
+<span id="coderef-hello" class="coderef-off"><span class="linenr">2: </span>  (message <span class="org-string">"tst"</span>))</span>
+<span class="linenr">3: </span>
+</pre>
+</div>
+<p>
+<a href="#coderef-hello" class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-hello');" onmouseout="CodeHighlightOff(this, 'coderef-hello');">2</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yiddishkop (<a href="mailto:yiddishkop@163.com">yiddishkop@163.com</a>)</p>
+<p class="date">Date: </p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="https://orgmode.org">Org</a> mode 9.1.13)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

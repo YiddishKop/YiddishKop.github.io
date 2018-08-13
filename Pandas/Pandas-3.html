@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pandas-笔记3</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Pandas-笔记3</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgaf09ad3">1. group by, part-VII</a>
+<ul>
+<li><a href="#orgacecd45">1.1. read in the data from gapminder.tsv by setup para <code>delimiter</code></a></li>
+<li><a href="#orgad16b52">1.2. <code>Series/DataFrame.aggregate()</code></a>
+<ul>
+<li><a href="#orgaa7049d">1.2.1. apply on Series</a></li>
+<li><a href="#orga2021ed">1.2.2. apply on DataFrame</a></li>
+</ul>
+</li>
+<li><a href="#org27f3e6d">1.3. gropy by + mathematical operation</a>
+<ul>
+<li><a href="#orgdf32fab">1.3.1. using built-in mathematical function for Series</a></li>
+<li><a href="#orga5c1e7f">1.3.2. groupby + mean()</a></li>
+<li><a href="#orgd2a557a">1.3.3. loc_filter + mean()</a></li>
+<li><a href="#orgb05a6cf">1.3.4. groupby + describe()</a></li>
+<li><a href="#org2ad2b27">1.3.5. using user-define function by <code>agg(user_defined_fn)</code>, other than the built-in</a></li>
+<li><a href="#org1e632c2">1.3.6. using function of numpy</a></li>
+<li><a href="#orga2ae27c">1.3.7. using ONE user_defined_fn</a></li>
+<li><a href="#org829f2b4">1.3.8. using MULTIPLE user_defined_fn</a></li>
+</ul>
+</li>
+<li><a href="#org1c12fc3">1.4. apply() vs. aggregate() vs. transform</a>
+<ul>
+<li><a href="#orgf3cf357">1.4.1. apply vs. aggregate</a></li>
+<li><a href="#org1f2aa14">1.4.2. apply vs. transform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgaf09ad3">1. group by, part-VII</a>
+<ul>
+<li><a href="#orgacecd45">1.1. read in the data from gapminder.tsv by setup para <code>delimiter</code></a></li>
+<li><a href="#orgad16b52">1.2. <code>Series/DataFrame.aggregate()</code></a>
+<ul>
+<li><a href="#orgaa7049d">1.2.1. apply on Series</a></li>
+<li><a href="#orga2021ed">1.2.2. apply on DataFrame</a></li>
+</ul>
+</li>
+<li><a href="#org27f3e6d">1.3. gropy by + mathematical operation</a>
+<ul>
+<li><a href="#orgdf32fab">1.3.1. using built-in mathematical function for Series</a></li>
+<li><a href="#orga5c1e7f">1.3.2. groupby + mean()</a></li>
+<li><a href="#orgd2a557a">1.3.3. loc_filter + mean()</a></li>
+<li><a href="#orgb05a6cf">1.3.4. groupby + describe()</a></li>
+<li><a href="#org2ad2b27">1.3.5. using user-define function by <code>agg(user_defined_fn)</code>, other than the built-in</a></li>
+<li><a href="#org1e632c2">1.3.6. using function of numpy</a></li>
+<li><a href="#orga2ae27c">1.3.7. using ONE user_defined_fn</a></li>
+<li><a href="#org829f2b4">1.3.8. using MULTIPLE user_defined_fn</a></li>
+</ul>
+</li>
+<li><a href="#org1c12fc3">1.4. apply() vs. aggregate() vs. transform</a>
+<ul>
+<li><a href="#orgf3cf357">1.4.1. apply vs. aggregate</a></li>
+<li><a href="#org1f2aa14">1.4.2. apply vs. transform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgaf09ad3" class="outline-2">
+<h2 id="orgaf09ad3"><span class="section-number-2">1</span> group by, part-VII</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="orgacecd45" class="outline-3">
+<h3 id="orgacecd45"><span class="section-number-3">1.1</span> read in the data from gapminder.tsv by setup para <code>delimiter</code></h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+<span class="org-variable-name">file_path</span> = <span class="org-string">'/home/yiddi/worklap/PythonML/Shan-HungWu DL/Pandas/scipy-2017-tutorial-pandas/data/'</span>
+<span class="org-variable-name">gapminder</span> = pd.read_csv(file_path+<span class="org-string">'gapminder.tsv'</span>, delimiter=<span class="org-string">'\t'</span>)
+<span class="org-keyword">print</span> ( gapminder )
+</pre>
+</div>
+
+<pre class="example">
+country continent  year  lifeExp       pop    gdpPercap
+0     Afghanistan      Asia  1952   28.801   8425333   779.445314
+1     Afghanistan      Asia  1957   30.332   9240934   820.853030
+2     Afghanistan      Asia  1962   31.997  10267083   853.100710
+3     Afghanistan      Asia  1967   34.020  11537966   836.197138
+4     Afghanistan      Asia  1972   36.088  13079460   739.981106
+5     Afghanistan      Asia  1977   38.438  14880372   786.113360
+6     Afghanistan      Asia  1982   39.854  12881816   978.011439
+7     Afghanistan      Asia  1987   40.822  13867957   852.395945
+8     Afghanistan      Asia  1992   41.674  16317921   649.341395
+9     Afghanistan      Asia  1997   41.763  22227415   635.341351
+10    Afghanistan      Asia  2002   42.129  25268405   726.734055
+11    Afghanistan      Asia  2007   43.828  31889923   974.580338
+12        Albania    Europe  1952   55.230   1282697  1601.056136
+13        Albania    Europe  1957   59.280   1476505  1942.284244
+14        Albania    Europe  1962   64.820   1728137  2312.888958
+15        Albania    Europe  1967   66.220   1984060  2760.196931
+16        Albania    Europe  1972   67.690   2263554  3313.422188
+17        Albania    Europe  1977   68.930   2509048  3533.003910
+18        Albania    Europe  1982   70.420   2780097  3630.880722
+19        Albania    Europe  1987   72.000   3075321  3738.932735
+20        Albania    Europe  1992   71.581   3326498  2497.437901
+21        Albania    Europe  1997   72.950   3428038  3193.054604
+22        Albania    Europe  2002   75.651   3508512  4604.211737
+23        Albania    Europe  2007   76.423   3600523  5937.029526
+24        Algeria    Africa  1952   43.077   9279525  2449.008185
+25        Algeria    Africa  1957   45.685  10270856  3013.976023
+26        Algeria    Africa  1962   48.303  11000948  2550.816880
+27        Algeria    Africa  1967   51.407  12760499  3246.991771
+28        Algeria    Africa  1972   54.518  14760787  4182.663766
+29        Algeria    Africa  1977   58.014  17152804  4910.416756
+...       ...   ...      ...       ...          ...
+1674  Yemen, Rep.      Asia  1982   49.113   9657618  1977.557010
+1675  Yemen, Rep.      Asia  1987   52.922  11219340  1971.741538
+1676  Yemen, Rep.      Asia  1992   55.599  13367997  1879.496673
+1677  Yemen, Rep.      Asia  1997   58.020  15826497  2117.484526
+1678  Yemen, Rep.      Asia  2002   60.308  18701257  2234.820827
+1679  Yemen, Rep.      Asia  2007   62.698  22211743  2280.769906
+1680       Zambia    Africa  1952   42.038   2672000  1147.388831
+1681       Zambia    Africa  1957   44.077   3016000  1311.956766
+1682       Zambia    Africa  1962   46.023   3421000  1452.725766
+1683       Zambia    Africa  1967   47.768   3900000  1777.077318
+1684       Zambia    Africa  1972   50.107   4506497  1773.498265
+1685       Zambia    Africa  1977   51.386   5216550  1588.688299
+1686       Zambia    Africa  1982   51.821   6100407  1408.678565
+1687       Zambia    Africa  1987   50.821   7272406  1213.315116
+1688       Zambia    Africa  1992   46.100   8381163  1210.884633
+1689       Zambia    Africa  1997   40.238   9417789  1071.353818
+1690       Zambia    Africa  2002   39.193  10595811  1071.613938
+1691       Zambia    Africa  2007   42.384  11746035  1271.211593
+1692     Zimbabwe    Africa  1952   48.451   3080907   406.884115
+1693     Zimbabwe    Africa  1957   50.469   3646340   518.764268
+1694     Zimbabwe    Africa  1962   52.358   4277736   527.272182
+1695     Zimbabwe    Africa  1967   53.995   4995432   569.795071
+1696     Zimbabwe    Africa  1972   55.635   5861135   799.362176
+1697     Zimbabwe    Africa  1977   57.674   6642107   685.587682
+1698     Zimbabwe    Africa  1982   60.363   7636524   788.855041
+1699     Zimbabwe    Africa  1987   62.351   9216418   706.157306
+1700     Zimbabwe    Africa  1992   60.377  10704340   693.420786
+1701     Zimbabwe    Africa  1997   46.809  11404948   792.449960
+1702     Zimbabwe    Africa  2002   39.989  11926563   672.038623
+1703     Zimbabwe    Africa  2007   43.487  12311143   469.709298
+
+[1704 rows x 6 columns]
+</pre>
+</div>
+</div>
+<div id="orgad16b52" class="outline-3">
+<h3 id="orgad16b52"><span class="section-number-3">1.2</span> <code>Series/DataFrame.aggregate()</code></h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-python">DataFrame.aggregate(func, axis=<span class="org-highlight-numbers-number">0</span>, *args, **kwargs)
+<span class="org-comment-delimiter"># </span><span class="org-comment">func:</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">function</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">list of functions</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">dict of column names -&gt; functions</span>
+</pre>
+</div>
+</div>
+
+<div id="orgaa7049d" class="outline-4">
+<h4 id="orgaa7049d"><span class="section-number-4">1.2.1</span> apply on Series</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Functions you want to apply, forms a <b>list/dict</b> as para <code>funcs</code> in <code>.aggregate(funcs=...)</code> .
+this function will return a DataFrame, each function create a new column in result DataFrame.
+</p>
+
+<p>
+if aggregate takse a dict of (key='colName': value=fn), it will <b>apply certain funcion on certain column</b>
+if not 'colName' not exist in DataFrame who call <code>aggregate</code>, it will create a new one with <b>column name</b> given by <code>dict.key</code>
+</p>
+
+
+<p>
+The code here, is <code>Series.aggregate({dict})</code> so all funcions all applied element-wisely on this column, and create 3 column.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">multi_agg</span> = gapminder.groupby(<span class="org-string">'continent'</span>)[<span class="org-string">'lifeExp'</span>].aggregate({
+    <span class="org-string">'ncount'</span> : np.count_nonzero,
+    <span class="org-string">'mean'</span> : np.mean,
+    <span class="org-string">'std'</span> : np.std
+}).rename(columns = {<span class="org-string">'ncount'</span>: <span class="org-string">'count'</span>,
+                     <span class="org-string">'mean'</span> : <span class="org-string">'avg'</span>,
+                     <span class="org-string">'std'</span> : <span class="org-string">'std_dev'</span>
+}).reset_index()
+<span class="org-keyword">print</span> ( multi_agg )
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orga2021ed" class="outline-4">
+<h4 id="orga2021ed"><span class="section-number-4">1.2.2</span> apply on DataFrame</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+<code>DataFrame.aggregate({dict})</code> <b>can apply different function on different row</b>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org27f3e6d" class="outline-3">
+<h3 id="org27f3e6d"><span class="section-number-3">1.3</span> gropy by + mathematical operation</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>count</li>
+<li>siez</li>
+<li>mean</li>
+<li>std</li>
+<li>min</li>
+<li>quantile( q=0.25 )</li>
+<li>max</li>
+<li>sum</li>
+<li>var</li>
+<li>sem</li>
+<li>describe &lt;&lt;&lt; : important! This method will give you the [count, mean, std, min, 25%, 50%, 75%, max] of the column value for each row</li>
+<li>first</li>
+<li>last</li>
+<li>nth</li>
+</ul>
+</div>
+
+<div id="orgdf32fab" class="outline-4">
+<h4 id="orgdf32fab"><span class="section-number-4">1.3.1</span> using built-in mathematical function for Series</h4>
+</div>
+
+<div id="orga5c1e7f" class="outline-4">
+<h4 id="orga5c1e7f"><span class="section-number-4">1.3.2</span> groupby + mean()</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( <span class="org-builtin">type</span>(gapminder.groupby(<span class="org-string">'year'</span>)) )
+gapminder.groupby(<span class="org-string">'year'</span>)[<span class="org-string">'lifeExp'</span>].mean()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgd2a557a" class="outline-4">
+<h4 id="orgd2a557a"><span class="section-number-4">1.3.3</span> loc_filter + mean()</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<div class="org-src-container">
+<pre class="src src-python" id="orgd2fba44"><span class="org-variable-name">y1952</span> = gapminder.loc[gapminder[<span class="org-string">'year'</span>] == <span class="org-highlight-numbers-number">1952</span>, :]
+<span class="org-keyword">print</span> ( y1952[<span class="org-string">'lifeExp'</span>] )
+<span class="org-keyword">print</span> ( y1952[<span class="org-string">'lifeExp'</span>].mean() )
+</pre>
+</div>
+
+<pre class="example">
+0       28.801
+12      55.230
+24      43.077
+36      30.015
+48      62.485
+60      69.120
+72      66.800
+84      50.939
+96      37.484
+108     68.000
+120     38.223
+132     40.414
+144     53.820
+156     47.622
+168     50.917
+180     59.600
+192     31.975
+204     39.031
+216     39.417
+228     38.523
+240     68.750
+252     35.463
+264     38.092
+276     54.745
+288     44.000
+300     50.643
+312     40.715
+324     39.143
+336     42.111
+348     57.206
+         ...
+1344    30.331
+1356    60.396
+1368    64.360
+1380    65.570
+1392    32.978
+1404    45.009
+1416    64.940
+1428    57.593
+1440    38.635
+1452    41.407
+1464    71.860
+1476    69.620
+1488    45.883
+1500    58.500
+1512    41.215
+1524    50.848
+1536    38.596
+1548    59.100
+1560    44.600
+1572    43.585
+1584    39.978
+1596    69.180
+1608    68.440
+1620    66.071
+1632    55.088
+1644    40.412
+1656    43.160
+1668    32.548
+1680    42.038
+1692    48.451
+Name: lifeExp, Length: 142, dtype: float64
+49.057619718309866
+</pre>
+</div>
+</div>
+
+<div id="orgb05a6cf" class="outline-4">
+<h4 id="orgb05a6cf"><span class="section-number-4">1.3.4</span> groupby + describe()</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<div class="org-src-container">
+<pre class="src src-python" id="org7f5a810"><span class="org-keyword">print</span> ( gapminder.groupby(<span class="org-string">'year'</span>)[<span class="org-string">'lifeExp'</span>].describe() )
+</pre>
+</div>
+
+<pre class="example">
+count       mean        std     min       25%      50%       75%     max
+year
+1952  142.0  49.057620  12.225956  28.801  39.05900  45.1355  59.76500  72.670
+1957  142.0  51.507401  12.231286  30.332  41.24750  48.3605  63.03675  73.470
+1962  142.0  53.609249  12.097245  31.997  43.46850  50.8810  65.23450  73.680
+1967  142.0  55.678290  11.718858  34.020  46.03375  53.8250  67.41950  74.160
+1972  142.0  57.647386  11.381953  35.400  48.50025  56.5300  69.24750  74.720
+1977  142.0  59.570157  11.227229  31.220  50.47550  59.6720  70.38250  76.110
+1982  142.0  61.533197  10.770618  38.445  52.94000  62.4415  70.92125  77.110
+1987  142.0  63.212613  10.556285  39.906  54.94075  65.8340  71.87725  78.670
+1992  142.0  64.160338  11.227380  23.599  56.12175  67.7030  72.58250  79.360
+1997  142.0  65.014676  11.559439  36.087  55.63375  69.3940  74.16975  80.690
+2002  142.0  65.694923  12.279823  39.193  55.52225  70.8255  75.45925  82.000
+2007  142.0  67.007423  12.073021  39.613  57.16025  71.9355  76.41325  82.603
+</pre>
+</div>
+</div>
+
+<div id="org2ad2b27" class="outline-4">
+<h4 id="org2ad2b27"><span class="section-number-4">1.3.5</span> using user-define function by <code>agg(user_defined_fn)</code>, other than the built-in</h4>
+<div class="outline-text-4" id="text-1-3-5">
+<div class="org-src-container">
+<pre class="src src-python">DataFrame.aggregate(func, axis=<span class="org-highlight-numbers-number">0</span>, *args, **kwargs)
+<span class="org-comment-delimiter"># </span><span class="org-comment">func:</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">function</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">list of functions</span>
+<span class="org-comment-delimiter">#       </span><span class="org-comment">dict of column names -&gt; functions</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="org1e632c2" class="outline-4">
+<h4 id="org1e632c2"><span class="section-number-4">1.3.6</span> using function of numpy</h4>
+<div class="outline-text-4" id="text-1-3-6">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">agg_mean</span> = gapminder.groupby(<span class="org-string">'continent'</span>)[<span class="org-string">'lifeExp'</span>].agg(np.mean)
+<span class="org-variable-name">agg_std</span> = gapminder.groupby(<span class="org-string">'continent'</span>)[<span class="org-string">'lifeExp'</span>].agg(np.mean)
+<span class="org-keyword">print</span> ( agg_mean )
+<span class="org-keyword">print</span> ( agg_std )
+</pre>
+</div>
+
+<pre class="example">
+continent
+Africa      48.865330
+Americas    64.658737
+Asia        60.064903
+Europe      71.903686
+Oceania     74.326208
+Name: lifeExp, dtype: float64
+continent
+Africa      48.865330
+Americas    64.658737
+Asia        60.064903
+Europe      71.903686
+Oceania     74.326208
+Name: lifeExp, dtype: float64
+</pre>
+</div>
+</div>
+
+<div id="orga2ae27c" class="outline-4">
+<h4 id="orga2ae27c"><span class="section-number-4">1.3.7</span> using ONE user_defined_fn</h4>
+<div class="outline-text-4" id="text-1-3-7">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">def</span> <span class="org-function-name">my_mean</span>(values):
+    <span class="org-variable-name">n</span> = <span class="org-builtin">len</span>( values )
+    <span class="org-variable-name">s</span>= np.<span class="org-builtin">sum</span>(values)
+    <span class="org-keyword">return</span> s/n
+
+<span class="org-variable-name">my_mean_life</span> = gapminder.groupby(<span class="org-string">'continent'</span>)[<span class="org-string">'lifeExp'</span>].agg(my_mean)
+<span class="org-keyword">print</span> ( my_mean_life )
+</pre>
+</div>
+
+<pre class="example">
+continent
+Africa      48.865330
+Americas    64.658737
+Asia        60.064903
+Europe      71.903686
+Oceania     74.326208
+Name: lifeExp, dtype: float64
+
+</pre>
+</div>
+</div>
+
+<div id="org829f2b4" class="outline-4">
+<h4 id="org829f2b4"><span class="section-number-4">1.3.8</span> using MULTIPLE user_defined_fn</h4>
+<div class="outline-text-4" id="text-1-3-8">
+<p>
+Functions you want to apply, forms a <b>list/dict</b> as para <code>funcs</code> in <code>.aggregate(funcs=...)</code> .
+this function will return a DataFrame, each function create a new column in result DataFrame.
+</p>
+
+<p>
+if aggregate takse a dict of (key='colName': value=fn), it will <b>apply certain funcion on certain column</b>
+if not 'colName' not exist in DataFrame who call <code>aggregate</code>, it will create a new one with <b>column name</b> given by <code>dict.key</code>
+</p>
+
+<p>
+The code here, is <code>Series.aggregate({dict})</code> so all funcions all applied element-wisely on this column, and create 3 column.
+<code>DataFrame.aggregate({dict})</code> can apply different function on different row.
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">multi_agg</span> = gapminder.groupby(<span class="org-string">'continent'</span>)[<span class="org-string">'lifeExp'</span>].aggregate({
+    <span class="org-string">'ncount'</span> : np.count_nonzero,
+    <span class="org-string">'mean'</span> : np.mean,
+    <span class="org-string">'std'</span> : np.std
+}).rename(columns = {<span class="org-string">'ncount'</span>: <span class="org-string">'count'</span>,
+                     <span class="org-string">'mean'</span> : <span class="org-string">'avg'</span>,
+                     <span class="org-string">'std'</span> : <span class="org-string">'std_dev'</span>
+}).reset_index()
+<span class="org-keyword">print</span> ( multi_agg )
+<span class="org-keyword">print</span> ( <span class="org-builtin">type</span>(multi_agg ) )
+</pre>
+</div>
+
+<pre class="example">
+continent  count        avg    std_dev
+0    Africa  624.0  48.865330   9.150210
+1  Americas  300.0  64.658737   9.345088
+2      Asia  396.0  60.064903  11.864532
+3    Europe  360.0  71.903686   5.433178
+4   Oceania   24.0  74.326208   3.795611
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org1c12fc3" class="outline-3">
+<h3 id="org1c12fc3"><span class="section-number-3">1.4</span> apply() vs. aggregate() vs. transform</h3>
+<div class="outline-text-3" id="text-1-4">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">apply(fn)</th>
+<th scope="col" class="org-left">aggregate(fn)</th>
+<th scope="col" class="org-left">transform(fn)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">on df</td>
+<td class="org-left">fn on each row/col</td>
+<td class="org-left">&lt;""</td>
+<td class="org-left">fn on each element</td>
+</tr>
+
+<tr>
+<td class="org-left">on series</td>
+<td class="org-left">fn on each element</td>
+<td class="org-left">&lt;""</td>
+<td class="org-left">fn on each element</td>
+</tr>
+
+<tr>
+<td class="org-left">on groupedDf</td>
+<td class="org-left">fn on each row/col of each groupe</td>
+<td class="org-left">&lt;""</td>
+<td class="org-left">fn on each element</td>
+</tr>
+
+<tr>
+<td class="org-left">on groupedSeries</td>
+<td class="org-left">fn on each element of row of group</td>
+<td class="org-left">&lt;""</td>
+<td class="org-left">fn on each element</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<div id="orgf3cf357" class="outline-4">
+<h4 id="orgf3cf357"><span class="section-number-4">1.4.1</span> apply vs. aggregate</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+apply() and aggregate() are used on <code>groupedDataFrame</code> or <code>groupedSeries</code>
+</p>
+
+<pre class="example">
+
+apply() vs. aggregate()
+
+df -&gt; groupby -&gt; groupedDf -&gt; ['colName'] -&gt; groupedCol -&gt; ~apply(fn)~ =&gt;
+Series(
+fn(colGrp1),
+fn(colGrp2),
+fn(colGrp3),
+...
+)
+
+df -&gt; groupby -&gt; groupedDf -&gt; ['colName'] -&gt; groupedCol -&gt; ~aggregate({fn1, fn2})~ =&gt;
+DataFrame(
+series( fn1(colGrp1), fn2(colGrp2), ...),
+series( fn2(colGrp1), fn2(colGrp2), ...)
+)
+</pre>
+</div>
+</div>
+
+
+<div id="org1f2aa14" class="outline-4">
+<h4 id="org1f2aa14"><span class="section-number-4">1.4.2</span> apply vs. transform</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<div class="org-src-container">
+<pre class="src src-python" id="orgf2c910a"><span class="org-variable-name">dfx</span> = pd.DataFrame( np.random.randn(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">3</span>),
+                    columns=[<span class="org-string">'A'</span>, <span class="org-string">'B'</span>, <span class="org-string">'C'</span>],
+                    index = pd.date_range(<span class="org-string">'1/1/2000'</span>, periods=<span class="org-highlight-numbers-number">10</span>))
+<span class="org-variable-name">transformed_dfx</span> = dfx[<span class="org-string">'A'</span>].transform(<span class="org-keyword">lambda</span> x: (x-x.mean())/x.std())
+<span class="org-keyword">print</span> ( transformed_dfx)
+</pre>
+</div>
+
+<pre class="example">
+2000-01-01    0.649323
+2000-01-02    1.490414
+2000-01-03    0.782475
+2000-01-04   -0.204436
+2000-01-05   -1.812279
+2000-01-06   -1.231838
+2000-01-07    0.240099
+2000-01-08   -0.694474
+2000-01-09    0.558441
+2000-01-10    0.222276
+Freq: D, Name: A, dtype: float64
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

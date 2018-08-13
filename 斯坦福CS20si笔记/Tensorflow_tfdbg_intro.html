@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow Debug 介绍</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow Debug 介绍</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7e68469">1. 介绍 tensorflow debuger</a>
+<ul>
+<li><a href="#orge5af9f5">1.1. tfdbg CLI 界面介绍</a></li>
+<li><a href="#orgbb5b981">1.2. tfdbg TensorBoard 界面介绍</a></li>
+<li><a href="#orgf1f453f">1.3. 其他处理部分</a>
+<ul>
+<li><a href="#org803de34">1.3.1. TB debugger 界面介绍</a></li>
+</ul>
+</li>
+<li><a href="#org5fffbe8">1.4. 一个 broken 例子</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org7e68469" class="outline-2">
+<h2 id="org7e68469"><span class="section-number-2">1</span> 介绍 tensorflow debuger</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="orge5af9f5" class="outline-3">
+<h3 id="orge5af9f5"><span class="section-number-3">1.1</span> tfdbg CLI 界面介绍</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+想使用 tfdbg 的 CLI 模式, 只需两步:
+</p>
+<ol class="org-ol">
+<li>wrap sess with <code>debug.LocalCLIDebugWrapperSession</code></li>
+<li>运行源码时, 给 command 加入 <code>--debug</code> flag</li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> tensorflow.python <span class="org-keyword">import</span> debug <span class="org-keyword">as</span> tf_debug
+<span class="org-variable-name">sess</span> = tf_debug.LocalCLIDebugWrapperSession(sess)
+</pre>
+</div>
+
+<p>
+tfdbg CLI 界面
+</p>
+<pre class="example">
+--- run-start: run #1: 1 fetch (accuracy/accuracy/Mean:0); 2 feeds -------------
+| &lt;-- --&gt; | run_info
+| run | invoke_stepper | exit |
+                                                                                             UP
+TTTTTT FFFF DDD  BBBB   GGG
+  TT   F    D  D B   B G
+  TT   FFF  D  D BBBB  G  GG
+  TT   F    D  D B   B G   G
+  TT   F    DDD  BBBB   GGG
+
+======================================
+Session.run() call #1:
+
+Fetch(es):
+  accuracy/accuracy/Mean:0
+
+Feed dict:
+  input/x-input:0
+  input/y-input:0
+======================================
+
+Select one of the following commands to proceed ----&gt;
+  run:
+    Execute the run() call with debug tensor-watching
+  run -n:
+    Execute the run() call without debug tensor-watching
+  run -t &lt;T&gt;:
+    Execute run() calls (T - 1) times without debugging, then execute run() once more with deDN
+--- Scroll (PgDn): 0.00% --------------------------------------------------------- Mouse: ON --
+tfdbg&gt;
+</pre>
+</div>
+</div>
+
+<div id="orgbb5b981" class="outline-3">
+<h3 id="orgbb5b981"><span class="section-number-3">1.2</span> tfdbg TensorBoard 界面介绍</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Truth values for the linear model.</span>
+<span class="org-variable-name">k_true</span> = [[<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">3</span>, -<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">2</span>, -<span class="org-highlight-numbers-number">2</span>]]
+<span class="org-variable-name">b_true</span> = [-<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">5</span>]
+<span class="org-variable-name">num_examples</span> = <span class="org-highlight-numbers-number">128</span>
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Input place holders.</span>
+    <span class="org-variable-name">x</span> = tf.placeholder(tf.float32, shape=[<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">3</span>], name=<span class="org-string">"x"</span>)
+    <span class="org-variable-name">y</span> = tf.placeholder(tf.float32, shape=[<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">2</span>], name=<span class="org-string">"y"</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Deine model architecture, loss and training operator.</span>
+    <span class="org-variable-name">dense_layer</span> = tf.keras.layers.Dense(<span class="org-highlight-numbers-number">2</span>, use_bias=<span class="org-constant">True</span>)
+    <span class="org-variable-name">y_hat</span> = dense_layer(x)
+    <span class="org-variable-name">loss</span> = tf.reduce_mean(
+        tf.keras.losses.mean_squared_error(y, y_hat), name=<span class="org-string">"loss"</span>)
+    <span class="org-variable-name">train_op</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>).minimize(loss)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Initializer model variables.</span>
+    sess.run(tf.global_variables_initializer())
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Saver</span>
+    <span class="org-variable-name">saver</span> = tf.train.Saver()
+
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">50</span>):
+        <span class="org-comment-delimiter"># </span><span class="org-comment">Generate synthetic training data.</span>
+        <span class="org-variable-name">xs</span> = np.random.randn(num_examples, <span class="org-highlight-numbers-number">3</span>)
+        <span class="org-variable-name">ys</span> = np.matmul(xs, k_true) + b_true
+
+        <span class="org-variable-name">save_path</span> = saver.save(sess, <span class="org-string">'/tmp/logdir/lin_dbg.ckpt'</span>)
+
+        <span class="org-variable-name">loss_val</span>, <span class="org-variable-name">_</span> = sess.run([loss, train_op], feed_dict={x: xs, y: ys})
+        <span class="org-keyword">print</span>(<span class="org-string">"Iter %d: loss = %g"</span> % (i, loss_val))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-keyword">from</span> tensorflow.python <span class="org-keyword">import</span> debug <span class="org-keyword">as</span> tf_debug
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Truth values for the linear model.</span>
+<span class="org-variable-name">k_true</span> = [[<span class="org-highlight-numbers-number">1</span>, -<span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">3</span>, -<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">2</span>, -<span class="org-highlight-numbers-number">2</span>]]
+<span class="org-variable-name">b_true</span> = [-<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">5</span>]
+<span class="org-variable-name">num_examples</span> = <span class="org-highlight-numbers-number">128</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Input place holders.</span>
+<span class="org-variable-name">x</span> = tf.placeholder(tf.float32, shape=[<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">3</span>], name=<span class="org-string">"x"</span>)
+<span class="org-variable-name">y</span> = tf.placeholder(tf.float32, shape=[<span class="org-constant">None</span>, <span class="org-highlight-numbers-number">2</span>], name=<span class="org-string">"y"</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Deine model architecture, loss and training operator.</span>
+<span class="org-variable-name">dense_layer</span> = tf.keras.layers.Dense(<span class="org-highlight-numbers-number">2</span>, use_bias=<span class="org-constant">True</span>)
+<span class="org-variable-name">y_hat</span> = dense_layer(x)
+<span class="org-variable-name">loss</span> = tf.reduce_mean(
+    tf.keras.losses.mean_squared_error(y, y_hat), name=<span class="org-string">"loss"</span>)
+<span class="org-variable-name">train_op</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>).minimize(loss)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Init OP</span>
+<span class="org-variable-name">init_op</span> = tf.global_variables_initializer()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Saver</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">saver = tf.train.Saver()</span>
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Initializer model variables.</span>
+    sess.run(init_op)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">sess = tf_debug.TensorBoardDebugWrapperSession(sess, "yiddiEdge:7000")</span>
+
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">50</span>):
+        <span class="org-comment-delimiter"># </span><span class="org-comment">Generate synthetic training data.</span>
+        <span class="org-variable-name">xs</span> = np.random.randn(num_examples, <span class="org-highlight-numbers-number">3</span>)
+        <span class="org-variable-name">ys</span> = np.matmul(xs, k_true) + b_true
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">save_path = saver.save(sess, '/tmp/logdir/lin_dbg.ckpt')</span>
+
+        <span class="org-variable-name">loss_val</span>, <span class="org-variable-name">_</span> = sess.run([loss, train_op], feed_dict={x: xs, y: ys})
+        <span class="org-keyword">print</span>(<span class="org-string">"Iter %d: loss = %g"</span> % (i, loss_val))
+</pre>
+</div>
+
+<p>
+0 - 0eac0512-9001-40a5-aff7-d50b30dfa1a8
+</p>
+
+
+<p>
+想使用 tfdbg 并对其进行可视化, 注意严格按照如下步骤来,
+</p>
+
+<ol class="org-ol">
+<li>run un-modified python code to produce <code>.ckpt</code> file</li>
+<li>execute TB command without &#x2013;debug flag</li>
+<li>modify python code, import debug and wrap sess, TB still run now.</li>
+<li>run modified python code</li>
+</ol>
+
+<p>
+如果, 完全关闭 TB 之后再修改代码, 会 lead an rpc error.
+</p>
+<blockquote>
+<p>
+_Rendezvous: &lt;_Rendezvous of RPC that terminated with (StatusCode.UNAVAILABLE,
+Connect Failed)&gt;
+</p>
+</blockquote>
+
+
+<ol class="org-ol">
+<li><p>
+需要在 tensorboard 命令行中加入如下参数 <code>debugger_port</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">require</span> '<span class="org-constant">ob-async</span>)
+</pre>
+</div>
+
+<pre class="example">
+ob-async
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-shell">tensorboard --logdir /tmp/logdir --debugger_port <span class="org-highlight-numbers-number">7000</span>
+</pre>
+</div></li>
+
+<li><p>
+源码中导入 tensorflow.python.debug
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">To connect to the debugger from your tf.Session:</span>
+<span class="org-keyword">from</span> tensorflow.python <span class="org-keyword">import</span> debug <span class="org-keyword">as</span> tf_debug
+</pre>
+</div></li>
+
+<li>wrap <code>sess</code> with <code>debug.TensorBoardDebugWrapperSession(sess, "local_URL")</code></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">sess</span> = tf.Session()
+<span class="org-variable-name">sess</span> = tf_debug.TensorBoardDebugWrapperSession(sess, <span class="org-string">"yiddiEdge:7000"</span>)
+sess.run(my_fetches)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">To connect to the debugger using hooks, e.g., from tf.Estimator:</span>
+<span class="org-keyword">from</span> tensorflow.python <span class="org-keyword">import</span> debug <span class="org-keyword">as</span> tf_debug
+<span class="org-variable-name">hook</span> = tf_debug.TensorBoardDebugHook(<span class="org-string">"yiddiEdge:7000"</span>)
+my_estimator.fit(x=x_data, y=y_data, steps=<span class="org-highlight-numbers-number">1000</span>, monitors=[hook])
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgf1f453f" class="outline-3">
+<h3 id="orgf1f453f"><span class="section-number-3">1.3</span> 其他处理部分</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-ipython" id="orgb3d5404">&lt;&lt;get-pid&gt;&gt;
+&lt;&lt;kill-pid&gt;&gt;
+&lt;&lt;<span class="org-keyword">del</span>-graph-summary&gt;&gt;
+&lt;&lt;tensorboard-run&gt;&gt;
+&lt;&lt;run-tensorboard&gt;&gt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="orgcfc5346">ps -aux | grep <span class="org-string">"python"</span> | grep -E <span class="org-string">"(default|tfdbg|tensorboard)"</span> | grep -v <span class="org-string">"grep"</span> | awk <span class="org-string">'{print $2}'</span>
+</pre>
+</div>
+
+<pre class="example">
+14526
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="org2102a81"><span class="org-comment-delimiter">;; </span><span class="org-comment">&#21462;&#20803;&#32032;</span>
+(<span class="org-keyword">defun</span> <span class="org-function-name">r1l</span>(tbl)
+  (mapcar (<span class="org-keyword">lambda</span> (x) (number-to-string (car x))) tbl)
+  )
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(print pid)</span>
+<span class="org-comment-delimiter">;; </span><span class="org-comment">(print (reduce-one-layer pid))</span>
+(mapcar #'shell-command-to-string
+        (mapcar (<span class="org-keyword">lambda</span> (x) (concat <span class="org-string">"kill "</span> x)) (r1l pid))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="orgde1064a">rm -rf /tmp/logdir/*
+ls /tmp/logdir
+</pre>
+</div>
+</div>
+
+
+
+
+<div id="org803de34" class="outline-4">
+<h4 id="org803de34"><span class="section-number-4">1.3.1</span> TB debugger 界面介绍</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_22-34-56.png" alt="screenshot_2018-08-02_22-34-56.png" />
+</p>
+</div>
+
+
+<p>
+界面大概可以分成4块, 左上角是树型结构是根据模型的 name_scope 绘制. 其中
+gradients 节点是 BP 算法的重要部分, 应该多加关注. 他基本决定了你的 model 是如何一步一步训练的.
+</p>
+
+
+<p>
+右上角就是我们熟悉的 graph 对应的结构图, 其中每一个 node 右键都可以点击 continue
+to. 这样他就会出现在右下角的列表中, 这个列表用于显示 Tensor Value.
+</p>
+
+<p>
+你当然也可以让 gradient node continue, 右下角的最后一列是一个黑白色的条, 将鼠标悬停其上可以查看每个 node 的各种信息,
+</p>
+<ul class="org-ul">
+<li>mean value of elements in this tensor</li>
+<li>stddev value of elements in this tensor</li>
+<li>max value of elements in this tensor</li>
+<li># of elements</li>
+<li># of +</li>
+<li># of -</li>
+</ul>
+
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_22-49-23.png" alt="screenshot_2018-08-02_22-49-23.png" />
+</p>
+</div>
+
+
+<p>
+当你点击 "click to view", 你会发现这个 Tensor 的详细视图, 你可以使用 numpy
+slicing 的方式去界定查看范围.
+</p>
+
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_22-50-23.png" alt="screenshot_2018-08-02_22-50-23.png" />
+</p>
+</div>
+
+
+<p>
+当你设置 [::, 0] 表示我要查看该 Tensor 的第0列随优化次数的变化
+</p>
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_22-53-45.png" alt="screenshot_2018-08-02_22-53-45.png" />
+</p>
+</div>
+
+
+<p>
+我们还可以看看 loss Tensor, 他是一个数值, 当我们打开他的 "click to view", 然后点击 "FULL HISTROY" 按键, 然后点击左下角的 "CONTINUE", 然后在弹出的界面中输入 "50"
+次, 可以看到他随优化次数而产生的变化, 这个变化是动态的, 整个界面的所有数值都会随之改变, 你可以观察到 loss 曲线的变化, 可以看到随着模型的训练, 这个 loss 值是如何变化的.
+</p>
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_23-00-32.png" alt="screenshot_2018-08-02_23-00-32.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_23-00-47.png" alt="screenshot_2018-08-02_23-00-47.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_23-01-56.png" alt="screenshot_2018-08-02_23-01-56.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org5fffbe8" class="outline-3">
+<h3 id="org5fffbe8"><span class="section-number-3">1.4</span> 一个 broken 例子</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-shell">python -m tensorflow.python.debug.examples.debug_mnist
+</pre>
+</div>
+
+<p>
+这会从官网下在数据集, 和一段有bug的源码, 训练之后可以看到第二行出现了精度上升,
+紧接着急剧下降, 然后一直维持在 0.098. 这种情况在训练 NN 时非常常见, 一般都是因为模型中出现了 "bad numerical values", 像是 inf or non. 我们下面要做的就是找到哪个
+Tensor 出了问题.
+</p>
+
+<pre class="example">
+Accuracy at step 0: 0.1113
+Accuracy at step 1: 0.2883  &lt;===
+Accuracy at step 2: 0.098
+Accuracy at step 3: 0.098
+Accuracy at step 4: 0.098
+Accuracy at step 5: 0.098
+Accuracy at step 6: 0.098
+Accuracy at step 7: 0.098
+Accuracy at step 8: 0.098
+Accuracy at step 9: 0.098
+</pre>
+
+
+<p>
+我们可以在这一步的 "Till condition met by watched tensor", 从下拉选框中选择
+"contains +/- or NaN", 这样模型的训练会忽略次数("50"), 一直训练直到某个 node 出现了 inf or nan 值, 这时候会停下, 并显示那个节点为红色.
+</p>
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-02_23-01-56.png" alt="screenshot_2018-08-02_23-01-56.png" />
+</p>
+</div>
+
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-03_00-15-32.png" alt="screenshot_2018-08-03_00-15-32.png" />
+</p>
+</div>
+
+<p>
+我们可以点开 click to view, 其中显示的橙色线条就代表 inf or nan 值.
+</p>
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-03_00-16-26.png" alt="screenshot_2018-08-03_00-16-26.png" />
+</p>
+</div>
+
+
+<p>
+但是, 为什么 inf or nan 会出现在 cross_entropy 节点中呢.
+</p>
+
+<ol class="org-ol">
+<li>查看源代码中  cross_entropy 节点的定义, 主要看该节点的输入节点</li>
+<li>从右上角的 graph 结构图中查其输入节点, 这里 cross_entropy 输入节点为 softmax,
+右键 -&gt; expand and heighlight 这样在 Tensor value overview(右下角) 部分 我们就可以看到被高亮的 softmax 此时的值. 很明显这里 softmax 为 0. 但我们对
+softmax 取 log 求cross_entropy的时候就会产生 inf.</li>
+</ol>
+
+
+
+
+<div class="figure">
+<p><img src="介绍 tensorflow debuger/screenshot_2018-08-03_00-19-40.png" alt="screenshot_2018-08-03_00-19-40.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

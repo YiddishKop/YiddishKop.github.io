@@ -1,0 +1,1531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-09 Recipe of Deep Learning</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-09 Recipe of Deep Learning</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org6d6dfd4">1. Recipe of Deep Learning</a>
+<ul>
+<li><a href="#org4bfffeb">1.1. Do not always blame Overfitting</a></li>
+<li><a href="#orgd9835cc">1.2. 「针对训练 or 测试」</a></li>
+</ul>
+</li>
+<li><a href="#org4c1ddfe">2. Bad results on Training Data</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org7631c0c">2.0.1. New Activation Function</a></li>
+<li><a href="#org8d84ad7">2.0.2. Hard to get the power of Deep</a></li>
+<li><a href="#org9a3e2dd">2.0.3. 为什么 layer 越多，正确率不增反降？</a></li>
+</ul>
+</li>
+<li><a href="#orgbc322d6">2.1. Vanishing Gradient Problem</a>
+<ul>
+<li><a href="#org42cacff">2.1.1. sigmoid 会衰减变化量</a></li>
+<li><a href="#org62ea77a">2.1.2. 如何解决：更换激活函数为 ReLU</a></li>
+<li><a href="#org434cb51">2.1.3. ReLU - variants</a></li>
+<li><a href="#orgc29b6f4">2.1.4. ReLU - advanced: Maxout</a></li>
+<li><a href="#orgbb3e346">2.1.5. Maxout is more powerful</a></li>
+<li><a href="#org7072ce5">2.1.6. How to train Maxout network</a></li>
+</ul>
+</li>
+<li><a href="#orga9729bc">2.2. Adaptive Learning Rate: RMSProp</a>
+<ul>
+<li><a href="#orgd3d4fbb">2.2.1. Hard to find optimal network parameters</a></li>
+<li><a href="#org104b828">2.2.2. Momentum</a></li>
+<li><a href="#orgdc5590d">2.2.3. Adam(= RMSProp + Momentum)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6a8625f">3. Bad results on Testing Data</a>
+<ul>
+<li><a href="#org5f0ead3">3.1. Early Stopping</a></li>
+<li><a href="#org411274f">3.2. Regularization</a>
+<ul>
+<li><a href="#org9224b69">3.2.1. L2 Regularization</a></li>
+<li><a href="#org280dafb">3.2.2. L1 Regularization</a></li>
+<li><a href="#orgacd7484">3.2.3. L1 和 L2 有什么不同</a></li>
+<li><a href="#org0e4de7e">3.2.4. Regularization - weight decay</a></li>
+</ul>
+</li>
+<li><a href="#org696b9f8">3.3. Regularization vs. Early stopping</a></li>
+<li><a href="#orga586265">3.4. Dropout</a>
+<ul>
+<li><a href="#org6a35a74">3.4.1. Traning</a></li>
+<li><a href="#orgb3faf60">3.4.2. Testing</a></li>
+<li><a href="#org1548912">3.4.3. Why dropout work</a></li>
+<li><a href="#orgda64bc6">3.4.4. Why multiply (1-p)%</a></li>
+<li><a href="#org643dacc">3.4.5. Dropout is a kind of ensemble</a></li>
+<li><a href="#org65a4b59">3.4.6. Ensemble Learning 为什么 work</a></li>
+<li><a href="#org507f936">3.4.7. Training of Dropout</a></li>
+<li><a href="#org0732481">3.4.8. Testing of Dropout</a></li>
+<li><a href="#org4cab095">3.4.9. 获得了这样的灵感</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org6d6dfd4" class="outline-2">
+<h2 id="org6d6dfd4"><span class="section-number-2">1</span> Recipe of Deep Learning</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Deep learning, 虽然参数很多，但确实不容易 overfitting。
+K-NN, DecisionTree 训练集上一做就是 100%正确，这才是 overfitting。
+DL 在训练集上就不太容易获得好的结果，所以即便在测试集上也不好，这个也不算是 overfitting
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_12-56-40.png" alt="screenshot_2017-06-10_12-56-40.png" />
+</p>
+</div>
+
+<p>
+如果出现 overfitting，调整了这三个训练步骤之后，还是要再检查一遍训练集是否足够好。
+</p>
+</div>
+<div id="org4bfffeb" class="outline-3">
+<h3 id="org4bfffeb"><span class="section-number-3">1.1</span> Do not always blame Overfitting</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+下图的 56-layer 并没有 overfitting，因为训练集和测试集都是这样的表现
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_12-59-26.png" alt="screenshot_2017-06-10_12-59-26.png" />
+</p>
+</div>
+
+<p>
+在做 DL 的时候，有太多太多的可能性让你的结果是不好的：
+</p>
+<ol class="org-ol">
+<li>local minimum</li>
+<li>saddle point</li>
+<li>plateau(高原:低斜率，但高)</li>
+</ol>
+<p>
+这个并不是 overfitting，也不是 underfitting，就是没有 train 好。
+</p>
+</div>
+</div>
+
+<div id="orgd9835cc" class="outline-3">
+<h3 id="orgd9835cc"><span class="section-number-3">1.2</span> 「针对训练 or 测试」</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_13-07-05.png" alt="screenshot_2017-06-10_13-07-05.png" />
+</p>
+</div>
+
+<p>
+在 DL 中有两个问题：Testing 不好 和 Training 不好。
+eg. Dropout for testing data ONLY
+</p>
+
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_13-08-49.png" alt="screenshot_2017-06-10_13-08-49.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org4c1ddfe" class="outline-2">
+<h2 id="org4c1ddfe"><span class="section-number-2">2</span> Bad results on Training Data</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org7631c0c" class="outline-4">
+<h4 id="org7631c0c"><span class="section-number-4">2.0.1</span> New Activation Function</h4>
+<div class="outline-text-4" id="text-2-0-1">
+<p>
+如果是训练集上效果不好，有可能是 function-set 不行，也就是 net structure 没设计好。比如 激活函数不好
+</p>
+</div>
+</div>
+<div id="org8d84ad7" class="outline-4">
+<h4 id="org8d84ad7"><span class="section-number-4">2.0.2</span> Hard to get the power of Deep</h4>
+<div class="outline-text-4" id="text-2-0-2">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_13-11-34.png" alt="screenshot_2017-06-10_13-11-34.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org9a3e2dd" class="outline-4">
+<h4 id="org9a3e2dd"><span class="section-number-4">2.0.3</span> 为什么 layer 越多，正确率不增反降？</h4>
+<div class="outline-text-4" id="text-2-0-3">
+<p>
+一个可能的原因是：梯度消失 and 梯度爆炸
+</p>
+</div>
+</div>
+<div id="orgbc322d6" class="outline-3">
+<h3 id="orgbc322d6"><span class="section-number-3">2.1</span> Vanishing Gradient Problem</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_14-52-06.png" alt="screenshot_2017-06-10_14-52-06.png" />
+</p>
+</div>
+
+<pre class="example">
+                   input layer 附近的参数 w 对于
+                 /  loss function 的微分会非常小.
+                 |             |
+                 |             |
+                 |             | 如果设定相同的 learning
+                 |             | rate with下面
+-----------      |             |
+w near input     |             v
+layer just       |     参数 w update 非常慢
+random; while    |
+w near output   &lt;|
+has converged    |  output layer 附近的参数 w 对于
+-----------      |  loss function 的微分会非常大.
+                 |              |
+                 |              |
+                 |              | 如果设定相同的 learning
+                 |              | rate with上面
+                 |              |
+                 \              v
+                        参数 w update 非常快
+
+</pre>
+</div>
+<div id="org42cacff" class="outline-4">
+<h4 id="org42cacff"><span class="section-number-4">2.1.1</span> sigmoid 会衰减变化量</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+backpropagtion 的意义是用梯度，也就是微分。求的是某一个 w 的增加量对于 loss-fn(cross-entropy)的变化量的比值：
+</p>
+
+<p>
+\(\frac{\partial{C}}{\partial{w}} = \frac{\bigtriangleup{C}}{\bigtriangleup{w}}\)
+</p>
+
+<p>
+但是由于 sigmoid 函数对于·「差距的衰减」作用， 如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2018-07-20_02-48-23.png" alt="screenshot_2018-07-20_02-48-23.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_14-49-54.png" alt="screenshot_2017-06-10_14-49-54.png" />
+</p>
+</div>
+
+<p>
+导致越靠近 input-layer 的 w 的变化量: \(\bigtriangleup{w}\) 所带来的计算结果(will contribute to
+finall loss)每经过一个神经元(sigmoid)都会变小，所以随着经过的 layer 越来越多，更新这些 w 对于 output layer 的影响越来越小，所以最后 output:y' 几乎是不变的。所以 C 也几乎是不变的 &#x2014; \(\bigtriangleup{C}\) 几乎为 0。 所以
+</p>
+
+<p>
+for w near input layer:
+</p>
+
+<p>
+∂C/∂w = every SMALL
+</p>
+
+<p>
+then w near input layer update very small each time, for a long run-time
+it's still <b>random</b>
+</p>
+
+<p>
+反之靠近 output-layer 的 w 的变化量:∂w 由于经过的神经元很少，衰减很少，对于
+output-layer 的影响就大，∂C 就大。所以
+</p>
+
+<p>
+for w near output layer:
+</p>
+
+<p>
+∂C/∂w = every LARGE
+</p>
+
+<p>
+then w near output layer update very large each time, for a short run-time
+it's converged, but it converged based on the random w near input layer,
+although converged, lead to bad prediction.
+</p>
+</div>
+</div>
+
+<div id="org62ea77a" class="outline-4">
+<h4 id="org62ea77a"><span class="section-number-4">2.1.2</span> 如何解决：更换激活函数为 ReLU</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+z - input
+a - output
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-05-10.png" alt="screenshot_2017-06-10_15-05-10.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>对于那些输出为 0 的神经元，根本不会影响最后一层的输出</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-19-28.png" alt="screenshot_2017-06-10_15-19-28.png" />
+</p>
+</div>
+
+<p>
+可以直接拿掉
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-19-44.png" alt="screenshot_2017-06-10_15-19-44.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>对于那些输出不为零的神经元，整个构成一个瘦长的线性网络</li>
+</ol>
+<p>
+<img src="Recipe of Deep Learning/screenshot_2017-06-10_15-20-57.png" alt="screenshot_2017-06-10_15-20-57.png" />
+这里就不存在·「差距衰减」的问题，但是还有两个问题：
+</p>
+<ol class="org-ol">
+<li>我们并不喜欢 linear network 这种模型太弱了。</li>
+<li>ReLU 没办法微分。</li>
+</ol>
+
+<p>
+其实这两个问题都不是问题：
+</p>
+<ol class="org-ol">
+<li>联合起来当 x 取值较大的时候并不是 linear network</li>
+<li>ReLU 只在输入为 0 的位置不可微分，但很少遇到需要这里的微分。</li>
+</ol>
+</div>
+</div>
+
+<div id="org434cb51" class="outline-4">
+<h4 id="org434cb51"><span class="section-number-4">2.1.3</span> ReLU - variants</h4>
+<div class="outline-text-4" id="text-2-1-3">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-28-58.png" alt="screenshot_2017-06-10_15-28-58.png" />
+</p>
+</div>
+
+<p>
+Leaky ReLU and Parametric ReLU
+</p>
+
+<p>
+激活函数不一定要事先指定
+===&gt; 对 ReLU 再次进化
+</p>
+</div>
+</div>
+<div id="orgc29b6f4" class="outline-4">
+<h4 id="orgc29b6f4"><span class="section-number-4">2.1.4</span> ReLU - advanced: Maxout</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<p>
+Learnable activation function
+激活函数是自动学出来的
+</p>
+<ol class="org-ol">
+<li>group</li>
+</ol>
+<p>
+哪些 value 会 group 在一起是事先决定的。每个 group 内的元素个数可以随便选。
+</p>
+<ol class="org-ol">
+<li>选 max 作为输出</li>
+</ol>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-33-51.png" alt="screenshot_2017-06-10_15-33-51.png" />
+</p>
+</div>
+
+
+<p>
+就不加 activate-function 了。
+ReLU is a special cases of Maxout
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-37-50.png" alt="screenshot_2017-06-10_15-37-50.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgbb3e346" class="outline-4">
+<h4 id="orgbb3e346"><span class="section-number-4">2.1.5</span> Maxout is more powerful</h4>
+<div class="outline-text-4" id="text-2-1-5">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-39-03.png" alt="screenshot_2017-06-10_15-39-03.png" />
+</p>
+</div>
+
+<p>
+Learnable activation function
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-40-31.png" alt="screenshot_2017-06-10_15-40-31.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org7072ce5" class="outline-4">
+<h4 id="org7072ce5"><span class="section-number-4">2.1.6</span> How to train Maxout network</h4>
+<div class="outline-text-4" id="text-2-1-6">
+<p>
+Maxout 没法微分，这个怎么用 Gradient 来训练呢？
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-44-11.png" alt="screenshot_2017-06-10_15-44-11.png" />
+</p>
+</div>
+
+<p>
+没有接到的部分，就可以直接拿掉，当你一个输入进来，之后其实他就是一个细长的 linear network, 你根本不需要考虑 Maxout 的拐点没法微分的问题
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-44-56.png" alt="screenshot_2017-06-10_15-44-56.png" />
+</p>
+</div>
+
+<p>
+所以你需要 train 的不是 Maxout，而是这个 linearNetwork
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-46-04.png" alt="screenshot_2017-06-10_15-46-04.png" />
+</p>
+</div>
+
+<p>
+但是，好像那些被删除的链接的 weight 怎么办？他们没有被 train
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_15-49-11.png" alt="screenshot_2017-06-10_15-49-11.png" />
+</p>
+</div>
+
+<p>
+当你给他不同的输入时（x）,maxout 会选择各种不同的链接，所以概率上每一个连线(weight)是都会被 train 到的。
+</p>
+
+<pre class="example">
+Maxout 和 Max-pooling(CNN)是完全一样的。
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orga9729bc" class="outline-3">
+<h3 id="orga9729bc"><span class="section-number-3">2.2</span> Adaptive Learning Rate: RMSProp</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Error surface can be very complex when training NN即便在同一个方向上 learning
+rate 也必须快速的变动(adagrad 在某一个方向(dimension)的 learningrate 是固定的)
+</p>
+
+<p>
+review grad (下图中去掉根号部分就是 gradient-descent)
+</p>
+
+<p>
+review AdaGrad(dimension-wise + 2nd derivative)
+</p>
+
+<p>
+学习率从原来的·「除以 1」变成·「除以平方和开根号」
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-07-32.png" alt="screenshot_2017-06-10_16-07-32.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-11-34.png" alt="screenshot_2017-06-10_16-11-34.png" />
+</p>
+</div>
+
+<p>
+Error surface can be very complex when training NN即便在同一个方向上 learning
+rate 也必须快速的变动(adagrad 在某一个方向(dimension)的 learningrate 是固定的)
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-13-37.png" alt="screenshot_2017-06-10_16-13-37.png" />
+</p>
+</div>
+
+<p>
+Adagrad 进阶版：
+</p>
+
+<pre class="example">
+RMSProp根号里面引入·「gt 的可调节权重」--- α手动设置，一般设置个 0.9 之类的。
+
+α小---倾向于相信新的 gradient 告诉你的曲线的平滑或陡峭的程度。
+α大---倾向于相信以前的 gradients
+</pre>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">adagrad</td>
+<td class="org-left">RMSProp</td>
+</tr>
+
+<tr>
+<td class="org-left">Root Mean Square</td>
+<td class="org-left">RMS with <span class="underline">previous gradients being _decayed</span></td>
+</tr>
+</tbody>
+</table>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-20-52.png" alt="screenshot_2017-06-10_16-20-52.png" />
+</p>
+</div>
+</div>
+<div id="orgd3d4fbb" class="outline-4">
+<h4 id="orgd3d4fbb"><span class="section-number-4">2.2.1</span> Hard to find optimal network parameters</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-22-42.png" alt="screenshot_2017-06-10_16-22-42.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>Very slow at the plateau</li>
+<li>Stuck at saddle point</li>
+<li>Stuck at local minima</li>
+</ol>
+
+<blockquote>
+<p>
+不用太担心 local-minimum 的问题，其实在 error-surface 上没有太多
+local-minimum 的情况。因为如果你是 local-minimum 你就必须在每一个
+dimension 都是如上图的形状，假设某一个参数 w 相对 Loss-fn 是这种形状的概率是 p，因为 NN 参数非常多，那么 1000 个 w 同时出现这种形状的概率是 p<sup>1000</sup>
+参数越多，local-minimum 出现的概率越低。
+</p>
+</blockquote>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-27-56.png" alt="screenshot_2017-06-10_16-27-56.png" />
+</p>
+</div>
+
+<p>
+将惯性引入 GradientDescent
+</p>
+</div>
+</div>
+
+<div id="org104b828" class="outline-4">
+<h4 id="org104b828"><span class="section-number-4">2.2.2</span> Momentum</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Review: Vanilla Gradient Descent
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-29-02.png" alt="screenshot_2017-06-10_16-29-02.png" />
+</p>
+</div>
+
+<p>
+加入惯性 movement 之后
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-45-42.png" alt="screenshot_2017-06-10_16-45-42.png" />
+</p>
+</div>
+
+<p>
+Movement: movement of last step minus gradient at present
+引入·「惯性的权重参数」&#x2014; λ, λ大就代表更看重惯性，λ小代表更看重当前的 Gradient
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">GradientDescent</th>
+<th scope="col" class="org-left">Momentum(v)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">w2 = w1 + (-ηg2)</td>
+<td class="org-left">v2 = λv1 + (-ηg2)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">w2 = w1 + v2</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">v0 = 0</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+vi is actually the weighted sum of all the previous gradient:
+</p>
+
+<p>
+∇L(θ0),∇L(θ1),∇L(θ2),&#x2026;,∇L(θi-1)
+</p>
+
+<p>
+v0 = 0
+v1 = -η∇L(θ0)
+v2 = -λη∇L(θ0) - η∇L(θ1)
+&#x2026;
+</p>
+
+<p>
+越之前的 gradient 的 weight 越小
+</p>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-54-26.png" alt="screenshot_2017-06-10_16-54-26.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="orgdc5590d" class="outline-4">
+<h4 id="orgdc5590d"><span class="section-number-4">2.2.3</span> Adam(= RMSProp + Momentum)</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">adagrad</td>
+<td class="org-left">RMSProp</td>
+</tr>
+
+<tr>
+<td class="org-left">Root Mean Square</td>
+<td class="org-left">RMS with <span class="underline">previous gradients being _decayed</span></td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_16-57-37.png" alt="screenshot_2017-06-10_16-57-37.png" />
+</p>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">GradientDescent</th>
+<th scope="col" class="org-left">Momentum(v)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">w2 = w1 + (-ηg2)</td>
+<td class="org-left">v2 = λv1 + (-ηg2)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">w2 = w1 + v2</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">v0 = 0</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-01-44.png" alt="screenshot_2017-06-10_17-01-44.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org6a8625f" class="outline-2">
+<h2 id="org6a8625f"><span class="section-number-2">3</span> Bad results on Testing Data</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org5f0ead3" class="outline-3">
+<h3 id="org5f0ead3"><span class="section-number-3">3.1</span> Early Stopping</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Early Stopping 和 Regularization 是普适的做法，并不只针对 NN, Droput 是针对 NN 的做法
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-08-29.png" alt="screenshot_2017-06-10_17-08-29.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-09-00.png" alt="screenshot_2017-06-10_17-09-00.png" />
+</p>
+</div>
+
+
+<p>
+注意，因为 Testing set 是未来的未知数据，所以这里只能通过 验证集 来模拟
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-10-19.png" alt="screenshot_2017-06-10_17-10-19.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org411274f" class="outline-3">
+<h3 id="org411274f"><span class="section-number-3">3.2</span> Regularization</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+New loss function to be minimized:
+</p>
+<ul class="org-ul">
+<li>Find a set of weight not only minimized original cost but also close to zero</li>
+</ul>
+</div>
+
+<div id="org9224b69" class="outline-4">
+<h4 id="org9224b69"><span class="section-number-4">3.2.1</span> L2 Regularization</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+<img src="Recipe of Deep Learning/screenshot_2017-06-10_17-12-09.png" alt="screenshot_2017-06-10_17-12-09.png" />
+Regularization: usually not consider biases
+之前讲过 regularization 是为了让函数更平滑，但 ‘b’ 通常是跟函数平滑程度没有关系的。
+</p>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-14-47.png" alt="screenshot_2017-06-10_17-14-47.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-14-57.png" alt="screenshot_2017-06-10_17-14-57.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-15-20.png" alt="screenshot_2017-06-10_17-15-20.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-15-37.png" alt="screenshot_2017-06-10_17-15-37.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-20-43.png" alt="screenshot_2017-06-10_17-20-43.png" />
+</p>
+</div>
+
+<p>
+Closer to zero, 离 0 越来越近因为 η,λ 都很小，1 - η*λ = 0.99
+所以每次做更新，都是把 wt 先乘以 0.99
+这样某一个前面的 w， 比如 w1 因为每次都要 *0.99,所以会越来越靠近 0
+</p>
+</div>
+</div>
+
+<div id="org280dafb" class="outline-4">
+<h4 id="org280dafb"><span class="section-number-4">3.2.2</span> L1 Regularization</h4>
+<div class="outline-text-4" id="text-3-2-2">
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-26-14.png" alt="screenshot_2017-06-10_17-26-14.png" />
+</p>
+</div>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-28-08.png" alt="screenshot_2017-06-10_17-28-08.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-28-54.png" alt="screenshot_2017-06-10_17-28-54.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgacd7484" class="outline-4">
+<h4 id="orgacd7484"><span class="section-number-4">3.2.3</span> L1 和 L2 有什么不同</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+一样的，always decay ==&gt; always delete
+在 L2-regularization 中，如果出现很·「大」的 w，由于是·「按比例」缩放所以 w 会很·「快」的变小。在 L1-regularization 中，如果出现很·「大」的 w，由于是·「按量」缩放所以 w 会很·「慢」的变小。
+</p>
+
+<p>
+在 L2-regularization 中，如果出现很·「小」的 w，由于是·「按比例」缩放所以 w 会很·「慢」的变小。在 L1-regularization 中，如果出现很·「小」的 w，由于是·「按量」缩放所以 w 会很·「快」的变小。
+</p>
+
+<p>
+所以总体来说，L1 产生的 w 矩阵会比较·「稀疏」，既有很大的 w，也有很多（=0）的 w
+所以总体来说，L2 产生的 w 矩阵会比较·「稠密」，大部分 w 都不大或者接近 0（！=0）
+</p>
+
+<p>
+CNN 里面想产生 sparse 的结果的 image，所以用 L1
+</p>
+
+<p>
+TODO: <a href="https://www.youtube.com/watch?v=sO4ZirJh9ds&amp;index=64&amp;t=109s&amp;list=WL">https://www.youtube.com/watch?v=sO4ZirJh9ds&amp;index=64&amp;t=109s&amp;list=WL</a>
+这个教程很好，似乎 regularization 引出了 convex optimization 的某些概念
+</p>
+</div>
+</div>
+
+<div id="org0e4de7e" class="outline-4">
+<h4 id="org0e4de7e"><span class="section-number-4">3.2.4</span> Regularization - weight decay</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+跟人脑的机制很像。
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-38-59.png" alt="screenshot_2017-06-10_17-38-59.png" />
+</p>
+</div>
+
+<p>
+6 岁初识世界，很多都感兴趣，会建立大量的神经连接。但是到 14 岁，由于很多神经元都用不到，也有很多事情不去玩了(类比没用的 weight 不去 update，就会慢慢
+decay 到 0)所以很多神经元连接就消失了。
+</p>
+</div>
+</div>
+</div>
+
+<div id="org696b9f8" class="outline-3">
+<h3 id="org696b9f8"><span class="section-number-3">3.3</span> Regularization vs. Early stopping</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+虽然在 NN 中 Regularization 有些帮助，但是帮助不是很大，没有像 SVM 这么依赖
+regularization。
+</p>
+
+<p>
+我们一般给 NN 的参数初始值都是很小的，或者接近于 0 的。我们下面做的事情就是让这些参数离 0 越来越远。
+</p>
+<pre class="example">
+Early Stopping 是减少·「离 0 的次数」
+Regularization 是减少·「离 0 的步幅」
+</pre>
+<p>
+总体来说都是让参数·「不要离 0 太远」
+</p>
+</div>
+</div>
+<div id="orga586265" class="outline-3">
+<h3 id="orga586265"><span class="section-number-3">3.4</span> Dropout</h3>
+<div class="outline-text-3" id="text-3-4">
+</div>
+<div id="org6a35a74" class="outline-4">
+<h4 id="org6a35a74"><span class="section-number-4">3.4.1</span> Traning</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+<code>=====</code>
+在每一次更新 w 之前，对 layer 做 sampling&#x2014;决定要不要丢掉
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-42-15.png" alt="screenshot_2017-06-10_17-42-15.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-42-43.png" alt="screenshot_2017-06-10_17-42-43.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-42-58.png" alt="screenshot_2017-06-10_17-42-58.png" />
+</p>
+</div>
+
+<p>
+这样每一次 update 之前都要做一次 sampling，都改变了 structure, 所以你每一次做 update 的 w 都不一样，要 traing 的 NN 也不一样。
+</p>
+
+<p>
+Each time before updating the parameters
+</p>
+<ol class="org-ol">
+<li>Each neuron has p% to dropout ===&gt; <b>The structure of the NN is changed</b></li>
+<li>Using the new NN for training</li>
+<li>For each mini-batch, we resampling the dropout neurons</li>
+</ol>
+
+<p>
+在训练的时候，很明显 dropout 削弱了模型的能力，所以使用 dropout 之后，训练效果会变差所以，一定要确保在使用 dropout 之前，是训练集效果很好，测试集效果不好，才能使用。如果 训练集 本身就不好，那么 dropout 只会让训练集越来越差。
+</p>
+</div>
+</div>
+
+<div id="orgb3faf60" class="outline-4">
+<h4 id="orgb3faf60"><span class="section-number-4">3.4.2</span> Testing</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<p>
+<code>=====</code>
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-49-33.png" alt="screenshot_2017-06-10_17-49-33.png" />
+</p>
+</div>
+
+<p>
+No dropout:
+</p>
+<ol class="org-ol">
+<li>if the dropout rate at <b>training</b> is p%, <b>all weights times (1-p)%</b></li>
+<li>assume that the dropout rate is 50%, if a weight <code>w = 1</code> at training, set <code>w = 0.5</code> for testing</li>
+</ol>
+</div>
+</div>
+
+<div id="org1548912" class="outline-4">
+<h4 id="org1548912"><span class="section-number-4">3.4.3</span> Why dropout work</h4>
+<div class="outline-text-4" id="text-3-4-3">
+<p>
+&#x2013; Intuition Reason
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-52-55.png" alt="screenshot_2017-06-10_17-52-55.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-53-02.png" alt="screenshot_2017-06-10_17-53-02.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-53-57.png" alt="screenshot_2017-06-10_17-53-57.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_17-54-12.png" alt="screenshot_2017-06-10_17-54-12.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgda64bc6" class="outline-4">
+<h4 id="orgda64bc6"><span class="section-number-4">3.4.4</span> Why multiply (1-p)%</h4>
+<div class="outline-text-4" id="text-3-4-4">
+<p>
+different weight in training and tesing
+</p>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-04-40.png" alt="screenshot_2017-06-10_18-04-40.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-05-09.png" alt="screenshot_2017-06-10_18-05-09.png" />
+</p>
+</div>
+
+<p>
+如果不乘以(1-p)%, 那么 training 和 testing 的输出不一致，这样 testing 反而会不好所以需要乘以(1-p)% 来大概的保证结果是一致的。
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-04-53.png" alt="screenshot_2017-06-10_18-04-53.png" />
+</p>
+</div>
+
+<p>
+一个更学术的理由：
+</p>
+</div>
+</div>
+
+<div id="org643dacc" class="outline-4">
+<h4 id="org643dacc"><span class="section-number-4">3.4.5</span> Dropout is a kind of ensemble</h4>
+<div class="outline-text-4" id="text-3-4-5">
+<p>
+Ensemble Learning 在比赛中很常用，
+</p>
+</div>
+</div>
+
+<div id="org65a4b59" class="outline-4">
+<h4 id="org65a4b59"><span class="section-number-4">3.4.6</span> Ensemble Learning 为什么 work</h4>
+<div class="outline-text-4" id="text-3-4-6">
+<p>
+之前讨论过 error 来自于两个方面：bias , variance
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-11-41.png" alt="screenshot_2017-06-10_18-11-41.png" />
+</p>
+</div>
+
+<p>
+如果模型能力强：bias 造成的 error 小，variance 造成的 error 大如果模型能力弱：bias 造成的 error 大，variance 造成的 error 小
+</p>
+
+<p>
+所以如果有很多能力较弱的 model，平均起来看，可以消去 bias 造成的 error
+所以如果有很多能力较强的 model，平均起来看，可以消去 variance 造成的 error
+</p>
+
+<p>
+而且还可以利用 parallel 来 traing 各自的 model
+</p>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-14-37.png" alt="screenshot_2017-06-10_18-14-37.png" />
+</p>
+</div>
+
+<p>
+注意这里是把 training data 分成几份，所以每个子训练集都不一样
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-15-59.png" alt="screenshot_2017-06-10_18-15-59.png" />
+</p>
+</div>
+
+<p>
+RandomForest 就是实践这种精神的一种方法，每一个 DecisionTree 随便 train 一下都会 overfitting，但是当很多 DecisionTree 放在一起的时候，就不容易 overfitting
+</p>
+</div>
+</div>
+
+<div id="org507f936" class="outline-4">
+<h4 id="org507f936"><span class="section-number-4">3.4.7</span> Training of Dropout</h4>
+<div class="outline-text-4" id="text-3-4-7">
+<p>
+<code>========================</code>
+<span class="underline">Dropout will produce many different structure of NN</span>
+</p>
+
+<p>
+因为每个 minibatch 在进行 update 的时候，都会做一次 sampling 产生出不同的 structure
+因为这种 sampling 会作用在所有的 神经元，当然也包括 input-layer，所以，每次的输入也被 sampling 成不同的‘输入’，所以完全可以看成是上面的 ensamble learning 的重现。
+</p>
+
+<p>
+different input + different structure
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-18-12.png" alt="screenshot_2017-06-10_18-18-12.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-22-28.png" alt="screenshot_2017-06-10_18-22-28.png" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>using one mini-batch to train one network</li>
+<li>some parameters in the network are shared</li>
+</ul>
+<p>
+虽然一个 network 使用 一个 mini-batch 来 train
+但是某一个神经元，有可能出现在好几个 mini-batch 中，所以这个神经元就是被·「好几个 mini-batch」train 的。
+</p>
+</div>
+</div>
+
+<div id="org0732481" class="outline-4">
+<h4 id="org0732481"><span class="section-number-4">3.4.8</span> Testing of Dropout</h4>
+<div class="outline-text-4" id="text-3-4-8">
+<p>
+<code>======================</code>
+所以，根据 ensamble leanring，应该这么做，但是 sampling 是随机的，这样做很不现实，不效率
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-26-21.png" alt="screenshot_2017-06-10_18-26-21.png" />
+</p>
+</div>
+
+<p>
+所以采用一种近似的方法：weight*(1-p)%
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-28-44.png" alt="screenshot_2017-06-10_18-28-44.png" />
+</p>
+</div>
+
+<p>
+为什么可以‘约等于’呢？举例说明
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-29-43.png" alt="screenshot_2017-06-10_18-29-43.png" />
+</p>
+</div>
+
+<p>
+Dropout(ensamble) will produce:
+</p>
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-30-19.png" alt="screenshot_2017-06-10_18-30-19.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-31-00.png" alt="screenshot_2017-06-10_18-31-00.png" />
+</p>
+</div>
+
+<p>
+ensamble will average the all z:
+(w1x1 + w2x2 + w2x2 + w1x1 + 0)/4 = 1/2w1x1 + 1/2w2x2
+</p>
+
+<p>
+dropout will weights*(1-p)% :
+</p>
+
+<div class="figure">
+<p><img src="Recipe of Deep Learning/screenshot_2017-06-10_18-31-41.png" alt="screenshot_2017-06-10_18-31-41.png" />
+</p>
+</div>
+
+<p>
+ensamble average and dropout weight*(1-p)% will be equall
+</p>
+
+<p>
+但是很明显，不会所有的 dropout 方法最后都和 ensamble 方法的结果相同。
+<b>只有 linear 的 NN</b> 才有可能产生这种结果。
+</p>
+
+<p>
+所以有些人
+</p>
+</div>
+</div>
+
+<div id="org4cab095" class="outline-4">
+<h4 id="org4cab095"><span class="section-number-4">3.4.9</span> 获得了这样的灵感</h4>
+<div class="outline-text-4" id="text-3-4-9">
+<p>
+既然只有 lienar nn 才能让 dropout 产生和 ensamble 完全相同的结果。那我干脆就使用 linear NN 效果肯定更好。
+</p>
+
+<p>
+比如使用激活函数为 ReLU or Maxout,这样的 NN 在使用 dropout 之后效果肯定非常好。
+</p>
+
+<p>
+实际上确实如此。以为内 ReLU 和 Maxout 的激活函数跟 linear-fn 很相近
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

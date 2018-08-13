@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tensorflow 基本概念</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Tensorflow 基本概念</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgced3d7c">1. Tensorflow 介绍</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org5cb67bb">1.0.1. 基本概念</a></li>
+<li><a href="#orgbcba25a">1.0.2. tensorflow 使用流程总结</a></li>
+<li><a href="#orgfafc2e7">1.0.3. eg: 创建图和计算图</a></li>
+<li><a href="#org5f2205f">1.0.4. eg: 变量的使用</a></li>
+<li><a href="#org84effbd">1.0.5. eg: 变量循环自增</a></li>
+<li><a href="#org0d25c2f">1.0.6. eg: fetch and feed</a></li>
+<li><a href="#orgd365852">1.0.7. 简单实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgced3d7c" class="outline-2">
+<h2 id="orgced3d7c"><span class="section-number-2">1</span> Tensorflow 介绍</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org5cb67bb" class="outline-4">
+<h4 id="org5cb67bb"><span class="section-number-4">1.0.1</span> 基本概念</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<ul class="org-ul">
+<li>使用图 (Graphs) 来表示 <b>计算规划</b>;</li>
+<li>使用 Tensor 表示 <b>数据</b></li>
+<li>图中的节点称之为 <b>操作</b> (operation), 一个操作获得 0 个或 n 个 Tensor</li>
+<li>使用 feed 为操作 <b>赋值</b>, 使用 fetch 从操作中 <b>取值</b></li>
+<li>在被称之为会话(Session)的上下文(Context)中 <b>执行</b> 图(graphs)</li>
+<li>通过变量(variable)维护 <b>状态</b></li>
+</ul>
+
+
+<div class="figure">
+<p><img src="Tensorflow 介绍/screenshot_2018-07-26_15-56-04.png" alt="screenshot_2018-07-26_15-56-04.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgbcba25a" class="outline-4">
+<h4 id="orgbcba25a"><span class="section-number-4">1.0.2</span> tensorflow 使用流程总结</h4>
+<div class="outline-text-4" id="text-1-0-2">
+<pre class="example">
+3步骤:
+
+  准备数据, 图构建, 图计算
+           |   |   |
+           |   |   |
+
+           数, 构, 计
+
+               |   |
+               |   |
+              /     \
+一模,两函,两器       运行两器
+</pre>
+</div>
+</div>
+
+<div id="orgfafc2e7" class="outline-4">
+<h4 id="orgfafc2e7"><span class="section-number-4">1.0.3</span> eg: 创建图和计算图</h4>
+<div class="outline-text-4" id="text-1-0-3">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">graph =&gt; feed/fetch(op(tensor))</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">|</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">| do computation</span>
+<span class="org-comment-delimiter">#  </span><span class="org-comment">v</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">session</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">======= &#26500;&#22270; ======</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">tensors shape 1*2</span>
+<span class="org-variable-name">cons1</span> = tf.constant([[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>]])
+<span class="org-comment-delimiter"># </span><span class="org-comment">tensors shape 2*1</span>
+<span class="org-variable-name">cons2</span> = tf.constant([[<span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">2</span>]])
+<span class="org-comment-delimiter"># </span><span class="org-comment">ops matrix multiply</span>
+<span class="org-variable-name">mat_product</span> = tf.matmul(cons1, cons2)
+<span class="org-keyword">print</span>(mat_product)  <span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#20010;&#21482;&#20250;&#25171;&#21360; 'result1' &#23545;&#35937;&#24341;&#29992;&#20449;&#24687;</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">======= &#23545;&#35805; &#26041;&#24335;1 ======</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#24517;&#39035;&#25191;&#34892;&#20851;&#38381;&#25805;&#20316;</span>
+<span class="org-variable-name">sess</span> = tf.Session()
+<span class="org-variable-name">result</span> = sess.run(result1)
+<span class="org-keyword">print</span>(result)  <span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#20010;&#21482;&#20250;&#25171;&#21360; 'result1' &#23545;&#35937;&#24341;&#29992;&#20449;&#24687;</span>
+sess.close()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">======= &#23545;&#35805; &#26041;&#24335;2 ======</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#19981;&#29992;&#25191;&#34892;&#20851;&#38381;&#25805;&#20316;</span>
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-variable-name">result</span> = sess.run(result1)
+    <span class="org-keyword">print</span>(result)  <span class="org-comment-delimiter"># </span><span class="org-comment">&#36825;&#20010;&#21482;&#20250;&#25171;&#21360; 'result1' &#23545;&#35937;&#24341;&#29992;&#20449;&#24687;</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org5f2205f" class="outline-4">
+<h4 id="org5f2205f"><span class="section-number-4">1.0.4</span> eg: 变量的使用</h4>
+<div class="outline-text-4" id="text-1-0-4">
+<ol class="org-ol">
+<li>使用之前必须初始化(初始化是一个op,图执行计算之前,必须先运行该初始化op)</li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-variable-name">x</span> = tf.Variable([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>])
+
+<span class="org-variable-name">a</span> = tf.constant([<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20943;&#27861; op</span>
+<span class="org-variable-name">sub</span> = tf.subtract(x, a)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21152;&#27861; op</span>
+<span class="org-variable-name">add</span> = tf.add(x, sub)
+<span class="org-comment-delimiter"># </span><span class="org-comment">initializer op</span>
+<span class="org-variable-name">init</span> = tf.global_variables_initializer()
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    sess.run(init)
+    <span class="org-keyword">print</span>(sess.run(sub))
+    <span class="org-comment-delimiter"># </span><span class="org-comment">error FailedPreconditionError (see above for</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">traceback): Attempting to use uninitialized value Variable_1</span>
+    <span class="org-keyword">print</span>(sess.run(add))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org84effbd" class="outline-4">
+<h4 id="org84effbd"><span class="section-number-4">1.0.5</span> eg: 变量循环自增</h4>
+<div class="outline-text-4" id="text-1-0-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">variable, initialize with 0</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">state = 0</span>
+<span class="org-variable-name">state</span> = tf.Variable(<span class="org-highlight-numbers-number">0</span>, name=<span class="org-string">'counter'</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21152;&#27861; op, &#20351;state&#21152;1</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">new_value = state + 1</span>
+<span class="org-variable-name">new_value</span> = tf.add(state, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#36171;&#20540; op</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">state = new_value</span>
+<span class="org-variable-name">update</span> = tf.assign(state, new_value)
+<span class="org-variable-name">init</span>= tf.global_variables_initializer()
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    sess.run(init)
+    <span class="org-keyword">print</span>(sess.run(state))
+    <span class="org-keyword">for</span> _ <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">5</span>):
+        sess.run(update)
+        <span class="org-keyword">print</span>(sess.run(state))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org0d25c2f" class="outline-4">
+<h4 id="org0d25c2f"><span class="section-number-4">1.0.6</span> eg: fetch and feed</h4>
+<div class="outline-text-4" id="text-1-0-6">
+<p>
+fetch 和 feed 是 <code>sess.run()</code> 参数的两种进阶形式, fetch 是说第一个参数(输出节点)
+可以使 one node, 也可以是 list of nodes; feed 是说第二个参数(输入节点)可以以字典
+(<code>{占位符引用:list of values, 占位符引用: list of values, 占位符引用: list of
+values, ...}</code>) 的形式给图中的占位符喂数据. 这里为什么字典值是 <b>list of values</b>
+因为这里实际上应该是 Dataset, run() 函数会每次从中取一行(也就是一个sample)输入
+placeholder中.
+</p>
+
+<p>
+关于 variable 和 placeholder 的区别, variable 是一个 dependent 量, 他的值需要依赖其他 node 值, 这有点像是 y = x + 3 中的 y. 他常常用在 hypothesis function 的表达中, 比如 y=wx+b 其中. w,b 就是 variable; placeholder 不是 dependent 量, 他的值不需要依赖计算, 而是直接从外部给出, <b>可以说 placeholder 是为 variable 生</b>.
+y=wx+b 中 x 和 y 就是 placeholder 他们代表已知的数据集和标签.
+</p>
+
+<p>
+注意, placeholder 的shape与数据集的shape是一样的. 假设你要输入的数据集是
+(60000, 784) 维度,那么你设置的 placeholder 也应该是 (60000, 784)
+</p>
+
+<blockquote>
+<p>
+variable ===&gt; initializer
+</p>
+
+<p>
+placeholder ===&gt; run(xxx, feed_dict{}})
+</p>
+</blockquote>
+
+<ul class="org-ul">
+<li>fetch 是指图在会话中计算的时候可以一次计算多个节点</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">fetch &#21516;&#26102;&#25191;&#34892;&#22810;&#20010; op &#24471;&#21040;&#36816;&#34892;&#32467;&#26524;</span>
+<span class="org-variable-name">input1</span> = tf.constant(<span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">input2</span> = tf.constant(<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">input3</span> = tf.constant(<span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add op</span>
+<span class="org-variable-name">add</span> = tf.add(input2, input3)
+<span class="org-comment-delimiter"># </span><span class="org-comment">multiply op</span>
+<span class="org-variable-name">mul</span> = tf.multiply(input1, add)
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">print(sess.run(mul))</span>
+    <span class="org-variable-name">result</span> = sess.run([mul, add]) <span class="org-comment-delimiter"># </span><span class="org-comment">fetch</span>
+    <span class="org-keyword">print</span>(result)
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>feed 是指以字典形式给 placeholder 喂数据.</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">&#21019;&#24314;&#21344;&#20301;&#31526;</span>
+<span class="org-variable-name">input1</span> = tf.placeholder(tf.float32)
+<span class="org-variable-name">input2</span> = tf.placeholder(tf.float32)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">multiply op</span>
+<span class="org-variable-name">output</span> = tf.multiply(input1, input2)
+
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#20197;&#23383;&#20856;&#24418;&#24335; feed &#25968;&#25454;</span>
+    <span class="org-keyword">print</span>(sess.run(output, feed_dict={input1:[<span class="org-highlight-numbers-number">7</span>.<span class="org-highlight-numbers-number">0</span>], input2:[<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>]}))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgd365852" class="outline-4">
+<h4 id="orgd365852"><span class="section-number-4">1.0.7</span> 简单实例</h4>
+<div class="outline-text-4" id="text-1-0-7">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. &#25968;&#25454;&#38598;&#20934;&#22791;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20351;&#29992;numpy&#29983;&#25104;100&#20010;&#38543;&#26426;&#28857;</span>
+<span class="org-variable-name">x_data</span> = np.random.rand(<span class="org-highlight-numbers-number">100</span>)
+<span class="org-variable-name">y_data</span> = x_data * <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span> + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. &#22270;&#26500;&#24314;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#26500;&#36896;&#19968;&#20010;&#32447;&#24615;"&#27169;"&#22411;</span>
+<span class="org-variable-name">b</span> = tf.Variable(<span class="org-highlight-numbers-number">0</span>.)
+<span class="org-variable-name">k</span> = tf.Variable(<span class="org-highlight-numbers-number">0</span>.)
+<span class="org-variable-name">y</span> = k * x_data + b
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20108;&#27425;&#20195;&#20215;"&#20989;"&#25968;</span>
+<span class="org-variable-name">loss</span> = tf.reduce_mean(tf.square(y_data - y))
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#20248;&#21270;"&#22120;"</span>
+<span class="org-variable-name">optimizer</span> = tf.train.GradientDescentOptimizer(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#26368;&#23567;&#21270;&#20195;&#20215;"&#20989;"&#25968;(argmin &#20989;&#25968;)</span>
+<span class="org-variable-name">train</span> = optimizer.minimize(loss)
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21021;&#22987;&#21270;"&#22120;"</span>
+<span class="org-variable-name">init</span> = tf.global_variables_initializer()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. &#22270;&#35745;&#31639;</span>
+<span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+    sess.run(init)       <span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#21021;&#22987;&#21270;"&#22120;"</span>
+    <span class="org-keyword">for</span> step <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">201</span>):
+        sess.run(train)  <span class="org-comment-delimiter"># </span><span class="org-comment">&#36816;&#34892;&#20248;&#21270;"&#22120;"</span>
+        <span class="org-keyword">if</span> step % <span class="org-highlight-numbers-number">20</span> == <span class="org-highlight-numbers-number">0</span>:
+            <span class="org-keyword">print</span>(step, sess.run([k, b, loss]))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

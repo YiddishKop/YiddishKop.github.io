@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记01:python 中的科学计算工具</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记01:python 中的科学计算工具</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgad575d7">1. Jupyter Notebooks</a></li>
+<li><a href="#org2b99a5d">2. Numpy Arrays</a></li>
+<li><a href="#org9d3ecab">3. SciPy Sparse Matrices</a>
+<ul>
+<li><a href="#org2830020">3.1. csr_matrix</a></li>
+<li><a href="#org6c95e39">3.2. lil_matrix</a></li>
+<li><a href="#org5a42258">3.3. lil_matrix vs. csr_matrix</a></li>
+<li><a href="#org47175a4">3.4. other kinds of sparse matrix</a></li>
+</ul>
+</li>
+<li><a href="#orgb913f56">4. matplotlib</a>
+<ul>
+<li><a href="#orgec87dcd">4.1. 3 methods frequently used to create array</a></li>
+</ul>
+</li>
+<li><a href="#org8c4062e">5. Misc tools</a>
+<ul>
+<li><a href="#orgfce2501">5.1. Numpy</a>
+<ul>
+<li><a href="#org4d70d61">5.1.1. np.random.RandomState(seed=Num)</a></li>
+<li><a href="#orgdf2cf5d">5.1.2. 3 methods frequently used to create array</a></li>
+<li><a href="#org9f12312">5.1.3. add or delete an axis</a></li>
+<li><a href="#org3df6e1c">5.1.4. <code>...</code></a></li>
+<li><a href="#org3cbfbc9">5.1.5. np.newaxis</a></li>
+<li><a href="#org1b9fdec">5.1.6. ndarray.ravel()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgad575d7" class="outline-2">
+<h2 id="orgad575d7"><span class="section-number-2">1</span> Jupyter Notebooks</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+You can run a cell by pressing [shift] + [Enter] or by pressing the "play"
+button in the menu.
+</p>
+
+
+<p>
+You can get help on a function or object by pressing [shift] + [tab] after the
+opening parenthesis function.
+</p>
+
+<p>
+You can also get help by executing function?
+</p>
+</div>
+</div>
+
+
+<div id="org2b99a5d" class="outline-2">
+<h2 id="org2b99a5d"><span class="section-number-2">2</span> Numpy Arrays</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Manipulating numpy arrays is an important part of doing machine learning (or,
+really, any type of scientific computation) in python. This will likely be a
+short review for most. In any case, let's quickly go through some of the most
+important features.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Setting a random seed for reproducibility</span>
+<span class="org-variable-name">rnd</span> = np.random.RandomState(seed=<span class="org-highlight-numbers-number">123</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Generating a random array</span>
+<span class="org-variable-name">X</span> = rnd.uniform(low=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, high=<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, size=(<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">5</span>))  <span class="org-comment-delimiter"># </span><span class="org-comment">a 3 x 5 array</span>
+
+<span class="org-keyword">print</span>(X)
+</pre>
+</div>
+
+<p>
+(Note that NumPy arrays use 0-indexing just like other data structures in Python.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Accessing elements</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">get a single element</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">(here: an element in the first row and column)</span>
+<span class="org-keyword">print</span>(X[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">get a row</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">(here: 2nd row)</span>
+<span class="org-keyword">print</span>(X[<span class="org-highlight-numbers-number">1</span>])
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">get a column</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">(here: 2nd column)</span>
+<span class="org-keyword">print</span>(X[:, <span class="org-highlight-numbers-number">1</span>])
+<span class="org-comment-delimiter"># </span><span class="org-comment">Transposing an array</span>
+<span class="org-keyword">print</span>(X.T)
+</pre>
+</div>
+
+\begin{bmatrix}
+    1 & 2 & 3 & 4 \\
+    5 & 6 & 7 & 8
+\end{bmatrix}^T
+=
+\begin{bmatrix}
+    1 & 5 \\
+    2 & 6 \\
+    3 & 7 \\
+    4 & 8
+\end{bmatrix}
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Creating a row vector</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">of evenly spaced numbers over a specified interval.</span>
+<span class="org-variable-name">y</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">12</span>, <span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">print</span>(y)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Turning the row vector into a column vector</span>
+<span class="org-keyword">print</span>(y[:, np.newaxis])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Generating a random array</span>
+<span class="org-variable-name">rnd</span> = np.random.RandomState(seed=<span class="org-highlight-numbers-number">123</span>)
+<span class="org-variable-name">X</span> = rnd.uniform(low=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, high=<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, size=(<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">5</span>))  <span class="org-comment-delimiter"># </span><span class="org-comment">a 3 x 5 array</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Getting the shape or reshaping an array</span>
+<span class="org-keyword">print</span>(X.shape)
+<span class="org-keyword">print</span>(X.reshape(<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">3</span>))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Indexing by an array of integers (fancy indexing)</span>
+<span class="org-variable-name">indices</span> = np.array([<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>])
+<span class="org-keyword">print</span>(indices)
+X[:, indices]
+</pre>
+</div>
+
+<pre class="example">
+array([[ 0.55131477,  0.28613933,  0.69646919],
+[ 0.4809319 ,  0.9807642 ,  0.42310646],
+[ 0.0596779 ,  0.72904971,  0.34317802]])
+</pre>
+
+<p>
+There is much, much more to know, but these few operations are fundamental to
+what we'll do during this tutorial.
+</p>
+</div>
+</div>
+
+<div id="org9d3ecab" class="outline-2">
+<h2 id="org9d3ecab"><span class="section-number-2">3</span> SciPy Sparse Matrices</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org2830020" class="outline-3">
+<h3 id="org2830020"><span class="section-number-3">3.1</span> csr_matrix</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+We won't make very much use of these in this tutorial, but sparse matrices are
+very nice in some situations. In some machine learning tasks, especially those
+associated with <b>textual analysis</b>, the data may be mostly zeros. Storing all
+these zeros is very inefficient, and <b>representing in a way that only contains
+the "non-zero" values</b> can be much more efficient. We can create and manipulate
+sparse matrices as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy <span class="org-keyword">import</span> sparse
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Create a random array with a lot of zeros</span>
+<span class="org-variable-name">rnd</span> = np.random.RandomState(seed=<span class="org-highlight-numbers-number">123</span>)
+
+<span class="org-variable-name">X</span> = rnd.uniform(low=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, high=<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, size=(<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">5</span>))
+<span class="org-keyword">print</span>(X)
+<span class="org-comment-delimiter"># </span><span class="org-comment">set the majority of elements to zero</span>
+<span class="org-variable-name">X</span>[X &lt; <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span>] = <span class="org-highlight-numbers-number">0</span>
+<span class="org-keyword">print</span>(X)
+<span class="org-comment-delimiter"># </span><span class="org-comment">turn X into a CSR (Compressed-Sparse-Row) matrix</span>
+<span class="org-variable-name">X_csr</span> = sparse.csr_matrix(X)
+<span class="org-keyword">print</span>(X_csr)
+<span class="org-comment-delimiter"># </span><span class="org-comment">Converting the sparse matrix to a dense array</span>
+<span class="org-keyword">print</span>(X_csr.toarray())
+
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="org6c95e39" class="outline-3">
+<h3 id="org6c95e39"><span class="section-number-3">3.2</span> lil_matrix</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+(You may have stumbled upon an alternative method for converting sparse to dense
+representations: <code>numpy.todense</code>; <code>toarray</code> returns a NumPy array, whereas
+<code>todense</code> returns a NumPy matrix. In this tutorial, we will be working with
+NumPy arrays, not <code>matrices</code>; the latter are <b>not supported by scikit-learn</b>.)
+</p>
+
+<p>
+The <code>CSR</code>: <code>sparse.csr_matrix()</code> representation can be very efficient for
+computations, but it is not as good for adding elements. For that, the <code>LIL</code>:
+<code>sparse.lil_matrix())</code> (List-In-List) representation is better:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Create an empty LIL matrix and add some items</span>
+<span class="org-variable-name">X_lil</span> = sparse.lil_matrix((<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">5</span>))
+
+<span class="org-keyword">for</span> i, j <span class="org-keyword">in</span> np.random.randint(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>, (<span class="org-highlight-numbers-number">15</span>, <span class="org-highlight-numbers-number">2</span>)):
+    <span class="org-variable-name">X_lil</span>[i, j] = i + j
+
+<span class="org-keyword">print</span>(X_lil)
+<span class="org-keyword">print</span>(<span class="org-builtin">type</span>(X_lil))
+<span class="org-variable-name">X_dense</span> = X_lil.toarray()
+<span class="org-keyword">print</span>(X_dense)
+<span class="org-keyword">print</span>(<span class="org-builtin">type</span>(X_dense))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org5a42258" class="outline-3">
+<h3 id="org5a42258"><span class="section-number-3">3.3</span> lil_matrix vs. csr_matrix</h3>
+<div class="outline-text-3" id="text-3-3">
+<pre class="example">
+.  *csr_matrix good for computation bad for modify itself*
+.
+.  ndarray --------------------------&gt; csr_matrix ---------&gt; ndarray
+.    ~scipy.sparse.csr_matrix(ndarray)~  |   ^   ~X_csr.toarray~ ==&gt; ndarray
+.                                        |   |   ~X_csr.todense~ ==&gt; ndmatrix(not supported in scipy)
+.                                        |   |
+.                                        |   |
+.                               ~.tolil~ |   | ~.tocsr~
+.                                        |   |
+.                                        V   |
+.  ndarray --------------------------&gt; lil_matrix ---------&gt; ndarray
+.      ~scipy.sparse.lil_matrix(ndarray)~      ~X_lil.toarray~ ==&gt; ndarray
+.
+.  *lil_matrix bad for computation good for modify itself*
+.
+.  &gt;&gt;&gt;&gt; but you can get both advantages(modify and compute), by convert to each other &lt;&lt;&lt;&lt;
+
+</pre>
+
+<p>
+   Often, once an LIL matrix is created, it is useful to convert it to a CSR
+format (<b>many scikit-learn algorithms require CSR or CSC format</b>)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_csr</span> = X_lil.tocsr()
+<span class="org-keyword">print</span>(X_csr)
+<span class="org-keyword">print</span>(<span class="org-builtin">type</span>(X_csr))
+<span class="org-variable-name">X_lil2</span> = X_csr.tolil()
+<span class="org-keyword">print</span>(X_lil)
+<span class="org-keyword">print</span>(<span class="org-builtin">type</span>(X_lil))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org47175a4" class="outline-3">
+<h3 id="org47175a4"><span class="section-number-3">3.4</span> other kinds of sparse matrix</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+The available sparse formats that can be useful for various problems are:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">CSR</td>
+<td class="org-left">(compressed sparse row)</td>
+</tr>
+
+<tr>
+<td class="org-left">CSC</td>
+<td class="org-left">(compressed sparse column)</td>
+</tr>
+
+<tr>
+<td class="org-left">BSR</td>
+<td class="org-left">(block sparse row)</td>
+</tr>
+
+<tr>
+<td class="org-left">COO</td>
+<td class="org-left">(coordinate)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIA</td>
+<td class="org-left">(diagonal)</td>
+</tr>
+
+<tr>
+<td class="org-left">DOK</td>
+<td class="org-left">(dictionary of keys)</td>
+</tr>
+
+<tr>
+<td class="org-left">LIL</td>
+<td class="org-left">(list in list)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The <code>scipy.sparse</code> submodule also has a lot of functions for sparse matrices
+including linear algebra, sparse solvers, graph algorithms, and much more.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb913f56" class="outline-2">
+<h2 id="orgb913f56"><span class="section-number-2">4</span> matplotlib</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Another important part of machine learning is the visualization of data. The
+most common tool for this in Python is matplotlib. It is an extremely flexible
+package, and we will go over some basics here.
+</p>
+
+<p>
+Since we are using Jupyter notebooks, let us use one of IPython's convenient
+built-in "magic functions", the "matoplotlib inline" mode, which will draw the
+plots directly inside the notebook.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-comment-delimiter"># </span><span class="org-comment">Plotting a line</span>
+<span class="org-variable-name">x</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>)
+plt.plot(x, np.sin(x));
+<span class="org-comment-delimiter"># </span><span class="org-comment">Scatter-plot points</span>
+<span class="org-variable-name">x</span> = np.random.normal(size=<span class="org-highlight-numbers-number">500</span>)
+<span class="org-variable-name">y</span> = np.random.normal(size=<span class="org-highlight-numbers-number">500</span>)
+plt.scatter(x, y);
+<span class="org-comment-delimiter"># </span><span class="org-comment">Showing images using imshow</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">- note that origin is at the top-left by default!</span>
+
+<span class="org-variable-name">x</span> = np.linspace(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">12</span>, <span class="org-highlight-numbers-number">100</span>)
+<span class="org-variable-name">y</span> = x[:, np.newaxis]
+
+<span class="org-variable-name">im</span> = y * np.sin(x) * np.cos(y)
+<span class="org-keyword">print</span>(im.shape)
+
+plt.imshow(im);
+<span class="org-comment-delimiter"># </span><span class="org-comment">Contour plots</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">- note that origin here is at the bottom-left by default!</span>
+plt.contour(im);
+<span class="org-comment-delimiter"># </span><span class="org-comment">3D plotting</span>
+<span class="org-keyword">from</span> mpl_toolkits.mplot3d <span class="org-keyword">import</span> Axes3D
+<span class="org-variable-name">ax</span> = plt.axes(projection=<span class="org-string">'3d'</span>)
+<span class="org-variable-name">xgrid</span>, <span class="org-variable-name">ygrid</span> = np.meshgrid(x, y.ravel())
+ax.plot_surface(xgrid, ygrid, im, cmap=plt.cm.viridis, cstride=<span class="org-highlight-numbers-number">2</span>, rstride=<span class="org-highlight-numbers-number">2</span>, linewidth=<span class="org-highlight-numbers-number">0</span>);
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/1942ocb.png" alt="1942ocb.png" />
+</p>
+</div>
+
+<p>
+There are many, many more plot types available. One useful way to explore these
+is by looking at the matplotlib gallery.
+</p>
+
+<p>
+You can test these examples out easily in the notebook: simply copy the Source
+Code link on each page, and put it in a notebook using the <code>%load</code> magic. For
+example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">%load http://matplotlib.org/mpl_examples/pylab_examples/ellipse_collection.py
+</pre>
+</div>
+</div>
+
+<div id="orgec87dcd" class="outline-3">
+<h3 id="orgec87dcd"><span class="section-number-3">4.1</span> 3 methods frequently used to create array</h3>
+<div class="outline-text-3" id="text-4-1">
+<ol class="org-ol">
+<li>np.random.&lt;distribution&gt;(args, size=)</li>
+<li>np.random.RandomState(seed=).&lt;distribution&gt;(args, size=)</li>
+<li>np.random.randint(lower, upper, size=)</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="org8c4062e" class="outline-2">
+<h2 id="org8c4062e"><span class="section-number-2">5</span> Misc tools</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="orgfce2501" class="outline-3">
+<h3 id="orgfce2501"><span class="section-number-3">5.1</span> Numpy</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="org4d70d61" class="outline-4">
+<h4 id="org4d70d61"><span class="section-number-4">5.1.1</span> np.random.RandomState(seed=Num)</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+The target of <code>RandomState</code> is to build an <b>shape-specifed</b> ndarray according to
+<b>specified-distribution</b>.
+</p>
+
+<p>
+<code>rds = numpy.random.RandomState(seed=&lt;num&gt;)</code> will return you a <code>rds = &lt;class
+'mtrand.RandomState'&gt;</code> object, who is the last step to collect samples from
+certain distribution: <code>samples = rds.&lt;distribution&gt;(mean,std,size)</code>
+</p>
+
+<pre class="example">
+. The target of ~RandomState~ is to build an *shape-specifed* ndarray
+. according to *specified-distribution*.
+.
+.
+.       module                     rds obj
+. ----- random -----&gt; RandomState --------&gt; [specified distribution] -----&gt; *ndarray*
+.                                                                             ^
+.                                            normal(0, 10, size=(2,4))        |
+.                                                          ^^^^^^^^^^---------+ specify the shape of
+.                                            uniform                            ndarray
+.
+.                                            lognorm
+.
+.                                            etc
+.
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">rds</span> = np.random.RandomState(seed=<span class="org-highlight-numbers-number">234</span>)
+<span class="org-keyword">print</span> (<span class="org-builtin">type</span>(np.random))
+rds.uniform(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">10</span>, size=(<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">5</span>))
+</pre>
+</div>
+
+<pre class="example">
+array([[ 0.30967343,  2.54282073,  9.12400444,  9.70174198,  2.46619776],
+[ 6.98807414,  8.66429319,  6.39521847,  4.56843648,  4.98794752],
+[ 7.20475007,  2.7125319 ,  8.00619031,  5.09252675,  8.19921021]])
+</pre>
+</div>
+</div>
+
+<div id="orgdf2cf5d" class="outline-4">
+<h4 id="orgdf2cf5d"><span class="section-number-4">5.1.2</span> 3 methods frequently used to create array</h4>
+<div class="outline-text-4" id="text-5-1-2">
+<ol class="org-ol">
+<li>np.random.&lt;distribution&gt;(args, size=)</li>
+<li>np.random.RandomState(seed=).&lt;distribution&gt;(args, size=)</li>
+<li>np.random.randint(lower, upper, size=)</li>
+</ol>
+</div>
+</div>
+
+<div id="org9f12312" class="outline-4">
+<h4 id="org9f12312"><span class="section-number-4">5.1.3</span> add or delete an axis</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<p>
+<code>...</code> and <code>np.newaxis</code> ENTER!
+</p>
+</div>
+</div>
+
+<div id="org3df6e1c" class="outline-4">
+<h4 id="org3df6e1c"><span class="section-number-4">5.1.4</span> <code>...</code></h4>
+<div class="outline-text-4" id="text-5-1-4">
+<p>
+<code>...</code> = <code>:,:,...,:</code> means I don't care it, I prefer to keep all.
+</p>
+
+<p>
+<code>x[..., 12]</code> means the I ONLY keep the <code>12th</code> (start from 0) column elements
+of last diemension of the array x
+</p>
+
+<p>
+shape = (2,3,1) means:
+</p>
+<pre class="example">
+.     shape =  (2,               3,               1)
+.         out-side row,      inside-row,       column
+.
+.     shape =  (4,               2,               3,            1)
+.         out-side^2 row,    out-side row,   inside-row,     column
+.
+
+</pre>
+
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span> = np.array([[[<span class="org-highlight-numbers-number">1</span>],[<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">3</span>]],[[<span class="org-highlight-numbers-number">4</span>],[<span class="org-highlight-numbers-number">5</span>],[<span class="org-highlight-numbers-number">6</span>]]])
+<span class="org-variable-name">y</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">15</span>, <span class="org-highlight-numbers-number">1</span>).reshape((<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">5</span>))
+<span class="org-keyword">print</span> (y[...,<span class="org-highlight-numbers-number">1</span>].shape)
+<span class="org-keyword">print</span> (x.shape)
+
+<span class="org-keyword">print</span> (x)
+<span class="org-keyword">print</span>(<span class="org-string">"x[0,...]---------"</span>)
+<span class="org-keyword">print</span>(x[<span class="org-highlight-numbers-number">0</span>,...])
+<span class="org-keyword">print</span>(x[<span class="org-highlight-numbers-number">0</span>,:,:])
+<span class="org-keyword">print</span>(<span class="org-string">"x[1,...]---------"</span>)
+<span class="org-keyword">print</span>(x[<span class="org-highlight-numbers-number">1</span>,...])
+<span class="org-keyword">print</span>(x[<span class="org-highlight-numbers-number">1</span>,:,:])
+<span class="org-keyword">print</span>(<span class="org-string">"x[...,0]---------"</span>)
+<span class="org-keyword">print</span>(x[...,<span class="org-highlight-numbers-number">0</span>])
+<span class="org-keyword">print</span>(x[:,:,<span class="org-highlight-numbers-number">0</span>])
+</pre>
+</div>
+
+<p>
+So, by this way we can reduce the '[]' by index the certain axis items, and with
+other axes all be kept:
+</p>
+
+<pre class="example">
+.                  [[ 0  1  2  3  4]
+.           y   =   [ 5  6  7  8  9]
+.                   [10 11 12 13 14]]
+.                       ^
+.                       |
+.                       |           y's shape = (3,5)
+.                       |
+.
+.          y[...,1] =  [1, 6, 11]   y[...,1].shape = (3,)
+.
+.
+.          *we can use same manner to reduce the dimension of an array*
+.
+.                  [[[1]
+.                    [2]
+.          x   =     [3]]
+.                   [[4]
+.                    [5]
+.                    [6]]]
+.                     ^
+.                +----+
+.                |
+.          x[...,0] =   [[1 2 3]
+.                        [4 5 6]]
+.                       [[1 2 3]
+.                        [4 5 6]]
+.
+
+
+</pre>
+</div>
+</div>
+
+<div id="org3cbfbc9" class="outline-4">
+<h4 id="org3cbfbc9"><span class="section-number-4">5.1.5</span> np.newaxis</h4>
+<div class="outline-text-4" id="text-5-1-5">
+<p>
+Very flexible to new a axis, and modify the shape of array
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span> = np.arange(<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">15</span>,<span class="org-highlight-numbers-number">1</span>).reshape((<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">5</span>))
+<span class="org-keyword">print</span> (x)
+<span class="org-keyword">print</span> (x.shape)  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- (3,5)</span>
+<span class="org-variable-name">y</span> = x[:,np.newaxis,:]
+<span class="org-keyword">print</span> (y)
+<span class="org-keyword">print</span> (y.shape)  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- (3,1,5)</span>
+<span class="org-variable-name">z1</span> = x[<span class="org-highlight-numbers-number">1</span>,np.newaxis,:]
+<span class="org-keyword">print</span> (z1)
+<span class="org-keyword">print</span> (z1.shape)  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- (1,5)</span>
+<span class="org-variable-name">z2</span> = x[<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>,np.newaxis,:]
+<span class="org-keyword">print</span> (z2)
+<span class="org-keyword">print</span> (z2.shape)  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- (1,1,5)</span>
+</pre>
+</div>
+
+<p>
+Actually, we can also add new axis by <code>reshape</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x</span> = np.arange(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">15</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span> (x.shape)
+<span class="org-keyword">print</span> (x)
+<span class="org-variable-name">y</span> = x.reshape((<span class="org-highlight-numbers-number">15</span>,<span class="org-highlight-numbers-number">1</span>))
+<span class="org-keyword">print</span> (y.shape)
+<span class="org-keyword">print</span> (y)
+</pre>
+</div>
+</div>
+</div>
+<div id="org1b9fdec" class="outline-4">
+<h4 id="org1b9fdec"><span class="section-number-4">5.1.6</span> ndarray.ravel()</h4>
+<div class="outline-text-4" id="text-5-1-6">
+<p>
+Used to <b>flattern</b> the ndarray. It is equivalent to <code>reshape(-1, order=order)</code>.
+</p>
+
+<pre class="example">
+&gt;&gt;&gt; x = np.array([[1, 2, 3], [4, 5, 6]])
+&gt;&gt;&gt; print(np.ravel(x))
+[1 2 3 4 5 6]
+&gt;&gt;&gt; print(x.reshape(-1))
+[1 2 3 4 5 6]
+&gt;&gt;&gt; print(np.ravel(x, order='F'))
+[1 4 2 5 3 6]
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 02</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 02</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf8d1a75">Cat 2.1 Functions, epimorphism</a>
+<ul>
+<li><a href="#way-to-design-a-language">2 way to design a language</a></li>
+<li><a href="#org4d65ec3">talk about PURE function</a>
+<ul>
+<li><a href="#the-top-level-of-abstraction">The Top level of Abstraction</a></li>
+<li><a href="#the-bottom-level-of-abstraction">The Bottom level of Abstraction</a></li>
+</ul>
+</li>
+<li><a href="#org61817b7">Directionality of function</a>
+<ul>
+<li><a href="#org3f3425e">isomorphism and inverse</a></li>
+<li><a href="#org923011e">2 reason function always not isomorphism</a></li>
+<li><a href="#org85f298d">abstraction vs. model</a></li>
+<li><a href="#org0102e08">come back to abstraction</a></li>
+<li><a href="#define-epimorphism">define epimorphism</a></li>
+<li><a href="#org00c1e7f">why epimorphism is important</a></li>
+<li><a href="#org7f7286d">6 kinds of morphism</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgc1e8e35">Cat 2.2 Monomorphisms, simple types</a>
+<ul>
+<li><a href="#orgc0432e3">epimorphism and monomorphism</a></li>
+<li><a href="#org77cf5c8">Talk more about set</a>
+<ul>
+<li><a href="#element-set">0 element set</a></li>
+<li><a href="#elements-set">1 elements set</a></li>
+<li><a href="#org81e6db4">2 elements set</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgf8d1a75" class="outline-2">
+<h2 id="orgf8d1a75">Cat 2.1 Functions, epimorphism</h2>
+<div class="outline-text-2" id="text-orgf8d1a75">
+</div>
+<div id="org24505a2" class="outline-3">
+<h3 id="way-to-design-a-language"><a id="org24505a2"></a>2 way to design a language</h3>
+<div class="outline-text-3" id="text-way-to-design-a-language">
+<p>
+every time you design a language, you have to provide the semantics for
+that language. Lot of language defined using so-called operational
+semantics, two way to define semantics:
+</p>
+
+<ol class="org-ol">
+<li>operational semantics:
+<ul class="org-ul">
+<li>tell how things execute right, which define the operations of the language,
+eg. how one statement or expression transformed into another simpler one.</li>
+</ul></li>
+
+<li>denotational semantics:
+<ul class="org-ul">
+<li>map things into some area you are intrested in, like mathematics. you build
+some mathematics model, and say "this statement or this construct
+corresponds to some mathematical thing."</li>
+<li>like last course, for instance, type is a set of values.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+
+<div id="org4d65ec3" class="outline-3">
+<h3 id="org4d65ec3">talk about PURE function</h3>
+<div class="outline-text-3" id="text-org4d65ec3">
+<p>
+what is a pure function, it must can apply to all value of its argument's type.
+Not like partial function, it only suited for a subset of certain type of
+argument.
+</p>
+</div>
+
+<div id="orgae34cb4" class="outline-4">
+<h4 id="the-top-level-of-abstraction"><a id="orgae34cb4"></a>The Top level of Abstraction</h4>
+<div class="outline-text-4" id="text-the-top-level-of-abstraction">
+<p>
+but, how to describe the purity of a function? &gt; a function is pure if you can
+<b>memoise</b> it. This means that you can turn it into a <b>lookup table</b>. everytime
+you call this function once it's evaluated, you can remember it, the next time
+you can just lookup into a table. so, types that are finite, only have finite
+number of elements, like Booleans, it's really easy to <b>tabulate</b>.
+</p>
+
+<ul class="org-ul">
+<li>functions on characters, they are really easy to tabulate.</li>
+<li>functions on Integers or Strings, they usually cannot be tabulated.</li>
+</ul>
+
+<p>
+eg.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">def</span> isTrue(b<span class="org-haskell-constructor">:</span> <span class="org-haskell-constructor">Boolean</span>)<span class="org-haskell-constructor">:</span> <span class="org-haskell-constructor">Boolean</span> <span class="org-haskell-operator">=</span> b <span class="org-haskell-operator">==</span> <span class="org-haskell-constructor">True</span>
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">input</th>
+<th scope="col" class="org-left">output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">true</td>
+<td class="org-left">true</td>
+</tr>
+
+<tr>
+<td class="org-left">false</td>
+<td class="org-left">true</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+we must say that, the pure function is at the top level of abstraction, what
+we more concern is the bottom level of abstraction &#x2014; what is the
+atom(primitive thing), what are the simplest building blocks from which we can
+build more complex stuff. <span class="underline"><b>First</b></span> , we should <b>decompose</b> the problem, get
+to the little blocks at the bottom, and then <b>recompose</b> stuff from there,
+when we are decomposing this idea of using procedures and types, we eventually
+get to the bottom and that's pure functions. So, on top of functions we can be
+building more complex stuff, including things like I/O.
+</p>
+</div>
+</div>
+
+<div id="orgef7b52e" class="outline-4">
+<h4 id="the-bottom-level-of-abstraction"><a id="orgef7b52e"></a>The Bottom level of Abstraction</h4>
+<div class="outline-text-4" id="text-the-bottom-level-of-abstraction">
+<p>
+keep in mind that, Programming can be modeled as a Cat of Set, which Set is an
+recursive concept &#x2014; one set can be element of another set. what is a
+function? function is some special relation(in mathematics). what is a
+relation? keep in mind that, set is set of Cat, not set of Set Theory. set in
+Cat cannot see elments inside; set in Set Theory we can see inside.
+</p>
+
+<ul class="org-ul">
+<li>relation is pairing 2 elment in 2 set, relation doesn't have to be symmetric.</li>
+<li>relation is just a subset of Cartesian product</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/ID3Jrer.jpg" alt="ID3Jrer.jpg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Cartesian product</p>
+</div>
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Cartesian%5C_product?oldformat=true">https://en.wikipedia.org/wiki/Cartesian\_product?oldformat=true</a>
+</p>
+
+<p>
+relation which ilegal for function
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/N76JS0D.jpg" alt="N76JS0D.jpg" />
+</p>
+</div>
+
+<p>
+<b>one</b> element of function CANNOT be mapped into a <b>bunch</b> of things.
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/QcbYJ9U.jpg" alt="QcbYJ9U.jpg" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org61817b7" class="outline-3">
+<h3 id="org61817b7">Directionality of function</h3>
+<div class="outline-text-3" id="text-org61817b7">
+<p>
+this is where directionality of function come from: every element of start-set
+must have a mapping to element of target-set; but not requiring that for every
+element of target-set. which means that <b>we map a whole set to a subset of
+another set</b>.
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/4J17S0m.jpg" alt="4J17S0m.jpg" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Whole to Sub</p>
+</div>
+
+<p>
+Some terms:
+</p>
+
+<ol class="org-ol">
+<li>Domain: Whole value of a start-set</li>
+<li>f: the function</li>
+<li>Codomain: Whole value of a target-set</li>
+<li>Image: subset of Codomain,result of mapping Domain by f</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/H1WPR6M.jpg" alt="H1WPR6M.jpg" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Terms of function</p>
+</div>
+
+<p>
+<b>Directionality and Mapping</b> are so important concept, that it will
+occur many times in this course:
+</p>
+
+<ol class="org-ol">
+<li>function: mapping between 2 set(objecst)</li>
+<li>Functor: mapping between 2 Cat</li>
+<li>Natural transformation: mapping between 2 Functor</li>
+</ol>
+
+<p>
+All these mappings have the same kind of directionality.
+</p>
+</div>
+
+<div id="org3f3425e" class="outline-4">
+<h4 id="org3f3425e">isomorphism and inverse</h4>
+<div class="outline-text-4" id="text-org3f3425e">
+<p>
+How to define inverse of a given function
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> b
+<span class="org-haskell-definition">g</span> <span class="org-haskell-operator">::</span> b <span class="org-haskell-operator">-&gt;</span> a
+g <span class="org-haskell-definition">*</span> f <span class="org-haskell-operator">=</span> id_a
+f <span class="org-haskell-definition">*</span> g <span class="org-haskell-operator">=</span> id_b
+</pre>
+</div>
+
+<p>
+what is isomorphism? function that is invertible is called <b>isomorphism</b> <b>g *
+f = id_a ; f * g = id_b</b> we can say: *f is isomorphism if existing a g to make
+2 equation available * #+END_QUOTE
+</p>
+
+<p>
+tips: you see that, we never look inside of a set, we just use and
+ONLY use function to define what is isomorphism.
+</p>
+
+<p>
+when we define something ONLY by function(arrow), we get an general definition
+for any Cat, not only for some Cat but <b>for all Cat</b> . but when we use <b>inside
+view</b> of set, we trap ourself to details, which impose restriction on availabe
+range of this definition. Isomorphism is excellent: isomorphism build a
+one-to-one relatioship between 2 set isomorphism kinda tell you that these 2
+things are for <b>some intents and purposes identical</b>
+</p>
+
+<p>
+for finite 2 set: one-to-one; for infinite 2 set: because of infinite things
+become more complex
+</p>
+
+<pre class="example">
+Even Nature Number &lt;-------------&gt; Natural Number
+y = 2x
+</pre>
+</div>
+</div>
+
+<div id="org923011e" class="outline-4">
+<h4 id="org923011e">2 reason function always not isomorphism</h4>
+<div class="outline-text-4" id="text-org923011e">
+<ol class="org-ol">
+<li>function will collapse elements of a set( because function allow
+many-to-one mapping)</li>
+<li>image is always a subset of Codomain
+<ul class="org-ul">
+<li>then if you inverse f, maybe we call it g. But for g, his input
+should be the whole codomain</li>
+<li id="then this is something like: f :: Int -&gt; Double, g">subDouble -&gt;
+Int</li>
+<li>then we CANNOT compose them.</li>
+<li>so you can think of function like a time related process</li>
+<li>you can boil an egg; you CAN NOT unboil an egg</li>
+</ul></li>
+</ol>
+</div>
+</div>
+
+<div id="org85f298d" class="outline-4">
+<h4 id="org85f298d">abstraction vs. model</h4>
+<div class="outline-text-4" id="text-org85f298d">
+<pre class="example">
+abstraction
+
+</pre>
+<p>
+from another point of view, we don't hope function to be invertible . Because we
+don't want to care about the inside of the set, we don't want to trap ourself to
+details, details is not abstractive.
+</p>
+
+<pre class="example">
+model
+
+</pre>
+<p>
+but when refering to practical things, we should use <b>model</b>.we should do some
+mapping, that from 3-d person to 2-d shadow. In mathematics, if a function <b>dose
+not collapse</b> things, we call it <b>injective function</b>. And if image equals to
+Codomain, we call ti <b>surjective function</b>.
+</p>
+
+<ul class="org-ul">
+<li>collapse: 3-d person to 2-d shadow (many-to-one)</li>
+<li>injective: 3-d person without a hat to 3-d wax figure with a hat (one-to-one)</li>
+<li>surjective: 3-d person without a hat to 2-d shadow without a hat</li>
+</ul>
+
+<p>
+or we can say:
+</p>
+<ul class="org-ul">
+<li>injective：一对一，不坍缩，有漏 or 无漏</li>
+<li>surjective: 多对一 or 一对一，坍缩，无漏</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/DCYg1ih.jpg" alt="DCYg1ih.jpg" />
+</p>
+<p><span class="figure-number">Figure 6: </span>injective vs. surjective</p>
+</div>
+
+<p>
+isomorphism = injective + surjective
+</p>
+</div>
+</div>
+
+<div id="org0102e08" class="outline-4">
+<h4 id="org0102e08">come back to abstraction</h4>
+<div class="outline-text-4" id="text-org0102e08">
+<p>
+what we talk about above in section 'model' is too detail: * one-to-one &#x2014;
+element related * image equals Codomain &#x2014; element related. But, as we said
+before, we don't like detail, we are talking about Cat. *can we describe clearly
+what is "injective" and "surjective" ONLY by morphism(arrow/function), if we can
+not see the elememnts*.
+</p>
+
+<p>
+YES, we can, but it's a little tricky, because I have to talk about <b>all the
+other</b> objects in the category, all of them, in order to define this one
+property. <b>This is very characteristic point in Cat</b>. when you define a property
+of an object or an arrow, you define it with respect to essentially everything
+else. you can not just focus on one litte thing, because no matter how good your
+microscope is you cannot look inside this litter point.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Set Theory</th>
+<th scope="col" class="org-left">Category Theory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">injective</td>
+<td class="org-left">monic - monomorphism</td>
+</tr>
+
+<tr>
+<td class="org-left">surjective</td>
+<td class="org-left">epic - epimorphism</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="org7623cd6" class="outline-4">
+<h4 id="define-epimorphism"><a id="org7623cd6"></a>define epimorphism</h4>
+<div class="outline-text-4" id="text-define-epimorphism">
+<p>
+<b>How</b>: first from a set, then we define a surjective function that can
+be expressed purely in terms of other functions.
+</p>
+
+<p>
+<b>what is not epimorphism</b>: exist some point outside of <b>image</b> but
+inside of Codomain.
+</p>
+
+<p>
+<b>build a new set and build functions to compose original function</b>:
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> a<span class="org-haskell-operator">-&gt;</span>b
+</pre>
+</div>
+
+<p>
+build 2 new functions: g1 and g2
+</p>
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">g1</span> <span class="org-haskell-operator">::</span> b<span class="org-haskell-operator">-&gt;</span>c
+<span class="org-haskell-definition">g2</span> <span class="org-haskell-operator">::</span> b<span class="org-haskell-operator">-&gt;</span>c
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/f67TF7I.jpg" alt="f67TF7I.jpg" />
+</p>
+<p><span class="figure-number">Figure 7: </span>a new set c and new functions g1,g2</p>
+</div>
+
+<p>
+<b>prove by contradiction</b>:if f is not surjective, we can not infer from: <code>g1 * f
+= g2 * f</code> to: <code>g1 = g2</code> , for all set c, for any g1 and g2, if g1 * f = g2 * f
+=&gt; g1 = g2 , then f is a epimorphism function in Cat.
+</p>
+
+<p>
+Although, we only build ONE new set, but if take it to any other Set, this
+epimorhpism will also avaiable. all above proving process, is so Cat manner: if
+you want define some property, you must take the WHOLE university( for all set
+c, for any g1 and g2 ) into account. Or we might say, if you want build some
+law, all people of the university must allow you to do, then you can do it. we
+also must notice that: <b>what we use to define a epimorphism is just use and ONLY
+use function composition</b> ,yes we did it. we just define something ONLY using
+arrows.
+</p>
+
+<p>
+remember that, function is arrow from one set to another set, nothing
+related to details &#x2014; the elements inside the set. So, <b>by using and
+ONLY using function</b>, we <b>keep the abstraction</b> of the Cat, this is what
+we want the <b>abstraction</b>
+</p>
+</div>
+</div>
+
+<div id="org00c1e7f" class="outline-4">
+<h4 id="org00c1e7f">why epimorphism is important</h4>
+<div class="outline-text-4" id="text-org00c1e7f">
+<p>
+because: if f is epimorphism, then we can use it like GCD of production
+</p>
+<pre class="example">
+3 * 2 = 3 * 2
+=&gt; 3 = 3
+</pre>
+<p>
+g1 * f = g2 * f if f is epimorphism =&gt; g1 = g2
+</p>
+</div>
+</div>
+<div id="org7f7286d" class="outline-4">
+<h4 id="org7f7286d">6 kinds of morphism</h4>
+<div class="outline-text-4" id="text-org7f7286d">
+<ol class="org-ol">
+<li>同构（isomorphism） 令f:X→Y为一个态射。若存在态射g:Y→X使得 和成立，则f称为一个同构。g称为f的逆态射， 逆态射g如果存在就是唯一的，而且显而易见g也是一个同构，其逆为f。两个对象之间 有一个同构，那么这两个对象称为同构的或者等价的。同构是范畴论中态射的最重要 种类。</li>
+
+<li>满同态（epimorphism） 一个态射f:X→Y称为一个满同态，如果对于所有Y→Z的态射g1
+成立。这也称为epi或epic.具 体范畴中的满同态通常是满射（surjective）函数，虽然并不总是这样。</li>
+
+<li>单同态（monomorphism） 态射f:X→Y称为单同态，如果对于所有Z→X的态射g1，g2，成立。它也称为mono或者 monic.具体范畴中的单同态通常为单射（injective）函数。</li>
+
+<li>双同态（bimorphism） 若f既是满同态也是单同态，则称f为双同态（bimorphism）。注意每个同构都是双同态，但 不是每个双同态都是同构。例如，交换环的范畴中，包含映射Z → Q是一个双同态，但不是 一个同构。如果在一个范畴中每个双同态都是同构，则这个范畴称为一个平衡范畴。例如， 集合是一个平衡范畴。</li>
+
+<li>自同态（endomorphism）:任何态射f:X→X称为X上的一个自同态。</li>
+
+<li>自同构（automorphism）:若一个自同态也是同构的，那么称之为自同构。</li>
+
+<li>若f:X→Y和g:Y→X满足 可是证明f是满的而g是单的，而且:X→X是幂等的。这种情况下，
+f和g称为分割（split）.f称为g的收缩（retraction）而g称为f的截面。任何既是满同态又是分割单同态的态射，或者既是单同态又是分割满同态的态射必须是同构。</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgc1e8e35" class="outline-2">
+<h2 id="orgc1e8e35">Cat 2.2 Monomorphisms, simple types</h2>
+<div class="outline-text-2" id="text-orgc1e8e35">
+<p>
+the same process with proving epimorphism:
+</p>
+<ol class="org-ol">
+<li><p>
+what is not a injective
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/TweE1Yf.jpg" alt="TweE1Yf.jpg" />
+</p>
+</div></li>
+
+<li>how can we describe it using other function, rather than looking
+inside the elements.</li>
+</ol>
+
+<p>
+we use <b>pre</b>-<b>composition</b> other than post-composition(used in defining
+epimorphism)
+</p>
+
+
+<div class="figure">
+<p><img src="https://i.imgur.com/oI3vOMS.jpg" alt="oI3vOMS.jpg" />
+</p>
+<p><span class="figure-number">Figure 9: </span>define monomorphism</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">for</span> all set c, any g1 g2<span class="org-haskell-constructor">:</span>
+<span class="org-haskell-keyword">if</span> <span class="org-haskell-definition">:</span> f <span class="org-haskell-operator">*</span> g1 <span class="org-haskell-operator">=</span> f <span class="org-haskell-operator">*</span> g2 <span class="org-haskell-operator">=&gt;</span> g1 <span class="org-haskell-operator">=</span> g2
+<span class="org-haskell-keyword">then</span> <span class="org-haskell-definition">:</span> f is monomorphism
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> epimorphism vs. monomorphism</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">epimorphism</th>
+<th scope="col" class="org-left">monomorphism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">* surjective(full)</td>
+<td class="org-left">* injective(1:1)</td>
+</tr>
+
+<tr>
+<td class="org-left">* post-composition</td>
+<td class="org-left">* pre-composition</td>
+</tr>
+
+<tr>
+<td class="org-left">* g1/f=g2/f =&gt; g1=g2</td>
+<td class="org-left">* f/g1=f/g2 =&gt; g1=g2</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div id="orgc0432e3" class="outline-3">
+<h3 id="orgc0432e3">epimorphism and monomorphism</h3>
+<div class="outline-text-3" id="text-orgc0432e3">
+<p>
+we know that: &gt; isomorphism = injective + surjective
+</p>
+
+<p>
+but for Cat: &gt; isomorphism != epimorphsim + monomorphism
+</p>
+</div>
+</div>
+
+<div id="org77cf5c8" class="outline-3">
+<h3 id="org77cf5c8">Talk more about set</h3>
+<div class="outline-text-3" id="text-org77cf5c8">
+<p>
+because set is what used to model type(object), we shoud take deep understand
+it.
+</p>
+</div>
+
+<div id="org63bc945" class="outline-4">
+<h4 id="element-set"><a id="org63bc945"></a>0 element set</h4>
+<div class="outline-text-4" id="text-element-set">
+<p>
+<b>So, what is the simplest set</b> . empty set is the simplest set
+</p>
+
+<p>
+<b>Dose empty set has related type in programming language</b>. you will not find an
+empty set in any imperative language. But you can find it in Haskell, but I must
+say type in Hasekll have bottom member, so that the empty set is not empty, it
+does have a bottom member. But if you just ignore the infinite loop of
+executing, then the empty set is the correct type called <code>Void</code> , no construct
+inside it.
+</p>
+
+<p>
+<b>Is there f::Void -&gt; Int ?</b> .In mathematcis, yes. it is excellent, because we
+can now have a identity function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">f</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Void</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">id_void</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-type">Void</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Void</span>
+</pre>
+</div>
+
+<blockquote>
+<p>
+this is a good function, but you can never call it, but it's sure
+exist.
+</p>
+</blockquote>
+
+<p>
+<b>Void is false in logic, you can not prove it, you can not prove false.
+and in type theory, function is something to do proving.</b>
+</p>
+</div>
+</div>
+
+<div id="orga1d70aa" class="outline-4">
+<h4 id="elements-set"><a id="orga1d70aa"></a>1 elements set</h4>
+<div class="outline-text-4" id="text-elements-set">
+<p>
+<b>Singleton set : Unit</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-constructor">Unit</span> <span class="org-haskell-operator">::</span> a <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-constructor">()</span>
+<span class="org-haskell-definition">one</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+<span class="org-haskell-definition">two</span> <span class="org-haskell-operator">::</span> <span class="org-haskell-constructor">()</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Int</span>
+</pre>
+</div>
+
+<p>
+for () is the type of Singleton set, so it only have one elment. so if it's
+taken as type of argument, then this function must always return the same value.
+</p>
+
+<p>
+Then you will find a truth: if the output set have 2 elments, like Boolean. Then
+function of this form <code>fn :: ()-&gt;Boolean</code> only have 2 different function.
+</p>
+
+<p>
+because in this situation, thers is no many-to-one mapping, there is ONLY
+one-to-one mapping. So, the number of elements in output set decide the number
+of mappings, do that decide the number of functions. <b>A big BONG~~~</b> then you
+will find that, we may <b>use and ONLY use</b> function to compute the number of
+elements in output set
+</p>
+
+<p>
+Function from a single set to any other set, they define in a way, the elements
+in a set. From elements to morphism(function/arrow). So we begin to discuss
+morphisms from this special set(Unit) instead of elements.
+</p>
+</div>
+</div>
+
+<div id="org81e6db4" class="outline-4">
+<h4 id="org81e6db4">2 elements set</h4>
+<div class="outline-text-4" id="text-org81e6db4">
+<p>
+We further learn that boolean is not as atomic structure in our cagetory of set.
+In general, it can be defined as the sum of two unit types. this type is not so
+independent. but 0 and 1 element set (or type.), they form the basis for all
+others. A function that returns a Boolean type, called <b>predikatom</b>.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

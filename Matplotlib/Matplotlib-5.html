@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matplotlib 第五课</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Matplotlib 第五课</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgee6b9d5">1. part-IV, Limits, Legends, and Layouts</a>
+<ul>
+<li><a href="#org893d1c6">1.1. Artists</a>
+<ul>
+<li><a href="#orga39face">1.1.1. Primative Artists</a></li>
+<li><a href="#orgc89f8bd">1.1.2. Container Artists</a></li>
+</ul>
+</li>
+<li><a href="#org93834db">1.2. Collections</a>
+<ul>
+<li><a href="#orge3bfc91">1.2.1. do settings to all items of collection</a></li>
+<li><a href="#org0700fad">1.2.2. do settings to separate items of collection</a></li>
+<li><a href="#org08eb226">1.2.3. more specified collection</a></li>
+<li><a href="#org05489b1">1.2.4. RegularPolyCollection</a></li>
+<li><a href="#org537a12c">1.2.5. StarPolygonCollection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgee6b9d5" class="outline-2">
+<h2 id="orgee6b9d5"><span class="section-number-2">1</span> part-IV, Limits, Legends, and Layouts</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> print_function
+<span class="org-keyword">import</span> matplotlib
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+</div>
+
+<div id="org893d1c6" class="outline-3">
+<h3 id="org893d1c6"><span class="section-number-3">1.1</span> Artists</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Anything can draw or can be draw is an <code>Artist</code>.
+</p>
+<ul class="org-ul">
+<li>Figure Artist.</li>
+<li>Axes Artist.</li>
+<li>plot Artist.</li>
+<li>bar Artist.</li>
+<li>scatter Artist.</li>
+<li>etc.</li>
+</ul>
+
+<p>
+There are two main classes of Artists: <code>primatives</code> and <code>containers</code>. Below
+is a sample of these primitives.
+</p>
+</div>
+
+<div id="orga39face" class="outline-4">
+<h4 id="orga39face"><span class="section-number-4">1.1.1</span> Primative Artists</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+primitives Artist:
+</p>
+<ul class="org-ul">
+<li>wedge artist</li>
+<li>arrow artist</li>
+<li>line2D artist</li>
+<li>rectangle artist</li>
+<li>ellipse artist</li>
+<li>fancyBoxPatch artist</li>
+<li>etc</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> matplotlib.collections <span class="org-keyword">import</span> PatchCollection
+<span class="org-keyword">import</span> matplotlib.path <span class="org-keyword">as</span> mpath
+<span class="org-keyword">import</span> matplotlib.patches <span class="org-keyword">as</span> mpatches
+<span class="org-keyword">import</span> matplotlib.lines <span class="org-keyword">as</span> mlines
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, figsize=(<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">7</span>))
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">create 3x3 grid to plot the artists</span>
+<span class="org-variable-name">pos</span> = np.mgrid[<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>:<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>:<span class="org-highlight-numbers-number">3j</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>:<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>:<span class="org-highlight-numbers-number">3j</span>].reshape(<span class="org-highlight-numbers-number">2</span>, -<span class="org-highlight-numbers-number">1</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- '-1' means I don't care, you compute it for me.</span>
+<span class="org-variable-name">patches</span> = []
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a circle</span>
+<span class="org-variable-name">art</span> = mpatches.Circle(pos[:, <span class="org-highlight-numbers-number">0</span>], <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, ec=<span class="org-string">"none"</span>)
+patches.append(art)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Circle"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a rectangle</span>
+<span class="org-variable-name">art</span> = mpatches.Rectangle(pos[:, <span class="org-highlight-numbers-number">1</span>] - [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">025</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>], <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, ec=<span class="org-string">"none"</span>)
+patches.append(art)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Rectangle"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a wedge</span>
+<span class="org-variable-name">wedge</span> = mpatches.Wedge(pos[:, <span class="org-highlight-numbers-number">2</span>], <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">30</span>, <span class="org-highlight-numbers-number">270</span>, ec=<span class="org-string">"none"</span>)
+patches.append(wedge)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Wedge"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a Polygon</span>
+<span class="org-variable-name">polygon</span> = mpatches.RegularPolygon(pos[:, <span class="org-highlight-numbers-number">3</span>], <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+patches.append(polygon)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">3</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Polygon"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">add an ellipse</span>
+<span class="org-variable-name">ellipse</span> = mpatches.Ellipse(pos[:, <span class="org-highlight-numbers-number">4</span>], <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+patches.append(ellipse)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">4</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">4</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Ellipse"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">add an arrow</span>
+<span class="org-variable-name">arrow</span> = mpatches.Arrow(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">5</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, width=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+patches.append(arrow)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">5</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Arrow"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a path patch</span>
+<span class="org-variable-name">Path</span> = mpath.Path
+<span class="org-variable-name">verts</span> = np.array([
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">158</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">257</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">035</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">11</span>),
+     (-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">175</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">20</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0375</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">20</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">085</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">115</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">22</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">32</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">005</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">20</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>),
+     (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">158</span>, -<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">257</span>),
+    ])
+<span class="org-variable-name">verts</span> = verts - verts.mean(<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">codes</span> = [Path.MOVETO,
+         Path.CURVE4, Path.CURVE4, Path.CURVE4, Path.LINETO,
+         Path.CURVE4, Path.CURVE4, Path.CURVE4, Path.CLOSEPOLY]
+
+<span class="org-variable-name">path</span> = mpath.Path(verts / <span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">5</span> + pos[:, <span class="org-highlight-numbers-number">6</span>], codes)
+<span class="org-variable-name">patch</span> = mpatches.PathPatch(path)
+patches.append(patch)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">6</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">6</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"PathPatch"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a fancy box</span>
+<span class="org-variable-name">fancybox</span> = mpatches.FancyBboxPatch(
+        pos[:, <span class="org-highlight-numbers-number">7</span>] - [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">025</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>], <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,
+        boxstyle=mpatches.BoxStyle(<span class="org-string">"Round"</span>, pad=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">02</span>))
+patches.append(fancybox)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">7</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">7</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"FancyBoxPatch"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">add a line</span>
+<span class="org-variable-name">x</span>,<span class="org-variable-name">y</span> = np.array([[-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">06</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>,-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>]])
+<span class="org-variable-name">line</span> = mlines.Line2D(x+pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">8</span>], y+pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">8</span>], lw=<span class="org-highlight-numbers-number">5</span>.)
+plt.text(pos[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">8</span>], pos[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">8</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>, <span class="org-string">"Line2D"</span>, ha=<span class="org-string">"center"</span>, size=<span class="org-highlight-numbers-number">14</span>)
+
+<span class="org-variable-name">collection</span> = PatchCollection(patches)
+ax.add_collection(collection)
+ax.add_line(line)
+ax.set_axis_off()
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947O2o.png" alt="4947O2o.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orgc89f8bd" class="outline-4">
+<h4 id="orgc89f8bd"><span class="section-number-4">1.1.2</span> Container Artists</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Containers are objects like Figure and Axes. Containers are given primitives
+to draw. The plotting functions we discussed back in Parts 1 &amp; 2 are
+convenience functions that generate these primitives and places them into
+the appropriate containers. In fact, most of those functions will return
+artist objects (or a list of artist objects) as well as store them into the
+appropriate axes container.
+</p>
+
+<p>
+As discussed in Part 3, there is a wide range of properties that can be
+defined for your plots. <b>These properties are processed and applied to their
+primitives</b>. Ultimately, you can override anything you want just by directly
+setting a property to the object itself.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">lines</span> = plt.plot([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>], <span class="org-string">'b'</span>, [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>], <span class="org-string">'r'</span>)
+lines[<span class="org-highlight-numbers-number">0</span>].<span class="org-builtin">set</span>(linewidth=<span class="org-highlight-numbers-number">5</span>)
+lines[<span class="org-highlight-numbers-number">1</span>].<span class="org-builtin">set</span>(linewidth=<span class="org-highlight-numbers-number">10</span>, alpha=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">7</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947bAv.png" alt="4947bAv.png" />
+</p>
+</div>
+
+<p>
+To see what properties are set for an artist, use getp()
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-keyword">print</span>(plt.getp(fig.patch))
+plt.close(fig)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org93834db" class="outline-3">
+<h3 id="org93834db"><span class="section-number-3">1.2</span> Collections</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<code>Collections</code> <b>In addition to</b> the <code>Figure and Axes containers</code>, there is another
+special type of container called a Collection. A Collection usually contains a
+list of primitives of <code>the same kind that should all be treated similiarly</code>. For
+example, a CircleCollection would have a list of Circle objects all with the
+<code>same color, size, and edge width</code>. Individual property values for artists in the
+collection can also be set (in some cases).
+</p>
+</div>
+<div id="orge3bfc91" class="outline-4">
+<h4 id="orge3bfc91"><span class="section-number-4">1.2.1</span> do settings to all items of collection</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<pre class="example">
+.           do settings to all items
+.                     |
+.                     v
+.   3 lines ---&gt; collections ---&gt;  ---&gt; axes ---&gt; show()
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> matplotlib.collections <span class="org-keyword">import</span> LineCollection
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)                       <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- create figure and axes</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">A collection of 3 lines</span>
+<span class="org-variable-name">lc</span> = LineCollection([[(<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">10</span>), (<span class="org-highlight-numbers-number">16</span>, <span class="org-highlight-numbers-number">10</span>)],          <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- create a collection of 3lines</span>
+                     [(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>), (<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">15</span>), (<span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">7</span>)],
+                     [(<span class="org-highlight-numbers-number">14</span>, <span class="org-highlight-numbers-number">3</span>), (<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>), (<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">5</span>)]])
+lc.set_color(<span class="org-string">'r'</span>)                                  <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- do some settings to all lines</span>
+lc.set_linewidth(<span class="org-highlight-numbers-number">5</span>)                                <span class="org-comment-delimiter">#    </span><span class="org-comment">inside of this collection</span>
+ax.add_collection(lc)                              <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- add this collection to axes created above</span>
+ax.set_xlim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">18</span>)
+ax.set_ylim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">18</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947oK1.png" alt="4947oK1.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org0700fad" class="outline-4">
+<h4 id="org0700fad"><span class="section-number-4">1.2.2</span> do settings to separate items of collection</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Now set individual properties in a collection</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">lc</span> = LineCollection([[(<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">10</span>), (<span class="org-highlight-numbers-number">16</span>, <span class="org-highlight-numbers-number">10</span>)],
+                     [(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>), (<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">15</span>), (<span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">7</span>)],
+                     [(<span class="org-highlight-numbers-number">14</span>, <span class="org-highlight-numbers-number">3</span>), (<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>), (<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">5</span>)]])
+lc.set_color([<span class="org-string">'r'</span>, <span class="org-string">'blue'</span>, (<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>)]) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- do separate settings in an array</span>
+lc.set_linewidth([<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">6</span>])                  <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- do separate settings in an array</span>
+ax.add_collection(lc)                        <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- add collection to axes</span>
+ax.set_xlim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">18</span>)
+ax.set_ylim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">18</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947aUE.png" alt="4947aUE.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org08eb226" class="outline-4">
+<h4 id="org08eb226"><span class="section-number-4">1.2.3</span> more specified collection</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+There are other kinds of collections that are <code>not just simply a list of
+primitives</code>, but <code>are Artists in their own</code> right. These special kinds of
+collections take advantage of various optimizations that can be assumed when
+rendering similar or identical things. You use these collections all the time
+whether you realize it or not! Markers are implemented this way (so, whenever
+you do plot() or scatter(), for example).
+</p>
+
+<p>
+eg:
+</p>
+<ul class="org-ul">
+<li><code>RegularPolyCollection</code> class</li>
+<li><code>StarPolygonCollection</code> class</li>
+</ul>
+</div>
+</div>
+
+<div id="org05489b1" class="outline-4">
+<h4 id="org05489b1"><span class="section-number-4">1.2.4</span> RegularPolyCollection</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> matplotlib.collections <span class="org-keyword">import</span> RegularPolyCollection
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">offsets</span> = np.random.rand(<span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">2</span>)       <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- produce the 2-D location of 20 polygon</span>
+<span class="org-variable-name">collection</span> = RegularPolyCollection(   <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- create a RegularPolyCollection</span>
+    numsides=<span class="org-highlight-numbers-number">5</span>,                       <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- all polygon have 5 sides</span>
+    sizes=(<span class="org-highlight-numbers-number">15</span>,),                      <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- give each column of polygon the size,</span>
+                                      <span class="org-comment-delimiter">#    </span><span class="org-comment">for 2D collection:(x,y), for 3D collection:(x,y,z)</span>
+    offsets=offsets,                  <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- give location of all polygon</span>
+    transOffset=ax.transData,
+    )
+ax.add_collection(collection)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947cPe.png" alt="4947cPe.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org537a12c" class="outline-4">
+<h4 id="org537a12c"><span class="section-number-4">1.2.5</span> StarPolygonCollection</h4>
+<div class="outline-text-4" id="text-1-2-5">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> matplotlib.collections <span class="org-keyword">import</span> StarPolygonCollection
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>)
+
+<span class="org-variable-name">offsets</span> = <span class="org-builtin">zip</span>([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">6</span>,<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>], [<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>]*<span class="org-highlight-numbers-number">4</span>)
+<span class="org-variable-name">offsets</span> = [[i,j] <span class="org-keyword">for</span> i,j <span class="org-keyword">in</span> offsets]
+
+<span class="org-variable-name">collection</span> = StarPolygonCollection(
+    <span class="org-highlight-numbers-number">5</span>,                         <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- all StartPolygons have 5 angles</span>
+    offsets=offsets,           <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- all location of each StartPolygon</span>
+    transOffset=ax.transData,
+    facecolors=[<span class="org-string">'gold'</span>],       <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- facecolors, you can give each a color</span>
+    sizes=[<span class="org-highlight-numbers-number">175</span>],
+    edgecolors=[<span class="org-string">'k'</span>]           <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- edgecolors, you can give each a color</span>
+)
+ax.add_collection(collection)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947Duw.png" alt="4947Duw.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

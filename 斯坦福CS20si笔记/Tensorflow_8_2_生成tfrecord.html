@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TFrecord 使用技术</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">TFrecord 使用技术</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org25d2b0a">1. 如何生成 TFrecord</a></li>
+<li><a href="#org8f911dc">2. 使用 tfrecord 和 slim 来处理的任务</a>
+<ul>
+<li><a href="#orgde27352">2.1. datasets 文件夹介绍</a>
+<ul>
+<li><a href="#org5c35029">2.1.1. dataset_factory.py 介绍</a></li>
+<li><a href="#org55087c3">2.1.2. download_xxx.py xxx.py 介绍</a></li>
+</ul>
+</li>
+<li><a href="#org2f56dc0">2.2. 编写 bash 文件执行 slim 程序</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org25d2b0a" class="outline-2">
+<h2 id="org25d2b0a"><span class="section-number-2">1</span> 如何生成 TFrecord</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这里仍然给使用已经 pretrained 的模型来训练我们自己的任务, 也就是我们只训练最后一层.
+</p>
+
+<p>
+google tensorflow 提供的 slim 可以用一种更加强大且自由的方式去定义自己的任务, 你需要编写下载数据集的代码, 转换为tfrecord的代码, 注册入 dataset 的代码, 以及
+tfrecord读入内存的代码. 但幸运的是这些代码的模式都很固定, 且其文件夹下有实例可以参考.
+</p>
+
+<blockquote>
+<p>
+&#x2026;../models/research/slim/
+</p>
+</blockquote>
+
+<p>
+我们主要使用, slim 文件夹下的 <code>train_image_classifier.py</code>,
+</p>
+
+<ol class="org-ol">
+<li>首先做图片预处理, 把图片生成 .tfrecord 文件, 该文件类型底层使用 protobuffer
+&#x2014; google 提供的 二进制 文件存储方式, 传输和运算效率非常高. 在进行模型训练的时候使用 .tfrecord 作为数据输入格式.</li>
+</ol>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> math
+<span class="org-keyword">import</span> os
+<span class="org-keyword">import</span> random
+<span class="org-keyword">import</span> sys
+
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#39564;&#35777;&#38598;&#25968;&#37327;</span>
+<span class="org-variable-name">_NUM_TEST</span> = <span class="org-highlight-numbers-number">500</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">random seed</span>
+<span class="org-variable-name">_RANDOM_SEED</span> = <span class="org-highlight-numbers-number">0</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#22359;&#25968;&#37327;</span>
+<span class="org-variable-name">_NUM_SHARDS</span> = <span class="org-highlight-numbers-number">5</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25968;&#25454;&#38598;&#36335;&#24452;</span>
+<span class="org-variable-name">DATASET_DIR</span> = <span class="org-string">"lec_8_2_data/train/"</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#29983;&#25104;&#30340;&#26631;&#31614;&#25991;&#20214;. &#27880;&#24847;&#36825;&#37324;'&#29983;&#25104;'&#30340;&#24847;&#24605;, &#25968;&#25454;&#22270;&#29255;&#26159;&#20351;&#29992;&#21508;&#33258;&#25152;&#22312;&#25991;&#20214;&#22841;&#20316;&#20026;&#33258;&#24049;&#30340;</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#26631;&#31614;, '&#29983;&#25104;'&#30340;&#24847;&#24605;&#26159;&#25226;&#25991;&#20214;&#22841;&#21517;&#23383;&#26144;&#23556;&#20026;&#25968;&#23383;.</span>
+<span class="org-variable-name">LABELS_FILENAME</span> = <span class="org-string">"lec8_2_produced_labels/labels.txt"</span>
+
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#23450;&#20041;tfrecord&#25991;&#20214;&#30340;&#36335;&#24452;+&#21517;&#23383;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">_get_dataset_filename</span>(dataset_dir, split_name, shard_id):
+    <span class="org-variable-name">output_filename</span> = <span class="org-string">'image_%s_%05d-of-%05d.tfrecord'</span> % (split_name, shard_id,
+                                                          _NUM_SHARDS)
+    <span class="org-keyword">return</span> os.path.join(dataset_dir, output_filename)
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">int64_feature</span>(values):
+    <span class="org-keyword">if</span> <span class="org-keyword">not</span> <span class="org-builtin">isinstance</span>(values, (<span class="org-builtin">tuple</span>, <span class="org-builtin">list</span>)):
+        <span class="org-variable-name">values</span> = [values]
+    <span class="org-keyword">return</span> tf.train.Feature(int64_list=tf.train.Int64List(value=values))
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">bytes_feature</span>(values):
+    <span class="org-keyword">return</span> tf.train.Feature(bytes_list=tf.train.BytesList(value=[values]))
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">image_to_tfexample</span>(image_data, image_format, class_id):
+    <span class="org-comment-delimiter">#</span><span class="org-comment">abstract base class for protocol message.</span>
+    <span class="org-keyword">return</span> tf.train.Example(
+        features=tf.train.Features(
+            feature={
+                <span class="org-comment-delimiter">#</span><span class="org-comment">&#21487;&#33258;&#24049;&#23450;&#20041;      &#22914;&#26524;&#26159;string/image =&gt; bytes_feature</span>
+                <span class="org-comment-delimiter">#</span><span class="org-comment">------------- : ------------------------</span>
+                <span class="org-string">'image/encoded'</span>: bytes_feature(image_data),
+                <span class="org-string">'iamge/format'</span>: bytes_feature(image_format),
+                <span class="org-string">'image/class/label'</span>: int64_feature(class_id),
+            }))
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#25226;&#25968;&#25454;&#36716;&#20026; tfrecord &#26684;&#24335;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">_convert_dataset</span>(split_name, filenames, class_names_to_ids, dataset_dir):
+    <span class="org-keyword">assert</span> split_name <span class="org-keyword">in</span> [<span class="org-string">'train'</span>, <span class="org-string">'test'</span>]
+    <span class="org-comment-delimiter">#</span><span class="org-comment">&#35745;&#31639;&#27599;&#20010;&#25968;&#25454;&#22359;&#26377;&#22810;&#23569;&#25968;&#25454;</span>
+    <span class="org-variable-name">num_per_shard</span> = <span class="org-builtin">int</span>(<span class="org-builtin">len</span>(filenames) / _NUM_SHARDS)
+    <span class="org-keyword">with</span> tf.Graph().as_default():
+        <span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+            <span class="org-keyword">for</span> shard_id <span class="org-keyword">in</span> <span class="org-builtin">range</span>(_NUM_SHARDS):
+                <span class="org-comment-delimiter">#</span><span class="org-comment">&#23450;&#20041;tfrecord&#25991;&#20214;&#30340;&#36335;&#24452;+&#21517;&#23383;</span>
+                <span class="org-variable-name">output_filename</span> = _get_dataset_filename(
+                    dataset_dir, split_name, shard_id)
+                <span class="org-keyword">with</span> tf.python_io.TFRecordWriter(
+                        output_filename) <span class="org-keyword">as</span> tfrecord_writer:  <span class="org-comment-delimiter"># </span><span class="org-comment">&#22266;&#23450;&#22871;&#36335;</span>
+                    <span class="org-comment-delimiter">#</span><span class="org-comment">&#27599;&#19968;&#20010;&#25968;&#25454;&#22359;&#30340;&#24320;&#22987;&#20301;&#32622;</span>
+                    <span class="org-variable-name">start_ndx</span> = shard_id * num_per_shard
+                    <span class="org-comment-delimiter">#</span><span class="org-comment">&#27599;&#19968;&#20010;&#25968;&#25454;&#22359;&#30340;&#26368;&#21518;&#20301;&#32622;</span>
+                    <span class="org-variable-name">end_ndx</span> = <span class="org-builtin">min</span>((shard_id + <span class="org-highlight-numbers-number">1</span>) * num_per_shard,
+                                  <span class="org-builtin">len</span>(filenames))
+                    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(start_ndx, end_ndx):
+                        <span class="org-keyword">try</span>:  <span class="org-comment-delimiter">#</span><span class="org-comment">&#22914;&#26524;&#36935;&#21040;&#25439;&#22351;&#30340;&#22270;&#29255;&#25991;&#20214;, &#21017;&#30452;&#25509;&#36339;&#36807;&#19981;&#20570;&#22788;&#29702;</span>
+                            sys.stdout.write(
+                                <span class="org-string">'\r&gt;&gt; Convert image %d/%d shard %d'</span> %
+                                (i + <span class="org-highlight-numbers-number">1</span>, <span class="org-builtin">len</span>(filenames), shard_id))
+                            sys.stdout.flush()
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">&#35835;&#21462;&#22270;&#29255;</span>
+                            <span class="org-variable-name">image_data</span> = tf.gfile.FastGFile(
+                                filenames[i], <span class="org-string">'rb'</span>).read()
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#24471;&#22270;&#29255;&#30340;&#31867;&#21035;&#21517;&#31216;</span>
+                            <span class="org-variable-name">class_name</span> = os.path.basename(
+                                os.path.dirname(filenames[i]))
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">&#25214;&#21040;&#31867;&#21035;&#21517;&#31216;&#23545;&#24212;&#30340;id</span>
+                            <span class="org-variable-name">class_id</span> = class_names_to_ids[class_name]
+                            <span class="org-comment-delimiter">#</span><span class="org-comment">&#29983;&#25104;tfrecord&#25991;&#20214;</span>
+                            <span class="org-variable-name">example</span> = image_to_tfexample(
+                                image_data, b<span class="org-string">'jpg'</span>, class_id)
+                            tfrecord_writer.write(example.SerializeToString())
+                        <span class="org-keyword">except</span> <span class="org-type">IOError</span> <span class="org-keyword">as</span> e:
+                            <span class="org-keyword">print</span>(<span class="org-string">'Could not read:'</span>, filenames[i])
+                            <span class="org-keyword">print</span>(<span class="org-string">'Error:'</span>, e)
+                            <span class="org-keyword">print</span>(<span class="org-string">'Skip it\n'</span>)
+
+    sys.stdout.write(<span class="org-string">'\n'</span>)
+    sys.stdout.flush()
+
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">&#21028;&#26029;tfrecord&#25991;&#20214;&#26159;&#21542;&#23384;&#22312;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">_dataset_exists</span>(dataset_dir):
+    <span class="org-keyword">for</span> split_name <span class="org-keyword">in</span> [<span class="org-string">'train'</span>, <span class="org-string">'test'</span>]:
+        <span class="org-keyword">for</span> shard_id <span class="org-keyword">in</span> <span class="org-builtin">range</span>(_NUM_SHARDS):
+            <span class="org-comment-delimiter">#</span><span class="org-comment">&#23450;&#20041;tfrecord&#25991;&#20214;&#30340;&#36335;&#24452;+&#21517;&#23383;</span>
+            <span class="org-variable-name">output_filename</span> = _get_dataset_filename(dataset_dir, split_name,
+                                                    shard_id)
+        <span class="org-keyword">if</span> <span class="org-keyword">not</span> tf.gfile.Exists(output_filename):
+            <span class="org-keyword">return</span> <span class="org-constant">False</span>
+    <span class="org-keyword">return</span> <span class="org-constant">True</span>
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">write_label_file</span>(labels_to_class_names,
+                     dataset_dir,
+                     filename=LABELS_FILENAME):
+    <span class="org-variable-name">labels_filename</span> = os.path.join(dataset_dir, filename)
+    <span class="org-keyword">with</span> tf.gfile.Open(labels_filename, <span class="org-string">'w'</span>) <span class="org-keyword">as</span> f:
+        <span class="org-keyword">for</span> label <span class="org-keyword">in</span> labels_to_class_names:
+            <span class="org-variable-name">class_name</span> = labels_to_class_names[label]
+            f.writer(<span class="org-string">'%d:%s\n'</span> % (label, class_name))
+
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#21462;&#25152;&#26377;&#25991;&#20214;&#20197;&#21450;&#20998;&#31867;</span>
+<span class="org-keyword">def</span> <span class="org-function-name">_get_dataset_filenames_and_classes</span>(dataset_dir):
+    <span class="org-comment-delimiter">#</span><span class="org-comment">&#25968;&#25454;&#30446;&#24405;</span>
+    <span class="org-variable-name">directories</span> = []
+    <span class="org-comment-delimiter">#</span><span class="org-comment">&#20998;&#31867;&#21517;&#31216;</span>
+    <span class="org-variable-name">class_names</span> = []
+    <span class="org-keyword">for</span> filename <span class="org-keyword">in</span> os.listdir(dataset_dir):
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#21512;&#24182;&#25991;&#20214;&#36335;&#24452;</span>
+        <span class="org-variable-name">path</span> = os.path.join(dataset_dir, filename)
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#21028;&#26029;&#35813;&#36335;&#24452;&#26159;&#21542;&#20026;&#30446;&#24405;</span>
+        <span class="org-keyword">if</span> os.path.isdir(path):
+            <span class="org-comment-delimiter">#</span><span class="org-comment">&#21152;&#20837;&#25968;&#25454;&#30446;&#24405;</span>
+            directories.append(path)
+            <span class="org-comment-delimiter">#</span><span class="org-comment">&#21152;&#20837;&#31867;&#21035;&#21517;&#31216;, &#25991;&#20214;&#22841;&#21517;&#23601;&#26159;&#31867;&#22411;&#21517;</span>
+            class_names.append(filename)
+
+    <span class="org-variable-name">photo_filenames</span> = []
+    <span class="org-comment-delimiter">#</span><span class="org-comment">&#24490;&#29615;&#27599;&#20010;&#20998;&#31867;&#30340;&#25991;&#20214;&#22841;</span>
+    <span class="org-keyword">for</span> directory <span class="org-keyword">in</span> directories:
+        <span class="org-keyword">for</span> filename <span class="org-keyword">in</span> os.listdir(directory):
+            <span class="org-variable-name">path</span> = os.path.join(directory, filename)
+            <span class="org-comment-delimiter">#</span><span class="org-comment">&#25226;&#22270;&#29255;&#21152;&#20837;&#22270;&#29255;&#21015;&#34920;</span>
+            photo_filenames.append(path)
+
+    <span class="org-keyword">return</span> photo_filenames, class_names
+
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#21028;&#26029;tfrecord&#25991;&#20214;&#26159;&#21542;&#23384;&#22312;, &#22914;&#26524;&#23384;&#22312;&#23601;&#19981;&#29992;&#39044;&#22788;&#29702;&#25968;&#25454;&#38598;&#22270;&#29255;, &#30452;&#25509;&#36339;&#36807;&#39044;&#22788;&#29702;</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">&#38454;&#27573;.</span>
+    <span class="org-keyword">if</span> _dataset_exists(DATASET_DIR):
+        <span class="org-keyword">print</span>(<span class="org-string">'tfrecord&#25991;&#20214;&#24050;&#23384;&#22312;'</span>)
+    <span class="org-keyword">else</span>:
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#33719;&#24471;&#25152;&#26377;&#22270;&#29255;&#21450;&#20998;&#31867;</span>
+        <span class="org-variable-name">photo_filenames</span>, <span class="org-variable-name">class_names</span> = _get_dataset_filenames_and_classes(
+            DATASET_DIR)
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#25226;&#20998;&#31867;&#36716;&#20026;&#23383;&#20856;&#26684;&#24335;, &#31867;&#20284;&#20110;{'house':0, 'flower':1, 'plane':2}</span>
+        <span class="org-variable-name">class_names_to_ids</span> = <span class="org-builtin">dict</span>(<span class="org-builtin">zip</span>(class_names, <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(class_names))))
+
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#25226;&#25968;&#25454;&#20999;&#20998;&#20026;&#35757;&#32451;&#38598;&#21644;&#27979;&#35797;&#38598;</span>
+        random.seed(_RANDOM_SEED)
+        random.shuffle(photo_filenames)  <span class="org-comment-delimiter"># </span><span class="org-comment">shuffle &#20250;&#25226;list&#20013;&#30340;&#25968;&#25454;&#25171;&#20081;</span>
+        <span class="org-variable-name">training_filenames</span> = photo_filenames[_NUM_TEST:]
+        <span class="org-variable-name">testing_filenames</span> = photo_filenames[:_NUM_TEST]
+
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#25968;&#25454;&#36716;&#25442;</span>
+        _convert_dataset(<span class="org-string">'train'</span>, training_filenames, class_names_to_ids,
+                         DATASET_DIR)
+
+        _convert_dataset(<span class="org-string">'test'</span>, testing_filenames, class_names_to_ids,
+                         DATASET_DIR)
+
+</pre>
+</div>
+
+<p>
+如果数据集比较小, 只需要存放到一个 tfrecord 即可, 但是当你数据量较大,比如500个G,
+这时候可以做数据集切分.
+</p>
+
+<p>
+数据块开始与最后位置的示意图
+</p>
+
+<pre class="example">
+每个点一个图片, 当我们切分的时候, 每一块 shard 的开始位置就是 shard_id * num_per_shard,
+这个公式对所有 shard 都有效, 但是每一块 shard 的末尾位置就需要考虑整个数据集的图片数量:
+
+min((shard_id+1) * num_per_shard, len(filename))
+
+                                                          /--- 1200
+..........................................................
+
++---------+----------+---------+----------+---------+----------+
+|     0   |     1    |    2    |    3     |    4    |     5    |
++---------+----------+---------+----------+---------+----------+
+ \  300  /                                                      \-- 1500
+
+
+
+</pre>
+
+
+<p>
+注意你读取文件的方式, 好几次错误都处在这里了
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">RIGHT</span>
+<span class="org-variable-name">image_data</span> = tf.gfile.FastGFile(filenames[i], <span class="org-string">'rb'</span>).read()
+<span class="org-comment-delimiter"># </span><span class="org-comment">WRONG</span>
+<span class="org-variable-name">image_data</span> = tf.gfile.FastGFile(filenames[i], <span class="org-string">'r'</span>).read()
+
+<span class="org-keyword">def</span> <span class="org-function-name">bytes_feature</span>(values):
+    <span class="org-keyword">return</span> tf.train.Feature(bytes_list=tf.train.BytesList(value=[values]))
+</pre>
+</div>
+
+
+<p>
+上面注意, 必须以 binary 方式读入图片, 而不能以 string 方式.
+</p>
+<pre class="example">
+                       think the source file read from
+  .................... is a utf-8 encoding file, in this scenario it's JPEG not utf-8 format, so program down with error:
+  .                  . 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte.
+  .                  .
+  .                  .
+  v                  .              image_data
+         read(图片, 'r')
+ 图片  ===========================&gt; string    --------------&gt;----------------------------+ RIGHT !!!
+              WRONG!!!              &lt;utf-8&gt;                                              |
+
+                                                                   tf.train.BytesList( image_data )
+                                    image_data
+         read(图片, 'rb')                                                                |
+ 图片  ===========================&gt; bytes     --------------&gt;----------------------------+ RIGHT !!!
+              RIGHT!!!              &lt;binary&gt;
+
+
+这里错不在第二步, 错在第一步不能以 'r' 模式读取图片文件, 因为 'r' 模式隐含的意思是 'r-utf8', 必须使用
+'rb' 模式读取图片文件.
+
+tf.train.BytesList(xxx) 可以读取 bytes 文件, 也可以读取 string 文件
+</pre>
+</div>
+</div>
+
+<div id="org8f911dc" class="outline-2">
+<h2 id="org8f911dc"><span class="section-number-2">2</span> 使用 tfrecord 和 slim 来处理的任务</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+官方 slim 所在位置及文件夹组成
+</p>
+<pre class="example">
+/home/yiddi/wellknown_proj_sourcecode/models/research/slim:
+
+-rw-r--r--  1 yiddi yiddi  14K 7月  31 18:33 BUILD
+drwxr-xr-x  2 yiddi yiddi 4.0K 7月  31 18:33 &gt;&gt;datasets&lt;&lt;
+drwxr-xr-x  2 yiddi yiddi 4.0K 7月  31 18:33 &gt;&gt;deployment&lt;&lt;
+-rw-r--r--  1 yiddi yiddi 2.3K 7月  31 18:33 download_and_convert_data.py
+-rw-r--r--  1 yiddi yiddi 6.6K 7月  31 18:33 eval_image_classifier.py
+-rw-r--r--  1 yiddi yiddi 4.6K 7月  31 18:33 export_inference_graph.py
+-rw-r--r--  1 yiddi yiddi 1.4K 7月  31 18:33 export_inference_graph_test.py
+-rw-r--r--  1 yiddi yiddi    0 7月  31 18:33 __init__.py
+drwxr-xr-x  4 yiddi yiddi 4.0K 7月  31 18:33 &gt;&gt;nets&lt;&lt;
+drwxr-xr-x  2 yiddi yiddi 4.0K 7月  31 18:33 &gt;&gt;preprocessing&lt;&lt;
+-rw-r--r--  1 yiddi yiddi  26K 7月  31 18:33 README.md
+drwxr-xr-x  2 yiddi yiddi 4.0K 7月  31 18:33 &gt;&gt;scripts&lt;&lt;
+-rw-r--r--  1 yiddi yiddi  916 7月  31 18:33 setup.py
+-rw-r--r--  1 yiddi yiddi  46K 7月  31 18:33 slim_walkthrough.ipynb
+-rw-r--r--  1 yiddi yiddi  21K 7月  31 18:33 -&gt; train_image_classifier.py &lt;-
+-rw-r--r--  1 yiddi yiddi    0 7月  31 18:33 WORKSPACE
+</pre>
+
+<p>
+其中被 &gt;&gt;&lt;&lt; wrap 的都是文件夹, -&gt; &lt;- wrap 的就是 slim 代码的入口, 需要调用这个
+python 文件来运行 slim
+</p>
+</div>
+
+<div id="orgde27352" class="outline-3">
+<h3 id="orgde27352"><span class="section-number-3">2.1</span> datasets 文件夹介绍</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+datasets 里面存放了下载 dataset 的 python 代码, 其中一个叫做 dataset_factory.py
+是一个重要文件, 他是 train_image_classifier.py 获取dataset的入口, 如果你想使用自己的 dataset 做训练, 就必须要在这个 dataset_factory.py 中注册自己的数据集.
+</p>
+</div>
+
+
+<div id="org5c35029" class="outline-4">
+<h4 id="org5c35029"><span class="section-number-4">2.1.1</span> dataset_factory.py 介绍</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<pre class="example">
+dataset_factory.py, 需要做的修改如下
+====================================
+
+from datasets import cifar10, flowers, imagenet, mnist, myimages
+                                                        --------
+                                                         #^
+datasets_map = {                                         #|
+    'cifar10': cifar10,                                  #|
+    'flowers': flowers,                                  #|
+    'imagenet': imagenet,                                #这个自己加的
+    'mnist': mnist,
+    'myimages': myimages, #&lt;- 这一行就是我们自己加的
+    --------------------
+}
+
+
+</pre>
+</div>
+</div>
+
+<div id="org55087c3" class="outline-4">
+<h4 id="org55087c3"><span class="section-number-4">2.1.2</span> download_xxx.py xxx.py 介绍</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+除了 dataset_factory.py 其他文件都是两两成对的:
+</p>
+<ul class="org-ul">
+<li>下载数据集转换成 tfrecord</li>
+<li>将 tfrecord 读入内存</li>
+</ul>
+
+<pre class="example">
+/home/yiddi/wellknown_proj_sourcecode/models/research/slim/datasets:
+
+download_and_convert_cifar10.py    - 下载数据集转换成 tfrecord
+cifar10.py                         - 将 tfrecord 读入内存
+
+download_and_convert_flowers.py    - 下载数据集转换成 tfrecord
+flowers.py                         - 将 tfrecord 读入内存
+
+download_and_convert_imagenet.sh   - 下载数据集转换成 tfrecord
+imagenet.py                        - 将 tfrecord 读入内存
+
+download_and_convert_mnist.py      - 下载数据集转换成 tfrecord
+mnist.py                           - 将 tfrecord 读入内存
+
+download_imagenet.sh               - 下载数据集转换成 tfrecord
+build_imagenet_data.py             - 将 tfrecord 读入内存
+
+imagenet_2012_validation_synset_labels.txt
+imagenet_lsvrc_2015_synsets.txt
+imagenet_metadata.txt
+
+__init__.py
+preprocess_imagenet_validation_data.py
+process_bounding_boxes.py
+dataset_factory.py
+dataset_utils.py
+</pre>
+
+<p>
+<code>download_xxxxx.py</code> : 声明一些重要参数, data_url, 等
+</p>
+
+<pre class="example">
+其中 myimages 就是我们需要参考其他下载数据集源代码的源文件结构自己写的 myimages.py 的名字
+基本都要提供如下参数值:
+
+
+# The URL where the CIFAR data can be downloaded.
+_DATA_URL = 'https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz'
+
+# The number of training files.
+_NUM_TRAIN_FILES = 5
+
+# The height and width of each image.
+_IMAGE_SIZE = 32
+
+# The names of the classes.
+_CLASS_NAMES = [
+    'airplane',
+    'automobile',
+    'bird',
+    'cat',
+    'deer',
+    'dog',
+    'frog',
+    'horse',
+    'ship',
+    'truck',
+]
+
+最终每个下载程序都会在指定文件夹下生成 tfrecord 文件.
+</pre>
+
+<p>
+<code>download_xxx.py</code> : dataset ===&gt; tfrecord, 代码实例
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">features</span>=tf.train.Features(
+    feature={
+        <span class="org-comment-delimiter">#</span><span class="org-comment">&#21487;&#33258;&#24049;&#23450;&#20041;      &#22914;&#26524;&#26159;string/image =&gt; bytes_feature</span>
+        <span class="org-comment-delimiter">#</span><span class="org-comment">------------- : ------------------------</span>
+        <span class="org-string">'image/encoded'</span>: bytes_feature(image_data),
+        <span class="org-string">'iamge/format'</span>: bytes_feature(image_format),
+        <span class="org-string">'image/class/label'</span>: int64_feature(class_id),
+    }))
+</pre>
+</div>
+
+<p>
+<code>xxx.py</code> : tfrecord ===&gt; 内存, 代码实例
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">keys_to_features</span> = {
+    <span class="org-string">'image/encoded'</span>: tf.FixedLenFeature((), tf.string, default_value=<span class="org-string">''</span>),
+    <span class="org-string">'image/format'</span>: tf.FixedLenFeature((), tf.string, default_value=<span class="org-string">'png'</span>),
+    <span class="org-string">'image/class/label'</span>: tf.FixedLenFeature(
+        [], tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
+}
+</pre>
+</div>
+
+
+<p>
+<code>xxx.py</code> : 返回 dataset
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">return</span> slim.dataset.Dataset(
+    data_sources=file_pattern,
+    reader=reader,
+    decoder=decoder,
+    num_samples=SPLITS_TO_SIZES[split_name],
+    items_to_descriptions=_ITEMS_TO_DESCRIPTIONS,
+    num_classes=_NUM_CLASSES,
+    labels_to_names=labels_to_names)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="org2f56dc0" class="outline-3">
+<h3 id="org2f56dc0"><span class="section-number-3">2.2</span> 编写 bash 文件执行 slim 程序</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span class="org-keyword">require</span> '<span class="org-constant">ob-async</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span class="org-comment-delimiter">#</span><span class="org-comment">!/bin/</span><span class="org-keyword">zsh</span>
+python /home/yiddi/wellknown_proj_sourcecode/models/research/slim/train_image_classifier.py <span class="org-sh-escaped-newline">\</span>
+       --train_dir= <span class="org-string">\ </span> <span class="org-comment-delimiter"># </span><span class="org-comment">&#27169;&#22411;&#20445;&#23384;&#30340;&#20301;&#32622;</span>
+       --dataset_name= <span class="org-string">\ </span> <span class="org-comment-delimiter"># </span><span class="org-comment">&#25105;&#20204;&#22312;dataset/&#20013;&#32534;&#20889;&#30340;&#29992;&#20110;datasset-tfrecord-&gt;&#20869;&#23384;&#30340;.py&#25991;&#20214;</span>
+       --dataset_split_name= <span class="org-string">\ </span><span class="org-comment-delimiter"># </span><span class="org-comment">train or test</span>
+       --dataset_dir= <span class="org-string">\ </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#22270;&#29255;&#23384;&#25918;&#30340;&#20301;&#32622;</span>
+       --batch_size= <span class="org-string">\ </span> <span class="org-comment-delimiter"># </span><span class="org-comment">&#22914;&#26524;GPU&#26174;&#23384;&#19981;&#22815;, &#36825;&#37324;&#24212;&#35813;&#35774;&#23567;, &#40664;&#35748;&#35774;&#32622;&#20026;32</span>
+       --max_number_of_steps= <span class="org-string">\ </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#40664;&#35748;&#19968;&#30452;&#35757;&#32451;, &#21487;&#20197;&#22768;&#26126;&#26368;&#22823;&#24490;&#29615;&#27425;&#25968; epoch</span>
+       --model_name=inception_v3 <span class="org-string">\ </span><span class="org-comment-delimiter"># </span><span class="org-comment">&#20351;&#29992;&#21738;&#20010;&#27169;&#22411;</span>
+</pre>
+</div>
+
+<p>
+以上这些参数,都是以
+</p>
+
+<ul class="org-ul">
+<li><code>tf.app.flags.DEFINE_string</code></li>
+<li><code>tf.app.flags.DEFINE_integer</code></li>
+<li><code>tf.app.flags.DEFINE_boolean</code></li>
+</ul>
+
+<p>
+三种形式声明在 <code>train_image_classifier.py</code> 文件中, 可以在里面查看详细说明和使用守则.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

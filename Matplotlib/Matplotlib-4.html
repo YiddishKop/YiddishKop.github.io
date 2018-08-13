@@ -1,0 +1,1951 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matplotlib 第四课</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Matplotlib 第四课</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org09a7ef6">1. part-III, How to speak "MPL"</a>
+<ul>
+<li><a href="#org36eecbd">1.1. Colors</a>
+<ul>
+<li><a href="#org421345e">1.1.1. Colornames</a></li>
+<li><a href="#org9ddf173">1.1.2. Hex values</a></li>
+<li><a href="#org758462b">1.1.3. 256 Shades of Gray</a></li>
+<li><a href="#org7d31bc9">1.1.4. RGB[A] tuples</a></li>
+<li><a href="#orga77712a">1.1.5. Cycle references</a></li>
+</ul>
+</li>
+<li><a href="#orgf159510">1.2. Markers</a></li>
+<li><a href="#org5038675">1.3. Line style</a></li>
+<li><a href="#orgf822f2f">1.4. <code>markers</code> , <code>colors</code> and <code>linestyle</code> can form a string argument.</a>
+<ul>
+<li><a href="#org07b164f">1.4.1. marker+markerfacecolor</a></li>
+<li><a href="#org9458698">1.4.2. linecolor + linestyle</a></li>
+<li><a href="#org190fdcf">1.4.3. linecolor + linestyle + marker + mfc + mfe</a></li>
+</ul>
+</li>
+<li><a href="#org44de8f2">1.5. Plot attributes</a></li>
+<li><a href="#org277af52">1.6. Colormaps</a></li>
+<li><a href="#org14de157">1.7. Mathtext</a></li>
+<li><a href="#orgd795e96">1.8. Hatches</a></li>
+<li><a href="#org8305afb">1.9. Property Cycles</a>
+<ul>
+<li><a href="#org258d926">1.9.1. Ugly tie contest!</a></li>
+</ul>
+</li>
+<li><a href="#org3b956e1">1.10. Transforms</a></li>
+<li><a href="#org3593fed">1.11. Managing all default settings &#x2013; Introducing matplotlibrc</a>
+<ul>
+<li><a href="#org9f96fb8">1.11.1. find the current active matplotlibrc file</a></li>
+<li><a href="#org184446f">1.11.2. change the matplotlibrc settings in runtime.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6c56fa0">2. Exercise</a>
+<ul>
+<li><a href="#orgba50b91">2.1. Exercise 3.1, about color cycle</a></li>
+<li><a href="#org4e993b4">2.2. Exercise 3.2, about markers and color</a></li>
+<li><a href="#orgaa2712b">2.3. Exercise 3.3, marker, linestyle, color</a></li>
+</ul>
+</li>
+<li><a href="#org3681260">3. Misc tools</a>
+<ul>
+<li><a href="#org34f25ef">3.1. matplotlib</a>
+<ul>
+<li><a href="#orgf6565e5">3.1.1. plt.plot( x1, x2, x3, y1, y2, y3)</a></li>
+<li><a href="#org57caac7">3.1.2. ax.imshow(data, cmap)</a></li>
+</ul>
+</li>
+<li><a href="#org63a4b21">3.2. Numpy</a>
+<ul>
+<li><a href="#orgfbad008">3.2.1. np.mgrid vs. meshgrid vs. ogrid</a></li>
+<li><a href="#org04ff30d">3.2.2. np.stack vs. hstack vs. vstack vs. dstack</a></li>
+<li><a href="#orgaba0c9b">3.2.3. np.stack(tupOfArrays, axis)</a></li>
+<li><a href="#org4118ce4">3.2.4. np.hstack(tupleOfArrays) vs. np.vstack(tupleOfArrays)</a></li>
+<li><a href="#org12b38ee">3.2.5. np.dstack()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org09a7ef6" class="outline-2">
+<h2 id="org09a7ef6"><span class="section-number-2">1</span> part-III, How to speak "MPL"</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In the previous parts, you learned how Matplotlib organizes plot-making by
+figures and axes. We broke down the components of a basic figure and learned how
+to create them. You also learned how to add one or more axes to a figure, and
+how to tie them together. You even learned how to change some of the basic
+appearances of the axes. Finally, we went over some of the many plotting methods
+that Matplotlib has to draw on those axes. With all that knowledge, you should
+be off making great and wonderful figures.
+</p>
+
+<p>
+Why are you still here?
+</p>
+
+<p>
+"We don't know how to control our plots and figures!" says some random voice in
+the back of the room.
+</p>
+
+<p>
+Of course! While the previous sections may have taught you some of the structure
+and syntax of Matplotlib, it did not describe much of the substance and
+vocabulary of the library. This section will go over many of the properties that
+are used throughout the library. Note that while many of the examples in this
+section may show one way of setting a particular property, that property may be
+applicible elsewhere in completely different context. This is the "language" of
+Matplotlib.
+</p>
+</div>
+
+<div id="org36eecbd" class="outline-3">
+<h3 id="org36eecbd"><span class="section-number-3">1.1</span> Colors</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+This is, perhaps, the <b>most important</b> piece of vocabulary in Matplotlib. Given
+that Matplotlib is a plotting library, colors are associated with everything
+that is plotted in your figures. Matplotlib supports a very robust language for
+specifying colors that should be familiar to a wide variety of users.
+</p>
+</div>
+
+<div id="org421345e" class="outline-4">
+<h4 id="org421345e"><span class="section-number-4">1.1.1</span> Colornames</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+<b>First, colors can be given as strings</b>. For very basic colors, you can even get
+away with just a single letter:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">b</td>
+<td class="org-left">blue</td>
+</tr>
+
+<tr>
+<td class="org-left">g</td>
+<td class="org-left">green</td>
+</tr>
+
+<tr>
+<td class="org-left">r</td>
+<td class="org-left">red</td>
+</tr>
+
+<tr>
+<td class="org-left">c</td>
+<td class="org-left">cyan</td>
+</tr>
+
+<tr>
+<td class="org-left">m</td>
+<td class="org-left">magenta</td>
+</tr>
+
+<tr>
+<td class="org-left">y</td>
+<td class="org-left">yellow</td>
+</tr>
+
+<tr>
+<td class="org-left">k</td>
+<td class="org-left">black</td>
+</tr>
+
+<tr>
+<td class="org-left">w</td>
+<td class="org-left">white</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Other colornames that are allowed are the HTML/CSS colornames such as
+"burlywood" and "chartreuse". See the full list of the 147 colornames. For
+the British speaking and poor spellers among us (I am not implying that
+British speakers are poor spellers!), we allow "grey" where-ever "gray"
+appears in that list of colornames. All of these colornames are
+case-insensitive.
+</p>
+</div>
+</div>
+
+<div id="org9ddf173" class="outline-4">
+<h4 id="org9ddf173"><span class="section-number-4">1.1.2</span> Hex values</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+<b>Colors can also be specified by supplying a HTML/CSS hex string</b>, such as
+'<code>#0000FF</code>' for blue. Support for an optional alpha channel was added for
+v2.0.
+</p>
+</div>
+</div>
+
+<div id="org758462b" class="outline-4">
+<h4 id="org758462b"><span class="section-number-4">1.1.3</span> 256 Shades of Gray</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+A gray level can be given instead of a color by passing a string representation
+of a number between 0 and 1, inclusive. <b>'0.0' is black</b>, while <b>'1.0' is white</b>.
+<b>'0.75' would be a light shade of gray</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">declare the colors explicitly.</span>
+plt.plot(t, t, <span class="org-string">'r'</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">'lightgray'</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">'0.0'</span>)
+plt.show()
+</pre>
+</div>
+</div>
+</div>
+<div id="org7d31bc9" class="outline-4">
+<h4 id="org7d31bc9"><span class="section-number-4">1.1.4</span> RGB[A] tuples</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+You may come upon instances where the previous ways of specifying colors do
+not work. This can sometimes happen in some of the deeper, stranger levels
+of the library. When all else fails, the universal language of colors for
+matplotlib is the <code>RGB[A] tuple</code>. This is the "<b>Red</b>", "<b>Green</b>", "<b>Blue</b>",
+and sometimes "<b>Alpha</b>" tuple of floats in the range of [0, 1]. One means
+full saturation of that channel, so a red RGBA tuple would be <code>(1.0, 0.0,
+    0.0, 1.0)</code>, whereas a <b>partly</b> <b>transparent</b> green RGBA tuple would be
+<code>(0.0, 1.0, 0.0, 0.75)</code>. The documentation will usually specify whether it
+accepts RGB or RGBA tuples. Sometimes, a list of tuples would be required
+for multiple colors, and you can even supply a <b>Nx3</b> or <b>Nx4</b> numpy array in
+such cases.
+</p>
+
+<p>
+In functions such as <code>plot()</code> and <code>scatter()</code>, while it may appear that they
+can take a color specification, what they really need is a "<b>format
+specification</b>", which includes color as part of the format. Unfortunately,
+such specifications are string only and <code>so RGB[A] tuples are not supported</code>
+<code>for such arguments</code> (but you can still pass an RGB[A] tuple for a "color"
+argument).
+</p>
+
+<p>
+Oftentimes there is a separate argument for "alpha" where-ever you can specify a
+color. The value for "alpha" will usually take precedence over the alpha value
+in the RGBA tuple. There is no easy way around this inconsistency.
+</p>
+</div>
+</div>
+
+<div id="orga77712a" class="outline-4">
+<h4 id="orga77712a"><span class="section-number-4">1.1.5</span> Cycle references</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+you give a cycle of color, you don't care what is the 1st 2nd 3rd &#x2026; color is.
+what you want is color your current component with the 3rd color, the ONLY job
+you need to do is giving color <code>C3</code>.
+</p>
+
+<p>
+With the advent of fancier color cycles coming from the many available
+styles, users <b>needed a way to reference those colors in the style without
+explicitly</b> <b>knowing what they are</b>. So, in v2.0, the ability to reference
+the first 10 iterations of the color cycle was added. Whereever one could
+specify a color, you can supply a 2 character string of '<b>C#</b>'. So, '<b>C0</b>'
+would be the first color, 'C1' would be the second, and so on and so forth
+up to 'C9'.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf159510" class="outline-3">
+<h3 id="orgf159510"><span class="section-number-3">1.2</span> Markers</h3>
+<div class="outline-text-3" id="text-1-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">marker</th>
+<th scope="col" class="org-left">description</th>
+<th scope="col" class="org-left">marker</th>
+<th scope="col" class="org-left">description</th>
+<th scope="col" class="org-left">marker</th>
+<th scope="col" class="org-left">description</th>
+<th scope="col" class="org-left">marker</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">"."</td>
+<td class="org-left">point</td>
+<td class="org-left">"+"</td>
+<td class="org-left">plus</td>
+<td class="org-left">","</td>
+<td class="org-left">pixel</td>
+<td class="org-left">"x"</td>
+<td class="org-left">cross</td>
+</tr>
+
+<tr>
+<td class="org-left">"o"</td>
+<td class="org-left">circle</td>
+<td class="org-left">"D"</td>
+<td class="org-left">diamond</td>
+<td class="org-left">"d"</td>
+<td class="org-left">thin_diamond</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">"8"</td>
+<td class="org-left">octagon</td>
+<td class="org-left">"s"</td>
+<td class="org-left">square</td>
+<td class="org-left">"p"</td>
+<td class="org-left">pentagon</td>
+<td class="org-left">"*"</td>
+<td class="org-left">star</td>
+</tr>
+
+<tr>
+<td class="org-left">" "</td>
+<td class="org-left">vertical line</td>
+<td class="org-left">"_"</td>
+<td class="org-left">horizontal line</td>
+<td class="org-left">"h"</td>
+<td class="org-left">hexagon1</td>
+<td class="org-left">"H"</td>
+<td class="org-left">hexagon2</td>
+</tr>
+
+<tr>
+<td class="org-left">0</td>
+<td class="org-left">tickleft</td>
+<td class="org-left">4</td>
+<td class="org-left">caretleft</td>
+<td class="org-left">"&lt;"</td>
+<td class="org-left">triangle_left</td>
+<td class="org-left">"3"</td>
+<td class="org-left">tri_left</td>
+</tr>
+
+<tr>
+<td class="org-left">1</td>
+<td class="org-left">tickright</td>
+<td class="org-left">5</td>
+<td class="org-left">caretright</td>
+<td class="org-left">"&gt;"</td>
+<td class="org-left">triangle_right</td>
+<td class="org-left">"4"</td>
+<td class="org-left">tri_right</td>
+</tr>
+
+<tr>
+<td class="org-left">2</td>
+<td class="org-left">tickup</td>
+<td class="org-left">6</td>
+<td class="org-left">caretup</td>
+<td class="org-left">"^"</td>
+<td class="org-left">triangle_up</td>
+<td class="org-left">"2"</td>
+<td class="org-left">tri_up</td>
+</tr>
+
+<tr>
+<td class="org-left">3</td>
+<td class="org-left">tickdown</td>
+<td class="org-left">7</td>
+<td class="org-left">caretdown</td>
+<td class="org-left">"v"</td>
+<td class="org-left">triangle_down</td>
+<td class="org-left">"1"</td>
+<td class="org-left">tri_down</td>
+</tr>
+
+<tr>
+<td class="org-left">"None"</td>
+<td class="org-left">nothing</td>
+<td class="org-left">None</td>
+<td class="org-left">nothing</td>
+<td class="org-left">" "</td>
+<td class="org-left">nothing</td>
+<td class="org-left">""</td>
+<td class="org-left">nothing</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">xs</span>, <span class="org-variable-name">ys</span> = np.mgrid[:<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">9</span>:<span class="org-highlight-numbers-number">0</span>:-<span class="org-highlight-numbers-number">1</span>]
+<span class="org-variable-name">markers</span> = [<span class="org-string">"."</span>, <span class="org-string">"+"</span>, <span class="org-string">","</span>, <span class="org-string">"x"</span>, <span class="org-string">"o"</span>, <span class="org-string">"D"</span>, <span class="org-string">"d"</span>, <span class="org-string">""</span>, <span class="org-string">"8"</span>, <span class="org-string">"s"</span>, <span class="org-string">"p"</span>, <span class="org-string">"*"</span>, <span class="org-string">"|"</span>, <span class="org-string">"_"</span>, <span class="org-string">"h"</span>, <span class="org-string">"H"</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">4</span>, <span class="org-string">"&lt;"</span>, <span class="org-string">"3"</span>,
+           <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-string">"&gt;"</span>, <span class="org-string">"4"</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">6</span>, <span class="org-string">"^"</span>, <span class="org-string">"2"</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">7</span>, <span class="org-string">"v"</span>, <span class="org-string">"1"</span>, <span class="org-string">"None"</span>, <span class="org-constant">None</span>, <span class="org-string">" "</span>, <span class="org-string">""</span>]
+<span class="org-variable-name">descripts</span> = [<span class="org-string">"point"</span>, <span class="org-string">"plus"</span>, <span class="org-string">"pixel"</span>, <span class="org-string">"cross"</span>, <span class="org-string">"circle"</span>, <span class="org-string">"diamond"</span>, <span class="org-string">"thin diamond"</span>, <span class="org-string">""</span>,
+             <span class="org-string">"octagon"</span>, <span class="org-string">"square"</span>, <span class="org-string">"pentagon"</span>, <span class="org-string">"star"</span>, <span class="org-string">"vertical bar"</span>, <span class="org-string">"horizontal bar"</span>, <span class="org-string">"hexagon 1"</span>, <span class="org-string">"hexagon 2"</span>,
+             <span class="org-string">"tick left"</span>, <span class="org-string">"caret left"</span>, <span class="org-string">"triangle left"</span>, <span class="org-string">"tri left"</span>, <span class="org-string">"tick right"</span>, <span class="org-string">"caret right"</span>, <span class="org-string">"triangle right"</span>, <span class="org-string">"tri right"</span>,
+             <span class="org-string">"tick up"</span>, <span class="org-string">"caret up"</span>, <span class="org-string">"triangle up"</span>, <span class="org-string">"tri up"</span>, <span class="org-string">"tick down"</span>, <span class="org-string">"caret down"</span>, <span class="org-string">"triangle down"</span>, <span class="org-string">"tri down"</span>,
+             <span class="org-string">"Nothing"</span>, <span class="org-string">"Nothing"</span>, <span class="org-string">"Nothing"</span>, <span class="org-string">"Nothing"</span>]
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, figsize=(<span class="org-highlight-numbers-number">7</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">4</span>))
+<span class="org-keyword">for</span> x, y, m, d <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(xs.T.flat, ys.T.flat, markers, descripts):
+    ax.scatter(x, y, marker=m, s=<span class="org-highlight-numbers-number">100</span>)
+    ax.text(x + <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, y - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>, d, size=<span class="org-highlight-numbers-number">14</span>)
+ax.set_axis_off()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626tfy.png" alt="4626tfy.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org5038675" class="outline-3">
+<h3 id="org5038675"><span class="section-number-3">1.3</span> Line style</h3>
+<div class="outline-text-3" id="text-1-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">linestyle</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">'-'</td>
+<td class="org-left">solid</td>
+</tr>
+
+<tr>
+<td class="org-left">'&#x2013;'</td>
+<td class="org-left">dashed</td>
+</tr>
+
+<tr>
+<td class="org-left">'-.'</td>
+<td class="org-left">dashdot</td>
+</tr>
+
+<tr>
+<td class="org-left">':'</td>
+<td class="org-left">dotted</td>
+</tr>
+
+<tr>
+<td class="org-left">'None'</td>
+<td class="org-left">draw nothing</td>
+</tr>
+
+<tr>
+<td class="org-left">' '</td>
+<td class="org-left">draw nothing</td>
+</tr>
+
+<tr>
+<td class="org-left">''</td>
+<td class="org-left">draw nothing</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+<span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, <span class="org-string">'-'</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">'--'</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">'-.'</span>, t , -t, <span class="org-string">':'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/49478fL.png" alt="49478fL.png" />
+</p>
+</div>
+
+
+<p>
+When using linestyle in <code>bar()</code> method, you must use the string name instead of
+the short name.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">ls=&gt; linestyle ; ec=&gt; edgecolor ; lw=&gt;linewidth</span>
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)
+ax.bar([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">20</span>, <span class="org-highlight-numbers-number">30</span>, <span class="org-highlight-numbers-number">40</span>], ls=<span class="org-string">'dashed'</span>, ec=<span class="org-string">'r'</span>, lw=<span class="org-highlight-numbers-number">5</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947JqR.png" alt="4947JqR.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf822f2f" class="outline-3">
+<h3 id="orgf822f2f"><span class="section-number-3">1.4</span> <code>markers</code> , <code>colors</code> and <code>linestyle</code> can form a string argument.</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="org07b164f" class="outline-4">
+<h4 id="org07b164f"><span class="section-number-4">1.4.1</span> marker+markerfacecolor</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">String symbol</th>
+<th scope="col" class="org-left">marker</th>
+<th scope="col" class="org-left">color</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">"8m"</td>
+<td class="org-left">8-&gt;octagon</td>
+<td class="org-left">m-&gt;magenta</td>
+</tr>
+
+<tr>
+<td class="org-left">"*y"</td>
+<td class="org-left">*-&gt;star</td>
+<td class="org-left">y-&gt;yellow</td>
+</tr>
+
+<tr>
+<td class="org-left">"sg"</td>
+<td class="org-left">s-&gt;square</td>
+<td class="org-left">g-&gt;green</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+String symbol can be used as value of para <code>color</code> of plot/scatter/etc.
+</p>
+
+<p>
+<code>plt.plot(x,y, '[marker][markeredgecolor]')</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, <span class="org-string">"*y"</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">"8m"</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">"sg"</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947wIk.png" alt="4947wIk.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org9458698" class="outline-4">
+<h4 id="org9458698"><span class="section-number-4">1.4.2</span> linecolor + linestyle</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+<code>plt.plot(x,y, '[linecolor][linestyle]')</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>., <span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, <span class="org-string">'r--'</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">'bs'</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">'g^'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947j-d.png" alt="4947j-d.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org190fdcf" class="outline-4">
+<h4 id="org190fdcf"><span class="section-number-4">1.4.3</span> linecolor + linestyle + marker + mfc + mfe</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+<code>plt.plot(x,y, '[linecolor][linestyle][marker]', mfc='...', mec='...')</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>., <span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">a</span> = np.exp(-t) * np.cos(<span class="org-highlight-numbers-number">2</span>*np.pi*t)
+plt.plot( t, a , <span class="org-string">'r:D'</span>, mfc=<span class="org-string">'g'</span>, mec=<span class="org-string">'y'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947wPY.png" alt="4947wPY.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org44de8f2" class="outline-3">
+<h3 id="org44de8f2"><span class="section-number-3">1.5</span> Plot attributes</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+With just about any plot you can make, there are <b>many attributes</b> that can be
+modified to make the lines and markers suit your needs. Note that for many
+plotting functions, Matplotlib will <b>cycle the colors for each dataset</b> you
+plot. However, you are free to explicitly state which colors you want used
+for which plots. For <code>plt.plot()</code>, <b>you can mix the specification for the
+colors, linestyles, and markers in a single string</b>.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Property</th>
+<th scope="col" class="org-left">Value Type</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">alpha</td>
+<td class="org-left">float</td>
+<td class="org-left">how transparent it is</td>
+</tr>
+
+<tr>
+<td class="org-left">color or c</td>
+<td class="org-left">any matplotlib color</td>
+<td class="org-left">'color' always describe the color of linestyle.</td>
+</tr>
+
+<tr>
+<td class="org-left">dash_capstyle</td>
+<td class="org-left">['butt', 'round' 'projecting']</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">dash_joinstyle</td>
+<td class="org-left">['miter' 'round' 'bevel']</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">dashes</td>
+<td class="org-left">sequence of on/off ink in points</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">drawstyle</td>
+<td class="org-left">[ ‘default’ ‘steps’ ‘steps-pre’</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">‘steps-mid’ ‘steps-post’ ]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">linestyle or ls</td>
+<td class="org-left">[ '-' '&#x2013;' '-.' ':' 'None' ' ' '']</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">and any drawstyle in combination with a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">linestyle, e.g. 'steps&#x2013;'.</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">linewidth or lw</td>
+<td class="org-left">float value in points</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">marker</td>
+<td class="org-left">[ 0 1 2 3 4 5 6 7 'o' 'd' 'D' 'h' 'H'</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">'' 'None' ' ' `None` '8' 'p' ','</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">'+' 'x' '.' 's' '\*' '\_' '&amp;#124;'</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">'1' '2' '3' '4' 'v' '&lt;' '&gt;' '^' ]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">markeredgecolor or mec</td>
+<td class="org-left">any matplotlib color</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">markeredgewidth or mew</td>
+<td class="org-left">float value in points</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">markerfacecolor or mfc</td>
+<td class="org-left">any matplotlib color</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">markersize or ms</td>
+<td class="org-left">float</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">solid_capstyle</td>
+<td class="org-left">['butt' 'round' 'projecting']</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">solid_joinstyle</td>
+<td class="org-left">['miter' 'round' 'bevel']</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">visible</td>
+<td class="org-left">[`True` `False`]</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">zorder</td>
+<td class="org-left">any number</td>
+<td class="org-left">which component is at up front, which is at back</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Property 'color' always describe the color of linestyle.
+</p>
+
+<p>
+3 color in this tabel, and their different means:
+</p>
+<ol class="org-ol">
+<li>'color' : color of line;</li>
+<li>'mfc'   : color of marker's face;</li>
+<li>'mec'   : color of marker's edge.</li>
+</ol>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>., <span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">a</span> = np.exp(-t) * np.cos(<span class="org-highlight-numbers-number">2</span>*np.pi*t)
+plt.plot(t, a, ls=<span class="org-string">'-.'</span>, marker=<span class="org-string">'D'</span>, mec=<span class="org-string">'g'</span>, mfc=<span class="org-string">'y'</span>, c=<span class="org-string">'r'</span>)
+</pre>
+</div>
+
+<p>
+or you can use the format:
+<code>plt.plot(x,y, '[linecolor][linestyle][marker]', mfc='...', med='...')</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>., <span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, <span class="org-string">'r--'</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">'bs'</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">'g^'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947W0X.png" alt="4947W0X.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org277af52" class="outline-3">
+<h3 id="org277af52"><span class="section-number-3">1.6</span> Colormaps</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+Another very important property of many figures is the <b>colormap</b>. The job of a
+colormap is to <b>relate a scalar value to a color</b>. In addition to the regular
+portion of the colormap, an "over", "under" and "bad" color can be optionally
+defined as well. NaNs will trigger the "bad" part of the colormap.
+</p>
+
+<p>
+As we all know, we create figures in order to <b>convey information visually</b> to our
+readers. There is much care and consideration that have gone into the design of
+these colormaps. Your choice in which colormap to use depends on what you are
+displaying. In mpl, the "<code>jet</code>" colormap has historically <b>been used by default</b>,
+but it will often not be the colormap you would want to use. Much discussion has
+taken place on the mailing lists with regards to what colormap should be
+default. The <code>v2.0</code> release of Matplotlib adopted <b>a new default colormap</b>,
+'<code>viridis</code>', along with some other stylistic changes to the defaults.
+</p>
+
+<p>
+Here is the full gallery of all the pre-defined colormaps, organized by the
+types of data they are usually used for.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">Have colormaps separated into categories:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">http://matplotlib.org/examples/color/colormaps_reference.html</span>
+<span class="org-variable-name">cmaps</span> = [(<span class="org-string">'Perceptually Uniform Sequential'</span>, [
+            <span class="org-string">'viridis'</span>, <span class="org-string">'plasma'</span>, <span class="org-string">'inferno'</span>, <span class="org-string">'magma'</span>]),
+         (<span class="org-string">'Sequential'</span>, [
+            <span class="org-string">'Greys'</span>, <span class="org-string">'Purples'</span>, <span class="org-string">'Blues'</span>, <span class="org-string">'Greens'</span>, <span class="org-string">'Oranges'</span>, <span class="org-string">'Reds'</span>,
+            <span class="org-string">'YlOrBr'</span>, <span class="org-string">'YlOrRd'</span>, <span class="org-string">'OrRd'</span>, <span class="org-string">'PuRd'</span>, <span class="org-string">'RdPu'</span>, <span class="org-string">'BuPu'</span>,
+            <span class="org-string">'GnBu'</span>, <span class="org-string">'PuBu'</span>, <span class="org-string">'YlGnBu'</span>, <span class="org-string">'PuBuGn'</span>, <span class="org-string">'BuGn'</span>, <span class="org-string">'YlGn'</span>]),
+         (<span class="org-string">'Sequential (2)'</span>, [
+            <span class="org-string">'binary'</span>, <span class="org-string">'gist_yarg'</span>, <span class="org-string">'gist_gray'</span>, <span class="org-string">'gray'</span>, <span class="org-string">'bone'</span>, <span class="org-string">'pink'</span>,
+            <span class="org-string">'spring'</span>, <span class="org-string">'summer'</span>, <span class="org-string">'autumn'</span>, <span class="org-string">'winter'</span>, <span class="org-string">'cool'</span>, <span class="org-string">'Wistia'</span>,
+            <span class="org-string">'hot'</span>, <span class="org-string">'afmhot'</span>, <span class="org-string">'gist_heat'</span>, <span class="org-string">'copper'</span>]),
+         (<span class="org-string">'Diverging'</span>, [
+            <span class="org-string">'PiYG'</span>, <span class="org-string">'PRGn'</span>, <span class="org-string">'BrBG'</span>, <span class="org-string">'PuOr'</span>, <span class="org-string">'RdGy'</span>, <span class="org-string">'RdBu'</span>,
+            <span class="org-string">'RdYlBu'</span>, <span class="org-string">'RdYlGn'</span>, <span class="org-string">'Spectral'</span>, <span class="org-string">'coolwarm'</span>, <span class="org-string">'bwr'</span>, <span class="org-string">'seismic'</span>]),
+         (<span class="org-string">'Qualitative'</span>, [
+            <span class="org-string">'Pastel1'</span>, <span class="org-string">'Pastel2'</span>, <span class="org-string">'Paired'</span>, <span class="org-string">'Accent'</span>,
+            <span class="org-string">'Dark2'</span>, <span class="org-string">'Set1'</span>, <span class="org-string">'Set2'</span>, <span class="org-string">'Set3'</span>,
+            <span class="org-string">'tab10'</span>, <span class="org-string">'tab20'</span>, <span class="org-string">'tab20b'</span>, <span class="org-string">'tab20c'</span>]),
+         (<span class="org-string">'Miscellaneous'</span>, [
+            <span class="org-string">'flag'</span>, <span class="org-string">'prism'</span>, <span class="org-string">'ocean'</span>, <span class="org-string">'gist_earth'</span>, <span class="org-string">'terrain'</span>, <span class="org-string">'gist_stern'</span>,
+            <span class="org-string">'gnuplot'</span>, <span class="org-string">'gnuplot2'</span>, <span class="org-string">'CMRmap'</span>, <span class="org-string">'cubehelix'</span>, <span class="org-string">'brg'</span>, <span class="org-string">'hsv'</span>,
+            <span class="org-string">'gist_rainbow'</span>, <span class="org-string">'rainbow'</span>, <span class="org-string">'jet'</span>, <span class="org-string">'nipy_spectral'</span>, <span class="org-string">'gist_ncar'</span>])]
+
+
+<span class="org-variable-name">nrows</span> = <span class="org-builtin">max</span>(<span class="org-builtin">len</span>(cmap_list) <span class="org-keyword">for</span> cmap_category, cmap_list <span class="org-keyword">in</span> cmaps)
+<span class="org-variable-name">gradient</span> = np.linspace(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">256</span>)
+<span class="org-variable-name">gradient</span> = np.vstack((gradient, gradient))
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">plot_color_gradients</span>(cmap_category, cmap_list, nrows):
+    <span class="org-variable-name">fig</span>, <span class="org-variable-name">axes</span> = plt.subplots(nrows=nrows)
+    fig.subplots_adjust(top=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">95</span>, bottom=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">01</span>, left=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, right=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">99</span>)
+    axes[<span class="org-highlight-numbers-number">0</span>].set_title(cmap_category + <span class="org-string">' colormaps'</span>, fontsize=<span class="org-highlight-numbers-number">14</span>)
+
+    <span class="org-keyword">for</span> ax, name <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(axes, cmap_list):
+        ax.imshow(gradient, aspect=<span class="org-string">'auto'</span>, cmap=plt.get_cmap(name))
+        <span class="org-variable-name">pos</span> = <span class="org-builtin">list</span>(ax.get_position().bounds)
+        <span class="org-variable-name">x_text</span> = pos[<span class="org-highlight-numbers-number">0</span>] - <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">01</span>
+        <span class="org-variable-name">y_text</span> = pos[<span class="org-highlight-numbers-number">1</span>] + pos[<span class="org-highlight-numbers-number">3</span>]/<span class="org-highlight-numbers-number">2</span>.
+        fig.text(x_text, y_text, name, va=<span class="org-string">'center'</span>, ha=<span class="org-string">'right'</span>, fontsize=<span class="org-highlight-numbers-number">10</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Turn off *all* ticks &amp; spines, not just the ones with colormaps.</span>
+    <span class="org-keyword">for</span> ax <span class="org-keyword">in</span> axes:
+        ax.set_axis_off()
+
+
+<span class="org-keyword">for</span> cmap_category, cmap_list <span class="org-keyword">in</span> cmaps:
+    plot_color_gradients(cmap_category, cmap_list, nrows)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947k4w.png" alt="4947k4w.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org14de157" class="outline-3">
+<h3 id="org14de157"><span class="section-number-3">1.7</span> Mathtext</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+Oftentimes, you just simply need that <b>superscript</b> or some other <code>math text</code>
+in your labels. Matplotlib provides a very easy way to do this for those
+<code>familiar with LaTeX</code>. Any text that is <code>surrounded by dollar signs</code> will be
+treated as "<b>mathtext</b>". Do note that because backslashes are prevelent in
+LaTeX, it is often a good idea to prepend an <code>r</code> to your string literal so that
+Python will not treat the backslashes as escape characters.
+</p>
+
+<p>
+'r'+string in python means this 'string' is a raw String. every symbol inside is
+itself, instead of its special mean.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.scatter([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">1</span>])
+plt.title(r<span class="org-string">'$\sigma_i=15$'</span>, fontsize=<span class="org-highlight-numbers-number">20</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947X1e.png" alt="4947X1e.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgd795e96" class="outline-3">
+<h3 id="orgd795e96"><span class="section-number-3">1.8</span> Hatches</h3>
+<div class="outline-text-3" id="text-1-8">
+<p>
+背景纹路
+A Patch object can have a hatching defined for it.
+</p>
+
+<pre class="example">
+| symbol | description                   |
+| /      | diagonal hatching             |
+| \      | back diagonal                 |
+| \vert  | vertical                      |
+| -      | horizontal                    |
+| +      | crossed                       |
+| x      | crossed diagonal              |
+| o      | small circle                  |
+| O      | large circle (upper-case 'o') |
+| .      | dots                          |
+| *      | stars                         |
+</pre>
+
+<p>
+Letters can be combined, in which case all the specified hatchings are done.
+Repeating a character increases the density of hatching of that pattern.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">mpl.rc(<span class="org-string">'axes'</span>, prop_cycle=cycler(<span class="org-string">'color'</span>, [<span class="org-string">'r'</span>, <span class="org-string">'orange'</span>, <span class="org-string">'c'</span>, <span class="org-string">'y'</span>]) +
+       cycler(<span class="org-string">'hatch'</span>, [<span class="org-string">'x'</span>, <span class="org-string">'xx-'</span>, <span class="org-string">'+O.'</span>, <span class="org-string">'*'</span>]))
+
+<span class="org-variable-name">x</span> = np.array([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">y</span> = [<span class="org-highlight-numbers-number">0</span>, -<span class="org-highlight-numbers-number">5</span>, -<span class="org-highlight-numbers-number">6</span>, -<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>]
+plt.fill(x+<span class="org-highlight-numbers-number">1</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">2</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">3</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">4</span>, y)
+plt.show()
+
+</pre>
+</div>
+</div>
+</div>
+<div id="org8305afb" class="outline-3">
+<h3 id="org8305afb"><span class="section-number-3">1.9</span> Property Cycles</h3>
+<div class="outline-text-3" id="text-1-9">
+<p>
+In case you haven't noticed, when you <b>do multiple plot calls in the same
+axes</b> &#x2013; and not specify any colors &#x2013; <b>the color for each plot is
+different</b>! The default style in Matplotlib will <code>cycle</code> through <code>a list of
+   colors</code> if you don't specify any. This feature has been in Matplotlib for a
+long time and it is similar to Matlab behavior.
+</p>
+
+<p>
+In v1.5, this feature was extended so that <b>one can cycle through other
+properties besides just color</b>. Now, you <b>can cycle linestyles, markers, hatch
+styles</b> &#x2013; just about any property that can be specified is now possible to be
+cycled.
+</p>
+
+<p>
+This feature is still being refined, and there has been significant improvements
+in its usability since v1.5, but here is a basic example that will work for v2.0
+or greater (for v1.5, you may need to have this cycler expression quoted).
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib <span class="org-keyword">as</span> mpl
+<span class="org-keyword">from</span> matplotlib.rcsetup <span class="org-keyword">import</span> cycler
+<span class="org-comment-delimiter"># </span><span class="org-comment">define an property cycle for 'axes'</span>
+mpl.rc(<span class="org-string">'axes'</span>,
+       <span class="org-comment-delimiter"># </span><span class="org-comment">define 3 property cycles: color cycle, linewidth cycle, linestyle cycle.</span>
+       prop_cycle=cycler(<span class="org-string">'color'</span>, <span class="org-string">'rgc'</span>) +               <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- color cycle</span>
+                  cycler(<span class="org-string">'lw'</span>, [<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">6</span>]) +                <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- linewidth cycle</span>
+                  cycler(<span class="org-string">'linestyle'</span>, [<span class="org-string">'-'</span>, <span class="org-string">'-.'</span>, <span class="org-string">':'</span>])  <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- linestyle cycle</span>
+       )
+<span class="org-variable-name">t</span>=np.arange(<span class="org-highlight-numbers-number">0</span>. ,<span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t)
+plt.plot(t, t**<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t**<span class="org-highlight-numbers-number">3</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947M0a.png" alt="4947M0a.png" />
+</p>
+</div>
+</div>
+
+
+<div id="org258d926" class="outline-4">
+<h4 id="org258d926"><span class="section-number-4">1.9.1</span> Ugly tie contest!</h4>
+<div class="outline-text-4" id="text-1-9-1">
+<div class="org-src-container">
+<pre class="src src-ipython">mpl.rc(<span class="org-string">'axes'</span>, prop_cycle=cycler(<span class="org-string">'color'</span>, [<span class="org-string">'r'</span>, <span class="org-string">'orange'</span>, <span class="org-string">'c'</span>, <span class="org-string">'y'</span>]) +
+                          cycler(<span class="org-string">'hatch'</span>, [<span class="org-string">'x'</span>, <span class="org-string">'xx-'</span>, <span class="org-string">'+O.'</span>, <span class="org-string">'*'</span>]))
+
+<span class="org-variable-name">x</span> = np.array([<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">y</span> = [<span class="org-highlight-numbers-number">0</span>, -<span class="org-highlight-numbers-number">5</span>, -<span class="org-highlight-numbers-number">6</span>, -<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>]
+plt.fill(x+<span class="org-highlight-numbers-number">1</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">2</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">3</span>, y)
+plt.fill(x+<span class="org-highlight-numbers-number">4</span>, y)
+plt.show()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947Z-g.png" alt="4947Z-g.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org3b956e1" class="outline-3">
+<h3 id="org3b956e1"><span class="section-number-3">1.10</span> Transforms</h3>
+<div class="outline-text-3" id="text-1-10">
+<p>
+The topic of transforms in Matplotlib, that is the ability to <code>map the
+   coordinates</code> specified by <code>your data</code> to the <code>coordinates</code> of <code>your figure</code>,
+is very advanced and will not be covered in this tutorial. For those who are
+interested in learning about them, see the transformation tutorial. For those
+who are really daring, there are the developer guides to transforms and
+scales. While most users will never, ever need to understand Matplotlib
+transforms to the level described in those links, it is important to be aware
+of them, and their critical role in figure-making.
+</p>
+
+<p>
+In a figure, there are <b>four coordinate systems</b>: <b>display, figure, axes, and
+data</b>. <code>Transforms are used to convert coordinates in one system into another
+   system for various uses</code>. This is how Matplotlib knows exactly where to place
+the ticks and ticklabels, even when you change the axis limits. The ticker
+says that the tick and label "1.5", for example, are to go at data
+x-coordinate 1.5. The transform says that location is at 0.4 in axes
+x-coordinate space. Meanwhile, the xlabel of "Distance" is placed at axes
+x-coordinate space of 0.5 (half-way). Meanwhile, a legend might be placed at
+a location relative to the figure coordinates.
+</p>
+
+<p>
+Furthermore, the transform system is what is used to allow various scales to
+work, such as log scales. The transform system is what is used to make the polar
+plots work seamlessly. Whether you realize it or not, you use the transforms
+system in Matplotlib all the time. Everything drawn in Matplotlib has a
+transform associated with it. Most of the time, you will never notice this, and
+will happily operate within the data coordinate system. But when you want to do
+some more advanced plots, with some eye-catching visual tricks, the transform
+system will be there for you.
+</p>
+</div>
+</div>
+
+<div id="org3593fed" class="outline-3">
+<h3 id="org3593fed"><span class="section-number-3">1.11</span> Managing all default settings &#x2013; Introducing matplotlibrc</h3>
+<div class="outline-text-3" id="text-1-11">
+<blockquote>
+<p>
+<b>matplotlibrc file store all default settings in dict-manner</b>
+</p>
+
+<p>
+"This color is blue by <b>default</b>"
+"This <code>plt.plot</code> is draw on current axes by <b>default</b>"
+"This &#x2026;.. by <b>default</b>"
+</p>
+
+<p>
+<code>mpl.rc('lines', linewidth=2, linestyle='-.') # &lt;- change matplotlibrc at runtime</code>
+</p>
+</blockquote>
+
+<p>
+Matplotlib's <b>greatest strength</b> is its ability to give you <code>complete control
+   over every single aspect of your plots and figures</code>. Matplotlib's <b>second
+greatest strength</b> is its ability to take as much control over as much of
+your plots and figures as you want. You, as the user, would never consider to
+use Matplotlib if you had to specify all of these things for every single
+plot. Most of the time, <code>the defaults</code> are exactly what you want them to be.
+</p>
+
+<p>
+Matplotlib uses the <code>matplotlibrc configuration file</code> to define the plethora of
+<code>defaults</code> found in the library. <code>You can control the defaults of almost every
+property in Matplotlib</code>:
+</p>
+<ul class="org-ul">
+<li>figure size and dpi</li>
+<li>line width</li>
+<li>color and style</li>
+<li>axes</li>
+<li>axis</li>
+<li>grid properties</li>
+<li>text</li>
+<li>font properties</li>
+<li>etc.</li>
+</ul>
+
+<p>
+Just modify your rc file and re-run your scripts to produce your improved
+figures.
+</p>
+
+<p>
+<b>seaborn is just a default file, which define a different rc file from the matplotlib</b>
+</p>
+</div>
+
+<div id="org9f96fb8" class="outline-4">
+<h4 id="org9f96fb8"><span class="section-number-4">1.11.1</span> find the current active matplotlibrc file</h4>
+<div class="outline-text-4" id="text-1-11-1">
+<p>
+<b>To display where the currently active matplotlibrc file was loaded from, one can
+do the following</b>:
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib
+<span class="org-keyword">print</span>(matplotlib.matplotlib_fname())
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org184446f" class="outline-4">
+<h4 id="org184446f"><span class="section-number-4">1.11.2</span> change the matplotlibrc settings in runtime.</h4>
+<div class="outline-text-4" id="text-1-11-2">
+<p>
+  <code>mpl.rc('lines', linewidth=2, linestyle='-.') # &lt;- change matplotlibrc at runtime</code>
+You can also <code>change the rc settings during runtime</code> within a python script or
+interactively from the python shell. All of the <code>rc</code> settings are stored in a
+<code>dictionary-like variable</code> called <code>matplotlib.rcParams</code>, which is <b>global</b> to the
+matplotlib package. rcParams can be modified directly. Newer versions of
+matplotlib can use <code>rc()</code>, for example:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib <span class="org-keyword">as</span> mpl
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+mpl.rcdefaults()  <span class="org-comment-delimiter"># </span><span class="org-comment">revert everything back to the built-in defaults settings.</span>
+
+fig, (ax1, ax2) = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>)
+ax1.plot([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>])
+
+mpl.rc(<span class="org-string">'lines'</span>, linewidth=<span class="org-highlight-numbers-number">2</span>, linestyle=<span class="org-string">'-.'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- change matplotlibrc at runtime</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Equivalent older, but still valid syntax</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">mpl.rcParams['lines.linewidth'] = 2</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">mpl.rcParams['lines.linestyle'] = '-.'</span>
+ax2.plot([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>])
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947Blu.png" alt="4947Blu.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org6c56fa0" class="outline-2">
+<h2 id="org6c56fa0"><span class="section-number-2">2</span> Exercise</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="orgba50b91" class="outline-3">
+<h3 id="orgba50b91"><span class="section-number-3">2.1</span> Exercise 3.1, about color cycle</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+you dont need to specify the color explicitly, it will give a color in the
+cycle to each component.
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+<span class="org-comment-delimiter"># </span><span class="org-comment">no color declaration, mpl give one in color cycle</span>
+plt.plot(t, t, t, t**<span class="org-highlight-numbers-number">2</span>, t, t**<span class="org-highlight-numbers-number">3</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626fbZ.png" alt="4626fbZ.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626gVs.png" alt="4626gVs.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org4e993b4" class="outline-3">
+<h3 id="org4e993b4"><span class="section-number-3">2.2</span> Exercise 3.2, about markers and color</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, <span class="org-string">"*y"</span>, t, t**<span class="org-highlight-numbers-number">2</span>, <span class="org-string">"8m"</span>, t, t**<span class="org-highlight-numbers-number">3</span>, <span class="org-string">"sg"</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4626fpB.png" alt="4626fpB.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgaa2712b" class="outline-3">
+<h3 id="orgaa2712b"><span class="section-number-3">2.3</span> Exercise 3.3, marker, linestyle, color</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+make a plot that has dotted red line, large yellow diamond markers, green edge
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>., <span class="org-highlight-numbers-number">5</span>., <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>)
+<span class="org-variable-name">a</span> = np.exp(-t) * np.cos(<span class="org-highlight-numbers-number">2</span>*np.pi*t)
+plt.plot(t, a, ls=<span class="org-string">'-.'</span>, marker=<span class="org-string">'D'</span>, mec=<span class="org-string">'g'</span>, mfc=<span class="org-string">'y'</span>, c=<span class="org-string">'r'</span>)
+</pre>
+</div>
+
+<pre class="example">
+[&lt;matplotlib.lines.Line2D at 0x7fe1979d1668&gt;]
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/4947jFS.png" alt="4947jFS.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org3681260" class="outline-2">
+<h2 id="org3681260"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org34f25ef" class="outline-3">
+<h3 id="org34f25ef"><span class="section-number-3">3.1</span> matplotlib</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="orgf6565e5" class="outline-4">
+<h4 id="orgf6565e5"><span class="section-number-4">3.1.1</span> plt.plot( x1, x2, x3, y1, y2, y3)</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+<code>plt.plot(x1, y1, x2, y2, x3, y3)</code>
+</p>
+
+<p>
+it will plot (x1, y1), (x2,y2), (x3, y3) 3 line, give each line a color in
+color cycle.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-variable-name">t</span> = np.arange(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">5</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>)
+plt.plot(t, t, t, t**<span class="org-highlight-numbers-number">2</span>, t, t**<span class="org-highlight-numbers-number">3</span>)
+plt.show()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org57caac7" class="outline-4">
+<h4 id="org57caac7"><span class="section-number-4">3.1.2</span> ax.imshow(data, cmap)</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+imshow will produce a image with size related to the shape of data array.
+</p>
+
+<pre class="example">
+.   data array                                  image produced
+.   | 0 | 3 | 6 |  9 | 12 |                     +-----------------+
+.   | 1 | 4 | 7 | 10 | 13 |                     |                 |
+.   | 2 | 5 | 8 | 11 | 14 |   ----imshow----&gt;   |                 |
+.   | 3 | 6 | 9 | 12 | 15 |                     |                 |
+.   | 3 | 6 | 9 | 12 | 15 |                     |                 |
+.                                               |                 |
+.                                               +-----------------+
+.
+.
+.   data array                                  image produced
+.                                               +-----------------+
+.   | 0 | 3 | 6 |  9 | 12 |                     |                 |
+.   | 1 | 4 | 7 | 10 | 13 |    ----imshow----&gt;  |                 |
+.                                               +-----------------+
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="org63a4b21" class="outline-3">
+<h3 id="org63a4b21"><span class="section-number-3">3.2</span> Numpy</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="orgfbad008" class="outline-4">
+<h4 id="orgfbad008"><span class="section-number-4">3.2.1</span> np.mgrid vs. meshgrid vs. ogrid</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+<a href="http://tiao.io/posts/numpy-mgrid-vs-meshgrid/">http://tiao.io/posts/numpy-mgrid-vs-meshgrid/</a>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">np.mgrid[slicing1, slicing2]</th>
+<th scope="col" class="org-left">np.meshgrid(arr1,arr2)</th>
+<th scope="col" class="org-left">np.ogrid[slicing1,slicing2]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">np.mgrid[0:4, 1:10]</td>
+<td class="org-left">np.meshgrid(arange(0,4), arange(1,10))</td>
+<td class="org-left">np.ogrid[0:4, 1:10]</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>WRONG</b> mgrid(arr1,arr2)</td>
+<td class="org-left"><b>WRONG</b> meshgrid[0:5, 5:9]</td>
+<td class="org-left"><b>WRONG</b> ogrid(arr1, arr2)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">return array</td>
+<td class="org-left">return list</td>
+<td class="org-left">return array</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+<code>np.mgrid().T</code> is always used to produce the points of 2D space, from wich
+we can get some 2D images; also can be used to create a catesian product( or
+combination ) efficiently.
+</p>
+
+<ol class="org-ol">
+<li>np.meshgrid produce the points of 2D or nD image.</li>
+<li>np.mgrid.T ===&gt; np.meshgrid</li>
+<li><p>
+np.ogrid ===broadcast==&gt; np.mgrid
+</p>
+
+<pre class="example">
+.
+.             np.ogrid[0] broadcast horizontal
+.             np.ogrid[1] broadcast vertical
+.          +----------------------------------------------+
+.          |                                              |
+.          v          .T                                  |
+.      np.mgrid    --------&gt;    np.meshgrid             np.ogrid
+.  [[0 0 0 0 0 0 0 0 0]         [[0 1 2 3]              [[0]     copy horizontal
+.   [1 1 1 1 1 1 1 1 1]          [0 1 2 3]               [1]  ----------&gt;
+.   [2 2 2 2 2 2 2 2 2]          [0 1 2 3]               [2]
+.   [3 3 3 3 3 3 3 3 3]]         [0 1 2 3]               [3]]
+.  [[9 8 7 6 5 4 3 2 1]          [0 1 2 3]              [.[9 8 7 6 5 4 3 2 1]]
+.   [9 8 7 6 5 4 3 2 1]          [0 1 2 3]                         |
+.   [9 8 7 6 5 4 3 2 1]          [0 1 2 3]                         |
+.   [9 8 7 6 5 4 3 2 1]]         [0 1 2 3]                         | copy vertically
+.                                [0 1 2 3]]                        v
+.                               [[9 9 9 9]
+.                                [8 8 8 8]
+.                                [7 7 7 7]
+.                                [6 6 6 6]
+.                                [5 5 5 5]
+.                                [4 4 4 4]
+.                                [3 3 3 3]
+.                                [2 2 2 2]
+.                                [1 1 1 1]]
+.                                    |
+.                                    v
+.                                (x  ,  y)
+.                                 |     |
+.      from np.meshgrid[0]&lt;-------+     +-------&gt; from np.meshgrid[1]
+.
+</pre>
+
+<pre class="example">
+
+.
+.                                                                 np.meshgrid
+.      ^                                                          [[|0 1 2 3]
+.      |                                                           [|0 1 2 3]
+.      |         |         |         |         |                   [|0 1 2 3]
+.    1 +---------+---------+---------+---------+--------           [|0 1 2 3]
+.      |         |         |         |         |                +--[|0 1 2 3]
+.      |         |         |         |         |                |  [|0 1 2 3]
+.    2 +---------+---------+---------+---------+--------        |  [|0 1 2 3]
+.      |         |         |         |         |                |  [|0 1 2 3]
+.      |         |         |         |         |                |  [|0 1 2 3]]
+.    3 +---------+---------+---------+---------+--------        | [[|9 9 9 9]
+.      |         |         |         |         |                |  [|8 8 8 8]
+.      |         |         |         |         |                |  [|7 7 7 7]
+.    4 +---------+---------+---------+---------+--------        |  [|6 6 6 6]
+.      |         |         |         |         |                |  [|5 5 5 5]
+.      |         |         |         |         |                |  [|4 4 4 4]
+.    5 +---------+---------+---------+---------+--------        |  [|3 3 3 3]
+.      |         |         |         |         |                |  [|2 2 2 2]
+.      |         |         |         |         |                |  [|1 1 1 1]]
+.    6 +---------+---------+---------+---------+--------        |   -\
+.      |         |         |         |         |                \-\  |
+.      |         |         |         |         |                  v  v
+.    7 +---------+---------+---------+---------+--------         (|0 |9), (1 9), (2 9), (3 9)
+.      |         |(0,7)    |(1,7)    |         |                 (|0 |8), (1 8), (2 8), (3 8)
+.      |         |         |         |         |                 (|0 |7), (1 7), (2 7), (3 7)
+.    8 +---------+---------+---------+---------+--------         (|0 |6), (1 6), (2 6), (3 6)
+.      |         |(0,8)    |(1,8)    |         |                 (|0 |5), (1 5), (2 5), (3 5)
+.      |         |         |         |         |                 (|0 |4), (1 4), (2 4), (3 4)
+.    9 +---------+---------+---------+---------+--------         (|0 |3), (1 3), (2 3), (3 3)
+.      |         |(0,9)    |(1,9)    |         |                 (|0 |2), (1 2), (2 2), (3 2)
+.      |         |         |         |         |                 (|0 |1), (1 1), (2 1), (3 1)
+.    --+---------+---------+---------+---------+--------------&gt;
+.      |         0         1         2         3
+.
+</pre></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">xs</span>, <span class="org-variable-name">ys</span> = np.mgrid[:<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">9</span>:<span class="org-highlight-numbers-number">0</span>:-<span class="org-highlight-numbers-number">1</span>]
+<span class="org-keyword">print</span> (xs)
+<span class="org-keyword">print</span> (ys)
+<span class="org-variable-name">xo</span>, <span class="org-variable-name">yo</span> = np.ogrid[:<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">9</span>:<span class="org-highlight-numbers-number">0</span>:-<span class="org-highlight-numbers-number">1</span>]
+<span class="org-keyword">print</span> (xo)
+<span class="org-keyword">print</span> (yo)
+</pre>
+</div>
+</div>
+</div>
+<div id="org04ff30d" class="outline-4">
+<h4 id="org04ff30d"><span class="section-number-4">3.2.2</span> np.stack vs. hstack vs. vstack vs. dstack</h4>
+</div>
+<div id="orgaba0c9b" class="outline-4">
+<h4 id="orgaba0c9b"><span class="section-number-4">3.2.3</span> np.stack(tupOfArrays, axis)</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+<code>stack</code> horizontally or vertically two n dimension array to n+1
+dimension array. stack two 1*3 array will get one 2*3 or 3*2 array.
+</p>
+
+<pre class="example">
+.                 combine to n+1 D array
+.                 by *unit* of column
+.
+.                 +--------------&gt; ~axis=1~ | | |
+. combine to      || 1 | 2 | 3 |            | | |
+. n+1 D array     || 4 | 5 | 6 |            | | |
+. by *unit*       |
+. of row          v
+.             ~axis=0~   -------
+.                        -------
+.                        -------
+.
+.                         +-----------------+
+.                         v                 |
+.                .................   this is the element of n+1 D
+.                . | 1 | 2 | 3 | .   array, by stack at ~axis = 0~
+.                .................
+.                  | 4 | 5 | 6 |     new array element-0 =
+.                                    [1,2,3]
+.                                    new array element-1 =
+.                                    [4,5,6]
+.                                    so new 1+1 array =
+.                                    [[1 2 3]
+.                                     [4 5 6]]
+.
+.                    +----------------------+
+.                    v                      |
+.                .........           this is the element of n+1 D
+.                . | 1 | . 2 | 3 |   array, by stack at ~axis = 1~
+.                . | 4 | . 5 | 6 |
+.                .........           new array element-0 =
+.                                    [1,4]
+.                                    new array element-1 =
+.                                    [2,5]
+.                                    new array element-2 =
+.                                    [3,6]
+.                                    so new 1+1 array =
+.                                    [[1 4]
+.                                     [2 5]
+.                                     [3 6]]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">a</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>])
+<span class="org-variable-name">b</span> = np.array([<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">s_a_b</span> = np.stack((a,b))
+<span class="org-variable-name">s_a_b_1</span> = np.stack((a,b), axis=<span class="org-highlight-numbers-number">1</span>)
+<span class="org-keyword">print</span> (s_a_b)
+<span class="org-keyword">print</span> (s_a_b_1)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org4118ce4" class="outline-4">
+<h4 id="org4118ce4"><span class="section-number-4">3.2.4</span> np.hstack(tupleOfArrays) vs. np.vstack(tupleOfArrays)</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+<code>merge</code> horizontally two n dimension array to another n dimension
+array.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">np. <code>h</code> stack(tupleOfArrays)</th>
+<th scope="col" class="org-left">np. <code>v</code> stack(tupleOfArrays)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>merge every <code>row</code> of a and b</b>.</td>
+<td class="org-left"><b>merge every <code>column</code> of a and b</b>.</td>
+</tr>
+
+<tr>
+<td class="org-left"><b>The result keey the same rowNumber, and sum the columnNumber</b>.</td>
+<td class="org-left"><b>The result keey the same columnNumber, and sum the rowNumber</b>.</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="example">
+
+.
+.
+.  a 1*3     b 1*3                      merge every row of a and b 1*(3+3)
+.  [1,2,3]  [4,5,6]  ---- hstack ----&gt;  [1,2,3,4,5,6]
+.
+.
+.  a 3*1   b 3*1                        merge every row of a and b 3*(1+1)
+.  [[1],   [[4],                        [[1 4],
+.   [2],    [5],     ---- hstack ----&gt;   [2 5],
+.   [3]]    [6]]                         [3 6]]
+.
+.
+.  a 1*3     b 1*3                      merge every column of a and b (1+1)*3
+.  [1,2,3]  [4,5,6]  ---- vstack ----&gt;  [[1,2,3],
+.                                        [4,5,6]]
+.
+.
+.  a 3*1   b 3*1                        merge every column of a and b (3+3)*1
+.  [[1],   [[4],                        [[1]
+.   [2],    [5],     ---- vstack ----&gt;   [2]
+.   [3]]    [6]]                         [3]
+.                                        [4]
+.                                        [5]
+.                                        [6]]
+.
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">a</span> = np.array((<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>))
+<span class="org-variable-name">b</span> = np.array((<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>))
+<span class="org-variable-name">h_a_b</span> = np.hstack((a,b))
+<span class="org-keyword">print</span> (h_a_b)
+<span class="org-variable-name">ad</span> = np.array([[<span class="org-highlight-numbers-number">1</span>],[<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">3</span>]])
+<span class="org-variable-name">bd</span> = np.array([[<span class="org-highlight-numbers-number">4</span>],[<span class="org-highlight-numbers-number">5</span>],[<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-variable-name">h_ad_bd</span> = np.hstack((ad,bd))
+<span class="org-keyword">print</span> (h_ad_bd)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">a</span> = np.array((<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>))
+<span class="org-variable-name">b</span> = np.array((<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>))
+<span class="org-variable-name">v_a_b</span> = np.hstack((a,b))
+<span class="org-keyword">print</span> (v_a_b)
+<span class="org-variable-name">ad</span> = np.array([[<span class="org-highlight-numbers-number">1</span>],[<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">3</span>]])
+<span class="org-variable-name">bd</span> = np.array([[<span class="org-highlight-numbers-number">4</span>],[<span class="org-highlight-numbers-number">5</span>],[<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-variable-name">v_ad_bd</span> = np.hstack((ad,bd))
+<span class="org-keyword">print</span> (v_ad_bd)
+</pre>
+</div>
+</div>
+</div>
+<div id="org12b38ee" class="outline-4">
+<h4 id="org12b38ee"><span class="section-number-4">3.2.5</span> np.dstack()</h4>
+<div class="outline-text-4" id="text-3-2-5">
+<div class="org-src-container">
+<pre class="src src-ipython">numpy.dstack([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+</pre>
+</div>
+
+<pre class="example">
+array([[[1, 4],
+[2, 5],
+[3, 6]]])
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

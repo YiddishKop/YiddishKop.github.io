@@ -1,0 +1,1027 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记06:非监督学习之特征转换</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记06:非监督学习之特征转换</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orge24e90e">1. Unsupervised Learning Part 1 &#x2013; Transformation</a>
+<ul>
+<li><a href="#org2ab1373">1.1. instances of unsupervised learning</a></li>
+<li><a href="#org52cc6f7">1.2. data preprocessing: standardization</a>
+<ul>
+<li><a href="#orgcd82d0e">1.2.1. what is a standardization in data preprocessing</a></li>
+<li><a href="#org50287ad">1.2.2. ordinary way of standardization</a></li>
+</ul>
+</li>
+<li><a href="#org9d4fecf">1.3. intro to <code>sklearn.preprocessing.StandardScaler</code> class</a>
+<ul>
+<li><a href="#org3db28a7">1.3.1. same API with ML model</a></li>
+<li><a href="#org441334b">1.3.2. creating</a></li>
+<li><a href="#orgf936249">1.3.3. fitting</a></li>
+<li><a href="#org01e15e0">1.3.4. transformation</a></li>
+<li><a href="#org725bda0">1.3.5. training/testing data should transform in the same way</a></li>
+<li><a href="#org628746f">1.3.6. other data preprocessing</a></li>
+<li><a href="#orgaa997cf">1.3.7. compare API of ML model with API of standardization</a></li>
+</ul>
+</li>
+<li><a href="#orge90b0e9">1.4. PCA</a>
+<ul>
+<li><a href="#orgeccf6c8">1.4.1. target of PCA: dimension reduce</a></li>
+<li><a href="#org921685c">1.4.2. essential of PCA: rotating to new direction</a></li>
+<li><a href="#orgf84eb81">1.4.3. recipe of PCA:</a>
+<ul>
+<li><a href="#org790d859">1.4.3.1. generate data points:</a></li>
+<li><a href="#orgf8ee66e">1.4.3.2. creating</a></li>
+<li><a href="#org50dd4d1">1.4.3.3. fitting</a></li>
+<li><a href="#org7f5b500">1.4.3.4. transformation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org6165297">1.5. Dimensionality Reduction for Visualization with PCA</a></li>
+</ul>
+</li>
+<li><a href="#org8d210d5">2. EXERCISE</a></li>
+<li><a href="#org0022c13">3. Misc tools</a>
+<ul>
+<li><a href="#orga055dcf">3.1. Scikit-learn</a>
+<ul>
+<li><a href="#org4fde575">3.1.1. ML models by now</a></li>
+<li><a href="#org6ec910f">3.1.2. ML fn by this note</a></li>
+</ul>
+</li>
+<li><a href="#org8c232d1">3.2. Matplotlib</a>
+<ul>
+<li><a href="#org91d7174">3.2.1. plot function with parameter <code>c = array of boolean/01</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+</pre>
+</div>
+
+<div id="orge24e90e" class="outline-2">
+<h2 id="orge24e90e"><span class="section-number-2">1</span> Unsupervised Learning Part 1 &#x2013; Transformation</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org2ab1373" class="outline-3">
+<h3 id="org2ab1373"><span class="section-number-3">1.1</span> instances of unsupervised learning</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Many instances of unsupervised learning, such as
+</p>
+
+<ul class="org-ul">
+<li>dimensionality reduction,</li>
+<li>manifold learning,</li>
+<li>feature extraction,</li>
+</ul>
+
+<p>
+find a new representation of the input data without any additional input.
+</p>
+
+
+<div class="figure">
+<p><img src="figures/unsupervised_workflow.png" alt="unsupervised_workflow.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org52cc6f7" class="outline-3">
+<h3 id="org52cc6f7"><span class="section-number-3">1.2</span> data preprocessing: standardization</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="orgcd82d0e" class="outline-4">
+<h4 id="orgcd82d0e"><span class="section-number-4">1.2.1</span> what is a standardization in data preprocessing</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+A very basic example is the rescaling of our data, which is a requirement for
+many machine learning algorithms as they are not scale-invariant &#x2013; rescaling
+falls into the category of <code>data pre-processing</code> and can barely be called
+learning. There exist many different rescaling techniques, and in the following
+example, we will take a look at a particular method that is commonly called
+"<code>standardization</code>."
+</p>
+
+<blockquote>
+<p>
+STANDARDIZATION:
+</p>
+<hr />
+<p>
+we will recale the data so that each feature is
+centered at zero (<code>mean = 0</code>) with unit variance (<code>standard deviation = 1</code>).
+</p>
+
+<p>
+For example, if we have a 1D dataset with the values [1, 2, 3, 4, 5], the standardized values are
+</p>
+
+<p>
+1 -&gt; -1.41
+2 -&gt; -0.71
+3 -&gt; 0.0
+4 -&gt; 0.71
+5 -&gt; 1.41
+</p>
+
+<p>
+computed via the equation \(x_{standardized} = \frac{x - \mu_x}{\sigma_x}\) ,
+where μ is the sample mean, and σ the standard deviation, respectively.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org50287ad" class="outline-4">
+<h4 id="org50287ad"><span class="section-number-4">1.2.2</span> ordinary way of standardization</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">ary</span> = np.array([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">5</span>])
+<span class="org-variable-name">ary_standardized</span> = (ary - ary.mean()) / ary.std()
+ary_standardized, ary_standardized.mean(), ary_standardized.std()
+
+</pre>
+</div>
+
+<pre class="example">
+(array([-1.41421356, -0.70710678,  0.        ,  0.70710678,  1.41421356]),
+0.0,
+0.99999999999999989)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org9d4fecf" class="outline-3">
+<h3 id="org9d4fecf"><span class="section-number-3">1.3</span> intro to <code>sklearn.preprocessing.StandardScaler</code> class</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Although standardization is a most basic preprocessing procedure &#x2013; as we've
+seen in the code snipped above &#x2013; scikit-learn implements a <code>StandardScaler class</code>
+for this computation. And in later sections, we will see why and when the
+scikit-learn interface comes in handy over the code snippet we executed above.
+</p>
+</div>
+
+<div id="org3db28a7" class="outline-4">
+<h4 id="org3db28a7"><span class="section-number-4">1.3.1</span> same API with ML model</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Applying such a preprocessing has a very similar interface to the supervised
+learning algorithms we saw so far. To get some more practice with <code>scikit-learn's
+"Transformer" interface</code>, let's start by loading the iris dataset and rescale it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_iris
+<span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+
+<span class="org-variable-name">iris</span> = load_iris() <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- return a Bunch obj, essentially a dict</span>
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(iris.data, iris.target, random_state=<span class="org-highlight-numbers-number">0</span>)
+<span class="org-keyword">print</span>(X_train.shape)
+</pre>
+</div>
+
+<p>
+The iris dataset is not "centered" that is it has non-zero mean and the standard
+deviation is different for each component:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">"mean : %s "</span> % X_train.mean(axis=<span class="org-highlight-numbers-number">0</span>))
+<span class="org-keyword">print</span>(<span class="org-string">"standard deviation : %s "</span> % X_train.std(axis=<span class="org-highlight-numbers-number">0</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org441334b" class="outline-4">
+<h4 id="org441334b"><span class="section-number-4">1.3.2</span> creating</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+To use a preprocessing method, we first import the estimator, here
+StandardScaler and instantiate it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.preprocessing <span class="org-keyword">import</span> StandardScaler
+<span class="org-variable-name">scaler</span> = StandardScaler()
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgf936249" class="outline-4">
+<h4 id="orgf936249"><span class="section-number-4">1.3.3</span> fitting</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<div class="org-src-container">
+<pre class="src src-ipython">scaler.fit(X_train)
+</pre>
+</div>
+
+<pre class="example">
+StandardScaler(copy=True, with_mean=True, with_std=True)
+
+</pre>
+</div>
+</div>
+
+<div id="org01e15e0" class="outline-4">
+<h4 id="org01e15e0"><span class="section-number-4">1.3.4</span> transformation</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+Now we can rescale our data by applying the <code>transform</code> (not predict) method:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_train_scaled</span> = scaler.transform(X_train) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- get a ndarray</span>
+</pre>
+</div>
+
+<p>
+X_train_scaled has the same number of samples and features, but the mean was
+subtracted and all features were scaled to have unit standard deviation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(X_train_scaled.shape)
+
+<span class="org-keyword">print</span>(<span class="org-string">"mean : %s "</span> % X_train_scaled.mean(axis=<span class="org-highlight-numbers-number">0</span>)) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- axis = 0 means accumulating vertically</span>
+<span class="org-keyword">print</span>(<span class="org-string">"standard deviation : %s "</span> % X_train_scaled.std(axis=<span class="org-highlight-numbers-number">0</span>))
+</pre>
+</div>
+
+<p>
+To summarize:
+</p>
+
+<p>
+Via the <code>fit</code> method, the estimator is fitted to the data we provide. In this
+step, the estimator estimates the parameters from the data (here: mean and
+standard deviation).
+</p>
+
+<p>
+Then, if we <code>transform</code> data, these parameters are used to transform a dataset.
+(Please note that the transform method does not update these parameters).
+</p>
+</div>
+</div>
+
+<div id="org725bda0" class="outline-4">
+<h4 id="org725bda0"><span class="section-number-4">1.3.5</span> training/testing data should transform in the same way</h4>
+<div class="outline-text-4" id="text-1-3-5">
+<p>
+It's important to note that <b>the same transformation is applied to the training
+and the test set</b>. <b>That has the consequence that usually the mean of the test
+data is not zero after scaling</b>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_test_scaled</span> = scaler.transform(X_test)
+<span class="org-keyword">print</span>(<span class="org-string">"mean test data: %s"</span> % X_test_scaled.mean(axis=<span class="org-highlight-numbers-number">0</span>))
+
+</pre>
+</div>
+
+<p>
+It is important for the training and test data to be transformed in exactly the
+same way, for the following processing steps to make sense of the data, as is
+illustrated in the figure below:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_relative_scaling
+plot_relative_scaling()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041DDD.png" alt="25041DDD.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org628746f" class="outline-4">
+<h4 id="org628746f"><span class="section-number-4">1.3.6</span> other data preprocessing</h4>
+<div class="outline-text-4" id="text-1-3-6">
+<ul class="org-ul">
+<li>StandardScaler</li>
+<li>MinMaxScaler</li>
+<li>etc.</li>
+</ul>
+
+<p>
+There are several common ways to scale the data. The most common one is the
+<code>StandardScaler</code> we just introduced, but rescaling the data to a fix minimum an
+maximum value with <code>MinMaxScaler</code> (usually between 0 and 1), or using more robust
+statistics like median and quantile, instead of mean and standard deviation
+(with RobustScaler), are also useful.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_scaling
+plot_scaling()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041QNJ.png" alt="25041QNJ.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgaa997cf" class="outline-4">
+<h4 id="orgaa997cf"><span class="section-number-4">1.3.7</span> compare API of ML model with API of standardization</h4>
+<div class="outline-text-4" id="text-1-3-7">
+<p>
+As with the classification and regression algorithms, we call <code>fit</code> to learn the
+model from the data. As this is an unsupervised model, we <code>only pass X, not y</code>.
+This simply estimates mean and standard deviation.
+</p>
+
+<blockquote>
+<p>
+X: training dataset; y: training datset labels; new_X: testing dataset or new data
+</p>
+
+<p>
+For <code>prediction model</code>:
+</p>
+<ul class="org-ul">
+<li>create:
+<code>estimator = [estimator]()</code>,
+eg: estimator = LinearRegression, LogisticRegression, etc</li>
+<li>fitting:
+supervised model : <code>[estimator].fit(X,y)</code>
+unsupervised model : <code>[estimator].fit(X)</code></li>
+<li>predict:
+<code>[estimator].predict(new_X)</code></li>
+</ul>
+
+<p>
+For <code>standardization model</code>:
+</p>
+<ul class="org-ul">
+<li>create:
+<code>scaler = StandardScaler()</code></li>
+<li>fitting:
+<code>scaler.fit(X)</code></li>
+<li>transformation:
+<code>scaler.transform(X)</code></li>
+</ul>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="orge90b0e9" class="outline-3">
+<h3 id="orge90b0e9"><span class="section-number-3">1.4</span> PCA</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="orgeccf6c8" class="outline-4">
+<h4 id="orgeccf6c8"><span class="section-number-4">1.4.1</span> target of PCA: dimension reduce</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+An unsupervised transformation that is somewhat more interesting is Principal
+Component Analysis (PCA). It is a technique to <b>reduce the dimensionality</b> of the
+data, by creating a:
+</p>
+</div>
+</div>
+
+<div id="org921685c" class="outline-4">
+<h4 id="org921685c"><span class="section-number-4">1.4.2</span> essential of PCA: rotating to new direction</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<blockquote>
+<p>
+<b>linear projection</b>.
+</p>
+
+<p>
+That is, we find new features to represent the data that are a <b>linear</b>
+<b>combination</b> of the old data (i.e. we <b>rotate</b> it).
+</p>
+</blockquote>
+
+<p>
+Thus, we can think of <b>PCA as a projection of our data onto a new feature
+space</b>.
+</p>
+</div>
+</div>
+
+<div id="orgf84eb81" class="outline-4">
+<h4 id="orgf84eb81"><span class="section-number-4">1.4.3</span> recipe of PCA:</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+The way PCA finds these new directions is by looking for the directions of
+<b>maximum variance</b>. Usually only few components that explain most of the variance
+in the data are kept.
+</p>
+
+<p>
+Here, the premise is to reduce the size (dimensionality) of a dataset while
+capturing most of its information. There are many reason why dimensionality
+reduction can be useful:
+</p>
+
+<ul class="org-ul">
+<li>It can reduce the computational cost when running learning algorithms,</li>
+<li>decrease the storage space,</li>
+<li>may help with the so-called "curse of dimensionality".</li>
+</ul>
+
+<p>
+To illustrate how a rotation might look like, we first show it on
+<b>two</b>-dimensional data and keep <b>both</b> principal components. Here is an
+illustration:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_pca_illustration
+plot_pca_illustration()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041dXP.png" alt="25041dXP.png" />
+</p>
+</div>
+</div>
+
+<div id="org790d859" class="outline-5">
+<h5 id="org790d859"><span class="section-number-5">1.4.3.1</span> generate data points:</h5>
+<div class="outline-text-5" id="text-1-4-3-1">
+<p>
+     a rotated Gaussian data points by linear transformation on original data
+points. Now let's go through all the steps in more detail: We create a Gaussian
+blob that is rotated:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">rnd</span> = np.random.RandomState(<span class="org-highlight-numbers-number">5</span>)
+<span class="org-variable-name">X_</span> = rnd.normal(size=(<span class="org-highlight-numbers-number">300</span>, <span class="org-highlight-numbers-number">2</span>))
+<span class="org-doc">''' (300,2) dot (2,2) + (2,) = (300,2)</span>
+<span class="org-doc"> points . Matrix + vector ===&gt; rotated points</span>
+
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc"> (300,2)| (x,y)  300 points           * Matrix + vector</span>
+<span class="org-doc">        | (x,y)  of original  -----&gt; linear combination      =  points of rotated</span>
+<span class="org-doc">        | (x,y)  axes                (linear transformation)    axes</span>
+<span class="org-doc">        | ...</span>
+<span class="org-doc">        | (x,y)</span>
+<span class="org-doc">        | (x,y)</span>
+
+<span class="org-doc">'''</span>
+<span class="org-variable-name">X_blob</span> = np.dot(X_, rnd.normal(size=(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>))) + rnd.normal(size=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-variable-name">y</span> = X_[:, <span class="org-highlight-numbers-number">0</span>] &gt; <span class="org-highlight-numbers-number">0</span> <span class="org-comment-delimiter"># </span><span class="org-comment">create a array of boolean as condition of color</span>
+plt.scatter(X_blob[:, <span class="org-highlight-numbers-number">0</span>],
+            X_blob[:, <span class="org-highlight-numbers-number">1</span>],
+            c=y, <span class="org-comment-delimiter"># </span><span class="org-comment">pass an array of boolean will give different color</span>
+                 <span class="org-comment-delimiter"># </span><span class="org-comment">to different condition-satisfied points.</span>
+            linewidths=<span class="org-highlight-numbers-number">0</span>, s=<span class="org-highlight-numbers-number">30</span>)
+
+plt.xlabel(<span class="org-string">"feature 1"</span>)
+plt.ylabel(<span class="org-string">"feature 2"</span>);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041usl.png" alt="25041usl.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgf8ee66e" class="outline-5">
+<h5 id="orgf8ee66e"><span class="section-number-5">1.4.3.2</span> creating</h5>
+<div class="outline-text-5" id="text-1-4-3-2">
+<p>
+As always, we instantiate our PCA model. By default all directions are kept.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.decomposition <span class="org-keyword">import</span> PCA
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">n_components : int, float, None or string</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Number of components to keep. if n_components is not set all components are kept</span>
+<span class="org-variable-name">pca</span> = PCA()
+<span class="org-comment-delimiter"># </span><span class="org-comment">pca = PCA(n_components=1)</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org50dd4d1" class="outline-5">
+<h5 id="org50dd4d1"><span class="section-number-5">1.4.3.3</span> fitting</h5>
+<div class="outline-text-5" id="text-1-4-3-3">
+<p>
+Then we fit the PCA model with our data. As PCA is an unsupervised algorithm,
+there is no output y.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">pca.fit(X_blob)
+<span class="org-keyword">print</span>(X_blob.shape)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org7f5b500" class="outline-5">
+<h5 id="org7f5b500"><span class="section-number-5">1.4.3.4</span> transformation</h5>
+<div class="outline-text-5" id="text-1-4-3-4">
+<p>
+<code>pca.transform(X_blob)</code> will find the best(2nd best, 3rd best, 4th best,
+etc) direction along which data points(of original axes) will have the
+max(2nd max, 3rd max, 4th max, etc) variance. The number of directions pca
+will keep specify by the parameter of pca: <code>n_components</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- projection all data points to one line</span>
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">1</span>).fit(X_blob)
+<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- projection all data points to one plane</span>
+<span class="org-comment-delimiter">#   </span><span class="org-comment">with two axes are the best and 2nd best direction found by pca</span>
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>).fit(X_blob)
+
+</pre>
+</div>
+
+
+
+<p>
+Note that, shape of X_blob will change to (300,1) after execute this src-block, you should rerun
+two src-block above before rerun this one.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_pca</span> = pca.transform(X_blob)
+plt.scatter(X_pca[:, <span class="org-highlight-numbers-number">0</span>], X_pca[:, <span class="org-highlight-numbers-number">1</span>], c=y, linewidths=<span class="org-highlight-numbers-number">0</span>, s=<span class="org-highlight-numbers-number">30</span>)
+plt.xlabel(<span class="org-string">"first principal component"</span>)
+plt.ylabel(<span class="org-string">"second principal component"</span>);
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">n_components : int, float, None or string</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Number of components to keep. if n_components is not set all components are kept</span>
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">1</span>).fit(X_blob)
+X_blob.shape, pca.transform(X_blob).shape
+</pre>
+</div>
+
+<pre class="example">
+((300, 2), (300, 1))
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/25041IBy.png" alt="25041IBy.png" />
+</p>
+</div>
+
+<p>
+On the left of the plot you can see the four points that were on the top right
+before. PCA found fit first component to be along the diagonal, and the second
+to be perpendicular to it. As PCA finds a rotation, the principal components are
+always at right angles ("orthogonal") to each other.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org6165297" class="outline-3">
+<h3 id="org6165297"><span class="section-number-3">1.5</span> Dimensionality Reduction for Visualization with PCA</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+Consider the digits dataset. It cannot be visualized in a single 2D plot, as it
+has <b>64 features(dimensions)</b>. We are going to extract <b>2 features(dimensions)
+to visualize</b> it in, using the example from the sklearn examples here
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> digits_plot
+digits_plot()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/8573Su2.png" alt="8573Su2.png" />
+</p>
+</div>
+
+<p>
+Note that this projection was determined without any information about the
+labels (represented by the colors): this is the sense in which the learning is
+unsupervised. Nevertheless, we see that the projection gives us insight into the
+distribution of the different digits in parameter space.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org8d210d5" class="outline-2">
+<h2 id="org8d210d5"><span class="section-number-2">2</span> EXERCISE</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+EXERCISE: Visualize the iris dataset using the first two principal components,
+and compare this visualization to using two of the original features.
+</p>
+</div>
+</div>
+
+<div id="org0022c13" class="outline-2">
+<h2 id="org0022c13"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="orga055dcf" class="outline-3">
+<h3 id="orga055dcf"><span class="section-number-3">3.1</span> Scikit-learn</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="org4fde575" class="outline-4">
+<h4 id="org4fde575"><span class="section-number-4">3.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+</ol>
+</blockquote>
+</div>
+</div>
+<div id="org6ec910f" class="outline-4">
+<h4 id="org6ec910f"><span class="section-number-4">3.1.2</span> ML fn by this note</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<div class="org-src-container">
+<pre class="src src-ipython">plt.scatter(X_blob[:, <span class="org-highlight-numbers-number">0</span>],
+            X_blob[:, <span class="org-highlight-numbers-number">1</span>],
+            c=y, <span class="org-comment-delimiter"># </span><span class="org-comment">pass an array of boolean will give different color</span>
+                 <span class="org-comment-delimiter"># </span><span class="org-comment">to different condition-satisfied points.</span>
+            linewidths=<span class="org-highlight-numbers-number">0</span>, s=<span class="org-highlight-numbers-number">30</span>)
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.decomposition <span class="org-keyword">import</span> PCA
+<span class="org-variable-name">pca</span> = PCA(n_components=<span class="org-highlight-numbers-number">2</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">pca.fit(X_blob)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_pca</span> = pca.transform(X_blob)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.scatter(X_pca[:, <span class="org-highlight-numbers-number">0</span>], X_pca[:, <span class="org-highlight-numbers-number">1</span>])
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="org8c232d1" class="outline-3">
+<h3 id="org8c232d1"><span class="section-number-3">3.2</span> Matplotlib</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="org91d7174" class="outline-4">
+<h4 id="org91d7174"><span class="section-number-4">3.2.1</span> plot function with parameter <code>c = array of boolean/01</code></h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+Give different colors for data points who satisfy different conditions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="org29f8b3e"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">X</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>,<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">9</span>])
+plt.scatter(X,y,c=y&gt;<span class="org-highlight-numbers-number">5</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- here pass an array of boolean to 'c' --- color parameter</span>
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041vCJ.png" alt="25041vCJ.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="orgd85ba35"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">X</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>])
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>,<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">9</span>])
+plt.scatter(X,y,c=y%<span class="org-highlight-numbers-number">2</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- here pass an array of '01' to 'c' --- color parameter</span>
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/250418MP.png" alt="250418MP.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

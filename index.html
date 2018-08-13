@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-08-12 日 01:36 -->
+<!-- 2018-08-13 一 08:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Articles</title>
+<title>Yiddishkop's tech blog</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="yiddi" />
+<meta name="author" content="yiddishkop" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -180,7 +180,7 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
- <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<link rel="stylesheet" type="text/css" href="css/site.css" >
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -227,40 +227,492 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
-<div id="org-div-home-and-up">
- <a accesskey="h" href="index.html"> UP </a>
- |
- <a accesskey="H" href="index.html"> HOME </a>
-</div><div id="preamble" class="status">
-<div class='nav'>
-<ul>
-<li><a href='http://zilongshanren.com'>博客</a></li>
-<li><a href='/index.html'>Wiki目录</a></li>
-</ul>
-</div>
-</div>
 <div id="content">
-<h1 class="title">Articles</h1>
-<ul class="org-ul">
-<li><a href="resume_about.html">Yuan Long</a></li>
-<li>生活札记
-<ul class="org-ul">
-<li><a href="生活札记/四种女人.html">四种女人</a></li>
-<li><a href="生活札记/时间就像一根筷子.html">时间就像一根筷子&#x2014;"湄公河行动"观感</a></li>
-<li><a href="生活札记/自己写的春联.html">曾经写的春联</a></li>
-<li><a href="生活札记/生活与信仰.html">生活,爱情与信仰</a></li>
-<li><a href="生活札记/闲来打油诗之一.html">闲来打油诗之一: 春梦</a></li>
-<li><a href="生活札记/闲来打油诗之三.html">闲来打油诗之三: 买椟还珠</a></li>
-<li><a href="生活札记/闲来打油诗之二.html">闲来打油诗之二</a></li>
-<li><a href="生活札记/闲来打油诗之四.html">闲来打油诗之四</a></li>
-</ul></li>
+<h1 class="title">Yiddishkop's tech blog</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdda9c0c">1. Xavier初心不负?</a></li>
+<li><a href="#org5d3dd97">2. Xavier简介</a></li>
+<li><a href="#org8813846">3. 其他initialization方法</a></li>
+<li><a href="#orgd98e07d">4. 实验设计与结果</a>
+<ul>
+<li><a href="#org23d3372">4.1. 5层全连接层</a></li>
+<li><a href="#org12ea000">4.2. 2层卷积层+2层全连接层</a></li>
+<li><a href="#org4e2b195">4.3. 5层卷积层+3层全连接层</a></li>
+</ul>
+</li>
+<li><a href="#org5bc5a64">5. 源码及使用说明</a></li>
+<li><a href="#org55e5d87">6. 结论</a>
+<ul>
+<li><a href="#org94f4abd">6.1. xavier initialization vs random initialization</a></li>
+<li><a href="#org5891c9a">6.2. xavier initialization vs orthogonal initialization</a></li>
+</ul>
+</li>
+<li><a href="#org9649089">7. 参考文献</a></li>
 </ul>
 </div>
+</div>
+<nav id='navbar'>
+<div class='container'>
+<ul>
+<li><a href='https://yiddishkop.github.io/'>Home</a></li>
+<li><a href='https://yiddishkop.github.io/DataScience.html'>DataScience</a></li>
+<li><a href='https://yiddishkop.github.io/DataScience.html'>Math</a></li>
+<li><a href='https://yiddishkop.github.io/Life.html'>Life</a></li>
+<li><a href='https://yiddishkop.github.io/PaperWriting.html'>PaperWriting</a></li>
+<li><a href='https://yiddishkop.github.io/Other.html'>Archive</a></li>
+<li><a href='https://yiddishkop.github.io/About/resume_about.html'>About</a></li>
+</ul>
+</div>
+</nav>
+
+<p>
+近期 post 列表:
+</p>
+<ol class="org-ol">
+<li>2018-07-08  - <a href="%E7%94%9F%E6%B4%BB%E6%9C%AD%E8%AE%B0/%E9%97%B2%E6%9D%A5%E6%89%93%E6%B2%B9%E8%AF%97%E4%B9%8B%E5%9B%9B.html">闲来打油诗之四: 追忆高考</a></li>
+<li>2018-07-19  - <a href="台大MLDS作业/HW01/MLDS 作业报告-1: Language Modeling">Language Modeling</a></li>
+<li>2018-07-23  - <a href="Pandas/Pandas-3.html">Pandas学习笔记之三</a></li>
+<li>2018-08-09  - Xavier 初心不负?</li>
+</ol>
+
+<br>
+<br>
+<br>
+<br>
+
+
+
+<div id="orgdda9c0c" class="outline-2">
+<h2 id="orgdda9c0c"><span class="section-number-2">1</span> Xavier初心不负?</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+训练神经网络会经常遇到 <code>inf</code> or <code>nan</code> (by tensorflow)问题, 如果能排除值计算的原因, 那么出现这一错误大多是由于 vanishing/exploding gradient, 本文重点探讨
+orthogonal<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup><sup>, </sup><sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup> 和 xavier<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup> 两种初始化方法在应对 vanishing 和
+exploding 问题上的原理和优势, 并进行一部分实验佐证结论.
+</p>
+
+<p>
+训练神经网络经常使用的初始化方法有这么几种, 本文仅针对最后两种:
+</p>
+<ol class="org-ol">
+<li class="on"><code>[X]</code> identity initialization</li>
+<li class="on"><code>[X]</code> uniform initialization</li>
+<li class="on"><code>[X]</code> gaussian initialization</li>
+<li class="off"><code>[&#xa0;]</code> orthogonal initialization</li>
+<li class="off"><code>[&#xa0;]</code> xavier initialization</li>
+</ol>
+</div>
+</div>
+
+<div id="org5d3dd97" class="outline-2">
+<h2 id="org5d3dd97"><span class="section-number-2">2</span> Xavier简介</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Xavier initialization是将neural network中的weight做normalization，这个做法是由
+Xavier Glorot和Yoshua Bengio于2010年在”Understanding the difficulty of training
+deep feedforward neural networks”<sup><a id="fnr.3.100" class="footref" href="#fn.3">3</a></sup> 这篇论文中提出。
+</p>
+
+<p>
+在neural network中，如果weight的初始值太小，信息在layer之间传递时，会变得太小而失去作用(vanishing gradient problem)；如果初始值太大，信息则会在传递时变得太大
+(exploding gradient problem)。Xavier initialization能够使信息在传递时维持在一个合理的范围内，因此能够传递通过较多的layer，而使loss收敛得较快或得到较好的
+training结果。
+</p>
+
+<p>
+文中的分析假设network的初始化处于线性条件，weight的初始化是独立的，且输入特征的
+variance相同，则可以得到：
+</p>
+
+<p>
+\(Var[{z}^{i}]=Var[x]\prod_{{i}^{'}=0}^{i-1}{{n}_{{i}^{'}}[{W}^{{i}^{'}}]}\)
+</p>
+
+<p>
+\(Var[\frac{\partial{Cost}}{\partial{s}^{i}}]=Var[\frac{\partial{Cost}}{\partial{s}^{d}}]\prod_{{i}^{'}=i}^{d}{{n}_{{i}^{'}+1}Var[{W}^{{i}^{'}}]}\)
+</p>
+
+<p>
+其中 \({z}^{i}\) 为第i层的输入向量，\({n}^{i}\) 为第i层的大小，\(x\) 为 network 的输入值，是 \(Var[{W}^{{i}^{'}}]\) 为第 \({i}^{'}\) 层中所有weight共同的variance，
+\({s}^{i}={z}^{i}{W}^{i}+{b}^{i}\) ，也是第i层 activation function 的输入向量，\(d\)
+为network的层数。
+</p>
+
+<p>
+在forward-propagation时，为了使资讯能够传递得更远，我希望在通过每一层后，向量的variance不变：
+</p>
+
+<p>
+\(\forall(i,{i}^{'}), Var[{z}^{i}]=Var[{z}^{{i}^{'}}]\)
+</p>
+
+<p>
+同样地, 在backward-propagation时, 希望cost function gradient的variance不变：
+</p>
+
+<p>
+\(\forall(i, {i}^{'}), Var[\frac{\partial{Cost}}{\partial{s}^{i}}]=Var[\frac{\partial{Cost}}{\partial{s}^{{i}^{'}}}]\)
+</p>
+
+<p>
+上述两个情况可写为：
+</p>
+
+<p>
+\(\forall{i},\quad{n}_{i}Var[{W}^{i}]=1\)
+</p>
+
+<p>
+\(\forall{i}, \quad{n}_{i+1}Var[{W}^{i}]=1\)
+</p>
+
+<p>
+将两个条件综合, 我希望得到：
+</p>
+
+<p>
+\(\forall{i}, \quad{Var[{W}^{i}]=\frac{2}{{n}_{i}+{n}_{i+1}}}\)
+</p>
+
+<p>
+这篇论文提<sup><a id="fnr.3.100" class="footref" href="#fn.3">3</a></sup>出了一个能够大致满足目标的方法, 称为normalized initialization：
+</p>
+
+<p>
+\(W\sim{U[-\frac{\sqrt{6}}{\sqrt{n}_{j}+{n}_{j+1}}, \frac{\sqrt{6}}{\sqrt{n}_{j}+{n}_{j+1}}]}\)
+</p>
+
+<p>
+其中 \(U[-a, a]\) 是区间为(-a, a) 的 uniform distribution。当neural network的层数愈多时, 在层层传递的过程中, weight造成的效应愈大, 因此normalized initialization
+的重要性愈高。
+</p>
+</div>
+</div>
+
+<div id="org8813846" class="outline-2">
+<h2 id="org8813846"><span class="section-number-2">3</span> 其他initialization方法</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+我的实验将Xavier initialization与以下两种initialization方法做比较：
+</p>
+
+<p>
+1)随机截断正常初始化: 基本的random initialization, 从normal distribution中产生随机变数, 排除掉距离平均值两个标准差外的数值, 做为weight的初始值。
+</p>
+
+<p>
+2)随机正交初始化: 以random orthogonal matrix做为neural network的weight初始值, 此方法由Saxe et al.<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup> 于2014年提出。 对于一个orthogonal matrix W, 会满足
+\(W^{T}W=WW^{T}=I\) , 因此有以下特性：
+</p>
+
+<ol class="org-ol">
+<li>\(\left\|Wx\right\|_{2}=\sqrt{(Wx)^{T}Wx}=\sqrt{x^{T}W^{T}Wx}=\left\|x\right\|_{2}\)
+, 任一向量乘上orthogonal matrix后, norm不改变。</li>
+
+<li>\(w_{i}^{T}w_{j}=\delta_{ij}\) , 其中 \(w_{i}\) 是w的第i个column。Orthogonal
+matrix的column之间、row之间都互相orthonormal。</li>
+</ol>
+
+<p>
+上述特性(1)能让输入向量在network中传递时, 保持norm不变, 因此用在层数较多的neural
+network或RNN时, 能够有效减少vanishing gradient problem和exploding gradient
+problem。特性(2)直观上来看能让weight之间有独立性, 因此让每个neuron学到不同的输入特征。
+</p>
+
+<p>
+在实作random orthogonal initialization时, 先产生一个random normal distribution的矩阵M, 再用singular value decomposition得到 \(M=U\Sigma{V}\) , 其中U和V皆为
+orthogonal matrix, 取其一做为weight的初始值。
+</p>
+</div>
+</div>
+
+<div id="orgd98e07d" class="outline-2">
+<h2 id="orgd98e07d"><span class="section-number-2">4</span> 实验设计与结果</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+我的实验是做在CIFAR-10这个dataset上。我试了三种model, 分别是:
+</p>
+<ol class="org-ol">
+<li>5层 fully-connected layer;</li>
+<li>2层 convolutional layer + 2层 fully-connected layer</li>
+<li>5层 convolutional layer + 3层fully-connected layer</li>
+</ol>
+
+<p>
+每层convolutional layer之后都有加ReLU、normalization以及max pooling, 每层
+fully-connected layer之后都有加ReLU。 每一种model都分别以 <b>truncated normal、
+Xavier、orthogonal</b> 三种initialization方式, 测试其loss和accuracy随training step
+的变化。
+</p>
+</div>
+
+
+
+<div id="org23d3372" class="outline-3">
+<h3 id="org23d3372"><span class="section-number-3">4.1</span> 5层全连接层</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+每层有1000个hidden units。结果如下图：
+</p>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-38-21.png" alt="screenshot_2018-08-10_21-38-21.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>5fc_loss</p>
+</div>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-38-30.png" alt="screenshot_2018-08-10_21-38-30.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>5fc_acc</p>
+</div>
+
+<p>
+可以看出来Xavier和orthogonal initialization比起truncated normal initialization,
+loss一开始比较小, 但到最后收敛到差不多的结果。三者的accuracy在training过程中差异不大, 最后达到的值也相差不大。
+</p>
+
+<p>
+在这个model中, Xavier和orthogonal initialization相较于random initialization的优势只有在training一开始的loss看得出来, 在training后期并不显著。
+</p>
+</div>
+</div>
+
+<div id="org12ea000" class="outline-3">
+<h3 id="org12ea000"><span class="section-number-3">4.2</span> 2层卷积层+2层全连接层</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+两层convolutional layer的kernel size都是(5, 5, 64), 两层fully-connected layer的
+hidden units数目分别是384和192。结果如下图：
+</p>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-38-41.png" alt="screenshot_2018-08-10_21-38-41.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>2conv_2fc_loss</p>
+</div>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-39-03.png" alt="screenshot_2018-08-10_21-39-03.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>2conv_2fc_acc</p>
+</div>
+
+<p>
+在这个结果中, 比起truncated normal initialization, Xaiver和orthogonal
+initialization的loss一开始比较小, 但到最后三者都收敛到差不多的大小。Xaiver和
+orthogonal initialization的accuracy一开始较高, 但最后三种方法也都达到差不多的
+accuracy。
+</p>
+
+<p>
+在这个model, Xaiver和orthogonal initialization在training初期loss较低, accuracy也上升得比较快, 显示两者优于random initialization, 但在training次数较多后同样看不出显著差异。
+</p>
+</div>
+</div>
+
+<div id="org4e2b195" class="outline-3">
+<h3 id="org4e2b195"><span class="section-number-3">4.3</span> 5层卷积层+3层全连接层</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+五层convolutional layer的kernel size都是(5, 5, 64), 三层fully-connected layer的
+hidden units数目都是500。结果如下图：
+</p>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-39-17.png" alt="screenshot_2018-08-10_21-39-17.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>5conv_3fc_loss</p>
+</div>
+
+
+<div class="figure">
+<p><img src="实验设计与结果/screenshot_2018-08-10_21-39-28.png" alt="screenshot_2018-08-10_21-39-28.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>5conv_3fc_acc</p>
+</div>
+
+<p>
+由图可知, Xavier initialization和orthogonal initialization的表现几乎一样好, 两者比起truncated normal initialization, 不仅收敛得比较快也收敛得比较好。使用
+truncated normal initialization可能遇到了vanishing gradient problem或exploding
+gradient problem, 导致loss无法下降。由accuracy可得知, Xavier和orthogonal
+initialization的accuracy都能提升到0.8左右, 但使用truncated normal initialization
+时, training完全没有效果, 导致accuracy只有0.1, 相当于乱猜。
+</p>
+
+<p>
+这个model的层数比第二个model多, 可以明显看到Xaiver和orthogonal initialization的优势。使用Truncated normal initialization时, 即使增加training次数, 也无法提升
+accuracy。
+</p>
+</div>
+</div>
+</div>
+
+<div id="org5bc5a64" class="outline-2">
+<h2 id="org5bc5a64"><span class="section-number-2">5</span> 源码及使用说明</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+source code: <a href="https://github.com/YiddishKop/ml_src_initializer_compare.git">https://github.com/YiddishKop/ml_src_initializer_compare.git</a>
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">源码文件</th>
+<th scope="col" class="org-left">说明</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">5fc.py</td>
+<td class="org-left">5 fully-connected layers</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">2conv_2fc.py</td>
+<td class="org-left">2 convolutional layers + 2 fully-connected layers</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">5conv_3fc.py</td>
+<td class="org-left">5 convolutional layers + 3 fully-connected layers</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Training
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">python [<span class="org-highlight-numbers-number">5fc</span>|<span class="org-highlight-numbers-number">2conv_2fc</span>|<span class="org-highlight-numbers-number">5conv_3fc</span>]_train.py
+</pre>
+</div>
+
+<p>
+Testing
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">python [<span class="org-highlight-numbers-number">5fc</span>|<span class="org-highlight-numbers-number">2conv_2fc</span>|<span class="org-highlight-numbers-number">5conv_3fc</span>]_eval.py
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org55e5d87" class="outline-2">
+<h2 id="org55e5d87"><span class="section-number-2">6</span> 结论</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="org94f4abd" class="outline-3">
+<h3 id="org94f4abd"><span class="section-number-3">6.1</span> xavier initialization vs random initialization</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+由实验结果可以知道,
+</p>
+<ol class="org-ol">
+<li>若 <b>model比较简单</b>, random initialization得到的 值没有太差, 虽然loss下降得较慢,
+但在 <b>training次数够多时</b>, 也能得到和Xavier initialization <b>差不多的accuracy</b></li>
+
+<li>若 <b>model比较复杂</b> (如第三种model), 则 <b>weight的初始值重要性提高</b>, 使用random
+initialization做training时, 就 <b>可能无法提升model的accuracy</b>, 而在我的实验中,
+使用 <b>Xavier initialization则能够收敛到较好的结果</b> 。</li>
+</ol>
+</div>
+</div>
+
+<div id="org5891c9a" class="outline-3">
+<h3 id="org5891c9a"><span class="section-number-3">6.2</span> xavier initialization vs orthogonal initialization</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+在实验中, orthogonal initialization能达到和Xavier initialization <b>差不多的结果</b>,
+两者之间看不出明显的优劣, 由此可知, Xavier initialization相较于其他
+initialization方法, 并不一定具有绝对的优势。
+</p>
+</div>
+</div>
+</div>
+
+<div id="org9649089" class="outline-2">
+<h2 id="org9649089"><span class="section-number-2">7</span> 参考文献</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://smerity.com/articles/2016/orthogonal_init.html">Explaining and illustrating orthogonal initialization for recurrent neural networks</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://arxiv.org/pdf/1511.06422.pdf">Dmytro Mishkin, Jiri Matas. "All you need is a good init." ICLR, 2016</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+<a href="http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf">Xavier Glorot and Yoshua Bengio. “Understanding the difficulty of
+training deep feedforward neural networks.” Aistats. Vol. 9, 2010</a>
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+<a href="https://arxiv.org/pdf/1312.6120.pdf">Andrew M. Saxe, James L. McClelland, and Surya Ganguli. “Exact solutions
+to the nonlinear dynamics of learning in deep linear neural networks.” ICLR,
+2014</a>
+</p></div></div>
+
+
+</div>
+</div></div>
 <div id="postamble" class="status">
-<p class="author">Author: yiddi</p>
-<p class="date">Created: 2018-08-12 日 01:36</p>
+<p class="author">Author: yiddishkop (<a href="mailto:[[mailto:yiddishkop@163.com][yiddi's email]]">[[mailto:yiddishkop@163.com][yiddi's email]]</a>)</p>
+<p class="date">Date: </p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="https://orgmode.org">Org</a> mode 9.1.13)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

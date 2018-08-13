@@ -1,0 +1,3103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Numpy-笔记1</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Numpy-笔记1</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgfe6f33b">1. Numpy</a>
+<ul>
+<li><a href="#org4ccc229">1.1. Array initializer</a></li>
+<li><a href="#org3645d34">1.2. Array Indexing</a></li>
+<li><a href="#org11804db">1.3. operation on array is element-wise</a></li>
+<li><a href="#org6a1445c">1.4. reduce rank by filter</a></li>
+<li><a href="#org03e8995">1.5. Datatypes</a></li>
+<li><a href="#org4c535b5">1.6. Array Math</a>
+<ul>
+<li><a href="#org7db8873">1.6.1. sum by axis</a></li>
+<li><a href="#org83377b0">1.6.2. transpose a matrix</a></li>
+</ul>
+</li>
+<li><a href="#orgb7dc823">1.7. Broadcasting: from element-wise to row-wise</a>
+<ul>
+<li><a href="#orgd133623">1.7.1. row-wise by for loop is slow</a></li>
+<li><a href="#orgad30e0a">1.7.2. element-wise by build a same shape matrix is fast</a></li>
+<li><a href="#orgb7790e7">1.7.3. matrix + row/column = row/column-wise</a></li>
+</ul>
+</li>
+<li><a href="#org5c37c1d">1.8. Summarization</a></li>
+</ul>
+</li>
+<li><a href="#orgb3cba0f">2. Numpy intro by scipy 2017</a>
+<ul>
+<li><a href="#org086f6c0">2.1. difference between numpy and python</a>
+<ul>
+<li><a href="#org197a30a">2.1.1. range vs np.arange</a></li>
+<li><a href="#org59a9051">2.1.2. divide by zero</a></li>
+<li><a href="#org07a02a4">2.1.3. power of any nubmer</a></li>
+<li><a href="#orgc034370">2.1.4. type conversion of array of numpy</a></li>
+<li><a href="#orgc9b0235">2.1.5. nan in numpy</a></li>
+<li><a href="#orgde769e3">2.1.6. some methods to build an numpy array</a></li>
+</ul>
+</li>
+<li><a href="#org4b8326d">2.2. how to retrieve the element of array of numpy</a>
+<ul>
+<li><a href="#org53cb99b">2.2.1. indexing</a></li>
+<li><a href="#org86b8577">2.2.2. slicing</a></li>
+<li><a href="#org7539e4a">2.2.3. set value</a></li>
+<li><a href="#orgc769729">2.2.4. 2-D array by reshape</a></li>
+<li><a href="#orge1a19b9">2.2.5. retrieve element of 2-D</a></li>
+<li><a href="#org79d0194">2.2.6. retrieve sub-matrix of 2-D</a></li>
+<li><a href="#org3545d3f">2.2.7. diff: (2,) and (2,1)</a></li>
+<li><a href="#orgf179514">2.2.8. 3-D array by reshape</a></li>
+<li><a href="#org4ee6733">2.2.9. flat the array to 1-D</a></li>
+<li><a href="#orge02bc69">2.2.10. more complex sub-matrix operation</a></li>
+<li><a href="#org0a5a454">2.2.11. fancy indexing</a></li>
+<li><a href="#org70f0d58">2.2.12. diff slicing and fancy indexing</a></li>
+<li><a href="#org5fe6028">2.2.13. fancy indexing math operation on numpy array</a></li>
+<li><a href="#org1dbcdd0">2.2.14. diff normal indexing and fancy indexing mathOperation</a></li>
+<li><a href="#orgcaf9a23">2.2.15. <code>arr.flags</code> whether array hold data or not</a></li>
+<li><a href="#org4159924">2.2.16. risky of not hold data</a></li>
+<li><a href="#org3806b8c">2.2.17. what is <code>numpy.array</code> underneath the hood</a></li>
+<li><a href="#orgc218899">2.2.18. methods to create a new Array or not</a></li>
+</ul>
+</li>
+<li><a href="#orgec56194">2.3. Mathematical operation and Reduction operations</a>
+<ul>
+<li><a href="#orgc640186">2.3.1. mean,std,var,max,argmax,unravel_index</a></li>
+<li><a href="#orgf834779">2.3.2. sum by axis</a></li>
+</ul>
+</li>
+<li><a href="#orgae9a181">2.4. broadCasting rule</a>
+<ul>
+<li><a href="#org5629f39">2.4.1. 1. make sure the shape match('match' means can be match after scaling by [1,n])</a></li>
+<li><a href="#org7bbcf4c">2.4.2. codes illustration</a></li>
+<li><a href="#org75844ad">2.4.3. 2. mathematical operations is applied element-wise</a></li>
+<li><a href="#org57e172a">2.4.4. 3. nan is float and <b>propagate</b> like virus</a></li>
+<li><a href="#org604c457">2.4.5. codes illustration</a></li>
+</ul>
+</li>
+<li><a href="#orgffe1771">2.5. Exercise in this youtube tutorial</a>
+<ul>
+<li><a href="#org64ddcbb">2.5.1. exercise of fancy indexing and mask</a></li>
+<li><a href="#org5aab74d">2.5.2. exercise of "dow_selection"</a></li>
+<li><a href="#org0dddacd">2.5.3. exercise of "calc_return"</a></li>
+<li><a href="#org269d1cd">2.5.4. exercise of "wind_statistics"</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orgfe6f33b" class="outline-2">
+<h2 id="orgfe6f33b"><span class="section-number-2">1</span> Numpy</h2>
+<div class="outline-text-2" id="text-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-right">0</th>
+<th scope="col" class="org-right">1</th>
+<th scope="col" class="org-right">2</th>
+<th scope="col" class="org-right">3</th>
+<th scope="col" class="org-right">4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+<td class="org-right">23</td>
+<td class="org-right">1</td>
+<td class="org-right">34</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">9</td>
+<td class="org-right">2</td>
+<td class="org-right">4</td>
+<td class="org-right">0</td>
+<td class="org-right">9</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">8</td>
+<td class="org-right">23</td>
+<td class="org-right">10</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">8</td>
+<td class="org-right">7</td>
+<td class="org-right">28</td>
+<td class="org-right">27</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">39</td>
+<td class="org-right">21</td>
+<td class="org-right">29</td>
+<td class="org-right">30</td>
+<td class="org-right">32</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">78</td>
+<td class="org-right">33</td>
+<td class="org-right">21</td>
+<td class="org-right">19</td>
+<td class="org-right">20</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">29</td>
+<td class="org-right">21</td>
+<td class="org-right">12</td>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<div id="org4ccc229" class="outline-3">
+<h3 id="org4ccc229"><span class="section-number-3">1.1</span> Array initializer</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org589bed7"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+<span class="org-variable-name">a</span>=np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>])
+<span class="org-keyword">print</span>(<span class="org-builtin">type</span>(a), a.shape, a[<span class="org-highlight-numbers-number">0</span>], a[<span class="org-highlight-numbers-number">1</span>], a[<span class="org-highlight-numbers-number">2</span>])
+<span class="org-variable-name">a</span>[<span class="org-highlight-numbers-number">0</span>] = <span class="org-highlight-numbers-number">5</span>
+<span class="org-keyword">print</span> (a)
+
+<span class="org-variable-name">b</span>=np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-keyword">print</span> (b)
+<span class="org-keyword">print</span> (b.shape)
+
+<span class="org-variable-name">a</span> = np.zeros((<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>))
+<span class="org-keyword">print</span> (a)
+
+<span class="org-variable-name">b</span> = np.ones((<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>))
+<span class="org-keyword">print</span> (b)
+
+<span class="org-variable-name">c</span> = np.full((<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>), <span class="org-highlight-numbers-number">7</span>)
+<span class="org-keyword">print</span> (c)
+
+<span class="org-variable-name">d</span> = np.eye(<span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (d)
+
+<span class="org-variable-name">e</span> = np.random.random((<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>))
+<span class="org-keyword">print</span> (e)
+</pre>
+</div>
+
+<pre class="example">
+&lt;class 'numpy.ndarray'&gt; (3,) 1 2 3
+[5 2 3]
+[[1 2 3]
+ [4 5 6]]
+(2, 3)
+[[0. 0.]
+ [0. 0.]]
+[[1. 1.]]
+[[7 7]
+ [7 7]]
+[[1. 0.]
+ [0. 1.]]
+[[0.43711228 0.82973462]
+ [0.67481687 0.61315307]]
+</pre>
+
+<ul class="org-ul">
+<li>np.array([x,x,x],[x,x,x]) is some like Array(1,2,3) in scala</li>
+<li>np.zeros((num,num)) is some like Array.fill(0)(3) in scala</li>
+<li>np.ones((num,num)) is some like Array.fill(1)(3) in scala</li>
+<li>np.full((num,num), x) is some like Array.fill(1)(3) in scala</li>
+<li>np.eye(2) is same as above</li>
+<li>np.random.random((2,2)) is some like Array.fill(1)(random.nextInt(100))</li>
+<li>inside of [] are elements</li>
+<li>inside of () is shape</li>
+</ul>
+</div>
+</div>
+
+<div id="org3645d34" class="outline-3">
+<h3 id="org3645d34"><span class="section-number-3">1.2</span> Array Indexing</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-python" id="orga4df897"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">a</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>,<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>], [<span class="org-highlight-numbers-number">9</span>,<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">11</span>,<span class="org-highlight-numbers-number">12</span>]])
+<span class="org-variable-name">b</span> = a[:<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">3</span>]
+<span class="org-keyword">print</span>(b)
+
+<span class="org-keyword">print</span> (a[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])
+<span class="org-variable-name">b</span>[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>] = <span class="org-highlight-numbers-number">77</span>
+<span class="org-keyword">print</span> (a[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])
+
+<span class="org-keyword">print</span>(a)
+<span class="org-variable-name">row_r1</span> = a[<span class="org-highlight-numbers-number">1</span>, :]
+<span class="org-variable-name">row_r2</span> = a[<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>, :]
+<span class="org-variable-name">row_r3</span> = a[[<span class="org-highlight-numbers-number">1</span>], :]
+<span class="org-keyword">print</span> (row_r1, row_r1.shape)
+<span class="org-keyword">print</span> (row_r2, row_r2.shape)
+<span class="org-keyword">print</span> (row_r3, row_r3.shape)
+
+<span class="org-variable-name">col_r1</span> = a[:, <span class="org-highlight-numbers-number">1</span>]
+<span class="org-variable-name">col_r2</span> = a[:, <span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>]
+<span class="org-keyword">print</span> (col_r1, col_r1.shape)
+<span class="org-keyword">print</span> (col_r2, col_r2.shape)
+</pre>
+</div>
+
+<pre class="example">
+Python 3.6.4 |Anaconda, Inc.| (default, Jan 16 2018, 18:10:19)
+[GCC 7.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+[[2 3]
+ [6 7]]
+2
+77
+[[ 1 77  3  4]
+ [ 5  6  7  8]
+ [ 9 10 11 12]]
+[5 6 7 8] (4,)
+[[5 6 7 8]] (1, 4)
+[[5 6 7 8]] (1, 4)
+[77  6 10] (3,)
+[[77]
+ [ 6]
+ [10]] (3, 1)
+python.el: native completion setup loaded
+</pre>
+
+
+<p>
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Interpretation of code
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-right">0</th>
+<th scope="col" class="org-right">1</th>
+<th scope="col" class="org-right">2</th>
+<th scope="col" class="org-right">3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">5</td>
+<td class="org-right">6</td>
+<td class="org-right">7</td>
+<td class="org-right">8</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">9</td>
+<td class="org-right">10</td>
+<td class="org-right">11</td>
+<td class="org-right">12</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+==&gt; a[0, 1] = 2
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">7</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+==&gt; b[0, 0] = 77
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">77</td>
+<td class="org-right">3</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">7</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+==&gt; a[0, 1] = 77
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-right">0</th>
+<th scope="col" class="org-right">1</th>
+<th scope="col" class="org-right">2</th>
+<th scope="col" class="org-right">3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+<td class="org-right">77</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">5</td>
+<td class="org-right">6</td>
+<td class="org-right">7</td>
+<td class="org-right">8</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">9</td>
+<td class="org-right">10</td>
+<td class="org-right">11</td>
+<td class="org-right">12</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+so you can see, when you create an array and slicing is make
+</p>
+<ul class="org-ul">
+<li><b>locate</b> some <b>anchor</b> at original matrix</li>
+<li>NOT <b>build</b> a <b>new</b> sub-matrix</li>
+</ul>
+
+<p>
+so you can see, if index of column or row is a <b>x</b> not <b>x:y</b>, then it will <b>reduce to an n-1 rank</b> tensor,
+</p>
+<ul class="org-ul">
+<li><code>a[:, 1]</code> is an array: rank-1</li>
+<li><code>a[1, :]</code> is an array: rank-1</li>
+<li><code>a[[1], :]</code> is an matrix, only has a row: rank-2</li>
+<li><code>a[:, [1]]</code> is an matrix, only has a column: rank-2</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7ab989b"><span class="org-variable-name">a</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>],[<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-keyword">print</span> (a[[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">0</span>]])
+<span class="org-keyword">print</span> (np.array([a[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">0</span>], a[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>], a[<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">0</span>]]))
+
+<span class="org-keyword">print</span> (a[[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">0</span>],[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">1</span>]])
+<span class="org-keyword">print</span> (np.array([a[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>], a[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>]]))
+</pre>
+</div>
+
+<pre class="example">
+[1 4 5]
+[1 4 5]
+[2 2]
+[2 2]
+
+</pre>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">&#xa0;</th>
+<th scope="col" class="org-right">0</th>
+<th scope="col" class="org-right">1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1*</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">3</td>
+<td class="org-right">4*</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">5*</td>
+<td class="org-right">6</td>
+</tr>
+</tbody>
+</table>
+
+<ul class="org-ul">
+<li><code>a[[xxx],[yyy]] = np.array(a[x,y], a[x,y], a[x,y])</code></li>
+</ul>
+</div>
+</div>
+
+<div id="org11804db" class="outline-3">
+<h3 id="org11804db"><span class="section-number-3">1.3</span> operation on array is element-wise</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-python" id="orgd9cb453"><span class="org-variable-name">a</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-variable-name">bool_idx</span> = (a &gt; <span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (bool_idx)
+
+<span class="org-variable-name">int_idx</span> = (a + <span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (int_idx)
+</pre>
+</div>
+
+<pre class="example">
+[[false false]
+ [ true  true]
+ [ true  true]]
+[[3 4]
+ [5 6]
+ [7 8]]
+
+</pre>
+
+<ul class="org-ul">
+<li><code>arr &gt; 2</code> =&gt; <code>arr.filter(_ &gt; 2)</code> =&gt; array of boolean</li>
+<li><code>arr + 2</code> =&gt; <code>arr.map(_ + 2)</code> =&gt; arr of int</li>
+</ul>
+</div>
+</div>
+
+<div id="org6a1445c" class="outline-3">
+<h3 id="org6a1445c"><span class="section-number-3">1.4</span> reduce rank by filter</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-python" id="org0d1ae27"><span class="org-variable-name">a</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>], [<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-variable-name">bool_idx</span> = (a &gt; <span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (bool_idx)
+
+<span class="org-variable-name">int_idx</span> = (a + <span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span> (int_idx)
+
+<span class="org-keyword">print</span>(a[bool_idx])
+<span class="org-keyword">print</span>(a[(a&gt;<span class="org-highlight-numbers-number">2</span>)])
+<span class="org-keyword">print</span>(a[(a%<span class="org-highlight-numbers-number">2</span>==<span class="org-highlight-numbers-number">0</span>)])
+</pre>
+</div>
+
+<pre class="example">
+[[False False]
+ [ True  True]
+ [ True  True]]
+[[3 4]
+ [5 6]
+ [7 8]]
+[3 4 5 6]
+[3 4 5 6]
+[2 4 6]
+
+</pre>
+
+<ul class="org-ul">
+<li><code>a[(a &gt; 2)]</code> =&gt; <code>arr.filter(_ &gt; 2).flatmap(_)</code></li>
+<li><code>arr &gt; 2</code> =&gt; <code>arr.filter(_ &gt; 2)</code> =&gt; array of boolean</li>
+<li><code>arr + 2</code> =&gt; <code>arr.map(_ + 2)</code> =&gt; arr of int</li>
+</ul>
+</div>
+</div>
+
+<div id="org03e8995" class="outline-3">
+<h3 id="org03e8995"><span class="section-number-3">1.5</span> Datatypes</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-python" id="org68ffd5d"><span class="org-variable-name">x</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>])
+<span class="org-variable-name">y</span> = np.array([<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">2</span>.<span class="org-highlight-numbers-number">0</span>])
+<span class="org-variable-name">z</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], dtype=np.int64)
+
+<span class="org-keyword">print</span> (x.dtype, y.dtype, z.dtype)
+</pre>
+</div>
+
+<pre class="example">
+int64 float64 int64
+
+</pre>
+</div>
+</div>
+
+<div id="org4c535b5" class="outline-3">
+<h3 id="org4c535b5"><span class="section-number-3">1.6</span> Array Math</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-python" id="orga03013e"><span class="org-variable-name">x</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>]], dtype=np.float64)
+<span class="org-variable-name">y</span> = np.array([[<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>], [<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>]], dtype=np.float64)
+
+<span class="org-keyword">print</span>(x+y)
+<span class="org-keyword">print</span>(np.add(x,y))
+<span class="org-keyword">print</span>(x-y)
+<span class="org-keyword">print</span>(np.subtract(x,y))
+</pre>
+</div>
+
+<pre class="example">
+[[ 6.  8.]
+ [10. 12.]]
+[[ 6.  8.]
+ [10. 12.]]
+[[-4. -4.]
+ [-4. -4.]]
+[[-4. -4.]
+ [-4. -4.]]
+
+</pre>
+
+<pre class="example">
+[[ 6.  8.]
+ [10. 12.]]
+[[ 6.  8.]
+ [10. 12.]]
+
+</pre>
+
+<pre class="example">
+[[1,2], [ 3, 4]]
+[[5,6], [ 7, 8]]  +
+-------------------
+[[6,8], [10,12]]
+
+[[ 1, 2], [ 3, 4]]
+[[ 5, 6], [ 7, 8]]  -
+-------------------
+[[-4,-4], [-4,-4]]
+</pre>
+
+<pre class="example">
+- '+/-//' on np array is element-wise: x +/- y = np.add/subtract/divide(x,y)
+- 'dot' is inner product of vector
+- '*' is element-wise multiplication
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb01262b"><span class="org-variable-name">x</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>]])
+<span class="org-variable-name">y</span> = np.array([[<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>], [<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>]])
+
+<span class="org-variable-name">v</span> = np.array([<span class="org-highlight-numbers-number">9</span>, <span class="org-highlight-numbers-number">10</span>])
+<span class="org-variable-name">w</span> = np.array([<span class="org-highlight-numbers-number">11</span>, <span class="org-highlight-numbers-number">12</span>])
+
+<span class="org-keyword">print</span> (v.dot(w))
+<span class="org-keyword">print</span> (np.dot(v, w))
+<span class="org-keyword">print</span> (x.dot(v))
+<span class="org-keyword">print</span> (np.dot(x, v))
+<span class="org-keyword">print</span> (x.dot(y))
+<span class="org-keyword">print</span> (np.dot(x, y))
+</pre>
+</div>
+
+<pre class="example">
+219
+219
+[29 67]
+[29 67]
+[[19 22]
+ [43 50]]
+[[19 22]
+ [43 50]]
+
+</pre>
+</div>
+
+<div id="org7db8873" class="outline-4">
+<h4 id="org7db8873"><span class="section-number-4">1.6.1</span> sum by axis</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org9538634"><span class="org-variable-name">x</span>=np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>]])
+
+<span class="org-keyword">print</span> (np.<span class="org-builtin">sum</span>(x))
+<span class="org-keyword">print</span> (np.<span class="org-builtin">sum</span>(x, axis = <span class="org-highlight-numbers-number">0</span>))
+<span class="org-keyword">print</span> (np.<span class="org-builtin">sum</span>(x, axis = <span class="org-highlight-numbers-number">1</span>))
+</pre>
+</div>
+
+<pre class="example">
+10
+[4 6]
+[3 7]
+
+</pre>
+
+
+<ul class="org-ul">
+<li><code>arr + arr</code> is element-wise; <code>np.add(x,y)</code> is element-wise</li>
+<li><code>np.sum(x)</code> is sum all elements</li>
+<li><p>
+<code>np.sum(x, axis=0)</code>
+</p>
+
+<pre class="example">
+..................&gt; 1
+. | 1 | 2 | 3 |
+. | 3 | 4 | 7 |
+. |---+---+---|
+. | 4 | 6 |   |
+v
+0
+</pre></li>
+</ul>
+</div>
+</div>
+
+
+<div id="org83377b0" class="outline-4">
+<h4 id="org83377b0"><span class="section-number-4">1.6.2</span> transpose a matrix</h4>
+<div class="outline-text-4" id="text-1-6-2">
+<div class="org-src-container">
+<pre class="src src-python" id="org89132b4"><span class="org-keyword">print</span> (x)
+<span class="org-keyword">print</span> (x.T)
+</pre>
+</div>
+
+<pre class="example">
+[[1 2]
+ [3 4]]
+[[1 3]
+ [2 4]]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgb7dc823" class="outline-3">
+<h3 id="orgb7dc823"><span class="section-number-3">1.7</span> Broadcasting: from element-wise to row-wise</h3>
+<div class="outline-text-3" id="text-1-7">
+</div>
+<div id="orgd133623" class="outline-4">
+<h4 id="orgd133623"><span class="section-number-4">1.7.1</span> row-wise by for loop is slow</h4>
+<div class="outline-text-4" id="text-1-7-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org4c182e9"><span class="org-variable-name">x</span>= np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>], [<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">9</span>], [<span class="org-highlight-numbers-number">10</span>,<span class="org-highlight-numbers-number">11</span>,<span class="org-highlight-numbers-number">12</span>]])
+<span class="org-variable-name">v</span>= np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>])
+<span class="org-variable-name">y</span>= np.empty_like(x)
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">4</span>):
+    <span class="org-variable-name">y</span>[i, :] = x[i, :] + v
+<span class="org-keyword">print</span> (y)
+</pre>
+</div>
+
+<pre class="example">
+[[ 2  2  4]
+ [ 5  5  7]
+ [ 8  8 10]
+ [11 11 13]]
+
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">[ 1  2  3]</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">[2, 2, 4]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 4  5  6]</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">[5, 5, 7]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 7  8  9]</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">[8, 8, 10]</td>
+</tr>
+
+<tr>
+<td class="org-left">[10 11 12]</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">[11, 11, 13]</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">copy shape</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">empty_like(arr):</td>
+<td class="org-left">method to build an same-shape matrix full-filled <b>random number</b></td>
+</tr>
+
+<tr>
+<td class="org-left">ones_like (arr)</td>
+<td class="org-left">method to build an same-shape matrix full-filled <b>1</b></td>
+</tr>
+
+<tr>
+<td class="org-left">zeros_like (arr)</td>
+<td class="org-left">method to build an same-shape matrix full-filled <b>0</b></td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">give shape</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">empty(shape)</td>
+<td class="org-left">new uninitialized array.</td>
+</tr>
+
+<tr>
+<td class="org-left">ones(shape)</td>
+<td class="org-left">new array setting values to one.</td>
+</tr>
+
+<tr>
+<td class="org-left">zeros(shape)</td>
+<td class="org-left">new array setting values to zero.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="orgad30e0a" class="outline-4">
+<h4 id="orgad30e0a"><span class="section-number-4">1.7.2</span> element-wise by build a same shape matrix is fast</h4>
+<div class="outline-text-4" id="text-1-7-2">
+<div class="org-src-container">
+<pre class="src src-python" id="org17dcbba"><span class="org-variable-name">vv</span>= np.tile(v, (<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">1</span>))
+<span class="org-keyword">print</span> (vv)
+<span class="org-variable-name">y</span> = x+vv
+<span class="org-keyword">print</span> (y)
+</pre>
+</div>
+
+<pre class="example">
+[[1 0 1]
+ [1 0 1]
+ [1 0 1]
+ [1 0 1]]
+[[ 2  2  4]
+ [ 5  5  7]
+ [ 8  8 10]
+ [11 11 13]]
+
+</pre>
+
+<ul class="org-ul">
+<li><code>tile(v, (num1,num2))</code></li>
+</ul>
+
+<p>
+see v as a unit, build a matrix by num1 times v as row, num2 times v as column
+eg. tile(v, (3,4))
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1,0,1,1,0,1,1,0,1]</td>
+</tr>
+
+<tr>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1,0,1,1,0,1,1,0,1]</td>
+</tr>
+
+<tr>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">if v=[1,0,1]</td>
+<td class="org-left">=</td>
+<td class="org-left">[1,0,1,1,0,1,1,0,1]</td>
+</tr>
+
+<tr>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">v</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1,0,1,1,0,1,1,0,1]</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+compare with two methods of implementing row-wise plus
+method 1:
+</p>
+<ol class="org-ol">
+<li>extract row, by empty_like()</li>
+<li>row + row</li>
+</ol>
+<p>
+method 2:
+</p>
+<ol class="org-ol">
+<li>build a matrix, by tile()</li>
+<li>matrix + matix</li>
+</ol>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">[ 1  2  3]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[2, 2, 4]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 4  5  6]</td>
+<td class="org-left">+</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">=</td>
+<td class="org-left">[5, 5, 7]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 7  8  9]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[8, 8, 10]</td>
+</tr>
+
+<tr>
+<td class="org-left">[10 11 12]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[1 0 1]</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">[11, 11, 13]</td>
+</tr>
+</tbody>
+</table>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">[ 1  2  3]</td>
+<td class="org-left">+ [1 0 1]</td>
+<td class="org-left">= [2, 2, 4]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 4  5  6]</td>
+<td class="org-left">+ [1 0 1]</td>
+<td class="org-left">= [5, 5, 7]</td>
+</tr>
+
+<tr>
+<td class="org-left">[ 7  8  9]</td>
+<td class="org-left">+ [1 0 1]</td>
+<td class="org-left">= [8, 8, 10]</td>
+</tr>
+
+<tr>
+<td class="org-left">[10 11 12]</td>
+<td class="org-left">+ [1 0 1]</td>
+<td class="org-left">= [11, 11, 13]</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+<div id="orgb7790e7" class="outline-4">
+<h4 id="orgb7790e7"><span class="section-number-4">1.7.3</span> matrix + row/column = row/column-wise</h4>
+<div class="outline-text-4" id="text-1-7-3">
+<p>
+by the method 1 above, python has expand this as an syantax sugar:
+</p>
+
+<p>
+matrix <code>+</code> array = row-wise <code>+</code> array
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org266e4e0"><span class="org-variable-name">x</span> = np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>], [<span class="org-highlight-numbers-number">7</span>,<span class="org-highlight-numbers-number">8</span>,<span class="org-highlight-numbers-number">9</span>], [<span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">11</span>, <span class="org-highlight-numbers-number">12</span>]])
+<span class="org-variable-name">v</span> = np.array([<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])
+<span class="org-variable-name">y</span> = x + v  <span class="org-comment-delimiter"># </span><span class="org-comment">Add v to each row of x using broadcasting</span>
+<span class="org-keyword">print</span> (y)
+</pre>
+</div>
+
+<pre class="example">
+[[ 2  2  4]
+ [ 5  5  7]
+ [ 8  8 10]
+ [11 11 13]]
+
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org51aeac6"><span class="org-variable-name">v</span> = np.array([<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>])
+<span class="org-variable-name">w</span> = np.array([<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>])
+<span class="org-keyword">print</span> (np.reshape(v, (<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">1</span>)) * w)
+<span class="org-variable-name">x</span>= np.array([[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">6</span>]])
+<span class="org-keyword">print</span> (x+v)
+<span class="org-keyword">print</span> ((x.T + w).T)
+<span class="org-keyword">print</span> (x+ np.reshape(w, (<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">1</span>)))
+<span class="org-keyword">print</span> (x* <span class="org-highlight-numbers-number">2</span>)
+</pre>
+</div>
+
+<pre class="example">
+[[ 4  5]
+ [ 8 10]
+ [12 15]]
+[[2 4 6]
+ [5 7 9]]
+[[ 5  6  7]
+ [ 9 10 11]]
+[[ 5  6  7]
+ [ 9 10 11]]
+[[ 2  4  6]
+ [ 8 10 12]]
+</pre>
+
+<pre class="example">
+. np.reshape(v, (3,1)) * w:
+---------------------------------------------
+.                   v: 3*1  w: 1*2  = 3*2
+.                     |1|             |4 | 5 |
+. | 1 | 2 | 3 | . T = |2| * |4|5|   = |8 | 10|
+.                     |3|             |12| 15|
+
+. x + v
+---------------------------------------------
+. | 1 | 2 | 3 |                  |2 | 4 |6 |
+. | 4 | 5 | 6 | + |1 |2 |3 |  =  |5 | 7 |9 |
+.
+
+. x.T +  w  = ----- .T =
+---------------------------------------------
+. 1 4         5, 9       5, 6, 7
+. 2 5 + 4 5 = 6, 10 .T = 9,10,11
+. 3 6         7, 11
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org5c37c1d" class="outline-3">
+<h3 id="org5c37c1d"><span class="section-number-3">1.8</span> Summarization</h3>
+<div class="outline-text-3" id="text-1-8">
+<ul class="org-ul">
+<li>matrix + row    = row-wise    plus</li>
+<li>matrix + column = column-wise plus</li>
+
+<li>tile(v, shape) : is copy v as unit to build a matrix with shape</li>
+<li>empty_like(matrix) : is a random matrix</li>
+<li>reshape(v, shape) : is somelike transpose v to other form</li>
+</ul>
+
+<p>
+Note that:
+</p>
+<ol class="org-ol">
+<li>dot ONLY has one meanning, M dot M = sum of <b>element-2-element</b> product = value</li>
+<li>'*' has many meanning according to the differnt thing who following
+column * row =&gt; Matrix product, eg. 3*1 * 1*3 = 3*3
+M * val =&gt; <b>element-wise</b> every element of M multiply with val
+M * row/column =&gt; <b>row/column-wise</b> product, and each row/column product is also <b>element-wise</b></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orgb3cba0f" class="outline-2">
+<h2 id="orgb3cba0f"><span class="section-number-2">2</span> Numpy intro by scipy 2017</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="https://www.youtube.com/watch?v=lKcwuPnSHIQ&amp;t=2839s">Introduction to Numerical Computing with NumPy scipy 2017 tutorial</a>
+</p>
+
+<blockquote>
+<p>
+in juypter note book:
+</p>
+<ol class="org-ol">
+<li>%matplotlib inline</li>
+</ol>
+</blockquote>
+</div>
+<div id="org086f6c0" class="outline-3">
+<h3 id="org086f6c0"><span class="section-number-3">2.1</span> difference between numpy and python</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Numpy is implemented by c language, you don't need to care about what it behave in python.like:
+</p>
+
+<p>
+python: will <b>NOT declare</b> type of elements in array
+numpy : will <b>declare</b>     type of elements in array
+</p>
+
+<p>
+this is more like the type-safe language:
+</p>
+<ul class="org-ul">
+<li>Array[ <code>Int</code> ](1,2,3,3,4)</li>
+<li>np.array([1,2,3,3,4], dtype= <code>'int8'</code>)</li>
+</ul>
+
+<p>
+python: 1 / 0: ERROE
+numpy : array / 0: WARNING, and get some infinite symbol
+</p>
+
+<p>
+python: integers are <b>arbitrarily large</b>, python will <b>allocate more and more</b> memory to holding this value
+numpy : integers are <b>fixed in size</b>, it will ONLY <b>KEEP</b> the bits fitting the size declared, and <b>IGNORE</b> the redundent bits
+</p>
+
+<p>
+np.nan == np.nan # False
+np.isnan(np.nan) # True
+Note that <code>nan</code> means undefined, so they don't have type, they are not comparable, two undefined things must be not equall.
+So, If you want to <b>filter out</b> the <code>nan</code> by <b>equall boolean operation</b> is <b>impossible</b>: <code>arr.filter(_ != nan) //WRONG</code>
+but you can do it by <code>isnan()</code> : <code>arr.filter(!_ isnana) //RIGHT</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1d4cba2"><span class="org-variable-name">a</span> = np.array([-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">100</span>], dtype=<span class="org-string">'int8'</span>)
+<span class="org-keyword">print</span>(a)
+</pre>
+</div>
+
+<pre class="example">
+[ -1   0   1 100]
+
+</pre>
+</div>
+
+<div id="org197a30a" class="outline-4">
+<h4 id="org197a30a"><span class="section-number-4">2.1.1</span> range vs np.arange</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+from code below we can see that: <b>building a np.arange() is 10x faster than python built-in range()</b>
+</p>
+
+<ul class="org-ul">
+<li><code>python.range()</code> returns an <b>dynamically-resizing</b> <b>linked-list of pointers</b>
+<ul class="org-ul">
+<li>means when you retrieve some item of this array, you will traverse the linked-list first ,then follow the <b>pointer</b> to find the object it point to</li>
+<li>every element(pointer) of this `array` will be checked and do some method transform to <b>make sure type-safe</b>, for everytime you do sth like <code>ele1+ele2</code></li>
+</ul></li>
+<li><code>numpy.arange()</code> returns an <b>non-resized dense</b> <b>array of objects</b>
+<ul class="org-ul">
+<li>there is no double look-up, or triple look-up</li>
+<li>`array` in numpy is <b>fixed</b> to the size 64-bit for integer, or for 32-bit float, when do <code>ele1 + ele2</code> <b>no type-safe checking</b> operation executed.</li>
+<li>`array` in numpy is somelike the type-safe language like scala, with defaultly declare the type</li>
+</ul></li>
+<li><code>python.list</code> is <b>hetergereas</b> (multiple type elements) and <b>resized</b>.</li>
+<li><code>numpy.array</code> is <b>homogeneous</b> (same type elements) and <b>fixed</b></li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd9b6466"><span class="org-comment-delimiter"># </span><span class="org-comment">normal way python to create a list of number</span>
+<span class="org-keyword">def</span> <span class="org-function-name">test_list</span>() :
+    <span class="org-keyword">return</span> <span class="org-builtin">list</span>(<span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">1000</span>))
+<span class="org-keyword">def</span> <span class="org-function-name">sum_test_list</span>() :
+    <span class="org-keyword">return</span> <span class="org-builtin">sum</span>(<span class="org-builtin">list</span>(<span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">1000</span>)))
+<span class="org-comment-delimiter"># </span><span class="org-comment">numpy way</span>
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">def</span> <span class="org-function-name">test_array</span>() :
+    <span class="org-keyword">return</span> np.arange(<span class="org-highlight-numbers-number">1000</span>)
+<span class="org-keyword">def</span> <span class="org-function-name">sum_test_array</span>() :
+    <span class="org-keyword">return</span> <span class="org-builtin">sum</span>(np.arange(<span class="org-highlight-numbers-number">1000</span>))
+<span class="org-comment-delimiter"># </span><span class="org-comment">get time consumption</span>
+<span class="org-keyword">import</span> timeit
+<span class="org-keyword">print</span>(timeit.timeit(test_list))
+<span class="org-keyword">print</span>(timeit.timeit(test_array))
+<span class="org-keyword">print</span>(timeit.timeit(sum_test_list))
+<span class="org-keyword">print</span>(timeit.timeit(sum_test_array))
+</pre>
+</div>
+
+<pre class="example">
+9.801971782006149
+1.1378583570040064
+14.511466812000435
+65.05813833899447
+
+</pre>
+</div>
+</div>
+
+<div id="org59a9051" class="outline-4">
+<h4 id="org59a9051"><span class="section-number-4">2.1.2</span> divide by zero</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter">#</span><span class="org-comment">1 / 0 # ERROR</span>
+<span class="org-keyword">print</span>(a / <span class="org-highlight-numbers-number">0</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">array of INFINITE, WARNING</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org07a02a4" class="outline-4">
+<h4 id="org07a02a4"><span class="section-number-4">2.1.3</span> power of any nubmer</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span>(<span class="org-highlight-numbers-number">100</span> ** <span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span>(<span class="org-highlight-numbers-number">100</span> ** <span class="org-highlight-numbers-number">50</span>)
+<span class="org-keyword">print</span>(a ** <span class="org-highlight-numbers-number">2</span>)
+</pre>
+</div>
+
+<pre class="example">
+10000
+10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+[ 1  0  1 16]
+
+</pre>
+</div>
+</div>
+
+<div id="orgc034370" class="outline-4">
+<h4 id="orgc034370"><span class="section-number-4">2.1.4</span> type conversion of array of numpy</h4>
+<div class="outline-text-4" id="text-2-1-4">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">b</span> = a.astype(<span class="org-string">'float32'</span>)
+<span class="org-keyword">print</span>(b)
+<span class="org-keyword">print</span>(b / <span class="org-highlight-numbers-number">0</span>)
+</pre>
+</div>
+
+<pre class="example">
+[ -1.   0.   1. 100.]
+[-inf  nan  inf  inf]
+
+</pre>
+</div>
+</div>
+
+<div id="orgc9b0235" class="outline-4">
+<h4 id="orgc9b0235"><span class="section-number-4">2.1.5</span> nan in numpy</h4>
+<div class="outline-text-4" id="text-2-1-5">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span>(np.nan == np.nan) <span class="org-comment-delimiter"># </span><span class="org-comment">False</span>
+<span class="org-keyword">print</span>(np.isnan(np.nan)) <span class="org-comment-delimiter"># </span><span class="org-comment">True</span>
+</pre>
+</div>
+
+<pre class="example">
+False
+True
+
+</pre>
+</div>
+</div>
+
+
+<div id="orgde769e3" class="outline-4">
+<h4 id="orgde769e3"><span class="section-number-4">2.1.6</span> some methods to build an numpy array</h4>
+<div class="outline-text-4" id="text-2-1-6">
+<div class="org-src-container">
+<pre class="src src-python">np.zeros
+np.ones
+np.empty
+<span class="org-keyword">print</span> (np.empty((<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">2</span>)))
+</pre>
+</div>
+
+<pre class="example">
+[[-inf  nan]
+ [ inf  inf]]
+
+</pre>
+
+<p>
+this is whatever left over in the memory addresss before it became my numpy array.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org4b8326d" class="outline-3">
+<h3 id="org4b8326d"><span class="section-number-3">2.2</span> how to retrieve the element of array of numpy</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span>(a)
+</pre>
+</div>
+
+<pre class="example">
+[ -1   0   1 100]
+
+</pre>
+</div>
+
+<div id="org53cb99b" class="outline-4">
+<h4 id="org53cb99b"><span class="section-number-4">2.2.1</span> indexing</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span>(a[<span class="org-highlight-numbers-number">0</span>])
+<span class="org-keyword">print</span>(a[-<span class="org-highlight-numbers-number">1</span>])
+
+</pre>
+</div>
+
+<pre class="example">
+-1
+100
+
+</pre>
+</div>
+</div>
+
+<div id="org86b8577" class="outline-4">
+<h4 id="org86b8577"><span class="section-number-4">2.2.2</span> slicing</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span>(a[<span class="org-highlight-numbers-number">0</span>:<span class="org-highlight-numbers-number">2</span>])
+<span class="org-keyword">print</span>(a[:<span class="org-highlight-numbers-number">2</span>])
+<span class="org-keyword">print</span>(a[::<span class="org-highlight-numbers-number">2</span>])
+
+</pre>
+</div>
+
+<pre class="example">
+[-1  0]
+[-1  0]
+[-1  1]
+
+</pre>
+</div>
+</div>
+
+<div id="org7539e4a" class="outline-4">
+<h4 id="org7539e4a"><span class="section-number-4">2.2.3</span> set value</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter">### </span><span class="org-comment">array of numpy is changeable</span>
+<span class="org-keyword">print</span>(a[-<span class="org-highlight-numbers-number">1</span>])
+<span class="org-keyword">print</span>(a)
+
+</pre>
+</div>
+
+<pre class="example">
+100
+[ -1   0   1 100]
+
+</pre>
+</div>
+</div>
+
+<div id="orgc769729" class="outline-4">
+<h4 id="orgc769729"><span class="section-number-4">2.2.4</span> 2-D array by reshape</h4>
+<div class="outline-text-4" id="text-2-2-4">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">b</span> = np.arange(<span class="org-highlight-numbers-number">12</span>).reshape(<span class="org-highlight-numbers-number">4</span>,<span class="org-highlight-numbers-number">3</span>)
+<span class="org-keyword">print</span>(b)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orge1a19b9" class="outline-4">
+<h4 id="orge1a19b9"><span class="section-number-4">2.2.5</span> retrieve element of 2-D</h4>
+<div class="outline-text-4" id="text-2-2-5">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( a.shape )
+<span class="org-keyword">print</span> ( b.shape )
+<span class="org-keyword">print</span> ( b[<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>])
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org79d0194" class="outline-4">
+<h4 id="org79d0194"><span class="section-number-4">2.2.6</span> retrieve sub-matrix of 2-D</h4>
+<div class="outline-text-4" id="text-2-2-6">
+<p>
+when do <code>retrieve sub-matrix</code> what you really do is to <b>slicing two index array in two direction</b>, which are vertical and horizon
+</p>
+
+
+<p>
+.  <code>arr[1:3, -1:] = [[5],[8]]</code>
+.
+.                               [-1:]
+.                                 |
+.                                 v
+.                |      0    1    2
+.               -+----------------&#x2013;&#x2014;&gt;
+.                |
+.               0|   |  0 |  1 |  2  |
+.         &#x2026;.&gt; 1|   |  3 |  4 |  5 *|
+.  [1:3]  &#x2026;.&gt; 2|   |  6 |  7 |  8 *|
+.               3|   |  9 | 10 | 11  |
+.                |
+.                v
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( b[:<span class="org-highlight-numbers-number">2</span>, :<span class="org-highlight-numbers-number">2</span>])
+<span class="org-comment-delimiter">#### </span><span class="org-comment">collapse to lower dimension array</span>
+<span class="org-keyword">print</span> ( b[<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">3</span>, -<span class="org-highlight-numbers-number">1</span>])
+<span class="org-comment-delimiter">#### </span><span class="org-comment">NO collapse to lower dimension array</span>
+<span class="org-keyword">print</span> ( b[<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">3</span>, [-<span class="org-highlight-numbers-number">1</span>]])
+<span class="org-comment-delimiter">#### </span><span class="org-comment">or</span>
+<span class="org-keyword">print</span> ( b[<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">3</span>, -<span class="org-highlight-numbers-number">2</span>:])
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org3545d3f" class="outline-4">
+<h4 id="org3545d3f"><span class="section-number-4">2.2.7</span> diff: (2,) and (2,1)</h4>
+<div class="outline-text-4" id="text-2-2-7">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( np.array([[<span class="org-highlight-numbers-number">2</span>],[<span class="org-highlight-numbers-number">3</span>]]).shape ) <span class="org-comment-delimiter"># </span><span class="org-comment">(2,1)</span>
+<span class="org-keyword">print</span> ( np.array([<span class="org-highlight-numbers-number">2</span>]).shape )       <span class="org-comment-delimiter"># </span><span class="org-comment">(2, )</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgf179514" class="outline-4">
+<h4 id="orgf179514"><span class="section-number-4">2.2.8</span> 3-D array by reshape</h4>
+<div class="outline-text-4" id="text-2-2-8">
+<p>
+3-D array: shape = (2, 3, 4)
+.
+.                                       4
+.                                       .
+.                                       .
+.                                   &#x2026;&#x2026;&#x2026;.
+.                                   v  v  v  v
+.
+.                        [ &gt;[     [ 0  1  2  3]
+.                         .       [ 4  5  6  7]
+.                        .        [ 8  9 10 11]]
+.      2  &#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.
+.                         .&gt;[ ..&gt; [12 13 14 15]
+.                             ..&gt; [16 17 18 19]
+.      3  &#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;&#x2026;.&gt; [20 21 22 23]]]
+.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">c</span> = np.arange(<span class="org-highlight-numbers-number">24</span>).reshape(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>)
+<span class="org-keyword">print</span> (c)
+<span class="org-keyword">print</span> (c[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>])
+<span class="org-comment-delimiter">#### </span><span class="org-comment">collapse to lower dimension array</span>
+<span class="org-keyword">print</span> (c[<span class="org-highlight-numbers-number">0</span>, :, :])
+<span class="org-keyword">print</span> (c[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">0</span>, :])
+<span class="org-comment-delimiter">#### </span><span class="org-comment">NO collapse to lower dimension array</span>
+<span class="org-keyword">print</span> (c[:<span class="org-highlight-numbers-number">1</span>, :, :])
+</pre>
+</div>
+
+<pre class="example">
+[[[ 0  1  2  3]
+  [ 4  5  6  7]
+  [ 8  9 10 11]]
+
+ [[12 13 14 15]
+  [16 17 18 19]
+  [20 21 22 23]]]
+17
+[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+[12 13 14 15]
+[[[ 0  1  2  3]
+  [ 4  5  6  7]
+  [ 8  9 10 11]]]
+</pre>
+</div>
+</div>
+
+<div id="org4ee6733" class="outline-4">
+<h4 id="org4ee6733"><span class="section-number-4">2.2.9</span> flat the array to 1-D</h4>
+<div class="outline-text-4" id="text-2-2-9">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-keyword">print</span> ( c.flatten() )
+</pre>
+</div>
+</div>
+</div>
+<div id="orge02bc69" class="outline-4">
+<h4 id="orge02bc69"><span class="section-number-4">2.2.10</span> more complex sub-matrix operation</h4>
+<div class="outline-text-4" id="text-2-2-10">
+<div class="org-src-container">
+<pre class="src src-python" id="org579e147"><span class="org-variable-name">a</span> = np.arange(<span class="org-highlight-numbers-number">25</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">print</span>( a )
+<span class="org-keyword">print</span>( a[<span class="org-highlight-numbers-number">4</span>, :])
+<span class="org-keyword">print</span>( a[<span class="org-highlight-numbers-number">1</span>:-<span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>:<span class="org-highlight-numbers-number">4</span>:<span class="org-highlight-numbers-number">2</span>])
+<span class="org-keyword">print</span>( a[[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>]])
+<span class="org-keyword">print</span>( a[:, <span class="org-highlight-numbers-number">1</span>::<span class="org-highlight-numbers-number">2</span>])
+</pre>
+</div>
+
+<pre class="example">
+[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]
+ [15 16 17 18 19]
+ [20 21 22 23 24]]
+[20 21 22 23 24]
+[[ 5  7]
+ [15 17]]
+[ 5 17]
+[[ 1  3]
+ [ 6  8]
+ [11 13]
+ [16 18]
+ [21 23]]
+</pre>
+</div>
+</div>
+
+<div id="org0a5a454" class="outline-4">
+<h4 id="org0a5a454"><span class="section-number-4">2.2.11</span> fancy indexing</h4>
+<div class="outline-text-4" id="text-2-2-11">
+<div class="org-src-container">
+<pre class="src src-python" id="org1be7222"><span class="org-variable-name">a</span> = np.arange(<span class="org-highlight-numbers-number">4</span>)
+<span class="org-keyword">print</span>(a)
+<span class="org-keyword">print</span> (a[[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>]])
+
+<span class="org-keyword">print</span> (b)
+<span class="org-keyword">print</span> (b[[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">0</span>]])
+
+<span class="org-keyword">print</span>(c)
+<span class="org-keyword">print</span>(c[[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>]])
+<span class="org-keyword">print</span>(c[[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">1</span>], [<span class="org-highlight-numbers-number">2</span>]])
+</pre>
+</div>
+
+<pre class="example">
+[0 1 2 3]
+[0 1 3]
+[[ 0  1  2]
+ [ 3  4  5]
+ [ 6  7  8]
+ [ 9 10 11]]
+[2 6]
+[[[ 0  1  2  3]
+  [ 4  5  6  7]
+  [ 8  9 10 11]]
+
+ [[12 13 14 15]
+  [16 17 18 19]
+  [20 21 22 23]]]
+[ 6 17]
+[ 6 18]
+</pre>
+</div>
+</div>
+
+<div id="org70f0d58" class="outline-4">
+<h4 id="org70f0d58"><span class="section-number-4">2.2.12</span> diff slicing and fancy indexing</h4>
+<div class="outline-text-4" id="text-2-2-12">
+<p>
+  <code>a[1:-1:2, 0:4:2] = [[ 5  7], [15 17]]</code>
+.
+.               |      |
+.              v|     v|
+.               |      |
+.           [[ 0|  1  2|  3  4]
+.     &gt;      [ 5|  6  7|  8  9]
+.    -----------<del>------</del>-------&#x2013;&#x2014;
+.            [10| 11 12| 13 14]
+.     &gt;      [15| 16 17| 18 19]
+.    -----------<del>------</del>-------&#x2013;&#x2014;
+.            [20| 21 22| 23 24]]
+.               |      |
+</p>
+
+
+
+<p>
+  <code>a[[1, 3], [0, 2]] = [ 5 17 ]</code>
+.
+.               |      |
+.              v|     v|
+.               |      |
+.           [[ 0|  1  2|  3  4]
+.     &gt;      [ 5|  6  7|  8  9]
+.    ------&#x2013;&#x2014;+      |
+.            [10  11 12| 13 14]
+.     &gt;      [15  16 17| 18 19]
+.    -------------&#x2013;&#x2014;+
+.            [20  21 22  23 24]]
+.
+</p>
+</div>
+</div>
+
+<div id="org5fe6028" class="outline-4">
+<h4 id="org5fe6028"><span class="section-number-4">2.2.13</span> fancy indexing math operation on numpy array</h4>
+<div class="outline-text-4" id="text-2-2-13">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">operation</th>
+<th scope="col" class="org-left">numpy</th>
+<th scope="col" class="org-left">scala</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">map</td>
+<td class="org-left">arr &gt; 16</td>
+<td class="org-left">arr.map(_ &gt; 16)</td>
+</tr>
+
+<tr>
+<td class="org-left">filter</td>
+<td class="org-left">arr[ arr&gt;16 ]</td>
+<td class="org-left">arr.filter (_ &gt; 16)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org905b7fe"><span class="org-keyword">print</span> (c)
+<span class="org-keyword">print</span> (c &gt; <span class="org-highlight-numbers-number">16</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">map</span>
+<span class="org-keyword">print</span> (c[ c&gt;<span class="org-highlight-numbers-number">16</span> ]) <span class="org-comment-delimiter"># </span><span class="org-comment">filter</span>
+</pre>
+</div>
+
+<pre class="example">
+[[[ 0  1  2  3]
+  [ 4  5  6  7]
+  [ 8  9 10 11]]
+
+ [[12 13 14 15]
+  [16 17 18 19]
+  [20 21 22 23]]]
+[[[False False False False]
+  [False False False False]
+  [False False False False]]
+
+ [[False False False False]
+  [False  True  True  True]
+  [ True  True  True  True]]]
+[17 18 19 20 21 22 23]
+</pre>
+</div>
+</div>
+
+<div id="org1dbcdd0" class="outline-4">
+<h4 id="org1dbcdd0"><span class="section-number-4">2.2.14</span> diff normal indexing and fancy indexing mathOperation</h4>
+<div class="outline-text-4" id="text-2-2-14">
+<p>
+Note that:
+<code>fancy indexing</code> is slower, it will try his best to avoiding copy, but <b>not ensure that</b>.
+<code>normal indexing</code> and <code>slicing</code> on numpy.array are faster, they <b>will not</b> copy any data around in memory.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org249dc0a"><span class="org-comment-delimiter">### </span><span class="org-comment">normal indexing and slicing</span>
+<span class="org-keyword">print</span> (c)
+<span class="org-variable-name">d</span>= c[:, <span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">3</span>]
+<span class="org-keyword">print</span> (d)
+<span class="org-keyword">print</span> (d.flags) <span class="org-comment-delimiter"># </span><span class="org-comment">OWNDATA:False</span>
+
+<span class="org-comment-delimiter">### </span><span class="org-comment">fancy indexing math operation</span>
+<span class="org-variable-name">e</span> = c[ c&gt;<span class="org-highlight-numbers-number">16</span> ]
+<span class="org-keyword">print</span> (e)
+<span class="org-keyword">print</span> (e.flags) <span class="org-comment-delimiter"># </span><span class="org-comment">OWNDATA:True</span>
+</pre>
+</div>
+
+<pre class="example">
+[[[    0     1     2     3]
+  [    4 10000     6     7]
+  [    8     9    10    11]]
+
+ [[   12    13    14    15]
+  [   16    17    18    19]
+  [   20    21    22    23]]]
+[[[10000     6]]
+
+ [[   17    18]]]
+  C_CONTIGUOUS : False
+  F_CONTIGUOUS : False
+  OWNDATA : False
+  WRITEABLE : True
+  ALIGNED : True
+  WRITEBACKIFCOPY : False
+  UPDATEIFCOPY : False
+(96, 32, 8)
+[10000    17    18    19    20    21    22    23]
+  C_CONTIGUOUS : True
+  F_CONTIGUOUS : True
+  OWNDATA : True
+  WRITEABLE : True
+  ALIGNED : True
+  WRITEBACKIFCOPY : False
+  UPDATEIFCOPY : False
+</pre>
+</div>
+</div>
+
+<div id="orgcaf9a23" class="outline-4">
+<h4 id="orgcaf9a23"><span class="section-number-4">2.2.15</span> <code>arr.flags</code> whether array hold data or not</h4>
+<div class="outline-text-4" id="text-2-2-15">
+<p>
+<code>OWNDATA</code>
+This flag is about whether this array (means <code>d</code> here) control its own data. <code>False</code> means
+it has <b>not created any data</b>. This could be <b>good for efficiency</b>, because copying data in memory is very expensive.
+But <b>bad for safety</b>.
+</p>
+
+<p>
+<code>OWNDATA : False</code> : slicing and normal indexing
+</p>
+<ul class="org-ul">
+<li>good for efficiency</li>
+<li>bad for safety.</li>
+</ul>
+
+
+<p>
+<code>OWNDATA : True</code> : fancy indexing and math Operation
+</p>
+<ul class="org-ul">
+<li>bad for efficiency</li>
+<li>good for safety.</li>
+</ul>
+</div>
+</div>
+
+<div id="org4159924" class="outline-4">
+<h4 id="org4159924"><span class="section-number-4">2.2.16</span> risky of not hold data</h4>
+<div class="outline-text-4" id="text-2-2-16">
+<p>
+BUT, this also risky:
+&gt;&gt;&gt;&gt; whatever you change in <code>d</code> will also change in <code>c</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb54aba4"><span class="org-variable-name">f</span> = np.arange(<span class="org-highlight-numbers-number">25</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">print</span> (f)
+<span class="org-variable-name">d</span> = f[:, <span class="org-highlight-numbers-number">1</span>:<span class="org-highlight-numbers-number">2</span>]
+<span class="org-variable-name">d</span>[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>] = <span class="org-highlight-numbers-number">10000</span>
+<span class="org-keyword">print</span> (f)
+</pre>
+</div>
+
+<pre class="example">
+[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]
+ [15 16 17 18 19]
+ [20 21 22 23 24]]
+[[    0 10000     2     3     4]
+ [    5     6     7     8     9]
+ [   10    11    12    13    14]
+ [   15    16    17    18    19]
+ [   20    21    22    23    24]]
+</pre>
+</div>
+</div>
+<div id="org3806b8c" class="outline-4">
+<h4 id="org3806b8c"><span class="section-number-4">2.2.17</span> what is <code>numpy.array</code> underneath the hood</h4>
+<div class="outline-text-4" id="text-2-2-17">
+<pre class="example">
+. x.strides = (3, 1)
+.
+.       [[1, 2, 3],
+.        [4, 5, 6],
+.        [7, 8, 9]]
+.
+.        [ 1  2  3  4  5  6  7  8  9]
+.          ^  ^  ^        ^        ^
+.          |  |  ||       ||       ||     skip 3 elements/step
+.          |  |
+.          |  |
+.         skip 1 element/step
+</pre>
+
+<p>
+NumPy array with any shape inside of computer is <b>a long line of number</b>,
+<code>reshap</code> is just a trick to make it <b>looks like</b> a multiple dimension
+array,
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf8d0dea"><span class="org-keyword">print</span> (c.strides)
+</pre>
+</div>
+
+<pre class="example">
+(96, 32, 8)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org0ba6c36"><span class="org-comment-delimiter">### </span><span class="org-comment">The question:</span>
+<span class="org-comment-delimiter">###        </span><span class="org-comment">at which byte, in x.data dose the item x[1,2] begin</span>
+<span class="org-variable-name">x</span> = np.array([[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>],
+              [<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>],
+              [<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">9</span>]], dtype=np.int8)
+<span class="org-variable-name">y</span> = np.array([[[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>],
+               [<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>],
+               [<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">9</span>]],
+              [[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>],
+               [<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">6</span>],
+               [<span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">9</span>]]], dtype=np.int8)
+<span class="org-keyword">print</span> (<span class="org-builtin">str</span>(x.data))
+
+<span class="org-comment-delimiter">### </span><span class="org-comment">The answer:</span>
+<span class="org-comment-delimiter">###        </span><span class="org-comment">strides: the number of bytes to jump to find the next element</span>
+<span class="org-comment-delimiter">###        </span><span class="org-comment">1 stride per dimension</span>
+<span class="org-keyword">print</span> (x.strides) <span class="org-comment-delimiter"># </span><span class="org-comment">2-D array will get tuple-2</span>
+<span class="org-keyword">print</span> (y.strides) <span class="org-comment-delimiter"># </span><span class="org-comment">3-D array will get tuple-3</span>
+<span class="org-variable-name">byte_offset</span> = <span class="org-highlight-numbers-number">3</span>*<span class="org-highlight-numbers-number">1</span> + <span class="org-highlight-numbers-number">1</span>*<span class="org-highlight-numbers-number">2</span> <span class="org-comment-delimiter"># </span><span class="org-comment">x[1,2]</span>
+<span class="org-keyword">print</span> (x.flat[byte_offset])
+<span class="org-keyword">print</span> (x[<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>])
+</pre>
+</div>
+
+<pre class="example">
+&lt;memory at 0x7f62191f1708&gt;
+(3, 1)
+(9, 3, 1)
+6
+6
+
+</pre>
+
+
+<pre class="example">
+. x.strides = (3, 1)
+.
+.       [[1, 2, 3],
+.        [4, 5, 6],
+.        [7, 8, 9]]
+.
+.        [ 1  2  3  4  5  6  7  8  9]
+.          ^  ^  ^        ^        ^
+.          |  |  ||       ||       ||     skip 3 elements/step
+.          |  |
+.          |  |
+.         skip 1 element/step
+
+</pre>
+</div>
+</div>
+
+<div id="orgc218899" class="outline-4">
+<h4 id="orgc218899"><span class="section-number-4">2.2.18</span> methods to create a new Array or not</h4>
+<div class="outline-text-4" id="text-2-2-18">
+<p>
+some methods to create a new Array and a header and some strides: <code>OWNDATA:True</code>
+</p>
+<ol class="org-ol">
+<li>np.arange()</li>
+<li>np.zeros()</li>
+<li>np.ones()</li>
+<li>np.empty()</li>
+</ol>
+
+<p>
+some methods NOT to create a new Array and ONLY a header and some strides: <code>OWNDATA:False</code>
+</p>
+<ol class="org-ol">
+<li>arr.T</li>
+<li>arr.reshape</li>
+<li>slicing</li>
+<li>normal indexing (special slicing)</li>
+</ol>
+
+<p>
+<b>maybe</b> create a new Array
+</p>
+<ol class="org-ol">
+<li><p>
+fancy slicing and mask
+</p>
+
+<pre class="example">
+.     &gt;&gt;&gt; some methods to *create a new Array and a header and some strides*:
+.     Header                          Array
+.     +------------------+            +-----+-----+-----+----+----+----+----+----------
+.     |  header ---------|----------&gt; |     |     |     |    |    |    |    |  ......
+.     |  shape           |            +-----+-----+-----+----+----+----+----+----------
+.     |  strides         |             ^
+.     +------------------+             |
+.                                      |
+.     &gt;&gt;&gt; some methods *NOT* to create |a new array but *ONLY a header and some strides*:
+.                                      |
+.     +-----------------+              |
+.     |  header --------+--------------+
+.     |  shape          |
+.     |  strides        |
+.     +-----------------+
+
+</pre></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orgec56194" class="outline-3">
+<h3 id="orgec56194"><span class="section-number-3">2.3</span> Mathematical operation and Reduction operations</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+<code>Mathematical operation</code> returns an array of the <b>same</b> size and shape.
+</p>
+<ul class="org-ul">
+<li>addtion</li>
+</ul>
+<p>
+<code>Reduction operation</code> returns an array of the <b>smaller</b> size and shape.
+</p>
+<ul class="org-ul">
+<li>np.sum(arr, axis)</li>
+<li>np.mean(arr)))</li>
+<li>np.mean(arr)))</li>
+<li>np.std(arr))</li>
+<li>np.var(arr))</li>
+<li>np.max(arr))</li>
+<li>np.min(arr))</li>
+<li>np.argmax(arr)) # the location of max item</li>
+<li>np.argmin(arr)) # the location of min item</li>
+<li>np.unravel_index(index_num, arr_shape) # get well-formated index</li>
+</ul>
+</div>
+
+<div id="orgc640186" class="outline-4">
+<h4 id="orgc640186"><span class="section-number-4">2.3.1</span> mean,std,var,max,argmax,unravel_index</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<div class="org-src-container">
+<pre class="src src-python" id="orgf3815dc"><span class="org-variable-name">calc_return_path</span> = <span class="org-string">'Numpy-Tutorial-SciPyConf-2017-master/exercises/calc_return/aapl_2008_close_values.csv'</span>
+<span class="org-variable-name">prices</span> = loadtxt(calc_return_path, usecols=[<span class="org-highlight-numbers-number">1</span>], delimiter=<span class="org-string">","</span>)
+
+<span class="org-keyword">print</span> (np.mean(prices))
+<span class="org-keyword">print</span> (np.std(prices))
+<span class="org-keyword">print</span> (np.var(prices))
+<span class="org-keyword">print</span> (np.<span class="org-builtin">max</span>(prices))
+<span class="org-keyword">print</span> (np.<span class="org-builtin">min</span>(prices))
+<span class="org-keyword">print</span> (np.argmin(prices))
+
+<span class="org-comment-delimiter">## </span><span class="org-comment">for a 2-D array, argmin/max will return the index of flattern 2-D array</span>
+<span class="org-keyword">print</span> (b)
+<span class="org-keyword">print</span> (np.argmax(b)) <span class="org-comment-delimiter"># </span><span class="org-comment">11</span>
+<span class="org-comment-delimiter">## </span><span class="org-comment">you can unravel this index to get the well-formated index you want</span>
+<span class="org-keyword">print</span> (np.unravel_index(np.argmax(b), b.shape))
+</pre>
+</div>
+
+<pre class="example">
+141.97901185770752
+33.665494483022535
+1133.3655187864208
+194.93
+80.49
+225
+[[ 0  1  2]
+ [ 3  4  5]
+ [ 6  7  8]
+ [ 9 10 11]]
+11
+(3, 2)
+</pre>
+</div>
+</div>
+
+<div id="orgf834779" class="outline-4">
+<h4 id="orgf834779"><span class="section-number-4">2.3.2</span> sum by axis</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<div class="org-src-container">
+<pre class="src src-python" id="org0adb2c7"><span class="org-keyword">print</span> (h)
+<span class="org-variable-name">h</span> = h.astype(<span class="org-string">'float64'</span>)  <span class="org-comment-delimiter"># </span><span class="org-comment">nan must be in float type</span>
+<span class="org-variable-name">h</span>[<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>] = np.nan
+<span class="org-keyword">print</span> (h)
+<span class="org-keyword">print</span> (h + <span class="org-highlight-numbers-number">5</span>)          <span class="org-comment-delimiter"># </span><span class="org-comment">nan will still be nan</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(h) )    <span class="org-comment-delimiter"># </span><span class="org-comment">nan propagate to any mathematical operation</span>
+                       <span class="org-comment-delimiter"># </span><span class="org-comment">1 + 2 + 3 + 5 + nan + 7 + 8 + ... = nan</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(h, axis = <span class="org-highlight-numbers-number">0</span>))
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(h, axis = <span class="org-highlight-numbers-number">1</span>))
+</pre>
+</div>
+
+<pre class="example">
+[[ 0.  1.  2.  3.  4.]
+ [ 5.  6.  7.  8.  9.]
+ [10. 11. 12. nan 14.]
+ [15. 16. 17. 18. 19.]
+ [20. 21. 22. 23. 24.]]
+[[ 0.  1.  2.  3.  4.]
+ [ 5.  6.  7.  8.  9.]
+ [10. 11. 12. nan 14.]
+ [15. 16. 17. 18. 19.]
+ [20. 21. 22. 23. 24.]]
+[[ 5.  6.  7.  8.  9.]
+ [10. 11. 12. 13. 14.]
+ [15. 16. 17. nan 19.]
+ [20. 21. 22. 23. 24.]
+ [25. 26. 27. 28. 29.]]
+nan
+[ 10.  35.  nan  85. 110.]
+[50. 55. 60. nan 70.]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgae9a181" class="outline-3">
+<h3 id="orgae9a181"><span class="section-number-3">2.4</span> broadCasting rule</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+when mathematical operation applied to two different shapes, broadcasting will happen
+</p>
+</div>
+<div id="org5629f39" class="outline-4">
+<h4 id="org5629f39"><span class="section-number-4">2.4.1</span> 1. make sure the shape match('match' means can be match after scaling by [1,n])</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<pre class="example">
+.    |  0 |  1 |  2 |  3 |  4 |
+.    |  5 |  6 |  7 |  8 |  9 |
+.    | 10 | 11 | 12 | 13 | 14 |  +  | 0 | 1 | 2 | 3 | 4 |
+.    | 15 | 16 | 17 | 18 | 19 |     ---------------------
+.    | 20 | 21 | 22 | 23 | 24 |                |
+.                                              |
+.                                              v
+.
+.                         apply broadcasting rule: scaling(copy) to same match
+.
+.                                              |
+.                                              |
+.                                              v
+.    |  0 |  1 |  2 |  3 |  4 |     | 0 | 1 | 2 | 3 | 4 |
+.    |  5 |  6 |  7 |  8 |  9 |     | 0 | 1 | 2 | 3 | 4 |
+.    | 10 | 11 | 12 | 13 | 14 |  +  | 0 | 1 | 2 | 3 | 4 |
+.    | 15 | 16 | 17 | 18 | 19 |     | 0 | 1 | 2 | 3 | 4 |
+.    | 20 | 21 | 22 | 23 | 24 |     | 0 | 1 | 2 | 3 | 4 |
+.
+.=================================================================================
+.
+.    | 0 | 1 | 2 | 3 | 4 |  +  | 0 |
+.                              | 1 |
+.                              | 2 |
+.                              | 3 |
+.                              | 4 |
+.
+.    ---------------------     -----
+.             |                  |
+.             |                  |
+.             v                  v
+.
+.    apply broadcasting rule: scaling(copy) to same match
+.
+.             |                  |
+.             |                  |
+.             v                  v
+.
+.    | 0 | 1 | 2 | 3 | 4 |  +  | 0 | 0 | 0 | 0 | 0 |
+.    | 0 | 1 | 2 | 3 | 4 |     | 1 | 1 | 1 | 1 | 1 |
+.    | 0 | 1 | 2 | 3 | 4 |     | 2 | 2 | 2 | 2 | 2 |
+.    | 0 | 1 | 2 | 3 | 4 |     | 3 | 3 | 3 | 3 | 3 |
+.    | 0 | 1 | 2 | 3 | 4 |     | 4 | 4 | 4 | 4 | 4 |
+.
+
+</pre>
+</div>
+</div>
+
+<div id="org7bbcf4c" class="outline-4">
+<h4 id="org7bbcf4c"><span class="section-number-4">2.4.2</span> codes illustration</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-variable-name">h</span> = np.arange(<span class="org-highlight-numbers-number">25</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">print</span> (h)
+</pre>
+</div>
+
+<pre class="example">
+[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]
+ [15 16 17 18 19]
+ [20 21 22 23 24]]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter"># </span><span class="org-comment">matrix + scalar</span>
+<span class="org-keyword">print</span> (h + <span class="org-highlight-numbers-number">4</span>)                                     <span class="org-comment-delimiter"># </span><span class="org-comment">broadcasting happen</span>
+</pre>
+</div>
+
+<pre class="example">
+[[ 4  5  6  7  8]
+ [ 9 10 11 12 13]
+ [14 15 16 17 18]
+ [19 20 21 22 23]
+ [24 25 26 27 28]]
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter"># </span><span class="org-comment">matrix + bad-shape-array = matrix</span>
+<span class="org-keyword">print</span> (h + np.arange(<span class="org-highlight-numbers-number">7</span>))                          <span class="org-comment-delimiter"># </span><span class="org-comment">ERROR, shape mismatch</span>
+<span class="org-keyword">print</span> (h + np.arange(<span class="org-highlight-numbers-number">10</span>))                         <span class="org-comment-delimiter"># </span><span class="org-comment">ERROR, shape mismatch</span>
+</pre>
+</div>
+
+<pre class="example">
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/tmp/babel-32610Fla/python-326106fk", line 2, in &lt;module&gt;
+    print (h + np.arange(7))                          # ERROR, shape mismatch
+ValueError: operands could not be broadcast together with shapes (5,5) (7,)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter"># </span><span class="org-comment">matrix + row/column = matrix + matrix</span>
+<span class="org-keyword">print</span> (h + np.arange(<span class="org-highlight-numbers-number">5</span>))                          <span class="org-comment-delimiter"># </span><span class="org-comment">broadcasting happen</span>
+<span class="org-keyword">print</span> (h + np.arange(<span class="org-highlight-numbers-number">5</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>))             <span class="org-comment-delimiter"># </span><span class="org-comment">broadcasting happen</span>
+</pre>
+</div>
+
+<pre class="example">
+[[ 0  2  4  6  8]
+ [ 5  7  9 11 13]
+ [10 12 14 16 18]
+ [15 17 19 21 23]
+ [20 22 24 26 28]]
+[[ 0  1  2  3  4]
+ [ 6  7  8  9 10]
+ [12 13 14 15 16]
+ [18 19 20 21 22]
+ [24 25 26 27 28]]
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python"><span class="org-comment-delimiter"># </span><span class="org-comment">row + column = matrix + matrix</span>
+<span class="org-keyword">print</span> (np.arange(<span class="org-highlight-numbers-number">5</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>) + np.arange(<span class="org-highlight-numbers-number">5</span>))  <span class="org-comment-delimiter"># </span><span class="org-comment">broadcasting happen</span>
+<span class="org-keyword">print</span> (np.arange(<span class="org-highlight-numbers-number">5</span>) + np.arange(<span class="org-highlight-numbers-number">5</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">1</span>))  <span class="org-comment-delimiter"># </span><span class="org-comment">broadcasting happen</span>
+</pre>
+</div>
+
+<pre class="example">
+[[0 1 2 3 4]
+ [1 2 3 4 5]
+ [2 3 4 5 6]
+ [3 4 5 6 7]
+ [4 5 6 7 8]]
+[[0 1 2 3 4]
+ [1 2 3 4 5]
+ [2 3 4 5 6]
+ [3 4 5 6 7]
+ [4 5 6 7 8]]
+</pre>
+</div>
+</div>
+
+
+
+<div id="org75844ad" class="outline-4">
+<h4 id="org75844ad"><span class="section-number-4">2.4.3</span> 2. mathematical operations is applied element-wise</h4>
+</div>
+<div id="org57e172a" class="outline-4">
+<h4 id="org57e172a"><span class="section-number-4">2.4.4</span> 3. nan is float and <b>propagate</b> like virus</h4>
+<div class="outline-text-4" id="text-2-4-4">
+<p>
+Once you have one nan element in array, all mathematical operation on array
+will get a nan
+</p>
+</div>
+</div>
+<div id="org604c457" class="outline-4">
+<h4 id="org604c457"><span class="section-number-4">2.4.5</span> codes illustration</h4>
+<div class="outline-text-4" id="text-2-4-5">
+<div class="org-src-container">
+<pre class="src src-python" id="org48919d5"><span class="org-keyword">print</span> (h)
+<span class="org-variable-name">h</span> = h.astype(<span class="org-string">'float64'</span>)  <span class="org-comment-delimiter"># </span><span class="org-comment">nan must be in float type</span>
+<span class="org-variable-name">h</span>[<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>] = np.nan
+<span class="org-keyword">print</span> (h)
+<span class="org-keyword">print</span> (h + <span class="org-highlight-numbers-number">5</span>)          <span class="org-comment-delimiter"># </span><span class="org-comment">nan will still be nan</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(h) )    <span class="org-comment-delimiter"># </span><span class="org-comment">nan propagate to any mathematical operation</span>
+                       <span class="org-comment-delimiter"># </span><span class="org-comment">1 + 2 + 3 + 5 + nan + 7 + 8 + ... = nan</span>
+</pre>
+</div>
+
+<pre class="example">
+[[ 0.  1.  2.  3.  4.]
+ [ 5.  6.  7.  8.  9.]
+ [10. 11. 12. nan 14.]
+ [15. 16. 17. 18. 19.]
+ [20. 21. 22. 23. 24.]]
+[[ 0.  1.  2.  3.  4.]
+ [ 5.  6.  7.  8.  9.]
+ [10. 11. 12. nan 14.]
+ [15. 16. 17. 18. 19.]
+ [20. 21. 22. 23. 24.]]
+[[ 5.  6.  7.  8.  9.]
+ [10. 11. 12. 13. 14.]
+ [15. 16. 17. nan 19.]
+ [20. 21. 22. 23. 24.]
+ [25. 26. 27. 28. 29.]]
+nan
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgffe1771" class="outline-3">
+<h3 id="orgffe1771"><span class="section-number-3">2.5</span> Exercise in this youtube tutorial</h3>
+<div class="outline-text-3" id="text-2-5">
+</div>
+<div id="org64ddcbb" class="outline-4">
+<h4 id="org64ddcbb"><span class="section-number-4">2.5.1</span> exercise of fancy indexing and mask</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<ol class="org-ol">
+<li>create the array below</li>
+<li>extract the elements indicated by '&lt;-'</li>
+<li>extract all the numbers divisible by 3 using boolean mask.</li>
+</ol>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1&lt;-</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">6</td>
+<td class="org-right">7 &lt;-</td>
+<td class="org-right">8</td>
+<td class="org-right">9</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-right">11</td>
+<td class="org-right">12</td>
+<td class="org-right">13 &lt;-</td>
+<td class="org-right">14</td>
+</tr>
+
+<tr>
+<td class="org-right">15</td>
+<td class="org-right">16</td>
+<td class="org-right">17</td>
+<td class="org-right">18</td>
+<td class="org-right">19 &lt;-</td>
+</tr>
+
+<tr>
+<td class="org-right">20</td>
+<td class="org-right">21</td>
+<td class="org-right">22</td>
+<td class="org-right">23</td>
+<td class="org-right">24</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7e776cc"><span class="org-variable-name">g</span> = np.arange(<span class="org-highlight-numbers-number">25</span>).reshape(<span class="org-highlight-numbers-number">5</span>,<span class="org-highlight-numbers-number">5</span>)
+<span class="org-variable-name">gg</span> = g[[<span class="org-highlight-numbers-number">0</span>,<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>],[<span class="org-highlight-numbers-number">1</span>,<span class="org-highlight-numbers-number">2</span>,<span class="org-highlight-numbers-number">3</span>,<span class="org-highlight-numbers-number">4</span>]]
+
+<span class="org-keyword">print</span> (gg) <span class="org-comment-delimiter"># </span><span class="org-comment">extract by fancy indexing.</span>
+<span class="org-keyword">print</span> (g[ g%<span class="org-highlight-numbers-number">3</span>==<span class="org-highlight-numbers-number">0</span> ]) <span class="org-comment-delimiter"># </span><span class="org-comment">extract by boolean mask.</span>
+</pre>
+</div>
+
+<pre class="example">
+[ 1  7 13 19]
+[ 0  3  6  9 12 15 18 21 24]
+
+</pre>
+</div>
+</div>
+
+<div id="org5aab74d" class="outline-4">
+<h4 id="org5aab74d"><span class="section-number-4">2.5.2</span> exercise of "dow_selection"</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<div class="org-src-container">
+<pre class="src src-python" id="orgefe9ea5"><span class="org-doc">"""</span>
+<span class="org-doc">Dow Selection</span>
+<span class="org-doc">-------------</span>
+
+<span class="org-doc">Topics: Boolean array operators, sum function, where function, plotting.</span>
+
+<span class="org-doc">The array 'dow' is a 2-D array with each row holding the</span>
+<span class="org-doc">daily performance of the Dow Jones Industrial Average from the</span>
+<span class="org-doc">beginning of 2008 (dates have been removed for exercise simplicity).</span>
+<span class="org-doc">The array has the following structure::</span>
+
+<span class="org-doc">       OPEN      HIGH      LOW       CLOSE     VOLUME      ADJ_CLOSE</span>
+<span class="org-doc">       13261.82  13338.23  12969.42  13043.96  3452650000  13043.96</span>
+<span class="org-doc">       13044.12  13197.43  12968.44  13056.72  3429500000  13056.72</span>
+<span class="org-doc">       13046.56  13049.65  12740.51  12800.18  4166000000  12800.18</span>
+<span class="org-doc">       12801.15  12984.95  12640.44  12827.49  4221260000  12827.49</span>
+<span class="org-doc">       12820.9   12998.11  12511.03  12589.07  4705390000  12589.07</span>
+<span class="org-doc">       12590.21  12814.97  12431.53  12735.31  5351030000  12735.31</span>
+
+<span class="org-doc">0. The data has been loaded from a .csv file for you.</span>
+<span class="org-doc">1. Create a "mask" array that indicates which rows have a volume</span>
+<span class="org-doc">   greater than 5.5 billion.</span>
+<span class="org-doc">2. How many are there?  (hint: use sum).</span>
+<span class="org-doc">3. Find the index of every row (or day) where the volume is greater</span>
+<span class="org-doc">   than 5.5 billion. hint: look at the where() command.</span>
+
+<span class="org-doc">Bonus</span>
+<span class="org-doc">~~~~~</span>
+
+<span class="org-doc">1. Plot the adjusted close for *every* day in 2008.</span>
+<span class="org-doc">2. Now over-plot this plot with a 'red dot' marker for every</span>
+<span class="org-doc">   day where the volume was greater than 5.5 billion.</span>
+
+<span class="org-doc">See :ref:`dow-selection-solution`.</span>
+<span class="org-doc">"""</span>
+
+<span class="org-keyword">from</span> numpy <span class="org-keyword">import</span> loadtxt, <span class="org-builtin">sum</span>, where
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-comment-delimiter"># </span><span class="org-comment">Constants that indicate what data is held in each column of</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">the 'dow' array.</span>
+<span class="org-variable-name">OPEN</span> = <span class="org-highlight-numbers-number">0</span>
+<span class="org-variable-name">HIGH</span> = <span class="org-highlight-numbers-number">1</span>
+<span class="org-variable-name">LOW</span> = <span class="org-highlight-numbers-number">2</span>
+<span class="org-variable-name">CLOSE</span> = <span class="org-highlight-numbers-number">3</span>
+<span class="org-variable-name">VOLUME</span> = <span class="org-highlight-numbers-number">4</span>
+<span class="org-variable-name">ADJ_CLOSE</span> = <span class="org-highlight-numbers-number">5</span>
+
+<span class="org-variable-name">dow_exercise_path</span> = <span class="org-string">'Numpy-Tutorial-SciPyConf-2017-master/exercises/dow_selection/dow.csv'</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">0. The data has been loaded from a .csv file for you.</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">'dow' is our NumPy array that we will manipulate.</span>
+<span class="org-variable-name">dow</span> = loadtxt(dow_exercise_path, delimiter=<span class="org-string">','</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. Create a "mask" array that indicates which rows have a volume</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">greater than 5.5 billion.</span>
+<span class="org-variable-name">dow_volumn</span> = dow[:, <span class="org-highlight-numbers-number">4</span>]
+<span class="org-variable-name">mask</span> = dow_volumn &gt; <span class="org-highlight-numbers-number">5500000000</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. How many are there?  (hint: use sum).</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">sum</span>(mask) )
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. Find the index of every row (or day) where the volume is greater</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">than 5.5 billion. hint: look at the where() command.</span>
+<span class="org-keyword">print</span> ( np.where(mask) )
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">BONUS:</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">a. Plot the adjusted close for EVERY day in 2008.</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">b. Now over-plot this plot with a 'red dot' marker for every</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">day where the volume was greater than 5.5 billion.</span>
+<span class="org-variable-name">dow_adjclose</span> = dow[:, ADJ_CLOSE]
+<span class="org-variable-name">csv_size</span> = dow_adjclose.size
+<span class="org-keyword">print</span> (csv_size)
+
+plt.figure()
+plt.plot( dow_adjclose, <span class="org-string">'b-'</span>)
+plt.show
+<span class="org-comment-delimiter"># </span><span class="org-comment">plt.plot( )</span>
+</pre>
+</div>
+
+<pre class="example">
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+  File "/tmp/babel-32610Fla/python-32610suy", line 53, in &lt;module&gt;
+    dow = loadtxt(dow_exercise_path, delimiter=',')
+  File "/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/numpy/lib/npyio.py", line 917, in loadtxt
+    fh = np.lib._datasource.open(fname, 'rt', encoding=encoding)
+  File "/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/numpy/lib/_datasource.py", line 260, in open
+    return ds.open(path, mode, encoding=encoding, newline=newline)
+  File "/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/numpy/lib/_datasource.py", line 616, in open
+    raise IOError("%s not found." % path)
+OSError: Numpy-Tutorial-SciPyConf-2017-master/exercises/dow_selection/dow.csv not found.
+</pre>
+</div>
+</div>
+
+<div id="org0dddacd" class="outline-4">
+<h4 id="org0dddacd"><span class="section-number-4">2.5.3</span> exercise of "calc_return"</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<div class="org-src-container">
+<pre class="src src-python" id="org484f863"><span class="org-doc">"""</span>
+<span class="org-doc">Calc return</span>
+<span class="org-doc">===========</span>
+
+<span class="org-doc">For a given stock, the return is connected to its close price p by</span>
+
+<span class="org-doc">         p(t) - p(t-1)</span>
+<span class="org-doc">ret(t) = -------------</span>
+<span class="org-doc">             p(t-1)</span>
+
+<span class="org-doc">The close price for Apple stock for all business days in 2008 is loaded for you</span>
+<span class="org-doc">from the data file `aapl_2008_close_values.csv`.</span>
+
+<span class="org-doc">1. Use these values to compute the corresponding daily return for every</span>
+<span class="org-doc">business day of that year (except the first one).</span>
+
+<span class="org-doc">2. Plot these returns, converted to percentages, over the course of the year.</span>
+<span class="org-doc">On the same plot, draw a red line at 0.</span>
+
+<span class="org-doc">Note: a for loop is neither necessary nor recommended for this calculation</span>
+
+<span class="org-doc">Bonus</span>
+<span class="org-doc">~~~~~</span>
+<span class="org-doc">3. There is some blank space in the plot made in question 2 because by default,</span>
+<span class="org-doc">matplotlib displays plots with a range along the x axis that is larger than the</span>
+<span class="org-doc">highest x coordinate. Use IPython to learn about matplotlib's `plt.xlim` function</span>
+<span class="org-doc">and make the limits of your plot tighter.</span>
+<span class="org-doc">"""</span>
+<span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> print_function
+<span class="org-keyword">from</span> numpy <span class="org-keyword">import</span> arange, loadtxt, zeros
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+<span class="org-variable-name">calc_return_path</span> = <span class="org-string">'Numpy-Tutorial-SciPyConf-2017-master/exercises/calc_return/aapl_2008_close_values.csv'</span>
+<span class="org-variable-name">prices</span> = loadtxt(calc_return_path, usecols=[<span class="org-highlight-numbers-number">1</span>], delimiter=<span class="org-string">","</span>)
+
+<span class="org-comment-delimiter">#          </span><span class="org-comment">p(t) - p(t-1)</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">ret(t) = -------------</span>
+<span class="org-comment-delimiter">#              </span><span class="org-comment">p(t-1)</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. Use these values to compute the corresponding daily return for every</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">business day of that year (except the first one).</span>
+<span class="org-variable-name">forth</span> = prices[:-<span class="org-highlight-numbers-number">1</span>]
+<span class="org-variable-name">back</span> = prices[<span class="org-highlight-numbers-number">1</span>:]
+<span class="org-variable-name">ret</span> = (back - forth)/forth
+<span class="org-keyword">print</span> (ret)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. Plot these returns, converted to percentages, over the course of the year.</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">On the same plot, draw a red line at 0.</span>
+plt.plot(ret*<span class="org-highlight-numbers-number">100</span>)
+plt.show
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. There is some blank space in the plot made in question 2 because by default,</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">matplotlib displays plots with a range along the x axis that is larger than the</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">highest x coordinate. Use IPython to learn about matplotlib's `plt.xlim` function</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">and make the limits of your plot tighter.</span>
+<span class="org-comment-delimiter"># </span><span class="custom">TODO</span>
+
+</pre>
+</div>
+
+<pre class="example">
+[ 4.61917471e-04 -7.63350946e-02 -1.33851708e-02 -3.59716280e-02
+  4.75912409e-02 -7.69230769e-03 -2.99404561e-02  3.52655047e-02
+ -5.44803669e-02 -5.56081401e-02  7.83011776e-03  2.92125054e-03
+ -3.54486862e-02 -1.06463634e-01 -2.49514633e-02 -4.12241888e-02
+  0.00000000e+00  1.17683255e-02  4.86544017e-03  2.40581026e-02
+ -1.18942080e-02 -1.57009346e-02 -1.73946069e-02 -5.68954855e-02
+ -6.22950820e-03  3.49719565e-02  3.16385081e-02 -3.54577057e-02
+  3.63607240e-02 -1.49922720e-02 -2.22030441e-02 -1.96581882e-02
+  1.34228188e-02 -1.84138265e-02 -1.71137074e-02  2.34388080e-03
+ -4.92734258e-03  3.19765002e-02  5.65224463e-02 -3.76414441e-02
+ -2.63157895e-02  2.37410663e-02 -1.04317124e-03 -2.85966744e-02
+  1.09154056e-02 -2.09406953e-02  6.39986632e-02 -1.03651355e-02
+  1.51551218e-02 -1.03954979e-02  9.47792433e-04  4.80549199e-02
+ -2.37163078e-02  2.77627824e-02  4.69723118e-02  1.03920304e-02
+  2.89402752e-02 -3.31586930e-02  1.96791444e-02  3.42633382e-03
+  4.20209059e-02 -1.36427473e-02  2.79340972e-02  9.69593035e-03
+  1.83564149e-02 -1.95650779e-02 -9.15990578e-03  2.05361859e-02
+ -4.79456487e-02  4.34959902e-03  4.06008932e-03  3.58538887e-02
+  5.13988289e-03  4.23975662e-02  4.42126180e-02 -4.73358706e-02
+  1.67915106e-02  3.71416293e-02  4.67621641e-03  1.47881930e-02
+  1.63144450e-02 -6.28391888e-03  3.47801092e-02  5.22222222e-03
+  2.09461700e-02  1.04476804e-02 -2.18043502e-02  1.35275754e-02
+ -8.69988112e-03  2.56745707e-02  9.56632653e-03 -1.94777848e-02
+  1.86298722e-02 -1.11210668e-02 -2.14262872e-02  1.25272331e-02
+ -4.14739107e-02 -6.39766541e-03  2.32702626e-02  2.90335044e-02
+  3.11108727e-03 -1.71113844e-03  1.10343350e-02 -1.40397351e-02
+ -3.92262225e-03 -9.71030911e-04  2.28954047e-02 -2.00073906e-02
+ -2.17086835e-02  2.21904080e-02 -2.60180995e-02 -4.17565400e-02
+ -5.13678864e-03  2.59325869e-02  2.59556661e-02 -1.47715372e-02
+  1.20279720e-02 -3.11221669e-02 -1.20385691e-02  5.19750520e-04
+  2.38961039e-02 -5.14685157e-02  1.08760252e-02 -1.55799871e-02
+  4.32393693e-02 -3.72108999e-02  1.15352598e-02  2.96261462e-02
+  2.50627997e-02 -2.95182400e-02  1.36585366e-02 -2.29292872e-02
+  7.53273844e-03 -2.43846331e-02  1.86866305e-02 -5.78670216e-03
+ -3.87637507e-02  6.90281562e-03 -2.56780324e-02  2.61696087e-02
+ -4.34861061e-02  1.94302962e-02 -4.76190476e-02  1.73575130e-02
+  1.78253119e-02 -5.81686265e-03 -1.44070462e-02 -2.18945487e-02
+  4.83586765e-02  2.20991036e-02 -3.77611304e-03  3.65592713e-02
+  2.36508405e-02  1.82645771e-02  1.45419567e-02  1.11544897e-04
+ -1.99643096e-02 -1.99157847e-03 -1.06049376e-02  1.33118193e-02
+ -8.81483167e-03  1.43439096e-02 -2.39832570e-02  6.31700956e-03
+  5.93181295e-03 -5.32432587e-03 -2.42316105e-02 -1.97015278e-02
+  4.63325110e-03 -3.43794921e-02 -6.45081255e-03 -1.41091272e-02
+ -3.95136778e-02 -4.61497890e-04  6.85970582e-03 -2.43039633e-02
+ -5.76070901e-02 -3.41977771e-03 -8.61452674e-02  4.89712900e-02
+  5.08613618e-02 -6.99737421e-02 -3.21251431e-02  1.47429833e-02
+  2.50174812e-02 -2.79693777e-02 -1.79195259e-01  7.98023941e-02
+ -3.99436917e-02 -8.26612903e-02 -3.02697303e-02  1.10229731e-02
+ -9.15019360e-02  7.06594886e-03 -1.16939526e-02  9.08271355e-02
+  1.39049587e-01 -5.60493379e-02 -5.88970023e-02  4.02246044e-02
+ -4.40671312e-02  1.06776181e-02 -7.06013816e-02  5.88042409e-02
+  1.40394343e-02 -1.88333503e-02 -4.45113094e-02  8.49169291e-02
+  4.64417976e-02  6.20755619e-02 -3.10698847e-02 -5.85556278e-03
+  3.76776365e-02 -6.92855212e-02 -4.06582769e-02 -8.67810293e-03
+ -2.40228013e-02 -1.15769712e-02 -4.90661602e-02  7.01287173e-02
+ -6.42886769e-02 -2.32712766e-02  2.00816882e-02 -4.02624847e-02
+ -6.72152045e-02  2.59659585e-02  1.25575200e-01 -2.31307154e-02
+  4.62555066e-02 -2.45263158e-02 -4.03582605e-02  3.98065895e-02
+  3.70931113e-02 -4.68196038e-02  2.83338803e-02  6.08510638e-02
+  3.40954673e-03 -1.84889067e-02 -3.26850626e-02  3.44210526e-02
+ -3.58196805e-02  7.17678100e-03 -6.57026092e-02  3.02826380e-03
+  6.37370010e-03 -4.73333333e-02  7.46442734e-03 -1.55128502e-02
+  9.05456256e-03  9.32292274e-03 -3.69472347e-03 -1.08934987e-02]
+</pre>
+</div>
+</div>
+<div id="org269d1cd" class="outline-4">
+<h4 id="org269d1cd"><span class="section-number-4">2.5.4</span> exercise of "wind_statistics"</h4>
+<div class="outline-text-4" id="text-2-5-4">
+<div class="org-src-container">
+<pre class="src src-python" id="orgedbf63a"><span class="org-doc">"""</span>
+<span class="org-doc">Wind Statistics</span>
+<span class="org-doc">----------------</span>
+
+<span class="org-doc">Topics: Using array methods over different axes, fancy indexing.</span>
+
+<span class="org-doc">1. The data in 'wind.data' has the following format::</span>
+
+<span class="org-doc">        61  1  1 15.04 14.96 13.17  9.29 13.96  9.87 13.67 10.25 10.83 12.58 18.50 15.04</span>
+<span class="org-doc">        61  1  2 14.71 16.88 10.83  6.50 12.62  7.67 11.50 10.04  9.79  9.67 17.54 13.83</span>
+<span class="org-doc">        61  1  3 18.50 16.88 12.33 10.13 11.17  6.17 11.25  8.04  8.50  7.67 12.75 12.71</span>
+
+<span class="org-doc">   The first three columns are year, month and day.  The</span>
+<span class="org-doc">   remaining 12 columns are average windspeeds in knots at 12</span>
+<span class="org-doc">   locations in Ireland on that day.</span>
+
+<span class="org-doc">   Use the 'loadtxt' function from numpy to read the data into</span>
+<span class="org-doc">   an array.</span>
+
+<span class="org-doc">2. Calculate the min, max and mean windspeeds and standard deviation of the</span>
+<span class="org-doc">   windspeeds over all the locations and all the times (a single set of numbers</span>
+<span class="org-doc">   for the entire dataset).</span>
+
+<span class="org-doc">3. Calculate the min, max and mean windspeeds and standard deviations of the</span>
+<span class="org-doc">   windspeeds at each location over all the days (a different set of numbers</span>
+<span class="org-doc">   for each location)</span>
+
+<span class="org-doc">4. Calculate the min, max and mean windspeed and standard deviations of the</span>
+<span class="org-doc">   windspeeds across all the locations at each day (a different set of numbers</span>
+<span class="org-doc">   for each day)</span>
+
+<span class="org-doc">5. Find the location which has the greatest windspeed on each day (an integer</span>
+<span class="org-doc">   column number for each day).</span>
+
+<span class="org-doc">6. Find the year, month and day on which the greatest windspeed was recorded.</span>
+
+<span class="org-doc">7. Find the average windspeed in January for each location.</span>
+
+<span class="org-doc">You should be able to perform all of these operations without using a for</span>
+<span class="org-doc">loop or other looping construct.</span>
+
+<span class="org-doc">Bonus</span>
+<span class="org-doc">~~~~~</span>
+
+<span class="org-doc">1. Calculate the mean windspeed for each month in the dataset.  Treat</span>
+<span class="org-doc">   January 1961 and January 1962 as *different* months. (hint: first find a</span>
+<span class="org-doc">   way to create an identifier unique for each month. The second step might</span>
+<span class="org-doc">   require a for loop.)</span>
+
+<span class="org-doc">2. Calculate the min, max and mean windspeeds and standard deviations of the</span>
+<span class="org-doc">   windspeeds across all locations for each week (assume that the first week</span>
+<span class="org-doc">   starts on January 1 1961) for the first 52 weeks. This can be done without</span>
+<span class="org-doc">   any for loop.</span>
+
+<span class="org-doc">Bonus Bonus</span>
+<span class="org-doc">~~~~~~~~~~~</span>
+
+<span class="org-doc">Calculate the mean windspeed for each month without using a for loop.</span>
+<span class="org-doc">(Hint: look at `searchsorted` and `add.reduceat`.)</span>
+
+<span class="org-doc">Notes</span>
+<span class="org-doc">~~~~~</span>
+
+<span class="org-doc">These data were analyzed in detail in the following article:</span>
+
+<span class="org-doc">   Haslett, J. and Raftery, A. E. (1989). Space-time Modelling with</span>
+<span class="org-doc">   Long-memory Dependence: Assessing Ireland's Wind Power Resource</span>
+<span class="org-doc">   (with Discussion). Applied Statistics 38, 1-50.</span>
+
+
+<span class="org-doc">See :ref:`wind-statistics-solution`.</span>
+<span class="org-doc">"""</span>
+
+<span class="org-keyword">from</span> numpy <span class="org-keyword">import</span> loadtxt
+<span class="org-variable-name">RPT</span> = <span class="org-highlight-numbers-number">3</span>
+<span class="org-variable-name">VAL</span> = <span class="org-highlight-numbers-number">4</span>
+<span class="org-variable-name">ROS</span> = <span class="org-highlight-numbers-number">5</span>
+<span class="org-variable-name">KIL</span> = <span class="org-highlight-numbers-number">6</span>
+<span class="org-variable-name">SHA</span> = <span class="org-highlight-numbers-number">7</span>
+<span class="org-variable-name">BIR</span> = <span class="org-highlight-numbers-number">8</span>
+<span class="org-variable-name">DUB</span> = <span class="org-highlight-numbers-number">9</span>
+<span class="org-variable-name">CLA</span> = <span class="org-highlight-numbers-number">10</span>
+<span class="org-variable-name">MUL</span> = <span class="org-highlight-numbers-number">11</span>
+<span class="org-variable-name">CLO</span> = <span class="org-highlight-numbers-number">12</span>
+<span class="org-variable-name">BEL</span> = <span class="org-highlight-numbers-number">13</span>
+<span class="org-variable-name">MAL</span> = <span class="org-highlight-numbers-number">14</span>
+
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">1. Use the 'loadtxt' function from numpy to read the data into #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">an array.                                                   #</span>
+<span class="org-comment-delimiter">##################################################################</span>
+<span class="org-variable-name">wind_path</span> = <span class="org-string">'Numpy-Tutorial-SciPyConf-2017-master/exercises/wind_statistics/wind.data'</span>
+<span class="org-variable-name">date_winds</span> = np.loadtxt(wind_path)
+<span class="org-variable-name">winds</span> = date_winds[:, <span class="org-highlight-numbers-number">3</span>:]
+<span class="org-variable-name">date</span> = date_winds[:, :<span class="org-highlight-numbers-number">3</span>]
+<span class="org-keyword">print</span> (date_winds.shape)
+<span class="org-keyword">print</span> (winds.shape)
+
+<span class="org-comment-delimiter">#################################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">2. Calculate the min, max and mean windspeeds and standard deviation of the</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">windspeeds over all the locations and all the times (a single set of numbers</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">for the entire dataset).</span>
+<span class="org-comment-delimiter">#################################################################################</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">min</span>(winds) )
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">max</span>(winds) )
+<span class="org-keyword">print</span> ( np.mean(winds) )
+<span class="org-keyword">print</span> ( np.std(winds) )
+
+<span class="org-comment-delimiter">################################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">3. Calculate the min, max and mean windspeeds and standard deviations of the #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">windspeeds at each location over all the days (a different set of numbers #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">for each location)                                                        #</span>
+<span class="org-comment-delimiter">################################################################################</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">min</span>(winds, axis=<span class="org-highlight-numbers-number">0</span>) )
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">max</span>(winds, axis=<span class="org-highlight-numbers-number">0</span>) )
+<span class="org-keyword">print</span> ( np.mean(winds, axis=<span class="org-highlight-numbers-number">0</span>) )
+<span class="org-keyword">print</span> ( np.std(winds, axis=<span class="org-highlight-numbers-number">0</span>) )
+
+<span class="org-comment-delimiter">##################################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">4. Calculate the min, max and mean windspeed and standard deviations of the        #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">windspeeds across all the locations at each day (a different set of numbers #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">for each day)                                                               #</span>
+<span class="org-comment-delimiter">##################################################################################</span>
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">min</span>(winds, axis=<span class="org-highlight-numbers-number">1</span>).shape )
+<span class="org-keyword">print</span> ( np.<span class="org-builtin">max</span>(winds, axis=<span class="org-highlight-numbers-number">1</span>).shape)
+<span class="org-keyword">print</span> ( np.mean(winds, axis=<span class="org-highlight-numbers-number">1</span>).shape )
+<span class="org-keyword">print</span> ( np.std(winds, axis=<span class="org-highlight-numbers-number">1</span>).shape )
+
+<span class="org-comment-delimiter">#################################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">5. Find the location which has the greatest windspeed on each day (an integer #</span>
+<span class="org-comment-delimiter">#    </span><span class="org-comment">column number for each day).                                               #</span>
+<span class="org-comment-delimiter">#################################################################################</span>
+<span class="org-keyword">print</span> ( np.argmax(winds, axis=<span class="org-highlight-numbers-number">1</span>).shape )
+
+<span class="org-comment-delimiter">###############################################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">6. Find the year, month and day on which the greatest windspeed was recorded. #</span>
+<span class="org-comment-delimiter">###############################################################################</span>
+<span class="org-keyword">print</span> ( date[np.unravel_index( np.argmax(winds), (winds.shape) )[<span class="org-highlight-numbers-number">0</span>] ] )
+
+<span class="org-comment-delimiter">###############################################################</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">7. Find the average windspeed in January for each location. #</span>
+<span class="org-comment-delimiter">###############################################################</span>
+<span class="org-variable-name">jan_date_winds</span> = date_winds[ date_winds[:, <span class="org-highlight-numbers-number">1</span>] == <span class="org-highlight-numbers-number">1</span> ]
+<span class="org-variable-name">jan_winds</span> = jan_date_winds[:, <span class="org-highlight-numbers-number">3</span>:]
+<span class="org-keyword">print</span> (jan_date_winds.shape)
+<span class="org-keyword">print</span> (jan_winds.shape)
+<span class="org-keyword">print</span> ( np.mean(jan_winds, axis=<span class="org-highlight-numbers-number">0</span> ))
+</pre>
+</div>
+
+<pre class="example">
+(6574, 15)
+(6574, 12)
+[[ 0  1  2  3  4]
+ [ 5  6  7  8  9]
+ [10 11 12 13 14]
+ [15 16 17 18 19]
+ [20 21 22 23 24]]
+[[ 0  1  2  3  4]
+ [10 11 12 13 14]
+ [20 21 22 23 24]]
+[ 2.  7. 12. 17. 22.]
+[ 0  5 10 15 20]
+[ 4  9 14 19 24]
+[0 0 0 0 0]
+[4 4 4 4 4]
+0.0
+42.54
+10.22837377040868
+5.603840181095793
+[0.67 0.21 1.5  0.   0.13 0.   0.   0.   0.   0.04 0.13 0.67]
+[35.8  33.37 33.84 28.46 37.54 26.16 30.37 31.08 25.88 28.21 42.38 42.54]
+[12.36371463 10.64644813 11.66010344  6.30627472 10.45688013  7.09225434
+  9.7968345   8.49442044  8.49581838  8.70726803 13.121007   15.59946152]
+[5.61918301 5.26820081 5.00738377 3.60513309 4.93536333 3.96838126
+ 4.97689374 4.49865783 4.16746101 4.50327222 5.83459319 6.69734719]
+(6574,)
+(6574,)
+(6574,)
+(6574,)
+(6574,)
+[66. 12.  2.]
+(558, 15)
+(558, 12)
+[14.86955197 12.92166667 13.29962366  7.19949821 11.67571685  8.05483871
+ 11.81935484  9.5094086   9.54320789 10.05356631 14.55051971 18.02876344]
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

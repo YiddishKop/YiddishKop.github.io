@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-03 Gradient descent</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-03 Gradient descent</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org78554ac">1. Gradient descent</a>
+<ul>
+<li><a href="#org1d87ab2">1.1. GD</a></li>
+<li><a href="#orgd8f0f08">1.2. AdaGrad</a>
+<ul>
+<li><a href="#org9d05511">1.2.1. adgrad 与 GD 的区别：</a></li>
+</ul>
+</li>
+<li><a href="#orgd945df6">1.3. Stochastic Gradient Descent</a></li>
+<li><a href="#org2655fb4">1.4. GD SGD ADA Relationship</a></li>
+<li><a href="#org16685b5">1.5. Feature scaling</a></li>
+<li><a href="#org305754d">1.6. Newton method</a></li>
+<li><a href="#orge176858">1.7. More limitation of Gradient Descent</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org78554ac" class="outline-2">
+<h2 id="org78554ac"><span class="section-number-2">1</span> Gradient descent</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org1d87ab2" class="outline-3">
+<h3 id="org1d87ab2"><span class="section-number-3">1.1</span> GD</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li>random choose θ<sub>0</sub></li>
+<li>θ<sub>i</sub> = θ<sub>i</sub>-1 - η∇L(θ<sub>i</sub>-1)</li>
+</ol>
+
+<p>
+这个式子，我之前一直没留意，η∇L(θ<sub>i</sub>-1),这里是斜率越高，也即坡越陡
+w 更新的步伐越大，斜率越小，坡越缓，w 更新的越慢，这个特别像是从山坡上滚下来的速度。
+</p>
+
+<p>
+Tuning Learning Rate
+</p>
+
+<p>
+步进要注意调整，但是我该怎么看到 Learning rate 对于 loss 的影响呢？
+</p>
+
+<pre class="example">
+.  ^loss
+.  |  / 步幅超级大，飞到对面山上去了
+.  | /
+.  |/
+.  |\
+.  | ------------  步幅太大卡住了
+.  +-------------&gt; 调整次数
+</pre>
+
+<p>
+要学会通过看 Loss-updateNum 曲线来判断 learning rate 是否合适。所以做 gradient 时一定要把这个图画出来。
+</p>
+
+<p>
+但是要调整 learning rate 真的很麻烦，有没有办法自动调整呢？
+Adaptive learning rate
+通常，learning rate 会随着 update 次数，越来越小。
+</p>
+
+<p>
+popular and simple idea reduce the learning rate by some
+factor every few epochs
+</p>
+
+<p>
+eg: 1/t decay:  ηt = η0/√t+1
+</p>
+
+<p>
+这样 learning rate 会随着时间越来越小，但是这样往往不够动态。
+</p>
+</div>
+</div>
+
+<div id="orgd8f0f08" class="outline-3">
+<h3 id="orgd8f0f08"><span class="section-number-3">1.2</span> AdaGrad</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+原来我们有很多参数，但是我们是对参数的 gradient 整体 *η我们希望给不同的参数不同的学习率，该怎么做呢？
+</p>
+
+<p>
+Adagrad = 1/t decay + GD
+w - 表示某个具体的参数
+gt - 表示某个具体参数对 Loss-fn 的偏微分σt - root mean square of all previous(include current time) derivatives of w
+</p>
+
+<p>
+σt = √Σg<sup>2</sup>/(t+1)
+</p>
+
+<p>
+ηt = η0/√t+1
+</p>
+
+<p>
+wt+1 = wt - ηtgt/σt
+= wt - η0gt/√Σg<sup>2</sup>
+= wt - η'gt
+</p>
+
+<p>
+Adagrad 在后来是非常非常慢的，慢的可怕，因为他是 t-decay 的。
+</p>
+
+<pre class="example">
+&gt;&gt;&gt; decay
+-----------------------------------------
+上次遇到 decay 是 L2-regular 他是 weight-decay
+为甚么叫做 weight-decay, 因为把带有 L2-regular
+的式子用微分（GD）处理可以发现，L2-regular 会按比例
+缩小 w ,所以是 weight-decay
+-----------------------------------------
+</pre>
+</div>
+
+<div id="org9d05511" class="outline-4">
+<h4 id="org9d05511"><span class="section-number-4">1.2.1</span> adgrad 与 GD 的区别：</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+<code>wt+1 = wt - η0gt/√Σg^2</code>
+</p>
+
+<p>
+跟 GD 不同，GD 是坡越陡峭 w 更新的越快。但是 adagrad 似乎有点矛盾，乘以 gt，除以 gt 的 root sum square。一个加速更新，一个减速更新。所以这里 adagrad 不是根据·「坡的陡峭程度」来调整 w 的更新步伐。而是根据 ·「坡度的反差」 来决定 w 的更新步伐。
+</p>
+
+<p>
+为什么用 ·「坡度的反差」比·「坡度的大小」更好。我们希望这个步进的次数越少越好。最好就一步到位。只更新一步就到谷底。best step = 一次微分/二次微分
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgd945df6" class="outline-3">
+<h3 id="orgd945df6"><span class="section-number-3">1.3</span> Stochastic Gradient Descent</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+optimizer 应该是 独立于具体的 loss-fn 的。这里仅仅用 regression 的 loss-fn 作为例子。
+</p>
+
+<p>
+L(regre<sub>residue</sub>) = sum square all residue
+w = w - η∇L
+</p>
+
+<p>
+他考虑的是每一个点的 residue 的平方，然后取和。 而 SGD 不是这么做，他的
+loss-fn 略做变化： <b>他不是看完所有的点的 residual 然后作处理, 而是看一个点就得到一个 L，update 一次 w</b> ，然后再看下一个点得到一个 L，update 一次 w。
+</p>
+
+<pre class="example">
+L1(regre_residue) = square one residue
+w = w - η∇L
+L2(regre_residue) = square one residue
+w = w - η∇L
+L3(regre_residue) = square one residue
+w = w - η∇L
+L4(regre_residue) = square one residue
+w = w - η∇L
+L5(regre_residue) = square one residue
+w = w - η∇L
+</pre>
+
+<p>
+如果只有 20 个点，那么每个点都算一遍 residual 的平方没什么问题。如果是有 20w
+个点呢？要看完才更新是不是太慢了。
+</p>
+
+<p>
+这是 SGD 就很好用，可以选择自己的更新次数。比如 1w 次更新。SGD 更灵活。
+</p>
+</div>
+</div>
+<div id="org2655fb4" class="outline-3">
+<h3 id="org2655fb4"><span class="section-number-3">1.4</span> GD SGD ADA Relationship</h3>
+<div class="outline-text-3" id="text-1-4">
+<pre class="example">
+·「总结」
+GD 的每一个 wi 都用【相同】的 ηi
+GD 的每一个 wi 都用【不同】的 ηi ===&gt; Adagrad
+GD 的每一个样本分开做 update ===&gt; SGD
+</pre>
+</div>
+</div>
+
+<div id="org16685b5" class="outline-3">
+<h3 id="org16685b5"><span class="section-number-3">1.5</span> Feature scaling</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+两个 input feature,如果两个 feature 的分布很不一样的话，就建议把他们通过某种方法做成一样的，比如
+</p>
+<pre class="example">
+   所有样本的第一个特征值的分布是 [-100, 100]
+   所有样本的第二个特征值的分布是 [-10, 10]
+</pre>
+<p>
+这样就建议对他们做 feature scaling : make different feature have same
+scaling.
+</p>
+
+<p>
+为什么要做 feature saling ?
+</p>
+
+
+<div class="figure">
+<p><img src="Gradient descent/screenshot_2017-06-06_21-43-37.png" alt="screenshot_2017-06-06_21-43-37.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Gradient descent/screenshot_2017-06-06_21-43-52.png" alt="screenshot_2017-06-06_21-43-52.png" />
+</p>
+</div>
+
+<p>
+做 feature scaling 的本质就是让不同参数对 loss-fn 的影响尽量一致&#x2014;形成圆形
+</p>
+<ol class="org-ol">
+<li>SGD,GD,adagrad 中只有 adagrad 能处理椭圆的情况</li>
+<li>因为椭圆的优化路线不是直接朝着椭圆中心，很明显红线走了弯路而圆形的优化路线是直接朝着圆心走，红线很直。</li>
+</ol>
+
+<p>
+所以很明显圆形可以更快的到达谷底,而且可以使用更多的优化方法，可选择范围广。那怎么做 feature scaling 呢？ 如下图示 x1 x2 x3 &#x2026; xr &#x2026; xR 都是样本点
+</p>
+
+
+<div class="figure">
+<p><img src="Gradient descent/screenshot_2017-06-06_21-53-10.png" alt="screenshot_2017-06-06_21-53-10.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org305754d" class="outline-3">
+<h3 id="org305754d"><span class="section-number-3">1.6</span> Newton method</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+GD 的本质是考虑了 Taylor Series 的一次式。如果考虑他的二次式就是 Newton
+method.
+</p>
+
+<p>
+但是同样代价是，你需要算 二次微分，海森矩阵，海参矩阵的逆矩阵如果参数很少还勉强可以，如果是 Deep learning 那种级别的参数运算效率是无法承受的。
+</p>
+</div>
+</div>
+
+<div id="orge176858" class="outline-3">
+<h3 id="orge176858"><span class="section-number-3">1.7</span> More limitation of Gradient Descent</h3>
+<div class="outline-text-3" id="text-1-7">
+<ol class="org-ol">
+<li>stuck at local minima</li>
+<li>stuck at saddle point</li>
+<li>very slow at the plateau</li>
+</ol>
+
+<p>
+注意图中的这种 saddle point，以前没见到过，需要加深对 saddle point 的理解
+</p>
+
+<div class="figure">
+<p><img src="Gradient descent/screenshot_2017-06-06_21-59-45.png" alt="screenshot_2017-06-06_21-59-45.png" />
+</p>
+</div>
+
+<p>
+我们在做 GD 的时候，并不是真的得到 gradient=0 的时候才停下，而是到某个很小的梯度值就停止了。但是这样的点，从上图中也可以看出他可能还处在高原上，根本不低，而且离
+local minima 还很远，更别说 global minima 了。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

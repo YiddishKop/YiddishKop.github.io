@@ -1,0 +1,1446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 15:06 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MLDS 作业报告-1: Language Modeling</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href=""> HOME </a>
+</div><div id="content">
+<h1 class="title">MLDS 作业报告-1: Language Modeling</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga91307c">作业说明</a>
+<ul>
+<li><a href="#orgf915caa">个人分析</a></li>
+</ul>
+</li>
+<li><a href="#orgb1b37bf">技术说明</a>
+<ul>
+<li><a href="#orgc5075cb">word2vec</a>
+<ul>
+<li><a href="#org850d778">Skip-Gram 和 CBOW 介绍</a></li>
+</ul>
+</li>
+<li><a href="#org5815124">NCE</a>
+<ul>
+<li><a href="#orgea694ac">交叉熵缺点</a></li>
+<li><a href="#orgca64e98">基于抽样的 softmax</a></li>
+<li><a href="#org97ef7b5">Noise Contrastive Estimation (NCE)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org323f61a">项目代码</a>
+<ul>
+<li><a href="#org047a27a">数据准备</a>
+<ul>
+<li><a href="#org4e224c3">数据下载</a></li>
+<li><a href="#org5b380f4">数据加载</a></li>
+</ul>
+</li>
+<li><a href="#org000e5c0">图构造</a></li>
+<li><a href="#orgfc23f08">模型评价</a></li>
+<li><a href="#org8626856">可视化</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orga91307c" class="outline-2">
+<h2 id="orga91307c">作业说明</h2>
+<div class="outline-text-2" id="text-orga91307c">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Course</th>
+<th scope="col" class="org-left">Semester</th>
+<th scope="col" class="org-left">HW,Link</th>
+<th scope="col" class="org-left">Task</th>
+<th scope="col" class="org-left">Dataset</th>
+<th scope="col" class="org-left">size</th>
+<th scope="col" class="org-left">sample_num</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses_MLDS17.html">MLDS</a></td>
+<td class="org-left">2017 Spring HW1</td>
+<td class="org-left"><a href="https://docs.google.com/presentation/d/1h51R4pMeZkS_CCdU0taBkQucUnPeyucQX433lsw8bVk/edit#slide=id.g1cc39546d1_0_5">作业链接</a></td>
+<td class="org-left">HW1 Language Model</td>
+<td class="org-left"><a href="http://mattmahoney.net/dc/">text8 wiki dump</a></td>
+<td class="org-left">100MB</td>
+<td class="org-left">17,005,207</td>
+</tr>
+</tbody>
+</table>
+
+<ol class="org-ol">
+<li>要求在 <b>充分考虑运算效率</b> 的前提下构建 word2vec.</li>
+<li>详细说明选择的技术(附上数学表达式及其理解).</li>
+<li>限制使用 tensorflow 1.0+</li>
+<li>注明 CPU GPU 型号/频率, 及神经网络训练时间.</li>
+</ol>
+</div>
+
+<div id="orgf915caa" class="outline-3">
+<h3 id="orgf915caa">个人分析</h3>
+<div class="outline-text-3" id="text-orgf915caa">
+<p>
+<b>word2vec</b> 一般都使用 one-hot encoding based on vocabulary, 而 vocabulary 的
+size 一般都是 10w+(业界肯定更高), 之前自己也做过基于 RNN 的 IMDB(keras 内置数据集, size=84MB) Sentimen Analysis, 1060 2G显存在 vocabulary=30,000 时只
+tokenize 就用时近两分钟.
+</p>
+
+<p>
+我分析训练较慢的主要原因是: one-hot 会对全连接神经网络的参数量剧增, 由于计算量太大, 不但NN难于训练, 还容易造成 overfitting 和 gradient vanishing and
+exploding 问题. 初步解决方法: 选择使用 <span class="underline">sampling based method &#x2014; NCE</span>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgb1b37bf" class="outline-2">
+<h2 id="orgb1b37bf">技术说明</h2>
+<div class="outline-text-2" id="text-orgb1b37bf">
+</div>
+<div id="orgc5075cb" class="outline-3">
+<h3 id="orgc5075cb">word2vec</h3>
+<div class="outline-text-3" id="text-orgc5075cb">
+<p>
+<code>Word2Vec</code> NLP 常用模型, 用于将非数值型数据如字符串, 转换向量形式以便利用 GD
+去训练, 最常用的方法是 one-hot encoding, 但 one-hot 只注重 <b>出现与否</b> , 不承载
+<b>上下文信息(context information)和词汇顺序信息(word ordering)</b>, 而这两者对于单词的词性/意义/感情色彩有决定性的作用. 由此 word2vec 应运而生, 他部分解决了 <span class="underline">承载环境信息</span> 的任务. 目的是: 让意义相同的 words 映射到 embeding space 中距离相近的位置上.
+</p>
+
+<p>
+比如,下面的例子:
+</p>
+<ul class="org-ul">
+<li><span class="underline">猫</span> 是我最喜欢的宠物;</li>
+
+<li><span class="underline">狗</span> 是我最喜欢的宠物;</li>
+</ul>
+
+<p>
+当把 <code>"猫"</code> 和 <code>"狗"</code> 喂进神经网络时, 得到的神经网络输出(可以把NN看成feature
+transformation函数)的结果向量, 较为相似.
+</p>
+
+<p>
+\(fn("cat")\approx{fn("dog")}\)
+</p>
+</div>
+
+<div id="org850d778" class="outline-4">
+<h4 id="org850d778">Skip-Gram 和 CBOW 介绍</h4>
+<div class="outline-text-4" id="text-org850d778">
+<p>
+word2vec 在 NLP 领域一般有两个变种: skip-gram 和 cbow.
+</p>
+
+<ul class="org-ul">
+<li>skip-gram 通过 target word 预测 context words;</li>
+<li>cbow 通过 context words 预测 target word.</li>
+</ul>
+
+<p>
+两者表述相反, 但对应的 NN 结构类似,
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Skip-gram</th>
+<th scope="col" class="org-left">CBOW</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><img src="Skip-gram.png" alt="Skip-gram.png" /></td>
+<td class="org-left"><img src="Cbow.png" alt="Cbow.png" /></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+举例说明两者在构建样本时的不同:
+</p>
+
+<blockquote>
+<p>
+猫是我最喜欢的宠物;
+</p>
+</blockquote>
+
+<p>
+cbow 则会构建这样的训练样本:
+</p>
+
+<pre class="example">
+| x        | y        |
+|----------+----------|
+| (猫, 我) | 是       |
+| (是, 最) | 我       |
+| (我, 喜) | 最       |
+
+</pre>
+
+
+<p>
+skip-gram 会构建这样的训练样本:
+</p>
+
+<pre class="example">
+| x        | y        |
+|----------+----------|
+| 是       | 猫       |
+| 是       | 我       |
+| 我       | 是       |
+| 我       | 最       |
+
+</pre>
+
+
+
+<p>
+从概率的角度分析, cbow 可以让 sequence 信息分布变得更平滑, 因为他是把整个
+context words 作为一个训练样本. 对于数据集较小的时候, cbow 由于每次训练都考虑了更多其他单词的信息, 所以更合适; skip-gram 收集到每两个单词的正反顺序信息, 所以当数据集较大的时候, 会更精确.
+</p>
+
+<p>
+本次作业仅 focus 在 skip-gram 上.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org5815124" class="outline-3">
+<h3 id="org5815124">NCE</h3>
+<div class="outline-text-3" id="text-org5815124">
+</div>
+<div id="orgea694ac" class="outline-4">
+<h4 id="orgea694ac">交叉熵缺点</h4>
+<div class="outline-text-4" id="text-orgea694ac">
+<p>
+Skip-gram 基于极大似然使用交叉熵来评价和优化模型:
+</p>
+
+<p>
+\[
+    \arg\min_{\Theta}\sum_{i=1}^{N}{-\log\mathrm{P}(\boldsymbol{y}^{(i)}|\boldsymbol{x}^{(i)},\Theta)}
+    \]
+</p>
+
+<p>
+对于一个 \(V\) 分类问题, (\(V\) 是单词表大小) :
+</p>
+
+
+<p>
+\(y=1,\cdots,V\)
+</p>
+
+<p>
+假设对于样本 x , 他的标签的 Bernoulli 分布记做:
+</p>
+
+<p>
+\[\Pr(y|\boldsymbol{x})\sim\mathrm{Categorical}(y|\boldsymbol{x};\boldsymbol{\rho})=\prod_{i=1}^{V}\rho_{i}^{1(y;y=i)}.\]
+</p>
+
+<p>
+我们很自然的会想到用 V 个 <b>softmax units</b> 作为输出层, 将第 L 层的第 i 个
+softmax 记做 \(a_i^{(L)}\), 将第 L 层的第 i 个 softmax 的输出 (L 层)输出记做
+\(z_i^{(L)}\), 于是有:
+</p>
+
+<p>
+\[
+    a_i^{(L)}=\rho_i=\mathrm{softmax}(\boldsymbol{z}^{(L)})_{i}=\frac{\exp(z_{i}^{(L)})}{\sum_{j=1}^{{\color{red}V}}\exp(z_{j}^{(L)})}.
+    \]
+</p>
+
+<p>
+最终代价函数就可以写成:
+</p>
+
+<p>
+\[\arg\min_{\Theta}\sum_{i}-\log\prod_{j}\left(\frac{\exp(z_{j}^{(L)})}{\sum_{k=1}^{{\color{red}V}}\exp(z_{k}^{(L)})}\right)^{1(y^{(i)};y^{(i)}=j)}=\arg\min_{\Theta}\sum_{i}\left[-z_{y^{(i)}}^{(L)}+\log\sum_{k=1}^{{\color{red}V}}\exp(z_{k}^{(L)})\right]\]
+</p>
+
+
+<p>
+模型想要达到的效果是, 如果一个样本属于 j 类, 那么 \(\rho_j\) 应该最大.但是, 很明显可以看到这个模型的计算复杂度是与 vocabulary size 直接相关的. 这就是普通
+NN 处理 word2vec 的缺点.
+</p>
+
+<p>
+下面引入 sample based method, 来减少输出层神经元数量.
+</p>
+</div>
+</div>
+
+<div id="orgca64e98" class="outline-4">
+<h4 id="orgca64e98">基于抽样的 softmax</h4>
+<div class="outline-text-4" id="text-orgca64e98">
+<ol class="org-ol">
+<li>假设我们有一个 batch_size = T 的训练数据, \(w_1,w_2,w_3,⋯,w_T\) .</li>
+<li>使用 context_window_size = n,</li>
+<li>假设 embedding 输入层标记为 \(v_w\) , 维度是 \(d\), embedding 输出层标记为 \(v_w^'\).</li>
+</ol>
+
+<p>
+\[C(\theta) = -z_{y^{(i)}}^{(L)} + log \sum_{k=1}^{V}
+exp(z_{k}^{(L)})\]
+</p>
+
+<p>
+计算 \(C(\theta)\) 对于模型参数 \(\theta\) 的梯度, 经过化简与处理可以得到:
+</p>
+
+
+<p>
+\[ \nabla_{\theta}C(\theta) = - \left[ \nabla_{\theta}
+(\,z_{y^{(i)}}^{(L)}\,) + \sum_{j=1}^{V} \frac{exp(z_j^{(L)})}
+{\sum_{k=1}^{V} exp(z_k^{(L)})}
+\nabla_{\theta}(-z_{j}^{(L)})\right]\]
+</p>
+
+<p>
+其中 \(\frac{exp(\,z_j^{(L)}\,)} {\sum_{k=1}^{V} \, exp(\,z_k^{(L)}\,)}\) 是 \(P(z_{j}^{(L)})\) 的近似, 带入之后:
+</p>
+
+
+<p>
+\[ \nabla_{\theta}C(\theta) = - \left[ \nabla_{\theta}
+(\,z_{y^{(i)}}^{(L)}\,) + \sum_{j=1}^{V} P(z_j^{(L)})
+\nabla_{\theta} (-z_j^{(L)}) \right] \]
+</p>
+
+
+<p>
+\[ \sum_{j=1}^{V} P(z_j^{(L)}) \nabla_{\theta} (-z_j^{(L)}) =
+\mathop{\mathbb{E}}_{z_j \sim P} [ \nabla_{\theta}(-z_{j}^{(L)}) ]
+\]
+</p>
+
+
+<p>
+\[
+\nabla_{\theta}C(\theta) = - \left[\nabla(\,z_{y^{(i)}}^{(L)}\,)
++\mathop{\mathbb{E}}_{z_j\sim P} [\nabla_{\theta}(-z_{j}^{(L)})
+]\right]
+\]
+</p>
+
+<p>
+下面不是处理 vocabulary 中所有的单词, 而是根据某个分布 Q 从 V 中 sample 出一个子集, \(V^'\), 那么上式第二项可以写成:
+</p>
+
+<p>
+\[ \mathop{\mathbb{E}}_{z_j \sim P} [ \nabla_{\theta}(-z_{j}^{(L)})
+] \approx \sum_{\boldsymbol {x}_i \in {\color{red}V^{\color{red}'}}}
+\frac{exp(z_{j}^{(L)})-log(Q(\boldsymbol {x}_i))}{ \sum_{\boldsymbol
+{x}_k \in {\color{red}V^{\color{red}'}}}
+exp(z_{j}^{(L)})-log(Q(\boldsymbol {x}_k))}\]
+</p>
+
+<p>
+\[
+Q(\mathbf {x}_i)= \begin{equation}
+\left\{
+\begin{array}{rl}
+\frac{1}{|V_{i}^{'}|} \; if \; \boldsymbol {x}_i \in V_{i}^{'}\\
+0, otherwise
+\end{array} \right.
+\end{equation}
+\]
+</p>
+</div>
+</div>
+
+<div id="org97ef7b5" class="outline-4">
+<h4 id="org97ef7b5">Noise Contrastive Estimation (NCE)</h4>
+<div class="outline-text-4" id="text-org97ef7b5">
+<p>
+对于 NCE 这里只做介绍, 具体公式详见: <a href="http://proceedings.mlr.press/v9/gutmann10a/gutmann10a.pdf">这篇论文</a>
+</p>
+
+<p>
+上面分析得知, 传统 NN 使用交叉熵做 error evaluation, 来衡量产生分布与目标分布之间的"距离". 所以他希望整个神经网络输出一个概率分布, 为了得到对概率值的模拟, 一般使用 softmax 对输出做 normalization, 但是当分类数量较大时, softmax
+会带来极大运算消耗. NCE 的出现就是为了解决 softmax 问题而生:
+</p>
+
+<blockquote>
+<p>
+NCE 把一个多分类问题转换成二分类问题
+</p>
+</blockquote>
+
+<p>
+每一次训练, NCE 使用一个"真"样本 <code>(true_center, true_conetext)</code>, 和 k 个随机
+"假"样本 <code>(true_center, random_context)</code> ("假"样本抽样过程叫做 "negtative
+sampling") 做为训练目标, 训练网络区分 <b>"真假"</b>.
+</p>
+
+
+<div class="figure">
+<p><img src="nce-nplm.png" alt="nce-nplm.png" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>原始代价函数:
+\[C(\theta) = -z_{y^{(i)}}^{(L)} + log \sum_{k=1}^{V} exp(z_{k}^{(L)})\]</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>sample based softmax 代价函数:
+\[
+      \nabla_{\theta}C(\theta) = - \left[\nabla(\,z_{y^{(i)}}^{(L)}\,)
+      +\mathop{\mathbb{E}}_{z_j\sim P} [\nabla_{\theta}(-z_{j}^{(L)})
+      ]\right]
+      \]</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>NCE 代价函数:
+\[C(\theta)=-\sum_{i=1}^{V}[log\frac{exp(\,z_{i}^{(L)}\,)}{
+      exp(\,z_{i}^{(L)}\,)+kQ(\boldsymbol{x})}+logP(1-\frac{
+      exp(\,z_{i}^{(L)}\,)}{exp(\,z_{i}^{(L)}\,)+kQ(\boldsymbol{x})}]
+      \]</li>
+</ul>
+
+
+
+<p>
+比较有意思的是, 当 k 取值越来越大时 NCE 的导数与 softmax 的梯度越来越近. 这也从另一个角度说明, 我们实际是通过 <b>给模型增加自由度</b>, 来换取计算复杂度的下降. 根据 VC-dimension 理论, 当我们引入参数时实际是在增加模型复杂度, 而增加模型复杂度会造成模型泛化能力不足, 这是一个 tradeoff. 但这里的 tradeoff 是很合理的:
+</p>
+<blockquote>
+<p>
+提升模型复杂度带来的损失, 远小于, 降低计算量所带来的收益
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org323f61a" class="outline-2">
+<h2 id="org323f61a">项目代码</h2>
+<div class="outline-text-2" id="text-org323f61a">
+</div>
+<div id="org047a27a" class="outline-3">
+<h3 id="org047a27a">数据准备</h3>
+<div class="outline-text-3" id="text-org047a27a">
+</div>
+<div id="org4e224c3" class="outline-4">
+<h4 id="org4e224c3">数据下载</h4>
+<div class="outline-text-4" id="text-org4e224c3">
+<p>
+定义一些工具函数, 用来产生批次样本. 首先, 把 corpus 读入内存, 使用 corpus 中出现频率最高的单词建立 vocabulary, 同时, 建立两个 python dict, 一个 map words to
+indices 另一个 map indices to words. 对于每一个 center word, 打包该词与其
+context words 组成一个训练样本 &#x2014; (center word, context words), 编写函数产生批次样本.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-doc">"""The content of process_data.py"""</span>
+
+<span class="org-keyword">from</span> collections <span class="org-keyword">import</span> Counter
+<span class="org-keyword">import</span> random
+<span class="org-keyword">import</span> os
+<span class="org-keyword">import</span> sys
+sys.path.append(<span class="org-string">'..'</span>)
+<span class="org-keyword">import</span> zipfile
+
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">from</span> six.moves <span class="org-keyword">import</span> urllib
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">Parameters for downloading data</span>
+<span class="org-variable-name">DOWNLOAD_URL</span> = <span class="org-string">'http://mattmahoney.net/dc/'</span>
+<span class="org-variable-name">EXPECTED_BYTES</span> = <span class="org-highlight-numbers-number">31344016</span>
+<span class="org-variable-name">DATA_FOLDER</span> = <span class="org-string">'data/'</span>
+<span class="org-variable-name">FILE_NAME</span> = <span class="org-string">'text8.zip'</span>
+
+<span class="org-keyword">def</span> <span class="org-function-name">make_dir</span>(path):
+    <span class="org-doc">""" Create a directory if there isn't one already. """</span>
+    <span class="org-keyword">try</span>:
+        os.mkdir(path)
+    <span class="org-keyword">except</span> <span class="org-type">OSError</span>:
+        <span class="org-keyword">pass</span>
+
+<span class="org-keyword">def</span> <span class="org-function-name">download</span>(file_name, expected_bytes):
+    <span class="org-doc">""" Download the dataset text8 if it's not already downloaded """</span>
+    <span class="org-variable-name">file_path</span> = DATA_FOLDER + file_name
+    <span class="org-keyword">if</span> os.path.exists(DATA_FOLDER):
+        <span class="org-keyword">print</span>(<span class="org-string">"Data_folder ready"</span>)
+    <span class="org-keyword">else</span>: make_dir(DATA_FOLDER)
+    <span class="org-keyword">if</span> os.path.exists(file_path):
+        <span class="org-keyword">print</span>(<span class="org-string">"Dataset ready"</span>)
+        <span class="org-keyword">return</span> file_path
+    <span class="org-variable-name">file_name</span>, <span class="org-variable-name">_</span> = urllib.request.urlretrieve(DOWNLOAD_URL + file_name, file_path)
+    <span class="org-variable-name">file_stat</span> = os.stat(file_path)
+    <span class="org-keyword">if</span> file_stat.st_size == expected_bytes:
+        <span class="org-keyword">print</span>(<span class="org-string">'Successfully downloaded the file'</span>, file_name)
+    <span class="org-keyword">else</span>:
+        <span class="org-keyword">raise</span> <span class="org-type">Exception</span>(
+              <span class="org-string">'File '</span> + file_name +
+              <span class="org-string">' might be corrupted. You should try downloading it with a browser.'</span>)
+    <span class="org-keyword">return</span> file_path    
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">read_data</span>(file_path):
+    <span class="org-doc">""" Read data into a list of tokens"""</span>
+    <span class="org-keyword">with</span> zipfile.ZipFile(file_path) <span class="org-keyword">as</span> f:
+        <span class="org-variable-name">words</span> = tf.compat.as_str(f.read(f.namelist()[<span class="org-highlight-numbers-number">0</span>])).split()
+        <span class="org-comment-delimiter"># </span><span class="org-comment">tf.compat.as_str() converts the input into the string</span>
+    <span class="org-keyword">return</span> words
+
+<span class="org-keyword">def</span> <span class="org-function-name">build_vocab</span>(words, vocab_size):
+    <span class="org-doc">""" Build vocabulary of VOCAB_SIZE most frequent words """</span>
+    <span class="org-variable-name">dictionary</span> = <span class="org-builtin">dict</span>()
+    <span class="org-variable-name">count</span> = [(<span class="org-string">'UNK'</span>, -<span class="org-highlight-numbers-number">1</span>)]
+    count.extend(Counter(words).most_common(vocab_size - <span class="org-highlight-numbers-number">1</span>))
+    <span class="org-variable-name">index</span> = <span class="org-highlight-numbers-number">0</span>
+    make_dir(<span class="org-string">'processed'</span>)
+    <span class="org-keyword">with</span> <span class="org-builtin">open</span>(<span class="org-string">'processed/vocab_1000.tsv'</span>, <span class="org-string">"w"</span>) <span class="org-keyword">as</span> f:
+        <span class="org-keyword">for</span> word, _ <span class="org-keyword">in</span> count:
+            <span class="org-variable-name">dictionary</span>[word] = index
+            <span class="org-keyword">if</span> index &lt; <span class="org-highlight-numbers-number">1000</span>:
+                f.write(word + <span class="org-string">"\n"</span>)
+            <span class="org-variable-name">index</span> += <span class="org-highlight-numbers-number">1</span>
+    <span class="org-variable-name">index_dictionary</span> = <span class="org-builtin">dict</span>(<span class="org-builtin">zip</span>(dictionary.values(), dictionary.keys()))
+    <span class="org-keyword">return</span> dictionary, index_dictionary
+
+<span class="org-keyword">def</span> <span class="org-function-name">convert_words_to_index</span>(words, dictionary):
+    <span class="org-doc">""" Replace each word in the dataset with its index in the dictionary """</span>
+    <span class="org-keyword">return</span> [dictionary[word] <span class="org-keyword">if</span> word <span class="org-keyword">in</span> dictionary <span class="org-keyword">else</span> <span class="org-highlight-numbers-number">0</span> <span class="org-keyword">for</span> word <span class="org-keyword">in</span> words]
+
+<span class="org-keyword">def</span> <span class="org-function-name">generate_sample</span>(index_words, context_window_size):
+    <span class="org-doc">""" Form training pairs according to the skip-gram model. """</span>
+    <span class="org-keyword">for</span> index, center <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>(index_words):
+        <span class="org-variable-name">context</span> = random.randint(<span class="org-highlight-numbers-number">1</span>, context_window_size)
+        <span class="org-comment-delimiter"># </span><span class="org-comment">get a random target before the center word</span>
+        <span class="org-keyword">for</span> target <span class="org-keyword">in</span> index_words[<span class="org-builtin">max</span>(<span class="org-highlight-numbers-number">0</span>, index - context): index]:
+            <span class="org-keyword">yield</span> center, target
+        <span class="org-comment-delimiter"># </span><span class="org-comment">get a random target after the center wrod</span>
+        <span class="org-keyword">for</span> target <span class="org-keyword">in</span> index_words[index + <span class="org-highlight-numbers-number">1</span>: index + context + <span class="org-highlight-numbers-number">1</span>]:
+            <span class="org-keyword">yield</span> center, target
+
+<span class="org-keyword">def</span> <span class="org-function-name">get_batch</span>(iterator, batch_size):
+    <span class="org-doc">""" Group a numerical stream into batches and yield them as Numpy arrays. """</span>
+    <span class="org-keyword">while</span> <span class="org-constant">True</span>:
+        <span class="org-variable-name">center_batch</span> = np.zeros(batch_size, dtype=np.int32)
+        <span class="org-variable-name">target_batch</span> = np.zeros([batch_size, <span class="org-highlight-numbers-number">1</span>])
+        <span class="org-keyword">for</span> index <span class="org-keyword">in</span> <span class="org-builtin">range</span>(batch_size):
+            center_batch[index], <span class="org-variable-name">target_batch</span>[index] = <span class="org-builtin">next</span>(iterator)
+        <span class="org-keyword">yield</span> center_batch, target_batch
+
+<span class="org-keyword">def</span> <span class="org-function-name">get_batch_gen</span>(index_words, context_window_size, batch_size):
+    <span class="org-doc">""" Return a python generator that generates batches"""</span>
+    <span class="org-variable-name">single_gen</span> = generate_sample(index_words, context_window_size)
+    <span class="org-variable-name">batch_gen</span> = get_batch(single_gen, batch_size)
+    <span class="org-keyword">return</span> batch_gen
+
+<span class="org-keyword">def</span> <span class="org-function-name">process_data</span>(vocab_size):
+    <span class="org-doc">""" Read data, build vocabulary and dictionary"""</span>
+    <span class="org-variable-name">file_path</span> = download(FILE_NAME, EXPECTED_BYTES)
+    <span class="org-variable-name">words</span> = read_data(file_path)
+    <span class="org-variable-name">dictionary</span>, <span class="org-variable-name">index_dictionary</span> = build_vocab(words, vocab_size)
+    <span class="org-variable-name">index_words</span> = convert_words_to_index(words, dictionary)
+    <span class="org-keyword">del</span> words <span class="org-comment-delimiter"># </span><span class="org-comment">to save memory</span>
+    <span class="org-keyword">return</span> index_words, dictionary, index_dictionary
+</pre>
+</div>
+
+<pre class="example">
+/home/yiddi/anaconda3/envs/tensorflow/lib/python3.6/site-packages/h5py/__init__.py:34:
+  FutureWarning: Conversion of the second argument of issubdtype from `float` to
+  `np.floating` is deprecated. In future, it will be treated as `np.float64 ==
+  np.dtype(float).type`. from ._conv import register_converters as
+  _register_converters
+</pre>
+
+<p>
+检测单个批次样本的形状
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">vocab_size</span> = <span class="org-highlight-numbers-number">10000</span>
+<span class="org-variable-name">window_sz</span> = <span class="org-highlight-numbers-number">5</span>
+<span class="org-variable-name">batch_sz</span> = <span class="org-highlight-numbers-number">64</span>
+<span class="org-variable-name">index_words</span>, <span class="org-variable-name">dictionary</span>, <span class="org-variable-name">index_dictionary</span> = process_data(vocab_size)
+<span class="org-variable-name">batch_gen</span> = get_batch_gen(index_words, window_sz, batch_sz)
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = <span class="org-builtin">next</span>(batch_gen)
+
+<span class="org-keyword">print</span>(X.shape)
+<span class="org-keyword">print</span>(y.shape)
+</pre>
+</div>
+
+<pre class="example">
+Data_folder ready
+Dataset ready
+(64,)
+(64, 1)
+
+</pre>
+
+<p>
+打印出前 10 对样本数据 (center word, context word):
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">10</span>): <span class="org-comment-delimiter"># </span><span class="org-comment">print out the pairs</span>
+  <span class="org-variable-name">data</span> = index_dictionary[X[i]]
+  <span class="org-variable-name">label</span> = index_dictionary[y[i,<span class="org-highlight-numbers-number">0</span>]]
+  <span class="org-keyword">print</span>(<span class="org-string">'('</span>, data, label,<span class="org-string">')'</span>)
+</pre>
+</div>
+
+<pre class="example">
+( anarchism originated )
+( anarchism as )
+( originated anarchism )
+( originated as )
+( originated a )
+( originated term )
+( originated of )
+( as originated )
+( as a )
+( a as )
+</pre>
+
+<p>
+打印出这 10 对样本对应的原始 corpus 数据.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">10</span>): <span class="org-comment-delimiter"># </span><span class="org-comment">print out the first 10 words in the text</span>
+  <span class="org-keyword">print</span>(index_dictionary[index_words[i]], end=<span class="org-string">' '</span>)
+</pre>
+</div>
+
+<pre class="example">
+anarchism originated as a term of abuse first used against
+
+</pre>
+
+<p>
+可以看到, 语句与其产生的样本是匹配的.
+</p>
+</div>
+</div>
+
+<div id="org5b380f4" class="outline-4">
+<h4 id="org5b380f4">数据加载</h4>
+<div class="outline-text-4" id="text-org5b380f4">
+<p>
+这里使用 Tensorflow 提供的 data input pileline 来作为模型的输入.他能构建更复杂的输入队列, 比 feed_dict 也更有效率.
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">BATCH_SIZE</span> = <span class="org-highlight-numbers-number">128</span>
+<span class="org-variable-name">dataset</span> = tf.contrib.data.Dataset.from_tensor_slices((X, y))
+<span class="org-variable-name">dataset</span> = dataset.repeat()
+<span class="org-variable-name">dataset</span> = dataset.batch(BATCH_SIZE)
+<span class="org-variable-name">iterator</span> = dataset.make_one_shot_iterator()
+<span class="org-variable-name">next_batch</span> = iterator.get_next()
+</pre>
+</div>
+
+<pre class="example">
+WARNING:tensorflow:From &lt;ipython-input-5-7ebc9cc946e4&gt;:2:
+Dataset.from_tensor_slices (from tensorflow.contrib.data.python.ops.dataset_ops)
+is deprecated and will be removed in a future version. Instructions for
+updating: Use `tf.data.Dataset.from_tensor_slices()`.
+</pre>
+
+<p>
+运行会话, 检测批次数据与批次标签的形状:
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+  <span class="org-variable-name">data</span>, <span class="org-variable-name">label</span> = sess.run(next_batch)
+  <span class="org-keyword">print</span>(data.shape)
+  <span class="org-keyword">print</span>(label.shape)
+</pre>
+</div>
+
+<pre class="example">
+(128,)
+(128, 1)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org000e5c0" class="outline-3">
+<h3 id="org000e5c0">图构造&#xa0;&#xa0;&#xa0;<span class="tag"><span class="MLALGO">MLALGO</span></span></h3>
+<div class="outline-text-3" id="text-org000e5c0">
+<p>
+按照以下步骤建图:
+</p>
+
+<ol class="org-ol">
+<li>创建图首:
+<ol class="org-ol">
+<li>输入</li>
+<li>输出</li>
+</ol></li>
+<li>创建图中:
+<ol class="org-ol">
+<li>一神: layers' weights and bias</li>
+<li>两函: err_fn, loss_fn</li>
+<li>三器: initializer, optimizer, saver</li>
+</ol></li>
+<li>创建图尾:
+<ol class="org-ol">
+<li>精度计算,</li>
+<li>模型评估</li>
+</ol></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> absolute_import <span class="org-comment-delimiter"># </span><span class="org-comment">use absolute import instead of relative import</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">'/' for floating point division, '//' for integer division</span>
+<span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> division  
+<span class="org-keyword">from</span> __future__ <span class="org-keyword">import</span> print_function  <span class="org-comment-delimiter"># </span><span class="org-comment">use 'print' as a function</span>
+
+<span class="org-keyword">import</span> os
+
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+
+<span class="org-keyword">from</span> process_data <span class="org-keyword">import</span> make_dir, get_batch_gen, process_data
+
+<span class="org-keyword">class</span> <span class="org-type">SkipGramModel</span>:
+  <span class="org-doc">""" Build the graph for word2vec model """</span>
+  <span class="org-keyword">def</span> <span class="org-function-name">__init__</span>(<span class="org-keyword">self</span>, hparams=<span class="org-constant">None</span>):
+
+    <span class="org-keyword">if</span> hparams <span class="org-keyword">is</span> <span class="org-constant">None</span>:
+        <span class="org-keyword">self</span>.hps = get_default_hparams()
+    <span class="org-keyword">else</span>:
+        <span class="org-keyword">self</span>.hps = hparams
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">define a variable to record training progress</span>
+    <span class="org-keyword">self</span>.global_step = tf.Variable(<span class="org-highlight-numbers-number">0</span>, dtype=tf.int32, trainable=<span class="org-constant">False</span>, name=<span class="org-string">'global_step'</span>)
+
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_create_input</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">""" Step 1: define input and output """</span>
+
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">"data"</span>):
+      <span class="org-keyword">self</span>.centers = tf.placeholder(tf.int32, [<span class="org-keyword">self</span>.hps.num_pairs], name=<span class="org-string">'centers'</span>)
+      <span class="org-keyword">self</span>.targets = tf.placeholder(tf.int32, [<span class="org-keyword">self</span>.hps.num_pairs, <span class="org-highlight-numbers-number">1</span>], name=<span class="org-string">'targets'</span>)
+      <span class="org-variable-name">dataset</span> = tf.contrib.data.Dataset.from_tensor_slices((<span class="org-keyword">self</span>.centers, <span class="org-keyword">self</span>.targets))
+      <span class="org-variable-name">dataset</span> = dataset.repeat() <span class="org-comment-delimiter"># </span><span class="org-comment"># Repeat the input indefinitely</span>
+      <span class="org-variable-name">dataset</span> = dataset.batch(<span class="org-keyword">self</span>.hps.batch_size)
+
+      <span class="org-keyword">self</span>.iterator = dataset.make_initializable_iterator()  <span class="org-comment-delimiter"># </span><span class="org-comment">create iterator</span>
+      <span class="org-keyword">self</span>.center_words, <span class="org-keyword">self</span>.target_words = <span class="org-keyword">self</span>.iterator.get_next()
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_create_embedding</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">""" Step 2: define weights. </span>
+<span class="org-doc">        In word2vec, it's actually the weights that we care about</span>
+<span class="org-doc">    """</span>
+    <span class="org-keyword">with</span> tf.device(<span class="org-string">'/cpu:0'</span>):
+      <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">"embed"</span>):
+        <span class="org-keyword">self</span>.embed_matrix = tf.Variable(
+                              tf.random_uniform([<span class="org-keyword">self</span>.hps.vocab_size,
+                                                 <span class="org-keyword">self</span>.hps.embed_size], -<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>),
+                                                 name=<span class="org-string">'embed_matrix'</span>)
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_create_loss</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">""" Step 3 + 4: define the model + the loss function """</span>
+    <span class="org-keyword">with</span> tf.device(<span class="org-string">'/cpu:0'</span>):
+      <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">"loss"</span>):
+        <span class="org-comment-delimiter"># </span><span class="org-comment">Step 3: define the inference</span>
+        <span class="org-variable-name">embed</span> = tf.nn.embedding_lookup(<span class="org-keyword">self</span>.embed_matrix, <span class="org-keyword">self</span>.center_words, name=<span class="org-string">'embed'</span>)
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">Step 4: define loss function</span>
+        <span class="org-comment-delimiter"># </span><span class="org-comment">construct variables for NCE loss</span>
+        <span class="org-variable-name">nce_weight</span> = tf.Variable(
+                        tf.truncated_normal([<span class="org-keyword">self</span>.hps.vocab_size, <span class="org-keyword">self</span>.hps.embed_size],
+                                            stddev=<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span> / (<span class="org-keyword">self</span>.hps.embed_size ** <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>)),
+                                            name=<span class="org-string">'nce_weight'</span>)
+        <span class="org-variable-name">nce_bias</span> = tf.Variable(tf.zeros([<span class="org-keyword">self</span>.hps.vocab_size]), name=<span class="org-string">'nce_bias'</span>)
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">define loss function to be NCE loss function</span>
+        <span class="org-keyword">self</span>.loss = tf.reduce_mean(tf.nn.nce_loss(weights=nce_weight,
+                                                  biases=nce_bias,
+                                                  labels=<span class="org-keyword">self</span>.target_words,
+                                                  inputs=embed,
+                                                  num_sampled=<span class="org-keyword">self</span>.hps.num_sampled,
+                                                  num_classes=<span class="org-keyword">self</span>.hps.vocab_size), name=<span class="org-string">'loss'</span>)
+  <span class="org-keyword">def</span> <span class="org-function-name">_create_optimizer</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">""" Step 5: define optimizer """</span>
+    <span class="org-keyword">with</span> tf.device(<span class="org-string">'/cpu:0'</span>):
+      <span class="org-keyword">self</span>.optimizer = tf.train.AdamOptimizer(<span class="org-keyword">self</span>.hps.lr).minimize(<span class="org-keyword">self</span>.loss,
+                                                         global_step=<span class="org-keyword">self</span>.global_step)
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_build_nearby_graph</span>(<span class="org-keyword">self</span>):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Nodes for computing neighbors for a given word according to</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">their cosine distance.</span>
+    <span class="org-keyword">self</span>.nearby_word = tf.placeholder(dtype=tf.int32)  <span class="org-comment-delimiter"># </span><span class="org-comment">word id</span>
+    <span class="org-variable-name">nemb</span> = tf.nn.l2_normalize(<span class="org-keyword">self</span>.embed_matrix, <span class="org-highlight-numbers-number">1</span>)
+    <span class="org-variable-name">nearby_emb</span> = tf.gather(nemb, <span class="org-keyword">self</span>.nearby_word)
+    <span class="org-variable-name">nearby_dist</span> = tf.matmul(nearby_emb, nemb, transpose_b=<span class="org-constant">True</span>)
+    <span class="org-keyword">self</span>.nearby_val, <span class="org-keyword">self</span>.nearby_idx = tf.nn.top_k(nearby_dist,
+                                         <span class="org-builtin">min</span>(<span class="org-highlight-numbers-number">1000</span>, <span class="org-keyword">self</span>.hps.vocab_size))
+
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_build_eval_graph</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">"""Build the eval graph."""</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Eval graph</span>
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Each analogy task is to predict the 4th word (d) given three</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">words: a, b, c.  E.g., a=italy, b=rome, c=france, we should</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">predict d=paris.</span>
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">The eval feeds three vectors of word ids for a, b, c, each of</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">which is of size N, where N is the number of analogies we want to</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">evaluate in one batch.</span>
+    <span class="org-keyword">self</span>.analogy_a = tf.placeholder(dtype=tf.int32)  <span class="org-comment-delimiter"># </span><span class="org-comment">[N]</span>
+    <span class="org-keyword">self</span>.analogy_b = tf.placeholder(dtype=tf.int32)  <span class="org-comment-delimiter"># </span><span class="org-comment">[N]</span>
+    <span class="org-keyword">self</span>.analogy_c = tf.placeholder(dtype=tf.int32)  <span class="org-comment-delimiter"># </span><span class="org-comment">[N]</span>
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Normalized word embeddings of shape [vocab_size, emb_dim].</span>
+    <span class="org-variable-name">nemb</span> = tf.nn.l2_normalize(<span class="org-keyword">self</span>.embed_matrix, <span class="org-highlight-numbers-number">1</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Each row of a_emb, b_emb, c_emb is a word's embedding vector.</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">They all have the shape [N, emb_dim]</span>
+    <span class="org-variable-name">a_emb</span> = tf.gather(nemb, <span class="org-keyword">self</span>.analogy_a)  <span class="org-comment-delimiter"># </span><span class="org-comment">a's embs</span>
+    <span class="org-variable-name">b_emb</span> = tf.gather(nemb, <span class="org-keyword">self</span>.analogy_b)  <span class="org-comment-delimiter"># </span><span class="org-comment">b's embs</span>
+    <span class="org-variable-name">c_emb</span> = tf.gather(nemb, <span class="org-keyword">self</span>.analogy_c)  <span class="org-comment-delimiter"># </span><span class="org-comment">c's embs</span>
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">We expect that d's embedding vectors on the unit hyper-sphere is</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">near: c_emb + (b_emb - a_emb), which has the shape [N, emb_dim].</span>
+    <span class="org-variable-name">target</span> = c_emb + (b_emb - a_emb)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">Compute cosine distance between each pair of target and vocab.</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">dist has shape [N, vocab_size].</span>
+    <span class="org-variable-name">dist</span> = tf.matmul(target, nemb, transpose_b=<span class="org-constant">True</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">For each question (row in dist), find the top 20 words.</span>
+    <span class="org-variable-name">_</span>, <span class="org-keyword">self</span>.pred_idx = tf.nn.top_k(dist, <span class="org-highlight-numbers-number">20</span>)
+
+  <span class="org-keyword">def</span> <span class="org-function-name">predict</span>(<span class="org-keyword">self</span>, sess, analogy):
+    <span class="org-doc">""" Predict the top 20 answers for analogy questions """</span>
+    idx, = sess.run([<span class="org-keyword">self</span>.pred_idx], {
+        <span class="org-keyword">self</span>.analogy_a: analogy[:, <span class="org-highlight-numbers-number">0</span>],
+        <span class="org-keyword">self</span>.analogy_b: analogy[:, <span class="org-highlight-numbers-number">1</span>],
+        <span class="org-keyword">self</span>.analogy_c: analogy[:, <span class="org-highlight-numbers-number">2</span>]
+    })
+    <span class="org-keyword">return</span> idx
+
+  <span class="org-keyword">def</span> <span class="org-function-name">_create_summaries</span>(<span class="org-keyword">self</span>):
+    <span class="org-keyword">with</span> tf.name_scope(<span class="org-string">"summaries"</span>):
+      tf.summary.scalar(<span class="org-string">"loss"</span>, <span class="org-keyword">self</span>.loss)
+      tf.summary.histogram(<span class="org-string">"histogram_loss"</span>, <span class="org-keyword">self</span>.loss)
+      <span class="org-comment-delimiter"># </span><span class="org-comment">because you have several summaries, we should merge them all</span>
+      <span class="org-comment-delimiter"># </span><span class="org-comment">into one op to make it easier to manage</span>
+      <span class="org-keyword">self</span>.summary_op = tf.summary.merge_all()
+
+  <span class="org-keyword">def</span> <span class="org-function-name">build_graph</span>(<span class="org-keyword">self</span>):
+    <span class="org-doc">""" Build the graph for our model """</span>
+    <span class="org-keyword">self</span>._create_input()
+    <span class="org-keyword">self</span>._create_embedding()
+    <span class="org-keyword">self</span>._create_loss()
+    <span class="org-keyword">self</span>._create_optimizer()
+    <span class="org-keyword">self</span>._build_eval_graph()
+    <span class="org-keyword">self</span>._build_nearby_graph()
+    <span class="org-keyword">self</span>._create_summaries()
+
+<span class="org-keyword">def</span> <span class="org-function-name">train_model</span>(sess, model, batch_gen, index_words, num_train_steps):
+  <span class="org-variable-name">saver</span> = tf.train.Saver()
+  <span class="org-comment-delimiter"># </span><span class="org-comment">defaults to saving all variables - in this case embed_matrix, nce_weight, nce_bias</span>
+
+  <span class="org-variable-name">initial_step</span> = <span class="org-highlight-numbers-number">0</span>
+  make_dir(<span class="org-string">'checkpoints'</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">directory to store checkpoints</span>
+
+  sess.run(tf.global_variables_initializer()) <span class="org-comment-delimiter"># </span><span class="org-comment">initialize all variables</span>
+  <span class="org-variable-name">ckpt</span> = tf.train.get_checkpoint_state(os.path.dirname(<span class="org-string">'checkpoints/checkpoint'</span>))
+  <span class="org-comment-delimiter"># </span><span class="org-comment">if that checkpoint exists, restore from checkpoint</span>
+  <span class="org-keyword">if</span> ckpt <span class="org-keyword">and</span> ckpt.model_checkpoint_path:
+      saver.restore(sess, ckpt.model_checkpoint_path)
+
+  <span class="org-variable-name">total_loss</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span> <span class="org-comment-delimiter"># </span><span class="org-comment">use this to calculate late average loss in the last SKIP_STEP steps</span>
+  <span class="org-variable-name">writer</span> = tf.summary.FileWriter(<span class="org-string">'graph/lr'</span> + <span class="org-builtin">str</span>(model.hps.lr), sess.graph)
+  <span class="org-variable-name">initial_step</span> = model.global_step.<span class="org-builtin">eval</span>()
+  <span class="org-keyword">for</span> index <span class="org-keyword">in</span> <span class="org-builtin">range</span>(initial_step, initial_step + num_train_steps):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">feed in new dataset  </span>
+    <span class="org-keyword">if</span> index % model.hps.new_dataset_every == <span class="org-highlight-numbers-number">0</span>:
+      <span class="org-keyword">try</span>:
+          <span class="org-variable-name">centers</span>, <span class="org-variable-name">targets</span> = <span class="org-builtin">next</span>(batch_gen)
+      <span class="org-keyword">except</span> <span class="org-type">StopIteration</span>: <span class="org-comment-delimiter"># </span><span class="org-comment">generator has nothing left to generate</span>
+          <span class="org-variable-name">batch_gen</span> = get_batch_gen(index_words, 
+                                    model.hps.skip_window, 
+                                    model.hps.num_pairs)
+          <span class="org-variable-name">centers</span>, <span class="org-variable-name">targets</span> = <span class="org-builtin">next</span>(batch_gen)
+          <span class="org-keyword">print</span>(<span class="org-string">'Finished looking at the whole text'</span>)
+
+      <span class="org-variable-name">feed</span> = {
+          model.centers: centers,
+          model.targets: targets
+      }
+      <span class="org-variable-name">_</span> = sess.run(model.iterator.initializer, feed_dict = feed)
+      <span class="org-keyword">print</span>(<span class="org-string">'feeding in new dataset'</span>)
+
+
+    <span class="org-variable-name">loss_batch</span>, <span class="org-variable-name">_</span>, <span class="org-variable-name">summary</span> = sess.run([model.loss, model.optimizer, model.summary_op])
+    writer.add_summary(summary, global_step=index)
+    <span class="org-variable-name">total_loss</span> += loss_batch
+    <span class="org-keyword">if</span> (index + <span class="org-highlight-numbers-number">1</span>) % model.hps.skip_step == <span class="org-highlight-numbers-number">0</span>:
+        <span class="org-keyword">print</span>(<span class="org-string">'Average loss at step {}: {:5.1f}'</span>.<span class="org-builtin">format</span>(
+                                                  index,
+                                                  total_loss/model.hps.skip_step))
+        <span class="org-variable-name">total_loss</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>
+        saver.save(sess, <span class="org-string">'checkpoints/skip-gram'</span>, index)
+
+<span class="org-keyword">def</span> <span class="org-function-name">get_default_hparams</span>():
+    <span class="org-variable-name">hparams</span> = tf.contrib.training.HParams(
+        num_pairs = <span class="org-highlight-numbers-number">10</span>**<span class="org-highlight-numbers-number">6</span>,                <span class="org-comment-delimiter"># </span><span class="org-comment">number of (center, target) pairs </span>
+                                          <span class="org-comment-delimiter"># </span><span class="org-comment">in each dataset instance</span>
+        vocab_size = <span class="org-highlight-numbers-number">10000</span>,
+        batch_size = <span class="org-highlight-numbers-number">128</span>,
+        embed_size = <span class="org-highlight-numbers-number">300</span>,                 <span class="org-comment-delimiter"># </span><span class="org-comment">dimension of the word embedding vectors</span>
+        skip_window = <span class="org-highlight-numbers-number">3</span>,                  <span class="org-comment-delimiter"># </span><span class="org-comment">the context window</span>
+        num_sampled = <span class="org-highlight-numbers-number">100</span>,                <span class="org-comment-delimiter"># </span><span class="org-comment">number of negative examples to sample</span>
+        lr = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">005</span>,                       <span class="org-comment-delimiter"># </span><span class="org-comment">learning rate</span>
+        new_dataset_every = <span class="org-highlight-numbers-number">10</span>**<span class="org-highlight-numbers-number">4</span>,        <span class="org-comment-delimiter"># </span><span class="org-comment">replace the original dataset every ? steps</span>
+        num_train_steps = <span class="org-highlight-numbers-number">2</span>*<span class="org-highlight-numbers-number">10</span>**<span class="org-highlight-numbers-number">5</span>,        <span class="org-comment-delimiter"># </span><span class="org-comment">number of training steps for each feed of dataset</span>
+        skip_step = <span class="org-highlight-numbers-number">2000</span>
+    )
+    <span class="org-keyword">return</span> hparams
+
+<span class="org-keyword">def</span> <span class="org-function-name">main</span>():
+
+  <span class="org-variable-name">hps</span> = get_default_hparams()
+  <span class="org-variable-name">index_words</span>, <span class="org-variable-name">dictionary</span>, <span class="org-variable-name">index_dictionary</span> = process_data(hps.vocab_size)
+  <span class="org-variable-name">batch_gen</span> = get_batch_gen(index_words, hps.skip_window, hps.num_pairs)
+
+  <span class="org-variable-name">model</span> = SkipGramModel(hparams = hps)
+  model.build_graph()
+
+
+  <span class="org-keyword">with</span> tf.Session() <span class="org-keyword">as</span> sess:
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">feed the model with dataset</span>
+    <span class="org-variable-name">centers</span>, <span class="org-variable-name">targets</span> = <span class="org-builtin">next</span>(batch_gen)
+    <span class="org-variable-name">feed</span> = {
+        model.centers: centers,
+        model.targets: targets
+    }
+    sess.run(model.iterator.initializer, feed_dict = feed) <span class="org-comment-delimiter"># </span><span class="org-comment">initialize the iterator</span>
+
+    train_model(sess, model, batch_gen, index_words, hps.num_train_steps)
+
+<span class="org-keyword">if</span> <span class="org-builtin">__name__</span> == <span class="org-string">'__main__'</span>:
+  main()
+</pre>
+</div>
+
+<pre class="example">
+Dataset ready
+INFO:tensorflow:Restoring parameters from checkpoints/skip-gram-149999
+feeding in new dataset
+Average loss at step 151999:   6.5
+Average loss at step 153999:   6.6
+</pre>
+</div>
+</div>
+
+<div id="orgfc23f08" class="outline-3">
+<h3 id="orgfc23f08">模型评价</h3>
+<div class="outline-text-3" id="text-orgfc23f08">
+<p>
+采用"逻辑推理题"的模式来测试模型是否足够好:
+</p>
+
+<p>
+\(\vec{Paris}-\vec{France}\approx\vec{Rome}-\vec{Italy}\)
+</p>
+
+<p>
+\(\vec{Paris}\approx\vec{France}+\vec{Rome}-\vec{Italy}\)
+</p>
+
+<p>
+把训练好的网络看成一个函数 \(f\), 那么我们希望 \(f\) 可以做到的事情是:
+</p>
+
+<p>
+\[
+"Paris"=\arg\max_{w_i}{(\cos{f(w_i;w_i\in{vocabulary}), (f("France")+f("Rome")-f("Italy"))})}
+\]
+</p>
+
+<p>
+稍微放款一些要求, 这里不使用 argmax, 而是用 topkmax, 只要 paris 出现在 topkmax
+中即可.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-keyword">import</span> tensorflow <span class="org-keyword">as</span> tf
+<span class="org-keyword">from</span> process_data <span class="org-keyword">import</span> process_data
+<span class="org-keyword">from</span> train <span class="org-keyword">import</span> get_default_hparams, SkipGramModel
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">Clears the default graph stack and resets the global default graph</span>
+tf.reset_default_graph() 
+<span class="org-variable-name">hps</span> = get_default_hparams()
+<span class="org-comment-delimiter"># </span><span class="org-comment">get dictionary </span>
+<span class="org-variable-name">index_words</span>, <span class="org-variable-name">dictionary</span>, <span class="org-variable-name">index_dictionary</span> = process_data(hps.vocab_size)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">build model</span>
+<span class="org-variable-name">model</span> = SkipGramModel(hps)
+model.build_graph()
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">initialize variables and restore checkpoint</span>
+<span class="org-variable-name">sess</span> = tf.InteractiveSession()
+sess.run(tf.global_variables_initializer())
+<span class="org-variable-name">saver</span> = tf.train.Saver()
+<span class="org-variable-name">ckpt</span> = tf.train.get_checkpoint_state(os.path.dirname(<span class="org-string">'checkpoints/checkpoint'</span>))
+saver.restore(sess, ckpt.model_checkpoint_path)
+</pre>
+</div>
+
+<pre class="example">
+Dataset ready
+INFO:tensorflow:Restoring parameters from checkpoints/skip-gram-2941999
+</pre>
+
+<p>
+下面构造一个工具函数, 用来找到 topkmax 单词.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+<span class="org-keyword">def</span> <span class="org-function-name">nearby</span>(words, model, sess, dictionary, index_dictionary, num=<span class="org-highlight-numbers-number">20</span>):
+    <span class="org-doc">"""Prints out nearby words given a list of words."""</span>
+    <span class="org-variable-name">ids</span> = np.array([dictionary.get(x, <span class="org-highlight-numbers-number">0</span>) <span class="org-keyword">for</span> x <span class="org-keyword">in</span> words])
+    <span class="org-variable-name">vals</span>, <span class="org-variable-name">idx</span> = sess.run(
+        [model.nearby_val, model.nearby_idx], {model.nearby_word: ids})
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-builtin">len</span>(words)):
+      <span class="org-keyword">print</span>(<span class="org-string">"\n%s\n====================================="</span> % (words[i]))
+      <span class="org-keyword">for</span> (neighbor, distance) <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(idx[i, :num], vals[i, :num]):
+        <span class="org-keyword">print</span>(<span class="org-string">"%-20s %6.4f"</span> % (index_dictionary.get(neighbor), distance))
+
+<span class="org-keyword">def</span> <span class="org-function-name">analogy</span>(line, model, sess, dictionary, index_dictionary):
+  <span class="org-doc">""" Prints the top k anologies for a given array which contain 3 words"""</span>
+  <span class="org-variable-name">analogy</span> = np.array([dictionary.get(w, <span class="org-highlight-numbers-number">0</span>) <span class="org-keyword">for</span> w <span class="org-keyword">in</span> line])[np.newaxis,:]
+  <span class="org-variable-name">idx</span> = model.predict(sess, analogy)
+  <span class="org-keyword">print</span>(line)
+  <span class="org-keyword">for</span> i <span class="org-keyword">in</span> idx[<span class="org-highlight-numbers-number">0</span>]:
+    <span class="org-keyword">print</span>(index_dictionary[i])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">words</span> = [<span class="org-string">'machine'</span>, <span class="org-string">'learning'</span>]
+nearby(words, model, sess, dictionary, index_dictionary)
+</pre>
+</div>
+
+<pre class="example">
+machine
+=====================================
+machine              1.0000
+bodies               0.5703
+model                0.5123
+engine               0.4834
+william              0.4792
+computer             0.4529
+simple               0.4367
+software             0.4325
+device               0.4310
+carrier              0.4296
+designed             0.4245
+using                0.4191
+models               0.4178
+gun                  0.4157
+performance          0.4151
+review               0.4129
+disk                 0.4082
+arrived              0.4021
+devices              0.4017
+process              0.4009
+
+learning
+=====================================
+learning             1.0000
+knowledge            0.3951
+instruction          0.3692
+communication        0.3666
+reflected            0.3665
+study                0.3646
+gospel               0.3637
+concepts             0.3628
+mathematics          0.3597
+cartoon              0.3582
+context              0.3555
+dialect              0.3494
+ching                0.3422
+tin                  0.3421
+gilbert              0.3416
+botswana             0.3389
+settlement           0.3388
+analysis             0.3386
+management           0.3374
+describing           0.3368
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">analogy([<span class="org-string">'london'</span>, <span class="org-string">'england'</span>, <span class="org-string">'berlin'</span>], model, sess, dictionary, index_dictionary)
+</pre>
+</div>
+
+<pre class="example">
+['london', 'england', 'berlin']
+berlin
+england
+predecessor
+elevator
+gr
+germany
+ss
+presidents
+link
+arose
+cologne
+correspond
+liturgical
+pioneered
+paris
+strikes
+icons
+turing
+scotland
+companion
+</pre>
+</div>
+</div>
+
+<div id="org8626856" class="outline-3">
+<h3 id="org8626856">可视化&#xa0;&#xa0;&#xa0;<span class="tag"><span class="DATAVIEW">DATAVIEW</span></span></h3>
+<div class="outline-text-3" id="text-org8626856">
+<p>
+这里采用 t-SNE 进行可视化
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.manifold <span class="org-keyword">import</span> TSNE
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+<span class="org-variable-name">rng</span> = <span class="org-highlight-numbers-number">300</span>
+
+<span class="org-variable-name">embed_matrix</span> = sess.run(model.embed_matrix) <span class="org-comment-delimiter"># </span><span class="org-comment">get the embed matrix</span>
+
+<span class="org-variable-name">X_embedded</span> = TSNE(n_components=<span class="org-highlight-numbers-number">2</span>).fit_transform(embed_matrix[:rng])
+
+plt.figure(figsize=(<span class="org-highlight-numbers-number">30</span>,<span class="org-highlight-numbers-number">30</span>))
+
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(rng):
+  plt.scatter(X_embedded[i][<span class="org-highlight-numbers-number">0</span>], X_embedded[i][<span class="org-highlight-numbers-number">1</span>])
+  plt.text(X_embedded[i][<span class="org-highlight-numbers-number">0</span>]+<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,
+           X_embedded[i][<span class="org-highlight-numbers-number">1</span>]+<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,
+           index_dictionary.get(i, <span class="org-highlight-numbers-number">0</span>), fontsize=<span class="org-highlight-numbers-number">18</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="项目代码/screenshot_2018-08-08_10-58-59.png" alt="screenshot_2018-08-08_10-58-59.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

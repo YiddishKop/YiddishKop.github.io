@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-04 Classification</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-04 Classification</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org38f4a7a">1. Classification</a>
+<ul>
+<li><a href="#org93c0736">1.1. Gaussian Distribution</a></li>
+<li><a href="#org3af99f7">1.2. Maximum Likelihood</a></li>
+<li><a href="#orgfbc6267">1.3. Modifying Model</a>
+<ul>
+<li><a href="#org5753874">1.3.1. tree steps</a></li>
+</ul>
+</li>
+<li><a href="#orgde009ca">1.4. Many other Probability Distribution</a>
+<ul>
+<li><a href="#org2ead534">1.4.1. 假设 input 多个 feature 相互独立来简化概率模型 :Naive Bayes:</a></li>
+<li><a href="#orgb2d4e93">1.4.2. 根据问题目标来决定概率模型：</a></li>
+</ul>
+</li>
+<li><a href="#org173e80c">1.5. Dive into Posterior Probability&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Sigmoid">Sigmoid</span></span></a>
+<ul>
+<li><a href="#org71e667f">1.5.1. 引入 sigmoind</a></li>
+<li><a href="#orgb1803d6">1.5.2. 殊途同归：统一向量模型和概率模型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org38f4a7a" class="outline-2">
+<h2 id="org38f4a7a"><span class="section-number-2">1</span> Classification</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+如果用 regression 直接做 classification，用+1/-1 来表示结果。
+</p>
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_09-28-44.png" alt="screenshot_2017-06-07_09-28-44.png" />
+</p>
+</div>
+
+<p>
+这会造成·「y 值太大的那些点会被照顾太多」，这样分界面会从我们希望的绿色转向紫色。这是由于 regression 的 loss-fn.并不适合做 classification。也就是我们·「看待
+residue」的方式要改变，也就是说衡量模型好坏的标准要改变。
+</p>
+
+<p>
+传统的方法有：perceptron，SVM
+</p>
+
+<p>
+这里介绍一种基于概率分布的观点：
+</p>
+</div>
+<div id="org93c0736" class="outline-3">
+<h3 id="org93c0736"><span class="section-number-3">1.1</span> Gaussian Distribution</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_09-46-28.png" alt="screenshot_2017-06-07_09-46-28.png" />
+</p>
+</div>
+
+<p>
+想想 bayes 定理：以 P(A and B) 的交换律为基础而形成的定理。
+</p>
+<ol class="org-ol">
+<li>已经知道从 A/B 各自抽取的概率</li>
+<li>已经知道 A/B 各自包含蓝绿球的比例</li>
+<li>==&gt; 问抽一个蓝球，来自与 A 的概率</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_09-48-13.png" alt="screenshot_2017-06-07_09-48-13.png" />
+</p>
+</div>
+
+<p>
+如果把盒子换成分类的话：
+</p>
+
+<ol class="org-ol">
+<li>已经知道从 A/B 各自抽取的概率     | 1. 已经知道 A/B 类型各自的占比</li>
+<li>已经知道 A/B 各自包含蓝绿球的比例 |  2. 已经知道某个样本点是 A/B 的概率</li>
+<li>==&gt; 问抽一个蓝球，来自与 A 的概率    | 3. ===&gt; 这个样本点是 A 类型的概率</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-00-29.png" alt="screenshot_2017-06-07_10-00-29.png" />
+</p>
+</div>
+
+<p>
+想得到(3),就得显得道 (1)(2), 所以我们想通过 trainingdata 来获得.
+</p>
+
+<pre class="example">
+.  Generative Model
+.
+.  这种想法很有用，叫做 Generative Model
+.  你可以通过这个模型 Generate 一个 x，P(x),如果你知道 x 的 distribution，你就可以
+.  产生 x。
+</pre>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-00-23.png" alt="screenshot_2017-06-07_10-00-23.png" />
+</p>
+</div>
+
+
+<p>
+Prior Probability
+算步骤(1): P(C1) P(C2)
+直接通过 labeled data 来计算所有样本中 C1 类，C2 类各自的占比
+Probability from Class
+这个比较麻烦，新来的一个 testpoint:x,他不在 trainingdata 的 C1 样本中。我怎么判断他是出自 C1 的概率呢？换种思路：trainingdata 的所有 C1 样本也是从某个更大的 C1'样本集合中抽取出来的而新来的 testpoint 就是出自 C1'.
+我们假设 C1 是通过 Gaussian distribution 从 C1'中抽取出来的。所以如果我能得到这个 Gaussian distribution，我就能得到 P(x|C1')
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-13-22.png" alt="screenshot_2017-06-07_10-13-22.png" />
+</p>
+</div>
+
+<p>
+这是高斯分布的概率密度公式，他正比与高斯分布的概率值有两个变数，Σ μ, 同样的 x，如果带入不同的 Σ μ, 就会产生不同的高斯分布如果 trainingdata 中所有的 C1 点都是通过某个 Σ μ 抽取出来的，那么我就可以通过 trainingdata 中的所有 C1 点来得到 Σ μ, 得到这个高斯分布我再带入 testpoint:x, 就可以得到 P(x|C1')~~P(x|C1)
+</p>
+
+<p>
+可以看出，如果 x 离 μ 越近这个 P(x|C1')的概率就越高，反之很低。
+</p>
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-23-06.png" alt="screenshot_2017-06-07_10-23-06.png" />
+</p>
+</div>
+
+<p>
+下面的问题是如何找到 Σ μ
+</p>
+</div>
+</div>
+<div id="org3af99f7" class="outline-3">
+<h3 id="org3af99f7"><span class="section-number-3">1.2</span> Maximum Likelihood</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+任何一种高斯分布都·「有可能」抽取出训练集的 C1 点。只是有些地方概率高，有些地方概率低，但没有一个地方概率是 0。
+</p>
+
+<p>
+但是不同的高斯分布抽取出 C1 的概率不一样。
+</p>
+
+<p>
+从中选取 likelihood 最大的那个高斯分布
+Likelihood 公式：
+</p>
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-42-11.png" alt="screenshot_2017-06-07_10-42-11.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-43-05.png" alt="screenshot_2017-06-07_10-43-05.png" />
+</p>
+</div>
+
+<p>
+求微分就可以解答
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-43-30.png" alt="screenshot_2017-06-07_10-43-30.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-43-58.png" alt="screenshot_2017-06-07_10-43-58.png" />
+</p>
+</div>
+
+
+<p>
+然后算出每一种 trainingdata 的分类所对应的 maximum likehood Gaussian
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_10-45-50.png" alt="screenshot_2017-06-07_10-45-50.png" />
+</p>
+</div>
+
+
+<pre class="example">
+算法步骤
+1. 直接通过 labeled data 来计算所有样本中 C1 类，C2 类各自的占比
+   Probability from Class
+   P(x|C1) = Gaussian(μ1,Σ1)
+   P(x|C2) = Gaussian(μ2,Σ2)
+
+2. Now we can do classification
+   P(C1|x) = P(x|C1)P(C1)/P(x)
+   = P(x|C1)P(C1)/(x in C1) or (x in C2)
+   = P(x|C1)P(C1)/(P(x|C1)P(C1) + P(x|C2)P(C2))
+
+   if P(C1|x) &gt; 0.5 , x ∈ C1
+</pre>
+
+<pre class="example">
++----------------------+--------------------------+
+|                      |                          |
+|    +-----------------+----------------+         |
+|    | P(x|c1)         | p(x|c2)        |         |
+|    |                 |                |         |
+|    +-----------------+----------------+         |
+|                      |                          |
+|  p(c1)               |                  P(c2)   |
++----------------------+--------------------------+
+</pre>
+</div>
+</div>
+
+
+<div id="orgfbc6267" class="outline-3">
+<h3 id="orgfbc6267"><span class="section-number-3">1.3</span> Modifying Model</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+make Covariance Matrix Σ same
+Σ 是跟 input 量成正比的，当 input 太大的时候，Σ会增长的很快。所以让他们一样，这样减少参数，避免 overfitting
+</p>
+
+<p>
+modify Gaussian
+</p>
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-18-15.png" alt="screenshot_2017-06-07_11-18-15.png" />
+</p>
+</div>
+
+<p>
+modify Maximumu likelihood
+</p>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-20-10.png" alt="screenshot_2017-06-07_11-20-10.png" />
+</p>
+</div>
+
+<pre class="example">
+   微分这个 maximum liklihood 公式，得到最好的 Σ μ:
+   μ1' = average of C1
+   μ2' = average of C2
+   Σ'  = C1 比例 × Σ1 + C2 比例 × Σ2
+   其中 Σ1Σ2 是用最原始的方法得到的两个 covariance matrix
+</pre>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-26-58.png" alt="screenshot_2017-06-07_11-26-58.png" />
+</p>
+</div>
+
+<p>
+可以看到，当我们强制 covariance 相等时通过 微分最大似然函数 得到的两个概率分布然后再通过 post-probability 算出的 boundary 是线性的
+</p>
+
+<p>
+·「总结」
+</p>
+</div>
+<div id="org5753874" class="outline-4">
+<h4 id="org5753874"><span class="section-number-4">1.3.1</span> tree steps</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Funcion Set -&gt; Post probability of different P(x|c1) and P(x|c2)
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-36-25.png" alt="screenshot_2017-06-07_11-36-25.png" />
+</p>
+</div>
+
+<p>
+Goodness of a function -&gt;  Σμ make Likelihood is larger
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-39-18.png" alt="screenshot_2017-06-07_11-39-18.png" />
+</p>
+</div>
+
+<p>
+Find the best -&gt; a analogy result
+注意这个模型不像其他模型需要通过·「循环优化」,他是可以通过微分直接求出最优解
+</p>
+</div>
+</div>
+</div>
+
+<div id="orgde009ca" class="outline-3">
+<h3 id="orgde009ca"><span class="section-number-3">1.4</span> Many other Probability Distribution</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+人来决定这个 tradoff，复杂的概率模型 bias 就小，variance 就大。
+</p>
+</div>
+<div id="org2ead534" class="outline-4">
+<h4 id="org2ead534"><span class="section-number-4">1.4.1</span> 假设 input 多个 feature 相互独立来简化概率模型 :Naive Bayes:</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<ul class="org-ul">
+<li>从向量上看，没有任何关系就是，两个向量的相似度为 0，那么他们应该是·「垂直的」。</li>
+<li>从概率上看，没有任何关系就是·「独立事件」。</li>
+<li></li>
+</ul>
+<p>
+如果我们假设 inputpoint 的各个维度(feature)之间没有任何关系：
+</p>
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_11-52-56.png" alt="screenshot_2017-06-07_11-52-56.png" />
+</p>
+</div>
+
+<p>
+那么，一个 K 维度高斯，就被转换成 K 个一维度高斯的乘积。这大大简化了 K 维度高斯的 Σμ 的计算。但是这么做是有风险的,有可能损失了·「特征间关系」这一信息。让模型没法对·「正确的特征做强有力的映射」。最后会出现 underfitting。
+</p>
+
+<blockquote>
+<p>
+这种·「独立性假设」化简概率模型然后来做分类的方法就叫做 Naive Bayes Classifier
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="orgb2d4e93" class="outline-4">
+<h4 id="orgb2d4e93"><span class="section-number-4">1.4.2</span> 根据问题目标来决定概率模型：</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<ol class="org-ol">
+<li>两个 feature，Bernoulli Distribution</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="org173e80c" class="outline-3">
+<h3 id="org173e80c"><span class="section-number-3">1.5</span> Dive into Posterior Probability&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Sigmoid">Sigmoid</span></span></h3>
+<div class="outline-text-3" id="text-1-5">
+</div>
+<div id="org71e667f" class="outline-4">
+<h4 id="org71e667f"><span class="section-number-4">1.5.1</span> 引入 sigmoind</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_12-02-32.png" alt="screenshot_2017-06-07_12-02-32.png" />
+</p>
+</div>
+
+<p>
+post-probability ===&gt; Sigmoid function
+P(C1|x) = σ(z)
+</p>
+</div>
+</div>
+
+<div id="orgb1803d6" class="outline-4">
+<h4 id="orgb1803d6"><span class="section-number-4">1.5.2</span> 殊途同归：统一向量模型和概率模型</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_12-05-01.png" alt="screenshot_2017-06-07_12-05-01.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_12-05-57.png" alt="screenshot_2017-06-07_12-05-57.png" />
+</p>
+</div>
+
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_12-08-05.png" alt="screenshot_2017-06-07_12-08-05.png" />
+</p>
+</div>
+
+<p>
+如果我们按照之前的假设： Σ1 = Σ2 = Σ
+</p>
+
+
+<div class="figure">
+<p><img src="Classification/screenshot_2017-06-07_12-13-31.png" alt="screenshot_2017-06-07_12-13-31.png" />
+</p>
+</div>
+
+<p>
+之前已经对比过，post-probability 就是 function set
+可以看到，最后的 post-probability 被化简成一个 ·「线性组合的 sigmoid 激活」这也解释了，为什么之前做了 ·「假设协方差矩阵相等」这个让步之后，得到的 boundary 是线性的。
+</p>
+
+
+<p>
+既然，最终都可以通过 ·「假设协方差矩阵相等」这个让步，把复杂的·「概率模型」转换为一个·「向量线性组合模型」,为什么不直接找这个向量模型呢？详情见下一节课
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-06</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记17:深入理解决策树与随机森林</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记17:深入理解决策树与随机森林</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org70a4440">1. In Depth - Decision Trees and Forests</a>
+<ul>
+<li><a href="#org1754fcb">1.1. Decision Tree</a>
+<ul>
+<li><a href="#orga96e557">1.1.1. what is a decision tree</a></li>
+<li><a href="#orgc17546b">1.1.2. benefit of tree-based model.</a></li>
+<li><a href="#orgc28a0bc">1.1.3. decision tree regression</a></li>
+<li><a href="#org0c45907">1.1.4. the drawbacks of decision tree regression</a></li>
+<li><a href="#orgac59640">1.1.5. decision tree classification</a></li>
+<li><a href="#org49bf33f">1.1.6. how to tune decision tree by <code>max_depth</code></a></li>
+</ul>
+</li>
+<li><a href="#org18c6df0">1.2. Random Forests</a>
+<ul>
+<li><a href="#org8349e61">1.2.1. parallel: RandomForestClassifier</a></li>
+<li><a href="#orgbcc0f5b">1.2.2. sequential: Gradient Boosting</a></li>
+<li><a href="#orgd026c8a">1.2.3. The most advantages: Feature importance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgcb7be5b">2. Exercise</a>
+<ul>
+<li><a href="#orgf334694">2.1. exercise 1</a></li>
+</ul>
+</li>
+<li><a href="#org61d9d9e">3. Misc tools</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org34f283f">3.0.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="org70a4440" class="outline-2">
+<h2 id="org70a4440"><span class="section-number-2">1</span> In Depth - Decision Trees and Forests</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org1754fcb" class="outline-3">
+<h3 id="org1754fcb"><span class="section-number-3">1.1</span> Decision Tree</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+</div>
+
+<div id="orga96e557" class="outline-4">
+<h4 id="orga96e557"><span class="section-number-4">1.1.1</span> what is a decision tree</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Here we'll explore a class of algorithms based on <b>decision trees</b>. Decision
+trees at their root are extremely intuitive. They encode a series of "if" and
+"else" choices, similar to how a person might make a decision.
+</p>
+
+<p>
+However, which questions to ask, and how to proceed for each answer is entirely
+learned from the data.
+</p>
+
+<p>
+For example, if you wanted to create a guide to identifying an animal found in
+nature, you might ask the following series of questions:
+</p>
+
+<ul class="org-ul">
+<li>Is the animal bigger or smaller than a meter long?
+<ul class="org-ul">
+<li>bigger: does the animal have horns?
+<ul class="org-ul">
+<li>yes: are the horns longer than ten centimeters?</li>
+<li>no: is the animal wearing a collar</li>
+</ul></li>
+<li>smaller: does the animal have two or four legs?
+<ul class="org-ul">
+<li>two: does the animal have wings?</li>
+<li>four: does the animal have a bushy tail?</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>
+and so on. This binary splitting of questions is the <b>essence of a decision
+tree</b>.
+</p>
+</div>
+</div>
+
+<div id="orgc17546b" class="outline-4">
+<h4 id="orgc17546b"><span class="section-number-4">1.1.2</span> benefit of tree-based model.</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+One of the main benefit of <b>tree-based</b> models is that:
+</p>
+<ol class="org-ol">
+<li>they require <b>little preprocessing</b> of the data.</li>
+<li>They can work with variables of <b>different types</b> (continuous and discrete)</li>
+<li><b>invariant to scaling</b> of the features.</li>
+<li><p>
+<b>nonparametric</b> model.
+</p>
+
+<p>
+What is called "<b>nonparametric</b>", which means <b>they
+don't have a fix set of parameters to learn</b>. Instead, a tree model can
+become more and more flexible, if given more data. In other words, the number
+of free parameters grows with the number of samples and is not fixed, as for
+example in linear models.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="orgc28a0bc" class="outline-4">
+<h4 id="orgc28a0bc"><span class="section-number-4">1.1.3</span> decision tree regression</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+A decision tree is a simple binary classification tree that is similar to
+nearest neighbor classification. It can be used as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> make_dataset
+<span class="org-variable-name">x</span>, <span class="org-variable-name">y</span> = make_dataset()
+<span class="org-variable-name">X</span> = x.reshape(-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>)
+plt.figure()
+plt.xlabel(<span class="org-string">'Feature X'</span>)
+plt.ylabel(<span class="org-string">'Target y'</span>)
+plt.scatter(X, y);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199dDW.png" alt="3199dDW.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.tree <span class="org-keyword">import</span> DecisionTreeRegressor
+<span class="org-variable-name">reg</span> = DecisionTreeRegressor(max_depth=<span class="org-highlight-numbers-number">5</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- max_depth</span>
+reg.fit(X, y)
+<span class="org-variable-name">X_fit</span> = np.linspace(-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">1000</span>).reshape((-<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>))
+<span class="org-variable-name">y_fit_1</span> = reg.predict(X_fit)
+plt.figure()
+plt.plot(X_fit.ravel(), y_fit_1, color=<span class="org-string">'blue'</span>, label=<span class="org-string">"prediction"</span>)
+plt.plot(X.ravel(), y, <span class="org-string">'.k'</span>, label=<span class="org-string">"training data"</span>)
+plt.legend(loc=<span class="org-string">"best"</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199qNc.png" alt="3199qNc.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="org0c45907" class="outline-4">
+<h4 id="org0c45907"><span class="section-number-4">1.1.4</span> the drawbacks of decision tree regression</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+A single decision tree allows us to <b>estimate the signal in a non-parametric
+way</b>, but clearly has some issues.
+</p>
+
+<p>
+In some regions, the model shows <b>high bias</b> and <b>under-fits</b> the data. (seen in
+the long flat lines which don't follow the contours of the data), while in other
+regions the model shows <b>high variance</b> and <b>over-fits</b> the data (reflected in
+the narrow spikes which are influenced by noise in single points).
+</p>
+</div>
+</div>
+
+<div id="orgac59640" class="outline-4">
+<h4 id="orgac59640"><span class="section-number-4">1.1.5</span> decision tree classification</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Decision tree classification work very similarly, by assigning all points within
+a leaf the majority class in that leaf:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_blobs
+<span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-keyword">from</span> sklearn.tree <span class="org-keyword">import</span> DecisionTreeClassifier
+<span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_2d_separator
+
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_blobs(centers=[[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">0</span>], [<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>]], random_state=<span class="org-highlight-numbers-number">61526</span>, n_samples=<span class="org-highlight-numbers-number">100</span>)
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X, y, random_state=<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">clf</span> = DecisionTreeClassifier(max_depth=<span class="org-highlight-numbers-number">5</span>)
+clf.fit(X_train, y_train)
+plt.figure()
+plot_2d_separator(clf, X, fill=<span class="org-constant">True</span>)
+plt.scatter(X_train[:, <span class="org-highlight-numbers-number">0</span>], X_train[:, <span class="org-highlight-numbers-number">1</span>], c=np.array([<span class="org-string">'b'</span>, <span class="org-string">'r'</span>])[y_train], s=<span class="org-highlight-numbers-number">60</span>, alpha=.<span class="org-highlight-numbers-number">7</span>, edgecolor=<span class="org-string">'k'</span>)
+plt.scatter(X_test[:, <span class="org-highlight-numbers-number">0</span>], X_test[:, <span class="org-highlight-numbers-number">1</span>], c=np.array([<span class="org-string">'b'</span>, <span class="org-string">'r'</span>])[y_test], s=<span class="org-highlight-numbers-number">60</span>, edgecolor=<span class="org-string">'k'</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/31993Xi.png" alt="31993Xi.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org49bf33f" class="outline-4">
+<h4 id="org49bf33f"><span class="section-number-4">1.1.6</span> how to tune decision tree by <code>max_depth</code></h4>
+<div class="outline-text-4" id="text-1-1-6">
+<p>
+There are many parameter that control the complexity of a tree, but the one that
+might be easiest to understand is the <code>maximum depth</code>. <b>This limits how finely
+the tree can partition the input space</b>, or <b>how many "if-else" questions</b> can
+be asked before deciding which class a sample lies in.
+</p>
+
+<p>
+This parameter is important to tune for trees and tree-based models. The
+interactive plot below shows how underfit and overfit looks like for this model.
+Having a max_depth of 1 is clearly an underfit model, while a depth of 7 or 8
+clearly overfits. The maximum depth a tree can be grown at for this dataset is
+8, at which point each leave only contains samples from a single class. This is
+known as all leaves being "pure."
+</p>
+
+<p>
+In the interactive plot below, the regions are assigned blue and red colors to
+indicate the predicted class for that region. The shade of the color indicates
+the predicted probability for that class (darker = higher probability), while
+yellow regions indicate an equal predicted probability for either class.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">%matplotlib inline</span>
+<span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_tree_interactive
+plot_tree_interactive()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Eio.png" alt="3199Eio.png" />
+</p>
+</div>
+
+<p>
+Decision trees are fast to train, easy to understand, and often lead to
+interpretable models. However, single trees often tend to overfit the training
+data. Playing with the slider above you might notice that the model starts to
+overfit even before it has a good separation between the classes.
+</p>
+
+<p>
+Therefore, in practice it is more common to combine multiple trees to produce
+models that generalize better. The most common methods for combining trees are
+random forests and gradient boosted trees.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org18c6df0" class="outline-3">
+<h3 id="org18c6df0"><span class="section-number-3">1.2</span> Random Forests</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Random forests are simply <b>many trees</b>, built on different random subsets
+(<b>drawn with replacement</b>) of the data, and using different random subsets
+(<b>drawn without replacement</b>) of the features for each split.
+</p>
+
+<p>
+This makes the trees different from each other, and makes them overfit to
+different aspects. Then, their predictions are averaged, leading to a smoother
+estimate that overfits less.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> figures <span class="org-keyword">import</span> plot_forest_interactive
+plot_forest_interactive()
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199dKK.png" alt="3199dKK.png" />
+</p>
+</div>
+</div>
+
+<div id="org8349e61" class="outline-4">
+<h4 id="org8349e61"><span class="section-number-4">1.2.1</span> parallel: RandomForestClassifier</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+we can selecting the optimal estimator via Cross-Validation
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> GridSearchCV
+<span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> RandomForestClassifier
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = digits.data, digits.target
+<span class="org-variable-name">X_train</span>, <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(X, y, random_state=<span class="org-highlight-numbers-number">42</span>)
+<span class="org-variable-name">rf</span> = RandomForestClassifier(n_estimators=<span class="org-highlight-numbers-number">200</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- n_estimators</span>
+<span class="org-variable-name">parameters</span> = {<span class="org-string">'max_features'</span>:[<span class="org-string">'sqrt'</span>, <span class="org-string">'log2'</span>, <span class="org-highlight-numbers-number">10</span>],
+              <span class="org-string">'max_depth'</span>:[<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">7</span>, <span class="org-highlight-numbers-number">9</span>]}
+<span class="org-variable-name">clf_grid</span> = GridSearchCV(rf, parameters, n_jobs=-<span class="org-highlight-numbers-number">1</span>)
+clf_grid.fit(X_train, y_train)
+
+clf_grid.score(X_train, y_train)
+
+clf_grid.score(X_test, y_test)
+
+</pre>
+</div>
+
+<pre class="example">
+0.9755555555555555
+
+</pre>
+</div>
+</div>
+
+<div id="orgbcc0f5b" class="outline-4">
+<h4 id="orgbcc0f5b"><span class="section-number-4">1.2.2</span> sequential: Gradient Boosting</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Another Ensemble method that can be useful is <code>Boosting</code>: here:
+</p>
+<ul class="org-ul">
+<li>rather than looking at 200 (say) parallel estimators,</li>
+<li><p>
+We construct a <b>chain of 200</b> estimators which
+</p>
+
+<p>
+iteratively refine the results of the previous estimator. The idea is that by
+<b>sequentially applying very fast</b>, simple models, we can get a total model
+error which is better than any of the individual pieces.
+</p></li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> GradientBoostingRegressor
+<span class="org-variable-name">clf</span> = GradientBoostingRegressor(n_estimators=<span class="org-highlight-numbers-number">100</span>, max_depth=<span class="org-highlight-numbers-number">5</span>, learning_rate=.<span class="org-highlight-numbers-number">2</span>)
+clf.fit(X_train, y_train)
+<span class="org-keyword">print</span>(clf.score(X_train, y_train))
+<span class="org-keyword">print</span>(clf.score(X_test, y_test))
+
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-keyword">from</span> sklearn.ensemble <span class="org-keyword">import</span> GradientBoostingClassifier
+<span class="org-variable-name">digits</span> = load_digits()
+<span class="org-variable-name">X_digits</span>, <span class="org-variable-name">y_digits</span> = digits.data, digits.target
+<span class="org-comment-delimiter"># </span><span class="org-comment">split the dataset, apply grid-search</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="orgd026c8a" class="outline-4">
+<h4 id="orgd026c8a"><span class="section-number-4">1.2.3</span> The most advantages: Feature importance</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Both <code>RandomForest</code> and <code>GradientBoosting</code> objects expose a
+<code>feature_importances_</code> attribute when fitted.
+</p>
+
+<p>
+This attribute is one of the most powerful feature of these models. They
+basically quantify <b>how much each feature contributes to gain in performance</b>
+in the nodes of the different trees.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = X_digits[y_digits &lt; <span class="org-highlight-numbers-number">2</span>], y_digits[y_digits &lt; <span class="org-highlight-numbers-number">2</span>]
+<span class="org-variable-name">rf</span> = RandomForestClassifier(n_estimators=<span class="org-highlight-numbers-number">300</span>, n_jobs=<span class="org-highlight-numbers-number">1</span>)
+rf.fit(X, y)
+<span class="org-keyword">print</span>(rf.feature_importances_)  <span class="org-comment-delimiter"># </span><span class="org-comment">one value per feature</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plt.figure()
+plt.imshow(rf.feature_importances_.reshape(<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>), cmap=plt.cm.viridis, interpolation=<span class="org-string">'nearest'</span>)
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.image.AxesImage at 0x7ff5068f79e8&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/3199qUQ.png" alt="3199qUQ.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgcb7be5b" class="outline-2">
+<h2 id="orgcb7be5b"><span class="section-number-2">2</span> Exercise</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="orgf334694" class="outline-3">
+<h3 id="orgf334694"><span class="section-number-3">2.1</span> exercise 1</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+EXERCISE: Cross-validating Gradient Boosting: Use a grid search to optimize the
+learning_rate and max_depth for a Gradient Boosted Decision tree on the digits
+data set.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org61d9d9e" class="outline-2">
+<h2 id="org61d9d9e"><span class="section-number-2">3</span> Misc tools</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org34f283f" class="outline-4">
+<h4 id="org34f283f"><span class="section-number-4">3.0.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-3-0-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import make_regression</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.model_selection import learning_curve</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.linear_model import Ridge</li>
+<li>from sklearn.linear_model import Lasso</li>
+<li>from sklearn.linear_model import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.tree import DecisionTreeRegressor *</li>
+<li>from sklearn.ensemble import RandomForestClassifier *</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor *</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

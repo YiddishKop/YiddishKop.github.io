@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>群论笔记 09</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">群论笔记 09</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#cat-9.1-natural-transformations">Cat 9.1 Natural transformations</a>
+<ul>
+<li><a href="#how-strong-is-the-naturality-is">How Strong is the naturality is ?</a></li>
+<li><a href="#natural-trans-vs.commutative-graph">Natural trans vs. commutative graph</a></li>
+<li><a href="#natural-transformation-can-invertibel">Natural Transformation can invertibel</a></li>
+<li><a href="#natural-trans-in-programming">Natural Trans in programming</a></li>
+</ul>
+</li>
+<li><a href="#orgf66527a">ad-hoc polymorphism : (overriding) can apply different function for</a>
+<ul>
+<li><a href="#example">example</a></li>
+<li><a href="#how-natural-transformation-save-lots-of-computing-time">How Natural Transformation save lots of computing time</a></li>
+<li><a href="#intuition-of-functor">Intuition of functor</a></li>
+<li><a href="#intuition-of-natural-transformation">Intuition of natural transformation</a></li>
+<li><a href="#the-ubiquitous-of-natural-transformation">The ubiquitous of natural transformation</a></li>
+<li><a href="#fn-a-a"><code>fn:: a-&gt;[a]</code></a></li>
+<li><a href="#fn-a-int"><code>fn:: [a]-&gt;Int</code></a></li>
+</ul>
+</li>
+<li><a href="#cat-9.2-bicategories">Cat 9.2 bicategories</a>
+<ul>
+<li><a href="#natural-transformation-composition">Natural transformation composition</a></li>
+<li><a href="#identity">Identity</a></li>
+<li><a href="#composition">Composition</a></li>
+<li><a href="#cells-and-2-category">Cells and 2-category</a></li>
+<li><a href="#exponential">Exponential ?</a></li>
+<li><a href="#interchange-law">Interchange law</a></li>
+<li><a href="#category-vs.bicategory">2-category vs. bicategory</a></li>
+<li><a href="#coherence-law">coherence law</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgd62b1c7" class="outline-2">
+<h2 id="cat-9.1-natural-transformations"><a id="orgd62b1c7"></a>Cat 9.1 Natural transformations</h2>
+<div class="outline-text-2" id="text-cat-9.1-natural-transformations">
+<p>
+3 most important things in category: 1. definition of category 2.
+definition of functor 3. definition of natrual transformation
+</p>
+
+<p>
+the most most important is (3), (1)(2) is just nessary background
+knowledge.
+</p>
+
+<p>
+category - structure functor - preserve the structure, model a cat in
+another cat.
+</p>
+
+<p>
+compare diff image given by the functors.
+</p>
+
+<p>
+natural trans are mappings between functors, &#x2014; alse preserve the
+structure.
+</p>
+
+<p>
+take into these 2 functor's structure and presever.
+</p>
+
+<hr />
+
+<p>
+so ,what is mapping between functors( remember that, functor is a type
+constructor with fmap inside )
+</p>
+
+<ol class="org-ol">
+<li><p>
+for objects in Cat C
+</p>
+
+
+<div class="figure">
+<p><img src="https://s7.postimg.cc/7254suit7/screenshot_50.png" alt="screenshot_50.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>mapping between 2 functors</p>
+</div>
+
+<p>
+for other object in C I do the same thing. I find the images of this
+object and pick a morphism between them.
+</p>
+
+<p>
+then I create a whole family of morphisms, these <b>individual
+morphism</b> is called the <b>component of the natural transformation</b>,
+&#x2014; component of /alpha at object of a, notice that object a is in
+the Cat C, but component /alpha is in Cat D.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s7.postimg.cc/7gb25xzxn/screenshot_51.png" alt="screenshot_51.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>component of natrual trans</p>
+</div></li>
+
+<li>for morphism in Cat C</li>
+</ol>
+
+<p>
+is there some relation between the Ff and Gf?
+</p>
+
+<p>
+[notice] natrual trans is not have to exist between any functors.
+</p>
+
+<p>
+we are now pay more attention to the 2 kinds of morphism in Cat D: * the
+component of NT(relation between two type constructor of same object in
+C) - in picture below, <b>/alpha\_a : Fa-&gt;Ga and /alpha\_b : Fb-&gt;Gb</b> * the
+mophism of original Cat and its mapping in target Cat - in picture
+below, <b>Ff and Gf</b>
+</p>
+
+
+<div class="figure">
+<p><img src="https://s31.postimg.cc/gje2ob36z/screenshot_52.png" alt="screenshot_52.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>the 'beautiful' Rectangle</p>
+</div>
+
+<p>
+Natural transformation describe a mapping between 2 functors, means
+these two functors are somehow similar, somehow related.So there must be
+some relations between these 4(2 components and 2 morphism mappings) &#x2014;
+<b>THEY ARE COMPOSABLE</b>
+</p>
+
+<p>
+<code>α_b * Ff = Gf * α_a</code>
+</p>
+
+<p>
+is called <b>Naturality conditoin</b>, and this rectangle is called
+<b>Naturality Square</b>.
+</p>
+
+<p>
+<b>α\_b and α\_a is called Natural Transformation</b>
+</p>
+</div>
+
+<div id="org02eea34" class="outline-3">
+<h3 id="how-strong-is-the-naturality-is"><a id="org02eea34"></a>How Strong is the naturality is ?</h3>
+<div class="outline-text-3" id="text-how-strong-is-the-naturality-is">
+<p>
+that's depends very much on the structure of the category.In some
+categories there are <b>lots of morphisms</b> between objects like set &#x2014;
+morphism rich category.
+</p>
+
+<p>
+If we draw these 4 ojbects( set, type constructor ): Fa, Fb, Ga, Gb
+</p>
+
+
+<div class="figure">
+<p><img src="https://s31.postimg.cc/v553cfpnv/screenshot_53.png" alt="screenshot_53.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>4 type costructors</p>
+</div>
+</div>
+</div>
+
+<div id="orge5565ef" class="outline-3">
+<h3 id="natural-trans-vs.commutative-graph"><a id="orge5565ef"></a>Natural trans vs. commutative graph</h3>
+<div class="outline-text-3" id="text-natural-trans-vs.commutative-graph">
+<p>
+In mathematics, we often say that: from Cat C, we can find the object a
+can be mapping to a morphism of Cat D; and similarly, morphism of Cat C
+can be mapping to a <b>Naturality Squre</b> in Cat D.
+</p>
+
+<p>
+<b>natural</b> <b>transformation</b> can be something like higher-level thant the
+<b>commutative graph</b>. So you just can say "there is a Natural trans
+between 2 functors", then this means that "there are some <b>commutative
+graphs</b>,these <b>Naturality squares</b>"
+</p>
+
+<p>
+and we will have a second semaster lectures, introducing "limit,
+colimit" &#x2014; defined on the basis of Natural trans, of course they also
+can be defined by the commutative graphs. But Natural Trans is a
+higher-level 'language' to describe. And we can find that product and
+coproduct are just special cases of limit and colimit.
+</p>
+
+<p>
+components of a Natural Trans are morphisms, and you know that morphisms
+are functions, function can shrunk information &#x2014; can lose information.
+If you map one functor into another functor using a natural trans, there
+maybe lot of information will lost.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s31.postimg.cc/sdqezqgkr/screenshot_54.png" alt="screenshot_54.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>Natural Trans will shrink information</p>
+</div>
+
+<p>
+<b>Natural Trans acts like sampling from a high resolutin picture, and get
+a low resolution picture.</b>
+</p>
+</div>
+</div>
+
+<div id="org2f7cf4d" class="outline-3">
+<h3 id="natural-transformation-can-invertibel"><a id="org2f7cf4d"></a>Natural Transformation can invertibel</h3>
+<div class="outline-text-3" id="text-natural-transformation-can-invertibel">
+<p>
+seriously :| then you find that: you have some <b>mapping</b>, and you have a
+<b>invertible mapping</b>:
+</p>
+
+<ul class="org-ul">
+<li>function and <b>invertible</b> function will lead to a definition of
+<b>isomorphism</b>, and a <b>isomorphic</b> <b>objects</b>.</li>
+
+<li>Natural Trans and <b>invertible</b> Natural Trans must will lead to
+<b>something</b> &#x2014; <b>isomorphic functors</b>.</li>
+</ul>
+
+<p>
+so <b>natural transfomation</b>, is also <b>natural isomorphism</b>.
+</p>
+
+<p>
+Natural transformation is just a bunch of morphisms, that means there
+will be bunch of isomorphism.
+</p>
+
+<p>
+Move further, means that all of components are invertible morphism,
+means every component is isomorphism.
+</p>
+
+<p>
+Natural isomorphism are really important.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s31.postimg.cc/3n0qm8tln/screenshot_55.png" alt="screenshot_55.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>Natural isomorphism</p>
+</div>
+</div>
+</div>
+
+<div id="org67addd6" class="outline-3">
+<h3 id="natural-trans-in-programming"><a id="org67addd6"></a>Natural Trans in programming</h3>
+<div class="outline-text-3" id="text-natural-trans-in-programming">
+<p>
+Functor is mapping between categories, and in Haskell it's endofunctor
+mapping from ONE category to itself.
+</p>
+
+<p>
+Natural transformation is a family of morphisms between two
+endofunctors.
+</p>
+
+<p>
+Family of morphisms, morphism is functin, family of functions that
+parameterize by a type &#x2014; which is called polymorphic function.
+</p>
+
+<p>
+seriously :|
+</p>
+
+<p>
+So,
+</p>
+
+<p>
+<b>naturally transformation is a polymorphic function</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell">alpha<span class="org-haskell-operator">::</span> <span class="org-haskell-keyword">forall</span> a<span class="org-haskell-operator">.</span> <span class="org-haskell-type">Fa</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Ga</span>
+</pre>
+</div>
+
+<p>
+Notice the difference between <b>polymorphic function</b> and <b>ad-hoc
+polymorphism</b>. * polymorphic function : apply one function for all type.
+</p>
+</div>
+</div>
+</div>
+<div id="orgf66527a" class="outline-2">
+<h2 id="orgf66527a">ad-hoc polymorphism : (overriding) can apply different function for</h2>
+<div class="outline-text-2" id="text-orgf66527a">
+<p>
+different type.
+</p>
+
+<p>
+Why I emphasize "apply one function for all types."?
+</p>
+
+
+<div class="figure">
+<p><img src="https://s31.postimg.cc/fsuj9x7uj/screenshot_56.png" alt="screenshot_56.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Natural Transform illustration</p>
+</div>
+
+<p>
+<code>fmap :: (a-&gt;b) -&gt; (Fa-&gt;Fb)</code>
+</p>
+
+<p>
+<code>alpha:: forall a. Fa -&gt; Ga</code>
+</p>
+
+<p>
+<code>α_b * Ff = Gf * α_a</code>
+</p>
+
+<p>
+<code>α_b * fmap_F f = fmap_G f α_a</code> is the interpretation of the <b>Naturality
+Condition</b>.
+</p>
+
+<p>
+Fb-&gt;Gb * Fa-&gt;Fb = Ga-&gt;Gb * Fa-&gt;Ga
+</p>
+
+<p>
+but α can be applied for all types
+</p>
+
+<p>
+or we can say: 1. because of <b>parametric polyphism</b>, Fa-&gt;Fb; Ga-&gt;Gb; -
+like some scala codes <code>List[Int].map() = List[Double]</code> or
+<code>Option[String].map() = Option[Int]</code> - every kind of <code>type constructor</code>
+will have its <code>own implementation</code> of <code>fmap</code> 2. because of <b>polymorphic
+function</b>, Fb-&gt;Gb; Fa-&gt;Ga - for all type a
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell">alpha<span class="org-haskell-operator">::</span> <span class="org-haskell-keyword">forall</span> a<span class="org-haskell-operator">.</span> <span class="org-haskell-type">Fa</span> <span class="org-haskell-operator">-&gt;</span> <span class="org-haskell-type">Ga</span>
+alpha <span class="org-haskell-definition">*</span> fmap f <span class="org-haskell-operator">=</span> fmap f <span class="org-haskell-operator">*</span> alpha 
+</pre>
+</div>
+
+<p>
+by the TWO KINDS OF POLYMORPHISM, the <b>naturality condition</b> is
+automatically satisfied
+</p>
+</div>
+
+<div id="org46a1fa9" class="outline-3">
+<h3 id="example"><a id="org46a1fa9"></a>example</h3>
+<div class="outline-text-3" id="text-example">
+<p>
+define a safeHead
+</p>
+
+<div class="org-src-container">
+<pre class="src src-haskell"><span class="org-haskell-definition">safeHead</span> <span class="org-haskell-operator">::</span> [a]<span class="org-haskell-operator">-&gt;</span><span class="org-haskell-type">Maybe</span> a <span class="org-haskell-operator">//</span>this is a <span class="org-haskell-type">F</span>[a]<span class="org-haskell-operator">-&gt;</span><span class="org-haskell-type">G</span>[a] a <span class="org-haskell-type">NaturalTransformation</span>
+<span class="org-haskell-definition">safeHead</span> <span class="org-haskell-constructor">[]</span> <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Nothing</span>
+<span class="org-haskell-definition">safeHead</span> (x<span class="org-haskell-constructor">:</span>xs) <span class="org-haskell-operator">=</span> <span class="org-haskell-constructor">Just</span> x
+</pre>
+</div>
+
+<p>
+and it'll automatically find the <b>different implemention</b> of <code>fmap</code> by
+<b>different invocator</b>, this scenario <code>List</code> and <code>Maybe</code>. So the whole
+naturality condition will automatically satisfied.
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/orajf3za7/screenshot_57.png" alt="screenshot_57.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>naturally condition</p>
+</div>
+</div>
+</div>
+
+<div id="org273ce02" class="outline-3">
+<h3 id="how-natural-transformation-save-lots-of-computing-time"><a id="org273ce02"></a>How Natural Transformation save lots of computing time</h3>
+<div class="outline-text-3" id="text-how-natural-transformation-save-lots-of-computing-time">
+<p>
+This will give you a intuition that category theory can be used in
+programming in a very practical way. You see that from picture above,
+apply <code>fmap</code> to a <code>List</code> is very <b>expensive</b>. But if compiler knows
+natural transformation, then convert <code>fmap</code> of <code>List</code>, to <code>fmap</code> of a
+<code>Maybe</code>, this will <b>save a lot of computing resource</b>
+</p>
+</div>
+</div>
+
+<div id="org7fd051d" class="outline-3">
+<h3 id="intuition-of-functor"><a id="org7fd051d"></a>Intuition of functor</h3>
+<div class="outline-text-3" id="text-intuition-of-functor">
+<p>
+So we know that why call a functor a container, because fmap apply to a
+container will <b>ONLY</b> <b>modify</b> <b>content</b> inside of the container, it
+will <b>NEVER</b> <b>change</b> the <b>shape</b> of container.
+</p>
+</div>
+</div>
+
+<div id="orga230642" class="outline-3">
+<h3 id="intuition-of-natural-transformation"><a id="orga230642"></a>Intuition of natural transformation</h3>
+<div class="outline-text-3" id="text-intuition-of-natural-transformation">
+<p>
+On the opposite side, the natural trans <b>NEVER</b> <b>modify</b> the <b>contents</b>
+of the container, what it <b>ONLY</b> dose is <b>change</b> the <b>shape</b> of the
+container, repackages the container.
+</p>
+
+<p>
+<code>fmap :: (a-&gt;b) -&gt; (Fa-&gt;Fb)</code>
+</p>
+
+<p>
+<code>alpha:: forall a. Fa -&gt; Ga</code>
+</p>
+</div>
+</div>
+
+<div id="org348f51c" class="outline-3">
+<h3 id="the-ubiquitous-of-natural-transformation"><a id="org348f51c"></a>The ubiquitous of natural transformation</h3>
+<div class="outline-text-3" id="text-the-ubiquitous-of-natural-transformation">
+<p>
+we use polymorphic function a lot, is it a natural transformation?
+</p>
+</div>
+</div>
+
+<div id="org5ebc34f" class="outline-3">
+<h3 id="fn-a-a"><a id="org5ebc34f"></a><code>fn:: a-&gt;[a]</code></h3>
+<div class="outline-text-3" id="text-fn-a-a">
+<p>
+function from <code>a</code> to <code>List[a]</code>, yes it's a natural transformation:
+</p>
+
+<ul class="org-ul">
+<li>type a to type a: is just a <b>identity functor on a</b></li>
+</ul>
+
+<p>
+so <code>fn:: a-&gt;[a]</code> is truely a natural transformation
+</p>
+</div>
+</div>
+
+<div id="orgf752d51" class="outline-3">
+<h3 id="fn-a-int"><a id="orgf752d51"></a><code>fn:: [a]-&gt;Int</code></h3>
+<div class="outline-text-3" id="text-fn-a-int">
+<p>
+Like computing the length of a List, it's also a natural transformation,
+because the <code>a</code> is <b>constant functor</b>, it will ignore its type argument.
+</p>
+
+<p>
+So, in general if you have a polymorphic function from an <code>ADT</code> to
+another <code>ADT</code>, it's a <b>natural transformation</b>.
+</p>
+
+<p>
+because ADT as showed before, are functors.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org284e441" class="outline-2">
+<h2 id="cat-9.2-bicategories"><a id="org284e441"></a>Cat 9.2 bicategories</h2>
+<div class="outline-text-2" id="text-cat-9.2-bicategories">
+<p>
+Giving you a large large view of category, as far as professor can do.
+Diving into deep math.
+</p>
+
+<p>
+when you think about mapping, you should ask several questions:
+</p>
+</div>
+
+<div id="orgd41555c" class="outline-3">
+<h3 id="natural-transformation-composition"><a id="orgd41555c"></a>Natural transformation composition</h3>
+<div class="outline-text-3" id="text-natural-transformation-composition">
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/n1ehao8hb/screenshot_59.png" alt="screenshot_59.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>multi-natural transformation</p>
+</div>
+
+<p>
+before that we must check the Naturality condition:
+</p>
+
+<p>
+<code>Hf * (β * α_a) ?</code> (β * α_b) * Ff=
+</p>
+
+<p>
+Diagram chasing, you must make sure all the Naturality condition
+satisfied.
+</p>
+</div>
+</div>
+
+<div id="org2af84e2" class="outline-3">
+<h3 id="identity"><a id="org2af84e2"></a>Identity</h3>
+<div class="outline-text-3" id="text-identity">
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/gnpe7e10f/screenshot_58.png" alt="screenshot_58.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>Identity natural transformation</p>
+</div>
+</div>
+</div>
+
+<div id="org22389f7" class="outline-3">
+<h3 id="composition"><a id="org22389f7"></a>Composition</h3>
+<div class="outline-text-3" id="text-composition">
+<p>
+of course, NT is bunch of morphism, morphism of course is composable, so
+dose the NT.
+</p>
+
+<p>
+But, hold on, what are we talking about? Mappings of Functors, and
+Functor is mapping of 2 category.
+</p>
+
+<p>
+*when refer to a mapping of some thing, you must ask yourself, can I
+take this "something" back to the basic concept of "object" of
+category.*
+</p>
+
+<p>
+In this scenario, yes we can:
+</p>
+
+<ul class="org-ul">
+<li>NT -&gt; morphism</li>
+<li>functor -&gt; object</li>
+<li>??? -&gt; category</li>
+</ul>
+
+<p>
+??? = [C, D]
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/f8svfglkv/screenshot_60.png" alt="screenshot_60.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>[C,D] = D\^C</p>
+</div>
+
+<p>
+So this scenario: * <b>NT</b> is morphism; * <b>functor</b> is object;
+</p>
+
+<p>
+remeber "Category of Category" is a "<b>Cat</b>". remeber that, * <b>functor</b>
+is the morphism of Cat. * <b>category</b> is the object of Cat.
+</p>
+</div>
+</div>
+
+<div id="orgee850f5" class="outline-3">
+<h3 id="cells-and-2-category"><a id="orgee850f5"></a>Cells and 2-category</h3>
+<div class="outline-text-3" id="text-cells-and-2-category">
+<p>
+<a href="https://postimg.cc/image/xbly6vrrv/">https://postimg.cc/image/xbly6vrrv/</a>
+</p>
+
+<p>
+2-category : has move further one step than "Cat"&#x2014;category of
+category, which is the pair category as object.
+</p>
+
+<p>
+Hom-set of Cat is set of Functors; Cat often think as a Category of
+small Category.
+</p>
+
+<p>
+Hom-set are trully a <b>set</b>. And then set can be seen as a Category, then
+we get [C,D] &#x2014; 2-category.
+</p>
+
+<p>
+but wait a minite, in the Category of Category, we have 2 objects: C and
+D, then [C,D] must also be in the same category with C and D. So:
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/9xdyv54rj/screenshot_62.png" alt="screenshot_62.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>[C,D] in same Cat with C and D</p>
+</div>
+
+<p>
+something like the set: * set = {a,b,c,d} * a ∈ set * c ∈ set * {a,c} ∈
+set
+</p>
+</div>
+</div>
+
+<div id="orgafa3b6e" class="outline-3">
+<h3 id="exponential"><a id="orgafa3b6e"></a>Exponential ?</h3>
+<div class="outline-text-3" id="text-exponential">
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/w0e6yge6n/screenshot_64.png" alt="screenshot_64.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>[C,D]</p>
+</div>
+
+<p>
+but functor of category, is a exponential ADT,
+</p>
+
+<p>
+?????? why [C,D] = D\^C
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/mmv8b8bpr/screenshot_71.png" alt="screenshot_71.png" />
+</p>
+<p><span class="figure-number">Figure 14: </span>why [C,D] = D\^C</p>
+</div>
+
+<p>
+by the partial function, we can see some glue of [C,D] = D\^C, this
+should be marked as TODO, I ignore the details of this, when this taught
+at previous lectures, need reviewing.
+</p>
+
+<p>
+categorical products as pairs of elements and categorical products with
+universal construction and projections, they will give you the same
+result.
+</p>
+
+<p>
+the category of functor category[C,D] is same as the D\^C, we start with
+a product category CXD,and then do the universal construction and we get
+the exponential objects.
+</p>
+
+<p>
+Can we build something instead hom-sets of hom-objects
+</p>
+
+<p>
+<b>vertical composition</b>
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/8xs9ctcb3/screenshot_65.png" alt="screenshot_65.png" />
+</p>
+<p><span class="figure-number">Figure 15: </span>vetical composition</p>
+</div>
+
+<p>
+Is there the natural trans between G * F and G'*F'
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/xr1tdrsu7/screenshot_66.png" alt="screenshot_66.png" />
+</p>
+<p><span class="figure-number">Figure 16: </span>G/F and G'/F'</p>
+</div>
+
+<p>
+and the answer is "Yes"
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/thx3bmkfz/screenshot_67.png" alt="screenshot_67.png" />
+</p>
+<p><span class="figure-number">Figure 17: </span>Natural trans between G/F and G'/F'</p>
+</div>
+
+<p>
+and it's called <code>β * α</code>.
+</p>
+</div>
+</div>
+
+<div id="org1bb3a66" class="outline-3">
+<h3 id="interchange-law"><a id="org1bb3a66"></a>Interchange law</h3>
+<div class="outline-text-3" id="text-interchange-law">
+<p>
+horizon composition and vertical compoisition
+</p>
+
+
+<div class="figure">
+<p><img src="https://s17.postimg.cc/sto8sd127/screenshot_68.png" alt="screenshot_68.png" />
+</p>
+<p><span class="figure-number">Figure 18: </span>composition of vertical and relation with horizon composition</p>
+</div>
+
+<p>
+skipped, too long to draw
+</p>
+
+<p>
+but definition of 2-category involves both vertical composition and
+horizon composition of two cells ,and the interchanging law.
+</p>
+
+<p>
+we can get isomorphism from the vertical composition ??? They are called
+left and right unitor.
+</p>
+</div>
+</div>
+
+<div id="org62c559e" class="outline-3">
+<h3 id="category-vs.bicategory"><a id="org62c559e"></a>2-category vs. bicategory</h3>
+<div class="outline-text-3" id="text-category-vs.bicategory">
+<p>
+So, if we start defining the stuff up to isomorphsim, then suddenly from
+a <b>2-category</b> we are getting into something called <b>bicategory</b>.
+</p>
+
+<p>
+the diff between 2-category and bicategory: * in a bicategory
+categorical laws are <b>up to isomorphism</b>. * 2-category is <b>more strict</b>
+than bicategory, becasue categorical laws is <b>equale</b> * bicategory is
+relaxed version of 2-category.
+</p>
+</div>
+</div>
+
+<div id="org1c448b3" class="outline-3">
+<h3 id="coherence-law"><a id="org1c448b3"></a>coherence law</h3>
+<div class="outline-text-3" id="text-coherence-law">
+<p>
+can not understand, so skipped!!
+</p>
+
+<p>
+Lets just talk about bicategory
+</p>
+
+<p>
+what if we have a category in which all morphism are inverted.If
+morphism in a category are all inverted, this category is called
+<b>groupoid</b>.
+</p>
+
+<p>
+So if you start doing the same thing with groupoid,instead of
+categories, turn out that you can have like n-groupoids and coherence
+laws are simple for groupoids.
+</p>
+
+<p>
+so the groupoid people say to catgory people,you're wrong direction. The
+correct thing to do is work with groupoid, and in particular if you go
+with high enough, you know at some point you say well, what's wrong with
+infinity. infinity groupoid.
+</p>
+
+<p>
+infinity groupoid would be something has zero cells &#x2013; objects . one
+cells morphism between them, two cells morphism between morphims, three
+cells between morphisms of morphisms and &#x2026; so on to inifinity.
+</p>
+
+<p>
+It turns out this is exactly the structure of the famous homotopy type
+theory.
+</p>
+
+<p>
+homotopy type theory said that groupoid are the way to go, not
+categories.
+</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

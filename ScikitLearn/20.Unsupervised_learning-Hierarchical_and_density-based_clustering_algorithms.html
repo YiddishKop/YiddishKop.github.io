@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记19:非监督学习-基于结构化和密度估计的clustering方法</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记19:非监督学习-基于结构化和密度估计的clustering方法</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2468c57">1. Unsupervised learning: Hierarchical and density-based clustering algorithms</a>
+<ul>
+<li><a href="#org04783cc">1.1. two clustering methods better than K-Means</a></li>
+</ul>
+</li>
+<li><a href="#org3639eb1">2. Hierarchical Clustering</a>
+<ul>
+<li><a href="#orgd71d90c">2.1. Agglomerative and divisive hierarchical clustering</a></li>
+<li><a href="#orga1bb7a9">2.2. agglomerative hierachical cluetering</a>
+<ul>
+<li><a href="#orgafd4aaf">2.2.1. how to measure similarity between two samples</a></li>
+<li><a href="#orgc4cc59a">2.2.2. how to measure similarity between two clusters</a></li>
+<li><a href="#org13f0960">2.2.3. applying agglomerative clustering by labeled datasets</a>
+<ul>
+<li><a href="#orgebec25c">2.2.3.1. draw dendrogram by <code>scipy.cluster.hierarchy.dendrogram</code> after compute the similarity by <code>scipy.cluster.hierachy.linkage</code></a></li>
+<li><a href="#org00877b3">2.2.3.2. build agglomerative model by <code>sklearn.cluster.AgglomerativeClustering</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgba55194">3. Density-based Clustering - DBSCAN</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org1fc21e6">3.0.1. what is DBSCAN</a></li>
+<li><a href="#orgd076d50">3.0.2. 3 kinds of points</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgba31d47">4. Exercise</a></li>
+<li><a href="#org5011e6a">5. Misc tools</a>
+<ul>
+<li><a href="#orgde5f00b">5.1. scikit-learn</a>
+<ul>
+<li><a href="#org6470af6">5.1.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">from</span> matplotlib <span class="org-keyword">import</span> pyplot <span class="org-keyword">as</span> plt
+
+</pre>
+</div>
+
+<div id="org2468c57" class="outline-2">
+<h2 id="org2468c57"><span class="section-number-2">1</span> Unsupervised learning: Hierarchical and density-based clustering algorithms</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="org04783cc" class="outline-3">
+<h3 id="org04783cc"><span class="section-number-3">1.1</span> two clustering methods better than K-Means</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+In a previous notebook, "08 Unsupervised Learning - Clustering.ipynb", we
+introduced one of the essential and widely used clustering algorithms,
+<b>K-means</b>. One of the advantages of <b>K-means</b> is that it is extremely easy to
+implement, and it is also computationally very efficient compared to other
+clustering algorithms.
+</p>
+
+<p>
+However, we've seen that one of the weaknesses of K-Means is that it only works
+well if the data can be grouped into a globular or spherical shape. Also, we
+have to assign the number of clusters, k, a priori &#x2013; this can be a problem if
+we have no prior knowledge about how many clusters we expect to find.
+</p>
+
+<p>
+Summarizing: short-commings of K-means:
+</p>
+<blockquote>
+<p>
+So we have 4 short-comings of K-means:
+</p>
+<ol class="org-ol">
+<li>Incorrect number of clusters &lt;&lt;&lt; solved by elbow-method</li>
+<li>Anisotropicly distributed data</li>
+<li>Different variance</li>
+<li>Unevenly sized blobs</li>
+</ol>
+</blockquote>
+
+<p>
+In this notebook, we will take a look at <b>2 alternative approaches</b> to clustering,
+</p>
+<ul class="org-ul">
+<li><b>hierarchical clustering</b></li>
+<li><b>density-based clustering</b>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="org3639eb1" class="outline-2">
+<h2 id="org3639eb1"><span class="section-number-2">2</span> Hierarchical Clustering</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+One nice feature of hierachical clustering is that we can <b>visualize the results
+as a dendrogram, a hierachical tree</b>. Using the visualization, we can then
+<b>decide how "deep" we want to cluster</b> the dataset by setting a "<code>depth</code>"
+threshold. Or in other words,
+</p>
+
+<blockquote>
+<p>
+overcome K-means by: &gt;&gt;&gt; we don't need to make a decision about the number of
+clusters upfront.
+</p>
+</blockquote>
+</div>
+
+<div id="orgd71d90c" class="outline-3">
+<h3 id="orgd71d90c"><span class="section-number-3">2.1</span> Agglomerative and divisive hierarchical clustering</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Furthermore, we can distinguish between 2 main approaches to hierarchical
+clustering:
+</p>
+<ul class="org-ul">
+<li>Divisive clustering</li>
+<li>Agglomerative clustering.</li>
+</ul>
+
+<p>
+In agglomerative clustering, we <b>start with a single sample</b> from our dataset
+and iteratively merge it with other samples to form clusters &#x2013; we can see it as
+a <b>bottom-up approach</b> for building the clustering dendrogram.
+</p>
+
+<p>
+In divisive clustering, however, we <b>start with the whole dataset</b> as one
+cluster, and we iteratively split it into smaller subclusters &#x2013; a <b>top-down
+approach</b>.
+</p>
+
+<p>
+In this notebook, we will use agglomerative clustering.
+</p>
+</div>
+</div>
+
+<div id="orga1bb7a9" class="outline-3">
+<h3 id="orga1bb7a9"><span class="section-number-3">2.2</span> agglomerative hierachical cluetering</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="orgafd4aaf" class="outline-4">
+<h4 id="orgafd4aaf"><span class="section-number-4">2.2.1</span> how to measure similarity between two samples</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Now, the next question is how we measure the similarity between samples. One
+approach is the familiar <b>Euclidean distance metric</b> that we already used via
+the K-Means algorithm. As a refresher, the distance between 2 m-dimensional
+vectors \(\mathbf{p}\) and \(\mathbf{q}\) can be computed as:
+</p>
+
+\begin{align} \mathrm{d}(\mathbf{q},\mathbf{p}) & = \sqrt{(q_1-p_1)^2 + (q_2-p_2)^2 + \cdots + (q_m-p_m)^2} \\[8pt]
+& = \sqrt{\sum_{j=1}^m (q_j-p_j)^2}.\end{align}
+
+<p>
+However, that's the distance between 2 samples. Now, how do we compute the
+similarity between subclusters of samples in order to decide which clusters to
+merge when constructing the dendrogram? I.e., our goal is to iteratively <b>merge
+the most similar pairs of clusters until only one big cluster remains</b>. There
+are many different approaches to this, for example <b>single and complete
+linkage</b>.
+</p>
+</div>
+</div>
+
+<div id="orgc4cc59a" class="outline-4">
+<h4 id="orgc4cc59a"><span class="section-number-4">2.2.2</span> how to measure similarity between two clusters</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Single and complete linkage
+</p>
+
+<p>
+In <code>single linkage</code>, we take the <b>pair</b> of <b>the most similar samples in each
+cluster</b> (based on the Euclidean distance, for example), means one of two from
+one cluster, the other one from another cluster &#x2014; one sample from one
+cluster.And merge the two clusters which have <b>the most similar 2 members</b> into
+one new, bigger cluster.
+</p>
+
+<p>
+In <code>complete linkage</code>, we compare the pairs of the two most dissimilar members
+of each cluster with each other, and we merge the 2 clusters where the distance
+between its <b>2 most dissimilar members is smallest</b>.
+</p>
+
+
+<div class="figure">
+<p><img src="figures/clustering-linkage.png" alt="clustering-linkage.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org13f0960" class="outline-4">
+<h4 id="org13f0960"><span class="section-number-4">2.2.3</span> applying agglomerative clustering by labeled datasets</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Why using labeled datset, convenient to check the result.
+</p>
+
+<p>
+To see the agglomerative, hierarchical clustering approach in action, let us
+load the familiar Iris dataset &#x2013; pretending we don't know the true class labels
+and want to find out <b>how many different follow species</b> it consists of:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_iris
+<span class="org-variable-name">iris</span> = load_iris()
+<span class="org-variable-name">X</span> = iris.data[:, [<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>]] <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- using only the 3rd and 4th features</span>
+                         <span class="org-comment-delimiter">#   </span><span class="org-comment">easy to visualize</span>
+<span class="org-variable-name">y</span> = iris.target
+<span class="org-variable-name">n_samples</span>, <span class="org-variable-name">n_features</span> = X.shape
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=y);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199qbE.png" alt="3199qbE.png" />
+</p>
+</div>
+</div>
+
+<div id="orgebec25c" class="outline-5">
+<h5 id="orgebec25c"><span class="section-number-5">2.2.3.1</span> draw dendrogram by <code>scipy.cluster.hierarchy.dendrogram</code> after compute the similarity by <code>scipy.cluster.hierachy.linkage</code></h5>
+<div class="outline-text-5" id="text-2-2-3-1">
+<p>
+First, we start with some exploratory clustering, visualizing the clustering
+dendrogram using SciPy's <code>linkage</code> and <code>dendrogram</code> functions:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> scipy.cluster.hierarchy <span class="org-keyword">import</span> linkage
+<span class="org-keyword">from</span> scipy.cluster.hierarchy <span class="org-keyword">import</span> dendrogram
+<span class="org-variable-name">clusters</span> = linkage(X,
+                   metric=<span class="org-string">'euclidean'</span>, <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- method to evalute the similarity</span>
+                   method=<span class="org-string">'complete'</span>   <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- method to combine two cluster</span>
+)
+<span class="org-variable-name">dendr</span> = dendrogram(clusters)
+plt.ylabel(<span class="org-string">'Euclidean Distance'</span>);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199Grq.png" alt="3199Grq.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org00877b3" class="outline-5">
+<h5 id="org00877b3"><span class="section-number-5">2.2.3.2</span> build agglomerative model by <code>sklearn.cluster.AgglomerativeClustering</code></h5>
+<div class="outline-text-5" id="text-2-2-3-2">
+<p>
+Next, let's use the <code>AgglomerativeClustering</code> estimator from scikit-learn and
+divide the dataset into 3 clusters. Can you guess which 3 clusters from the
+dendrogram it will reproduce?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.cluster <span class="org-keyword">import</span> AgglomerativeClustering
+<span class="org-variable-name">ac</span> = AgglomerativeClustering(n_clusters=<span class="org-highlight-numbers-number">3</span>,
+                             affinity=<span class="org-string">'euclidean'</span>, <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- method to compute similarity</span>
+                             linkage=<span class="org-string">'complete'</span>)   <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- method to combine two cluster</span>
+<span class="org-variable-name">prediction</span> = ac.fit_predict(X)
+<span class="org-keyword">print</span>(<span class="org-string">'Cluster labels: %s\n'</span> % prediction)
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=prediction);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199T1w.png" alt="3199T1w.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgba55194" class="outline-2">
+<h2 id="orgba55194"><span class="section-number-2">3</span> Density-based Clustering - DBSCAN</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org1fc21e6" class="outline-4">
+<h4 id="org1fc21e6"><span class="section-number-4">3.0.1</span> what is DBSCAN</h4>
+<div class="outline-text-4" id="text-3-0-1">
+<p>
+Another useful approach to clustering is <b>Density-based Spatial Clustering of
+Applications with Noise</b> (DBSCAN).
+</p>
+
+<p>
+In essence, we can think of DBSCAN as an algorithm that <b>divides the dataset
+into subgroup based on dense regions</b> of point.
+</p>
+</div>
+</div>
+
+<div id="orgd076d50" class="outline-4">
+<h4 id="orgd076d50"><span class="section-number-4">3.0.2</span> 3 kinds of points</h4>
+<div class="outline-text-4" id="text-3-0-2">
+<p>
+In DBSCAN, we distinguish between 3 different "points",
+</p>
+
+<ul class="org-ul">
+<li><b>Core points</b>: A core point is a point that has <b>at least a minimum number of
+other points</b> (MinPts) in its radius epsilon.</li>
+<li><b>Border points</b>: A border point is a point that is not a core point, since it
+<b>doesn't have enough MinPts in its neighborhood</b>, but <b>lies within the radius
+epsilon of a core point</b>.</li>
+<li><b>Noise points</b>: <b>All other points</b> that are neither core points nor border
+points.</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="figures/dbscan.png" alt="dbscan.png" />
+</p>
+</div>
+
+<p>
+we can split them by two evidence:
+</p>
+<ul class="org-ul">
+<li>MinPts</li>
+<li>with in the radius of core point</li>
+</ul>
+
+<p>
+A nice feature about DBSCAN is that we <b>don't have to specify a number of
+clusters</b> upfront. However, it requires the setting of additional
+<b>hyperparameters</b> such as the:
+</p>
+<ul class="org-ul">
+<li><b>value for MinPts</b></li>
+<li><b>radius epsilon</b>.</li>
+</ul>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_moons
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_moons(n_samples=<span class="org-highlight-numbers-number">400</span>,
+                  noise=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,
+                  random_state=<span class="org-highlight-numbers-number">1</span>)
+plt.scatter(X[:,<span class="org-highlight-numbers-number">0</span>], X[:,<span class="org-highlight-numbers-number">1</span>])
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199g_2.png" alt="3199g_2.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.cluster <span class="org-keyword">import</span> DBSCAN
+<span class="org-variable-name">db</span> = DBSCAN(eps=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,               <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- radius epsilon</span>
+            min_samples=<span class="org-highlight-numbers-number">10</span>,        <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- MinPts</span>
+            metric=<span class="org-string">'euclidean'</span>)
+<span class="org-variable-name">prediction</span> = db.fit_predict(X)
+<span class="org-keyword">print</span>(<span class="org-string">"Predicted labels:\n"</span>, prediction)
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=prediction);
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/3199SJG.png" alt="3199SJG.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgba31d47" class="outline-2">
+<h2 id="orgba31d47"><span class="section-number-2">4</span> Exercise</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+EXERCISE: Using the following toy dataset, two concentric circles, experiment
+with the three different clustering algorithms that we used so far: KMeans,
+AgglomerativeClustering, and DBSCAN. Which clustering algorithms reproduces or
+discovers the hidden structure (pretending we don't know y) best? Can you
+explain why this particular algorithm is a good choice while the other 2 "fail"?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> make_circles
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = make_circles(n_samples=<span class="org-highlight-numbers-number">1500</span>,
+                    factor=.<span class="org-highlight-numbers-number">4</span>,
+                    noise=.<span class="org-highlight-numbers-number">05</span>)
+plt.scatter(X[:, <span class="org-highlight-numbers-number">0</span>], X[:, <span class="org-highlight-numbers-number">1</span>], c=y);
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/8573TSC.png" alt="8573TSC.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="org5011e6a" class="outline-2">
+<h2 id="org5011e6a"><span class="section-number-2">5</span> Misc tools</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="orgde5f00b" class="outline-3">
+<h3 id="orgde5f00b"><span class="section-number-3">5.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="org6470af6" class="outline-4">
+<h4 id="org6470af6"><span class="section-number-4">5.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import make_moons  *</li>
+<li>from sklearn.datasets import make_circles *</li>
+<li>from sklearn.datasets import make_regression</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.datasets import load_digits</li>
+<li>from sklearn.datasets import load_breast_cancer</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV</li>
+<li>from sklearn.model_selection import learning_curve</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.feature_selection import SelectPercentile</li>
+<li>from sklearn.feature_selection import f_classif</li>
+<li>from sklearn.feature_selection import f_regression</li>
+<li>from sklearn.feature_selection import chi2</li>
+<li>from sklearn.feature_selection import SelectFromModel</li>
+<li>from sklearn.feature_selection import RFE</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.linear_model import Ridge</li>
+<li>from sklearn.linear_model import Lasso</li>
+<li>from sklearn.linear_model import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.cluster import DBSCAN  *</li>
+<li>from sklearn.cluster import AgglomerativeClustering *</li>
+<li>from scipy.cluster.hierarchy import linkage    *</li>
+<li>from scipy.cluster.hierarchy import dendrogram *</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.metrics import classification_report</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline</li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.tree import DecisionTreeRegressor</li>
+<li>from sklearn.ensemble import RandomForestClassifier</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

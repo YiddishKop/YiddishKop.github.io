@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记12:交叉验证</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记12:交叉验证</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga1550c6">1. Cross-Validation and scoring methods</a>
+<ul>
+<li>
+<ul>
+<li><a href="#orgfc94746">1.0.1. 3 methods to decide parameter 'cv'</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org1e77b21">2. Misc tools</a>
+<ul>
+<li><a href="#org04825ff">2.1. scikit-learn</a>
+<ul>
+<li><a href="#orgaf131fd">2.1.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="orga1550c6" class="outline-2">
+<h2 id="orga1550c6"><span class="section-number-2">1</span> Cross-Validation and scoring methods</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In the previous sections and notebooks, we split our dataset into two parts, a
+training set and a test set. We used the training set to fit our model, and we
+used the test set to evaluate its generalization performance &#x2013; how well it
+performs on new, unseen data. ​ ​
+</p>
+
+
+<div class="figure">
+<p><img src="figures/train_test_split.png" alt="train_test_split.png" />
+</p>
+</div>
+
+
+<p>
+However, often (labeled) data is precious, and this approach lets us only use ~
+3/4 of our data for training. On the other hand, we will only ever try to apply
+our model 1/4 of our data for testing. A common way to use more of the data to
+build a model, but also get a more robust estimate of the generalization
+performance, is <b>cross-validation</b>.
+</p>
+
+<p>
+In cross-validation, the data is split repeatedly into a training and
+non-overlapping test-sets, with a separate model built for every pair. The
+test-set scores are then aggregated for a more robust estimate.
+</p>
+
+<p>
+The most common way to do cross-validation is <b>k-fold cross-validation</b>, in
+which the data is first <b>split into k (often 5 or 10) equal-sized folds</b>, and
+then for each iteration, <b>one of the k folds is used as test data, and the rest
+as training data</b>:
+</p>
+
+
+
+<div class="figure">
+<p><img src="figures/cross_validation.png" alt="cross_validation.png" />
+</p>
+</div>
+
+<p>
+This way, each data point will be in the test-set exactly once, and we can use
+all but a k'th of the data for training. Let us apply this technique to evaluate
+the KNeighborsClassifier algorithm on the Iris dataset:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_iris
+<span class="org-keyword">from</span> sklearn.neighbors <span class="org-keyword">import</span> KNeighborsClassifier
+<span class="org-variable-name">iris</span> = load_iris()
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = iris.data, iris.target
+<span class="org-keyword">print</span>(X.shape, y.shape)
+<span class="org-variable-name">classifier</span> = KNeighborsClassifier()
+</pre>
+</div>
+
+<p>
+The labels in iris are sorted, which means that if we split the data as
+illustrated above, the first fold will only have the label 0 in it, while the
+last one will only have the label 2:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">y
+</pre>
+</div>
+
+<pre class="example">
+array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2])
+</pre>
+
+<p>
+To avoid this problem in evaluation, we first shuffle our data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">rng</span> = np.random.RandomState(<span class="org-highlight-numbers-number">0</span>)
+<span class="org-variable-name">permutation</span> = rng.permutation(<span class="org-builtin">len</span>(X))
+<span class="org-variable-name">X</span>, <span class="org-variable-name">y</span> = X[permutation], y[permutation]
+<span class="org-keyword">print</span>(y)
+</pre>
+</div>
+
+<p>
+Now implementing cross-validation is easy:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">k</span> = <span class="org-highlight-numbers-number">5</span>
+<span class="org-variable-name">n_samples</span> = <span class="org-builtin">len</span>(X)
+<span class="org-variable-name">fold_size</span> = n_samples // k
+<span class="org-variable-name">scores</span> = []
+<span class="org-variable-name">masks</span> = []
+<span class="org-keyword">for</span> fold <span class="org-keyword">in</span> <span class="org-builtin">range</span>(k):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">generate a boolean mask for the test set in this fold</span>
+    <span class="org-variable-name">test_mask</span> = np.zeros(n_samples, dtype=<span class="org-builtin">bool</span>)
+    <span class="org-variable-name">test_mask</span>[fold * fold_size : (fold + <span class="org-highlight-numbers-number">1</span>) * fold_size] = <span class="org-constant">True</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">store the mask for visualization</span>
+    masks.append(test_mask)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">create training and test sets using this mask</span>
+    <span class="org-variable-name">X_test</span>, <span class="org-variable-name">y_test</span> = X[test_mask], y[test_mask]
+    <span class="org-variable-name">X_train</span>, <span class="org-variable-name">y_train</span> = X[~test_mask], y[~test_mask]
+    <span class="org-comment-delimiter"># </span><span class="org-comment">fit the classifier</span>
+    classifier.fit(X_train, y_train)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">compute the score and record it</span>
+    scores.append(classifier.score(X_test, y_test))
+</pre>
+</div>
+
+<p>
+Let's check that our test mask does the right thing:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+plt.matshow(masks, cmap=<span class="org-string">'gray_r'</span>)
+</pre>
+</div>
+
+<pre class="example">
+&lt;matplotlib.image.AxesImage at 0x7f9c3281ac50&gt;
+
+</pre>
+
+<div class="figure">
+<p><img src="./obipy-resources/250412lK.png" alt="250412lK.png" />
+</p>
+</div>
+
+<p>
+And now let's look a the scores we computed:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(scores)
+<span class="org-keyword">print</span>(np.mean(scores))
+</pre>
+</div>
+
+<p>
+As you can see, there is a rather wide spectrum of scores from 90% correct to
+100% correct. If we only did a single split, we might have gotten either answer.
+</p>
+
+<p>
+As cross-validation is such a common pattern in machine learning, there are
+functions to do the above for you with much more flexibility and less code. The
+<code>sklearn.model_selection</code> module has all functions related to cross validation.
+There easiest function is <code>cross_val_score</code> which takes an estimator and a
+dataset, and will do all of the splitting for you:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> cross_val_score
+<span class="org-variable-name">scores</span> = cross_val_score(classifier, X, y)
+<span class="org-keyword">print</span>(scores)
+<span class="org-keyword">print</span>(np.mean(scores))
+</pre>
+</div>
+
+<p>
+As you can see, the function uses three folds by default. You can change the
+number of folds using the cv argument:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">cross_val_score(classifier, X, y, cv=<span class="org-highlight-numbers-number">5</span>)
+</pre>
+</div>
+
+<pre class="example">
+array([ 1.  ,  0.93,  1.  ,  1.  ,  0.93])
+
+</pre>
+
+<p>
+There are also helper objects in the cross-validation module that will generate
+indices for you for all kinds of different cross-validation methods, including
+k-fold:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> KFold, StratifiedKFold, ShuffleSplit
+</pre>
+</div>
+</div>
+
+<div id="orgfc94746" class="outline-4">
+<h4 id="orgfc94746"><span class="section-number-4">1.0.1</span> 3 methods to decide parameter 'cv'</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<p>
+we will use <code>cv.split(train_set, test_set)</code> to split dataset into folds
+</p>
+<ul class="org-ul">
+<li>ShuffleSplit</li>
+<li>KFold</li>
+<li>StratifiedKFold &lt;&lt;&lt; for unbalanced data</li>
+</ul>
+
+
+<p>
+    &gt;&gt;&gt; how to choose classifier for unbalanced dataset
+By default, <code>cross_val_score</code> will use <code>StratifiedKFold</code> for classification,
+which ensures that the class proportions in the dataset are reflected in each
+fold.
+</p>
+
+<p>
+If you have a binary classification dataset with <b>90% of data point belonging to
+class 0</b>, that would mean that in each fold, 90% of datapoints would belong to
+class 0. If you would just use KFold cross-validation, <b>it is likely that you
+would generate a split that only contains class 0</b>. It is generally a good idea
+to use <code>StratifiedKFold</code> whenever you do classification.
+</p>
+
+<p>
+StratifiedKFold would also remove our need to shuffle iris. Let's see what kinds
+of folds it generates on the unshuffled iris dataset. Each cross-validation
+class is a generator of sets of training and test indices:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">cv</span> = StratifiedKFold(n_splits=<span class="org-highlight-numbers-number">5</span>)
+<span class="org-keyword">for</span> train, test <span class="org-keyword">in</span> cv.split(iris.data, iris.target):
+    <span class="org-keyword">print</span>(test)
+</pre>
+</div>
+
+<p>
+As you can see, there are a couple of samples from the beginning, then from the
+middle, and then from the end, in each of the folds. This way, the class ratios
+are preserved. Let's visualize the split:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">def</span> <span class="org-function-name">plot_cv</span>(cv, features, labels):
+    <span class="org-variable-name">masks</span> = []
+    <span class="org-keyword">for</span> train, test <span class="org-keyword">in</span> cv.split(features, labels):
+        <span class="org-variable-name">mask</span> = np.zeros(<span class="org-builtin">len</span>(labels), dtype=<span class="org-builtin">bool</span>)
+        <span class="org-variable-name">mask</span>[test] = <span class="org-highlight-numbers-number">1</span>
+        masks.append(mask)
+
+    plt.matshow(masks, cmap=<span class="org-string">'gray_r'</span>)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plot_cv(StratifiedKFold(n_splits=<span class="org-highlight-numbers-number">5</span>), iris.data, iris.target)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041DwQ.png" alt="25041DwQ.png" />
+</p>
+</div>
+
+<p>
+For comparison, again the standard KFold, that ignores the labels:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plot_cv(KFold(n_splits=<span class="org-highlight-numbers-number">5</span>), iris.data, iris.target)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041Q6W.png" alt="25041Q6W.png" />
+</p>
+</div>
+
+<p>
+Keep in mind that increasing the number of folds will give you a larger training
+dataset, but will lead to more repetitions, and therefore a slower evaluation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plot_cv(KFold(n_splits=<span class="org-highlight-numbers-number">10</span>), iris.data, iris.target)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041dEd.png" alt="25041dEd.png" />
+</p>
+</div>
+
+<p>
+Another helpful cross-validation generator is ShuffleSplit. This generator
+simply splits of a random portion of the data repeatedly. This allows the user
+to specify the number of repetitions and the training set size independently:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plot_cv(ShuffleSplit(n_splits=<span class="org-highlight-numbers-number">5</span>, test_size=.<span class="org-highlight-numbers-number">2</span>), iris.data, iris.target)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/25041qOj.png" alt="25041qOj.png" />
+</p>
+</div>
+
+<p>
+If you want a more robust estimate, you can just increase the number of splits:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">plot_cv(ShuffleSplit(n_splits=<span class="org-highlight-numbers-number">20</span>, test_size=.<span class="org-highlight-numbers-number">2</span>), iris.data, iris.target)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/250413Yp.png" alt="250413Yp.png" />
+</p>
+</div>
+
+<p>
+You can use all of these cross-validation generators with the cross_val_score
+method:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">cv</span> = ShuffleSplit(n_splits=<span class="org-highlight-numbers-number">5</span>, test_size=.<span class="org-highlight-numbers-number">2</span>)
+cross_val_score(classifier, X, y, cv=cv)
+</pre>
+</div>
+
+<pre class="example">
+array([ 0.97,  0.97,  0.97,  0.93,  0.93])
+
+</pre>
+
+<p>
+EXERCISE: Perform three-fold cross-validation using the KFold class on the iris
+dataset without shuffling the data. Can you explain the result?
+</p>
+</div>
+</div>
+</div>
+
+<div id="org1e77b21" class="outline-2">
+<h2 id="org1e77b21"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org04825ff" class="outline-3">
+<h3 id="org04825ff"><span class="section-number-3">2.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="orgaf131fd" class="outline-4">
+<h4 id="orgaf131fd"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score *</li>
+<li>from sklearn.model_selection import KFold           *</li>
+<li>from sklearn.model_selection import StratifiedKFold *</li>
+<li>from sklearn.model_selection import ShuffleSplit    *</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1889 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-13 一 00:42 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Emacs之衣带渐宽终不悔</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="css/site.css" >
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Emacs之衣带渐宽终不悔</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4f824a4">function definition under certain mode.</a>
+<ul>
+<li><a href="#orgedb28ec">hooks</a></li>
+</ul>
+</li>
+<li><a href="#orga571505">hotkeys</a>
+<ul>
+<li><a href="#orgca8d041">dired</a></li>
+<li><a href="#orgf24a4c6">global</a></li>
+<li><a href="#org1e61d5a">helm</a></li>
+<li><a href="#orgee11b8b">evil &amp; vim</a></li>
+<li><a href="#org63e8ff2">org</a></li>
+<li><a href="#org5a0a2fd">avy</a></li>
+<li><a href="#org0b49b08">misc</a></li>
+<li><a href="#org58fa473">file</a></li>
+<li><a href="#org9208877">buffer</a></li>
+<li><a href="#org6ede09e">layout</a></li>
+<li><a href="#org779b3fd">window</a></li>
+<li><a href="#org8c4f592">project</a></li>
+<li><a href="#org1154436">elisp-function</a></li>
+<li><a href="#org4f90c5e">book mark</a></li>
+<li><a href="#orgcb8338e">calc</a></li>
+</ul>
+</li>
+<li><a href="#orga975213">package</a>
+<ul>
+<li><a href="#orgc4d26c4"><span class="todo TODO">TODO</span> org-download</a></li>
+<li><a href="#org48c0c96">lispy</a>
+<ul>
+<li><a href="#orgaffb8e4">Introduction to lispy</a></li>
+<li><a href="#org17d02cb">Basic usage of lispy</a></li>
+</ul>
+</li>
+<li><a href="#orgaf06ddc">restclient</a>
+<ul>
+<li><a href="#orgbe61fea">video introduction</a></li>
+</ul>
+</li>
+<li><a href="#orgba653c8">ctags and etags</a>
+<ul>
+<li><a href="#org1f13771">why use ctags auto completion?</a>
+<ul>
+<li><a href="#org3a0187b">how to make ctags available for some source file?</a></li>
+<li><a href="#org87d1371">how to know where is the tags list file the current buffer used?</a></li>
+<li><a href="#orgcc55158">what's the defect of tags in emacs?</a></li>
+<li><a href="#org8b8aad4">how set the tags file for current buffer?</a></li>
+<li><a href="#org4a50b90">when open a source code file ,emacs will find TAGS file automatically from current file-path to root.</a></li>
+</ul>
+</li>
+<li><a href="#orge4902a4">how to configure ctags and auto completion?</a></li>
+<li><a href="#org40bae10">how to jump-to-definition place in zilong'configurations?</a></li>
+<li><a href="#org30742f8">how to enable etags or ctags of other major-mode?</a></li>
+</ul>
+</li>
+<li><a href="#org7bd2c28">comany-mode</a>
+<ul>
+<li><a href="#org0c12c7d">how company-mode works?</a></li>
+<li><a href="#org38dd1fd">why my company sucks</a>
+<ul>
+<li><a href="#orgd050c2e">为什么我的 company 会失效?</a></li>
+<li><a href="#org6263aa8">如何指定某个 backend</a></li>
+<li><a href="#org9e4fcd7">两种补全方式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgc3ee6b9">cask</a>
+<ul>
+<li><a href="#org3f6a97f">如何通过 cask 回退 older-version pkg?</a></li>
+</ul>
+</li>
+<li><a href="#orga49096c">usa-package</a>
+<ul>
+<li><a href="#org1d5779b">use-package 是更安全的 require</a></li>
+<li><a href="#org9af7a47">use-package a-pkg 分成多个部分</a></li>
+</ul>
+</li>
+<li><a href="#org9e1abf6">anaconda-mode</a>
+<ul>
+<li><a href="#orgf56a813">安装过程出现的问题</a></li>
+</ul>
+</li>
+<li><a href="#org7250e0e">multiple-cursor-mode and cua-mode ?</a></li>
+</ul>
+</li>
+<li><a href="#org7affbce">configuration</a>
+<ul>
+<li><a href="#org508faa4">如何安装不在 melpa 的包(自己写的包)</a></li>
+<li><a href="#org015747a">layers.el&#x2014;如何大量配置包参数</a></li>
+<li><a href="#org4e809c2">set all customize settings in one file</a></li>
+<li><a href="#org8924a05">where other settings locate</a></li>
+<li><a href="#orgea977ee">install package not included in spacemacs</a></li>
+<li><a href="#orgccd4f0f">find README of any layer in spacemacs</a></li>
+<li><a href="#org6287c7e">exclude some unwanted packages</a></li>
+</ul>
+</li>
+<li><a href="#org90a0436">debug</a>
+<ul>
+<li><a href="#org91bccdb">hotkeys for debug</a>
+<ul>
+<li><a href="#orgbb5ef43">emacs is frozen</a></li>
+<li><a href="#org6dd7454">emacs is slow</a></li>
+<li><a href="#org0be37a5">emacs start-up time is long</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org28045c2">hack tip</a>
+<ul>
+<li><a href="#orgf763f28">I want a feature from other editors, how could i implement it in emacs?</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<nav id='navbar'>
+<div class='container'>
+<ul>
+<li><a href='https://yiddishkop.github.io/'>Home</a></li>
+<li><a href='#'>FP</a></li>
+<li><a href='#'>DataScience</a></li>
+<li><a href='#'>Spark</a></li>
+<li><a href='#'>CS</a></li>
+<li><a href='#'>论文撰写</a></li>
+<li><a href='#'>Life</a></li>
+<li><a href='https://yiddishkop.github.io/YIDDI_reme/resume_of_webpage_cn.html'>About</a></li>
+</ul>
+</div>
+</nav>
+
+<p>
+使用 Emacs 第一阶段, 这个过程短则数月长则数载, 全看个人对于: "<b>你始终是个白痴</b>"
+这句话的耐受力.
+</p>
+<pre class="example">
+1. 你感觉自己是个白痴          &lt;---+
+2. 你感觉自己不是个白痴            |
+3. 你感觉已经和 Emacs 相伴相知 ----+
+</pre>
+
+<p>
+耐受力越强这个过程越短, 以下是我自己总结的关于 Emacs(尤其是Spacemacs) 的常用
+mode(mode 之于 emacs &lt;=&gt; app 之于 OS)用法及其快捷键, 大部分都使用英文记录, 因为当你在 Emacs 中遇到问题时你大概只能找到英文文档, 算是小学二年级教程(本人大概也在这个级别, 但无法确定, 也许某一天突然发现&#x2026;), 记住 <b>你始终是个白痴</b>, 但你不寂寞,
+因为至少我也是. <a href="mailto:yiddishkop@163.com">mail to me</a> if exhausted :)
+</p>
+
+<div id="org4f824a4" class="outline-2">
+<h2 id="org4f824a4">function definition under certain mode.</h2>
+<div class="outline-text-2" id="text-org4f824a4">
+</div>
+<div id="orgedb28ec" class="outline-3">
+<h3 id="orgedb28ec">hooks</h3>
+<div class="outline-text-3" id="text-orgedb28ec">
+<p>
+hook is a <b>collection of funcions</b> will execute after certain mode start.
+</p>
+<div class="org-src-container">
+<pre class="src src-lisp">(add-hook 'org-mode-hook '())
+</pre>
+</div>
+<p>
+<b>WARNING : I enter the edit table of org mode by press <code>C-c `</code>, but failed to enter</b>
+<b>the major-mode related to the type of source code.</b>
+</p>
+</div>
+</div>
+</div>
+<div id="orga571505" class="outline-2">
+<h2 id="orga571505">hotkeys</h2>
+<div class="outline-text-2" id="text-orga571505">
+</div>
+<div id="orgca8d041" class="outline-3">
+<h3 id="orgca8d041">dired</h3>
+<div class="outline-text-3" id="text-orgca8d041">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;spe:dired&gt;open dired-mode in current file</td>
+<td class="org-left">SPC f j</td>
+<td class="org-left">file-jump</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt;open spacemacs configuration file</td>
+<td class="org-left">SPC f e d</td>
+<td class="org-left">open init.el</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt;enter zshell in dired-mode(need zsh installed)</td>
+<td class="org-left">`</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt; dired-mode hide tetail</td>
+<td class="org-left">)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt;dired-mode omit-mode</td>
+<td class="org-left">(</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt; preview a file with cursor locate in</td>
+<td class="org-left">o</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt; preview a file, cursor stay</td>
+<td class="org-left">C-o</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:dired&gt; edit mode, modify file name directly in dired</td>
+<td class="org-left">C-x C-q</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orgf24a4c6" class="outline-3">
+<h3 id="orgf24a4c6">global</h3>
+<div class="outline-text-3" id="text-orgf24a4c6">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;spe&gt;discover major-mode key bindings</td>
+<td class="org-left">Spc ?</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;save and apply new configuration</td>
+<td class="org-left">SPC f e r</td>
+<td class="org-left">file-refresh</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;search in document</td>
+<td class="org-left">SPC s j</td>
+<td class="org-left">search jump</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;open/closed debug info buffer</td>
+<td class="org-left">spc t D</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;list all the layers installed</td>
+<td class="org-left">SPC h SPC</td>
+<td class="org-left">pkgs of this layer</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;reload a mode by diminish-undo</td>
+<td class="org-left">(M-x:)dimish-undo</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;kill-ring paste</td>
+<td class="org-left">C-n/p</td>
+<td class="org-left">copy next/previous</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;switch input-method</td>
+<td class="org-left">C-\</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe&gt;toggle rainbow-mode</td>
+<td class="org-left">spc t C c</td>
+<td class="org-left">display color instead of color unicode</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org1e61d5a" class="outline-3">
+<h3 id="org1e61d5a">helm</h3>
+<div class="outline-text-3" id="text-org1e61d5a">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;helm&gt; helm-find-files</td>
+<td class="org-left">spc-f-f</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;helm&gt; helm-ag search all func-name variable in proj</td>
+<td class="org-left">spc-s-p</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="orgee11b8b" class="outline-3">
+<h3 id="orgee11b8b">evil &amp; vim</h3>
+<div class="outline-text-3" id="text-orgee11b8b">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;evil&gt;move backward/forward a word</td>
+<td class="org-left">" " e/b</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;move backward/forward a word with dash</td>
+<td class="org-left">" " E/B</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;move line up/down</td>
+<td class="org-left">(vim-c):m +/- num</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;paste after/before selected char</td>
+<td class="org-left">(vim-n) p/P</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;narrow a function</td>
+<td class="org-left">(vim-n)z-a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;narrow all functions</td>
+<td class="org-left">(vim-n)z-m</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;modify a char</td>
+<td class="org-left">(vim-n)r</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;mark the current line as &lt;num&gt;th mark</td>
+<td class="org-left">(vim-n)m &lt;num&gt;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;goto &lt;num&gt;th mark</td>
+<td class="org-left">(vim-n)` &lt;num&gt;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;evil-find-char: find next occurance of typed char</td>
+<td class="org-left">(vim-n) f</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil&gt;goto the location last modified</td>
+<td class="org-left">(vim-n)g;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil:format&gt; let rest chars of a line to next line</td>
+<td class="org-left">C j</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil:format&gt;let rest chars of next line to current line</td>
+<td class="org-left">shift j</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil:format&gt;scroll window to make current line middle of window</td>
+<td class="org-left">z z</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;evil:elisp&gt; find the doc of current function</td>
+<td class="org-left">K</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;vim&gt;delete all the blank line</td>
+<td class="org-left">:g/^$/d</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;vim&gt;delete all the line with only blank space in it</td>
+<td class="org-left">:g/^\s*$/d</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;vim&gt;wrap a selected(by <code>v</code>) word by a character</td>
+<td class="org-left">&lt;selected&gt; s &lt;char&gt;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org63e8ff2" class="outline-3">
+<h3 id="org63e8ff2">org</h3>
+<div class="outline-text-3" id="text-org63e8ff2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;spe:org&gt;capture org tempalte</td>
+<td class="org-left">spc C c</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;some org-mode handler</td>
+<td class="org-left">,</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;org-mode clock in</td>
+<td class="org-left">, I</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;org-mode clock out</td>
+<td class="org-left">, O</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;org-mode switch index  1) + - 1.</td>
+<td class="org-left">-</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;org-mode add TODO tag</td>
+<td class="org-left">t</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt; quick insert todo items</td>
+<td class="org-left">F9</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;indent ONE line text to proper number of lines</td>
+<td class="org-left">M-q</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;narrow a branch of org file</td>
+<td class="org-left">, n</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;widden a branch of org file</td>
+<td class="org-left">, N</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt;move org branch up/down</td>
+<td class="org-left">M-j/k</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;toggle org todo dependency</td>
+<td class="org-left">C-c C-x o</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt; jump to clocked task (can jump out from current file)</td>
+<td class="org-left">C-C C-x C-j</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;org column view</td>
+<td class="org-left">C-c C-x C-c</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;org attachment</td>
+<td class="org-left">C-c C-a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;org clock reporting(position on headline)</td>
+<td class="org-left">C-c C-x C-r</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;Org make id</td>
+<td class="org-left">(M-x:)org-id-get-create</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;Org attanch file</td>
+<td class="org-left">C-c C-a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;org change state of a task</td>
+<td class="org-left">C-c C-t</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;org take note in LOGBOOK</td>
+<td class="org-left">C-c C-z</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;toggle a org entry and set archive tag</td>
+<td class="org-left">C-c C-x a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;em:org&gt;archive this branch file to achive org file</td>
+<td class="org-left">C-c C-x C-a</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:org&gt; add a footnote ref</td>
+<td class="org-left">, i f</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;org&gt; display latex formula directly in org file</td>
+<td class="org-left">C-c C-x C-l</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;org&gt; screenshot by org-download</td>
+<td class="org-left">C-c g</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org5a0a2fd" class="outline-3">
+<h3 id="org5a0a2fd">avy</h3>
+<div class="outline-text-3" id="text-org5a0a2fd">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;spe:avy:format&gt;avy-goto-char, a very handy way to locate cursor</td>
+<td class="org-left">spc j j</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;spe:avy:format&gt;avy-goto-line,</td>
+<td class="org-left">spc j l</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org0b49b08" class="outline-3">
+<h3 id="org0b49b08">misc</h3>
+<div class="outline-text-3" id="text-org0b49b08">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&lt;spe:misc&gt; YouDao dict</td>
+<td class="org-left">Spc o y</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org58fa473" class="outline-3">
+<h3 id="org58fa473">file</h3>
+<div class="outline-text-3" id="text-org58fa473">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left"><code>spc f f</code></td>
+<td class="org-left">find file from current directory(C-h to gu up-level of directory)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc p f</code></td>
+<td class="org-left">在当前项目中查找文件 三种主要 pkg counsel-git / projectile/ ido-find-file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f L</code></td>
+<td class="org-left">counsel-locate :find file across the whole ubuntu system</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f l</code></td>
+<td class="org-left">find file literally (对编码格式不是本系统的有用)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f h</code></td>
+<td class="org-left">find file in hex mode</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f o</code></td>
+<td class="org-left">使用外部文件打开,必须先用 spacemacs 打开之后方可使用</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f E</code></td>
+<td class="org-left">sudo edit</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f D</code></td>
+<td class="org-left">delete current file and buffer</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f j</code></td>
+<td class="org-left">file jump the current file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f r</code></td>
+<td class="org-left">recent files</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f R</code></td>
+<td class="org-left">rename file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f v</code></td>
+<td class="org-left">add local variable</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f y</code></td>
+<td class="org-left">yank current buffer's full path</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f a d</code></td>
+<td class="org-left">find the current visited directory with fasd(from chenbin)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f C d/u</code></td>
+<td class="org-left">conver file between unix and dos</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f e d</code></td>
+<td class="org-left">find the .spacemacs/init.el</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f e i</code></td>
+<td class="org-left">find .emacs.d/init.el</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f e l</code></td>
+<td class="org-left">helm locate library file(all .el file)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f c</code></td>
+<td class="org-left">copy file</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f b</code></td>
+<td class="org-left">show bookmarsk</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spc f s</code></td>
+<td class="org-left">save/create buffers</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org9208877" class="outline-3">
+<h3 id="org9208877">buffer</h3>
+<div class="outline-text-3" id="text-org9208877">
+<ol class="org-ol">
+<li><code>spc b .</code> buffer micro state, allways active until enter(supported by hydra)</li>
+<li><code>spc b b</code> switch buffers</li>
+<li><code>spc b d</code> kill buffer</li>
+<li><code>spc b f</code> find buffer file in finder(only for MAC)</li>
+<li><code>spc b B/i</code> I bind it to ibuffer</li>
+<li><code>spc b k</code> kill matching buffers</li>
+<li><code>spc b N</code> new empty buffer</li>
+<li><code>spc b m</code> kill others</li>
+<li><code>spc b h</code> go to home</li>
+<li><code>spc b R</code> safe revert buffer</li>
+<li><code>spc b s</code> switch to scratch buffer</li>
+<li><code>spc b w</code> toggle buffer readonly</li>
+<li><code>spc b Y</code> copy the whole buffer to clipboard</li>
+<li><code>spc b p</code> paste to the whole buffer</li>
+<li><code>spc &lt;tab&gt;</code> switch between the current buffer and the last opened buffer</li>
+</ol>
+</div>
+</div>
+<div id="org6ede09e" class="outline-3">
+<h3 id="org6ede09e">layout</h3>
+<div class="outline-text-3" id="text-org6ede09e">
+<p>
+WORKFLOW:
+</p>
+<ol class="org-ol">
+<li>use <code>spc l L</code> to choose a layout file from directory, in which store a num of layout, then you will load all the layout(include all the buffer) in emacs.</li>
+<li>use <code>spc l l</code> to choose a layout by name from the layous in the layout file</li>
+<li>use <code>spc l n/p</code> to switch the layout between all the layout in the layout file</li>
+<li>use <code>spc l r</code> to remove a buffer from a layout</li>
+<li>use <code>spc l d</code> to delete current layout from layout file</li>
+<li>use <code>spc l D</code> to delete a layout by name from the layout file</li>
+<li>use <code>spc l R</code> to rename a layout</li>
+<li>use <code>spc l s</code> to save all the modification of all the layouts of current layout file</li>
+</ol>
+<p>
+ATTENTION: your layout file will be saved in .emacs.d/.cache/layouts/
+Most important facility is: you can save and switch freely between your different layouts.
+</p>
+<ol class="org-ol">
+<li><code>spc l L</code> load layout file</li>
+<li><code>spc l l</code> to switch between layouts</li>
+<li><code>spc l s</code> to save layout to file</li>
+<li><code>spc l &lt;tab&gt;</code> switch between the last layout and the current one</li>
+<li><code>spc l o</code> custom layout</li>
+<li><code>spc l R</code> rename layout</li>
+<li><code>spc l ?</code> to open the help window, learn more operations about layout</li>
+</ol>
+</div>
+</div>
+<div id="org779b3fd" class="outline-3">
+<h3 id="org779b3fd">window</h3>
+<div class="outline-text-3" id="text-org779b3fd">
+<ol class="org-ol">
+<li><code>spc w -</code> split window below</li>
+<li><code>spc w /</code> split window right</li>
+<li><code>spc w .</code> window micro state</li>
+<li>=spc w 2/3 = use predefined window layout</li>
+<li><code>spc w =</code> balance window</li>
+<li><code>spc w b</code> switch to minibuffer</li>
+<li><code>spc w d</code> delete current buffer</li>
+<li><code>spc w m</code> maximize window</li>
+<li><code>spc w u/U</code> window undo/redo</li>
+<li><code>spc w h/j/k/l</code> move to window</li>
+<li><code>spc w H/J/K/L</code> move window to position left/down/up/right</li>
+<li><code>spc w F</code> make a new frame</li>
+<li><code>spc w o</code> switch to other frame</li>
+<li><code>spc w 1/2/3/4</code> goto window with num</li>
+<li><code>spc w w</code> goto other window one by one</li>
+<li><code>spc w W</code> ace window</li>
+<li><code>spc t g</code> toggle golden ratio</li>
+<li><code>spc t -</code> make current always the center of this window</li>
+</ol>
+</div>
+</div>
+<div id="org8c4f592" class="outline-3">
+<h3 id="org8c4f592">project</h3>
+<div class="outline-text-3" id="text-org8c4f592">
+<ol class="org-ol">
+<li><code>spc p f</code> visit files in project</li>
+<li><code>spc p b</code> visit buffers in project</li>
+<li><code>spc p p</code> switch to project</li>
+<li><code>spc p l</code> switch to project and create a new layout</li>
+<li>find-file-in-project is a really handy package</li>
+</ol>
+</div>
+</div>
+<div id="org1154436" class="outline-3">
+<h3 id="org1154436">elisp-function</h3>
+<div class="outline-text-3" id="text-org1154436">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">compress current function</td>
+<td class="org-left">z-c</td>
+</tr>
+
+<tr>
+<td class="org-left">open function</td>
+<td class="org-left">z-o</td>
+</tr>
+
+<tr>
+<td class="org-left">ONLY open current, compress others</td>
+<td class="org-left">z-s</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org4f90c5e" class="outline-3">
+<h3 id="org4f90c5e">book mark</h3>
+<div class="outline-text-3" id="text-org4f90c5e">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">set bookmark</td>
+<td class="org-left">Spc-b-m-s</td>
+</tr>
+
+<tr>
+<td class="org-left">display all bookmarks</td>
+<td class="org-left">Spc-b-m-j</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="orgcb8338e" class="outline-3">
+<h3 id="orgcb8338e">calc</h3>
+<div class="outline-text-3" id="text-orgcb8338e">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">'ln' &#x2013; natural logarithm of num on top of stack</td>
+<td class="org-left">shift-l</td>
+</tr>
+
+<tr>
+<td class="org-left">'exp' &#x2013; exponential of num on the stack</td>
+<td class="org-left">shift-e</td>
+</tr>
+
+<tr>
+<td class="org-left">'log10' &#x2013; base-10 logarithm of num on top of stack</td>
+<td class="org-left">shift-h shift-l</td>
+</tr>
+
+<tr>
+<td class="org-left">'log' &#x2013; base-&lt;num&gt; logarithm of num on top of stack</td>
+<td class="org-left">&lt;num&gt; shift-B</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="orga975213" class="outline-2">
+<h2 id="orga975213">package</h2>
+<div class="outline-text-2" id="text-orga975213">
+</div>
+<div id="orgc4d26c4" class="outline-3">
+<h3 id="orgc4d26c4"><span class="todo TODO">TODO</span> org-download</h3>
+<div class="outline-text-3" id="text-orgc4d26c4">
+<p>
+URL: <a href="https://github.com/abo-abo/org-download">https://github.com/abo-abo/org-download</a>
+setting file: <a href="file:///home/yiddi/.emacs.d/layers/+emacs/org/packages.el#MissingReference">org-download 在配置文件中的位置</a>
+drag picture directly to your org file
+</p>
+</div>
+</div>
+
+<div id="org48c0c96" class="outline-3">
+<h3 id="org48c0c96">lispy</h3>
+<div class="outline-text-3" id="text-org48c0c96">
+</div>
+<div id="orgaffb8e4" class="outline-4">
+<h4 id="orgaffb8e4">Introduction to lispy</h4>
+<div class="outline-text-4" id="text-orgaffb8e4">
+<ol class="org-ol">
+<li>lispy: vi-like paredit</li>
+<li>it even has some IDE features
+<ol class="org-ol">
+<li>jump-to-def</li>
+<li>debug</li>
+</ol></li>
+<li>how to install</li>
+</ol>
+</div>
+</div>
+<div id="org17d02cb" class="outline-4">
+<h4 id="org17d02cb">Basic usage of lispy</h4>
+<div class="outline-text-4" id="text-org17d02cb">
+<ol class="org-ol">
+<li>barf and slurp
+move bracket () very smartly,
+<ol class="org-ol">
+<li>by <code>d</code> switch between '(' and ')'</li>
+<li>by <code>[</code> <code>]</code> you can move '(' ')'</li>
+</ol></li>
+<li>raise sexp
+<ol class="org-ol">
+<li><code>r</code> make left-bracket of sexp you want to raise heightlight selected,press 'r',then amazing happen.</li>
+<li><code>u</code> lisp undo</li>
+</ol></li>
+<li>kill/copy/yank
+<ol class="org-ol">
+<li><code>C-k</code> redefined in lispy-mode ,only will kill the pair-bracket content after cursor</li>
+<li><code>m</code> to select and highlight the content in pair-bracket</li>
+<li><code>C-w</code> to kill the selected content and the matched pair-backet, use <code>C-y</code> to yank</li>
+<li><code>c</code> locate the right bracket, and press <code>c</code>, it will copy pair-bracket and content in it to a new line</li>
+</ol></li>
+<li>ace, like vi-extension in chrome
+<ol class="org-ol">
+<li><code>a</code> use <code>d</code> to locate the right bracket, and press <code>a</code>, and press the char he mark,you can go there directly.</li>
+<li>if only one pair of bracket, <code>a</code> means select</li>
+<li><code>i</code> press to select content or content with brackets where amazing happens.</li>
+</ol></li>
+<li>swipe
+<ol class="org-ol">
+<li><code>w</code> <code>s</code> can switch the position between same level sexp. like (let ((sexp1)(sexp2)) when cursor</li>
+</ol></li>
+<li>navigate: h/j/k/l/ f/b :move cursor between brakets
+<ol class="org-ol">
+<li><code>f/b</code> will go further and backward to the same half of bracket,like a flow of right-half or left-half: 1st ( -f-&gt; ( -f-&gt; (</li>
+<li><code>j/k</code> will go up and down between the same level brackets</li>
+<li><code>h/l</code> will go left and right of brakctes, the largest range is &#x2013; function range</li>
+</ol></li>
+<li>doc: display the documment of this function
+<ol class="org-ol">
+<li><code>C-1</code> display doc</li>
+<li><code>C-2</code> display base structure</li>
+</ol></li>
+<li>split
+<ol class="org-ol">
+<li><code>M-j</code> locate cursor head of sexp, can split inner-sexp from outter-sexp</li>
+<li><code>s-j</code> can delete the brackets of inner-sexp</li>
+</ol></li>
+<li>wrap
+<ol class="org-ol">
+<li><code>s-(</code> locate cursor head of a word, can wrap the whole word by brackts,both sides</li>
+</ol></li>
+<li>format
+<ol class="org-ol">
+<li><code>M</code> format func to muli-line</li>
+<li><code>O</code> format func to one-line</li>
+</ol></li>
+<li>sexp goto
+<ol class="org-ol">
+<li><code>t</code> triger a map, which mark many places, you can cut the sexp nearest the cursor to anywhere</li>
+</ol></li>
+<li>jump to def
+<ol class="org-ol">
+<li><code>F</code> jump to the definition</li>
+<li><code>C-o</code> jump back</li>
+</ol></li>
+<li class="off"><code>[&#xa0;]</code> jump to tag  <b>need study</b>
+<ol class="org-ol">
+<li><code>G</code> jump to the tags file</li>
+</ol></li>
+<li>debug
+<ol class="org-ol">
+<li><code>F</code> locate cursor to one bracket of the sexp(which will call a func), press <code>F</code> to jump to its definition.</li>
+<li><code>xe</code> locate cursor to the one of bracket of the function, and press <code>xe</code></li>
+<li><code>C-o</code> esc to normal-state, and press <code>C-o</code> to jump back to the sexp(which will call a func).</li>
+<li><code>e</code> press <code>e</code>, enter debug window.</li>
+<li><code>n</code> press <code>n</code> to go next</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="orgaf06ddc" class="outline-3">
+<h3 id="orgaf06ddc">restclient</h3>
+<div class="outline-text-3" id="text-orgaf06ddc">
+<p>
+This is a tool to manually explore and test HTTP REST webservices.
+Runs queries from a plain-text query sheet, displays results as a pretty-printed XML, JSON and even images.
+</p>
+</div>
+<div id="orgbe61fea" class="outline-4">
+<h4 id="orgbe61fea">video introduction</h4>
+<div class="outline-text-4" id="text-orgbe61fea">
+<p>
+<a href="http://emacsrocks.com/e05.html">Rocks Emacs - restclient</a>
+</p>
+</div>
+</div>
+</div>
+<div id="orgba653c8" class="outline-3">
+<h3 id="orgba653c8">ctags and etags</h3>
+<div class="outline-text-3" id="text-orgba653c8">
+</div>
+<div id="org1f13771" class="outline-4">
+<h4 id="org1f13771">why use ctags auto completion?</h4>
+<div class="outline-text-4" id="text-org1f13771">
+</div>
+<div id="org3a0187b" class="outline-5">
+<h5 id="org3a0187b">how to make ctags available for some source file?</h5>
+<div class="outline-text-5" id="text-org3a0187b">
+<p>
+<code>$ ctags -e a.js</code> ctags for a file of emacs
+<code>$ ctags -eR filename</code> ctags for a directory of emacs
+etags has no <code>-R</code> argument for recursive search directory.
+so we can handle it ,with 3 methods:
+<a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Etags-Regexps.html#Etags-Regexps">use regex file as etags' argument</a>
+<a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Create-Tags-Table.html">use find command to pipline to etags</a>
+</p>
+<ol class="org-ol">
+<li>add <code>--regex</code>"&lt;regex&gt;"= directly after <code>etags</code> command</li>
+<li>add regex to a file, and add this file as argument of <code>etags</code> command</li>
+<li>use <code>find</code> to find the targets and pipline to <code>find XXX -print | etags</code></li>
+</ol>
+</div>
+</div>
+<div id="org87d1371" class="outline-5">
+<h5 id="org87d1371">how to know where is the tags list file the current buffer used?</h5>
+<div class="outline-text-5" id="text-org87d1371">
+<ol class="org-ol">
+<li>by <code>spc h d v</code> , find the variable description of <code>tags-table-list</code>, it will show you the path of the tags file.</li>
+<li><code>spc o (</code> you can enter a ELisp ELPA</li>
+<li>by elisp ELPA (steq-default tags-table-list "some-path"), you can set your own ctags file temporary.</li>
+</ol>
+</div>
+</div>
+<div id="orgcc55158" class="outline-5">
+<h5 id="orgcc55158">what's the defect of tags in emacs?</h5>
+</div>
+<div id="org8b8aad4" class="outline-5">
+<h5 id="org8b8aad4">how set the tags file for current buffer?</h5>
+<div class="outline-text-5" id="text-org8b8aad4">
+<p>
+<code>tags-table-list</code> don't make a tags file respectively for different language. so you must set it by your own.
+<code>M-x visit-tags-table</code> can let you do it.
+but there is some annoying error when build TAGS in terminal
+<a href="http://stackoverflow.com/questions/2580313/ctags-doesnt-undestand-e-option-no-exuberant-tags-option">About error when input: ctags -e</a>
+</p>
+<blockquote>
+<p>
+etags is short for "Emacs tags", not "exuberant ctags". It sounds like you have Emacs' etags command installed, not exuberant-ctags'.
+</p>
+</blockquote>
+<p>
+its better to try <code>etags file</code> to build TAGS file instead of <code>ctags -e</code>
+</p>
+</div>
+</div>
+<div id="org4a50b90" class="outline-5">
+<h5 id="org4a50b90">when open a source code file ,emacs will find TAGS file automatically from current file-path to root.</h5>
+</div>
+</div>
+
+<div id="orge4902a4" class="outline-4">
+<h4 id="orge4902a4">how to configure ctags and auto completion?</h4>
+<div class="outline-text-4" id="text-orge4902a4">
+<ol class="org-ol">
+<li>project wide configurations for auto generating the Tags file.</li>
+<li>Configure the ctags rules for generate more tags</li>
+<li><p>
+use etags-select to quickly navigate a large code base
+</p>
+
+<p>
+it's inconvinent for everytime you update/modify your code, you must build Tags file again.
+here is a tricks from CHEN BIN.
+</p></li>
+<li>~/.spacemacs.d/layers/zilongshanren-programming/funcs.el
+in which defined a lot of functions to automatically rebuild TAGS files</li>
+</ol>
+</div>
+</div>
+<div id="org40bae10" class="outline-4">
+<h4 id="org40bae10">how to jump-to-definition place in zilong'configurations?</h4>
+<div class="outline-text-4" id="text-org40bae10">
+<p>
+<code>g ]</code> -&gt; etags-select-find-tag-at-point
+</p>
+</div>
+</div>
+<div id="org30742f8" class="outline-4">
+<h4 id="org30742f8">how to enable etags or ctags of other major-mode?</h4>
+<div class="outline-text-4" id="text-org30742f8">
+<p>
+the source code of company : <code>company-etags.el</code> defined a variable : company-etags-mode ,
+it is a list of major-modes ,in which will funcional the etags for complemention. you can
+add some major-mode to it
+</p>
+</div>
+</div>
+</div>
+<div id="org7bd2c28" class="outline-3">
+<h3 id="org7bd2c28">comany-mode</h3>
+<div class="outline-text-3" id="text-org7bd2c28">
+</div>
+<div id="org0c12c7d" class="outline-4">
+<h4 id="org0c12c7d">how company-mode works?</h4>
+<div class="outline-text-4" id="text-org0c12c7d">
+<ol class="org-ol">
+<li><p>
+backend for the completion sources and front end to display the condidates
+</p>
+<pre class="example">
+Its value is (company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf company-files
+   (company-dabbrev-code company-gtags company-etags company-keywords)
+   company-oddmuse company-dabbrev)
+</pre>
+<ul class="org-ul">
+<li>从前到后,依次查看所有 <b>backend</b> 是否适合当前输入的文字</li>
+<li>可以从 buffer 状态栏查看当前使用的 <b>backend</b> (会根据文本自动切换 backend)</li>
+<li>也可以手动通过 M-x &lt;input backend-name&gt; 来手动激活该 backend 的自动补全</li>
+</ul></li>
+<li><b>C-h v company-bakends</b></li>
+<li>try company-file and company-ispell, M-x</li>
+<li><b>C-h C-f</b> to view the backend implementation</li>
+</ol>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">company-frontends</td>
+<td class="org-left">是指前端補全框架</td>
+</tr>
+
+<tr>
+<td class="org-left">company-backends</td>
+<td class="org-left">有很多.其中最后一个,就是前面都匹配不到了,最后一个是 compnay-Deabbre ,他会匹配你当前打开的所有 buffer 中的词项.</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">company-File 这是另一个 backend, 是负责输入文件目录.'/' 触发.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="org38dd1fd" class="outline-4">
+<h4 id="org38dd1fd">why my company sucks</h4>
+<div class="outline-text-4" id="text-org38dd1fd">
+</div>
+<div id="orgd050c2e" class="outline-5">
+<h5 id="orgd050c2e">为什么我的 company 会失效?</h5>
+<div class="outline-text-5" id="text-orgd050c2e">
+<ol class="org-ol">
+<li>失效如何定位?</li>
+</ol>
+<p>
+首先看补全 package 是否需要 server 端,还是只有本地 backends.
+我的 ubuntu 就是因为没有安装 python-pip,所以一直显示 "can't install anaconda-server"
+安装之后,又提示 jedi 有什么问题.
+</p>
+<ol class="org-ol">
+<li>然后确定自己是否使用了正确的 backends</li>
+</ol>
+</div>
+</div>
+
+<div id="org6263aa8" class="outline-5">
+<h5 id="org6263aa8">如何指定某个 backend</h5>
+<div class="outline-text-5" id="text-org6263aa8">
+<p>
+我们可以自己写个函数来给某些 mode 添加 backend
+比如默认 python 中可能是没有 company-anaconda backend 的我们可以这样
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'python-mode-hook
+  (<span class="org-keyword">lambda</span>()
+    (set (make-local-variable 'company-bakcends)  '(company-anaconda))))
+</pre>
+</div>
+</div>
+</div>
+<div id="org9e4fcd7" class="outline-5">
+<h5 id="org9e4fcd7">两种补全方式</h5>
+<div class="outline-text-5" id="text-org9e4fcd7">
+<ol class="org-ol">
+<li>[本地]就是在本地存有很多 backends.然后根据本地 backends 补全.</li>
+<li>[远程]就是 company-(anaconda/jedi/ycmd/tern) 的补全方式,需要安装服务器端.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div id="orgc3ee6b9" class="outline-3">
+<h3 id="orgc3ee6b9">cask</h3>
+<div class="outline-text-3" id="text-orgc3ee6b9">
+<p>
+[cask] 目前学习了两种安装方式,一个是 cask 一个是非 cask 的. 非 cask 是首先检查
+initpackage 列表中的 pkg 是否都安装了?如果没有会安装他们,之后才开始进行一些列的
+init.el 配置. cask 的方式,是要通过设定你的 export path 来设置 emacs 默认启动版本和 cask 的安装路径,来通过 cask install 来安装. 这之后才会执行一些 init.el 配置.
+这里都是先装包,再配置. 这样做的目的只有一个: 再一个新的环境中,下载我们的配置,直接使用. 或称: 配置,正确迁移. [progn] 是将多条语句捆绑成一条. 经常用在只允许一条语句的地方.
+[pp] 是 pretty print .
+[macroexpand] 用来展开一个宏,注意在后面加 quote&#x2014; '
+</p>
+</div>
+<div id="org3f6a97f" class="outline-4">
+<h4 id="org3f6a97f">如何通过 cask 回退 older-version pkg?</h4>
+<div class="outline-text-4" id="text-org3f6a97f">
+<ol class="org-ol">
+<li>melpa 是通过 pkg 源码的 github,抓取最新 release.github 上每个 release 都有自己的 commit 号和 MD5 码.</li>
+<li>可以通过 ~/.emacs.d/cask 文件来管理 <b>下载源</b> <b>每个包的下载 commit 号</b></li>
+</ol>
+<p>
+<b>格式: (depends-on "pkg-name" :git "pkgpage-in-github" :reg "commit-code")</b>
+</p>
+<ul class="org-ul">
+<li>pkgpage 是 melpa 中每个 pkg 的 github 页;</li>
+<li>commit-code 可以在该 github 页上通过 release 找到稳定版, 通过 commit 找到提交版.
+eg: (depends-on "monokai-theme" :git "<a href="https://github.com/oneKelvinSmith/monokai-emacs">https://github.com/oneKelvinSmith/monokai-emacs</a>" :ref "61c0ff7")
+<ol class="org-ol">
+<li>(不要通过 emacs package 删除) <b>通过 terminal 删除要回退的包</b></li>
+<li>通过 terminal cask install 安装 cask 文件中指定的版本</li>
+</ol></li>
+</ul>
+<p>
+这样是可以安装回任意版本的 pkg.但是重启 emacs 之后, <b>不要</b> 去 package-list 中更新.因为还是会更新最新的.
+</p>
+</div>
+</div>
+</div>
+
+<div id="orga49096c" class="outline-3">
+<h3 id="orga49096c">usa-package</h3>
+<div class="outline-text-3" id="text-orga49096c">
+</div>
+<div id="org1d5779b" class="outline-4">
+<h4 id="org1d5779b">use-package 是更安全的 require</h4>
+<div class="outline-text-4" id="text-org1d5779b">
+<p>
+上面是 use-package 通过 macroexpand 展开的内容. 注意提示符 message Cannot load %s.这个经常在 emacs 编译 init.el 时出现.
+</p>
+</div>
+</div>
+<div id="org9af7a47" class="outline-4">
+<h4 id="org9af7a47">use-package a-pkg 分成多个部分</h4>
+<div class="outline-text-4" id="text-org9af7a47">
+<ul class="org-ul">
+<li>:init 是表示在 require a-pkg 之前定义</li>
+<li>:config 是表示在 require a-pkg 之后定义
+[tips] 我们尽量少的使用 require 整个 pkg,而是应当通过 autoload 来事先加载一部分功能,从而使用需要的命令</li>
+<li>:commands 是 usepackage 声明 autoload 的方法.</li>
+<li>:bind 用来绑定快捷键,甚至可以制定 mode-map</li>
+<li>:ensure 保证在 use-packge 执行之前,从源中下载最新版</li>
+<li>:pin 如果想下载另一个源,可以在这里指定</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="org9e1abf6" class="outline-3">
+<h3 id="org9e1abf6">anaconda-mode</h3>
+<div class="outline-text-3" id="text-org9e1abf6">
+<p>
+通過 pip install anaconda-mode 會直接安裝三個依賴包
+</p>
+<ul class="org-ul">
+<li>anaconda 是一个用于数据分析的 py 包的库,维护了几百个可用的 py 包.</li>
+<li>anaconda-mode 是专门为 emacs 的 python-mode 编写的自动补全 pkg,专门用来从一个本地服务器匹配补全.
+<ul class="org-ul">
+<li>anaconda-mode:其工作需要本地端有 factory-service 的支持,用于获取自动补全的内容(可以通过 pip 安装)</li>
+<li>Jedi:是一个自动补全和静态分析 python 库的工具,anaconda-mode 依赖了这个包(可以通过 pip 安装)</li>
+</ul></li>
+<li>company-mode 提供了更好的 ui 和更多的补全设置,eg 很多类型的 backends. 可以配合 anaconda-mode 提供的 backends 使用</li>
+</ul>
+</div>
+<div id="orgf56a813" class="outline-4">
+<h4 id="orgf56a813">安装过程出现的问题</h4>
+<div class="outline-text-4" id="text-orgf56a813">
+<ol class="org-ol">
+<li>Server error: ValueError('need more than 0 values to unpack',)
+有人提出这个问题,但是 anaconda-mode 作者说,这是 jedi 的 bug <a href="https://github.com/proofit404/anaconda-mode/issues/224">jedi 的 bug?</a></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="org7250e0e" class="outline-3">
+<h3 id="org7250e0e">multiple-cursor-mode and cua-mode ?</h3>
+<div class="outline-text-3" id="text-org7250e0e">
+<p>
+it is so annoying to make this list of checkboxes, I refer <code>cua-mode</code> , <code>multiple-cursor-mode</code> , but both are not execute very well in
+evil edit-mode ,so i frequently swich emacs-mode and evil-mode by <code>C-z</code> .
+</p>
+<ol class="org-ol">
+<li>I copy all the text from onenote from the chrome;</li>
+<li>I get how to toggle the check-box between SOLVED and UNSOLVED, by <code>C-z</code> ;</li>
+<li>I add '[]' to the head of all lines by cua-mode in evil-mode, FAILED!</li>
+<li>I googled a mode which pre-installed in zilong'configurations&#x2014; <code>multiple-cursor-mode</code> ;</li>
+<li>it also sucks in evil-mode.</li>
+<li>I find the configuration and hotkey re-defined by zilong ,in <code>/.spacemacs.d/layers/zilongshanren-misc/packages.el</code>
+<ol class="org-ol">
+<li>switch to emacs-mode</li>
+<li><code>C-spc</code> to select several chars , then <code>C-s-f</code> to mark all the identical highlight</li>
+<li><code>C-spc</code> again to cancel the highlight state, then you get MULTIPLE CURSOR</li>
+<li>now, its your fasion time!</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="org7affbce" class="outline-2">
+<h2 id="org7affbce">configuration</h2>
+<div class="outline-text-2" id="text-org7affbce">
+</div>
+<div id="org508faa4" class="outline-3">
+<h3 id="org508faa4">如何安装不在 melpa 的包(自己写的包)</h3>
+<div class="outline-text-3" id="text-org508faa4">
+<ol class="org-ol">
+<li>查看该包 github 网站,获得其.el 文件中的 provide 值&#x2013;&gt;也就是具体包名</li>
+<li><p>
+自己 layer 的 packages 函数中包含该名,并加参数
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(&lt;pkgName&gt; <span class="org-builtin">:location</span> (recipe <span class="org-builtin">:fetch</span> github <span class="org-builtin">:repo</span> <span class="org-string">"&lt;URLofpkgInGithub&gt;"</span>))
+</pre>
+</div></li>
+<li>配置该包的 init 函数</li>
+</ol>
+</div>
+</div>
+<div id="org015747a" class="outline-3">
+<h3 id="org015747a">layers.el&#x2014;如何大量配置包参数</h3>
+<div class="outline-text-3" id="text-org015747a">
+<p>
+通过自定义的 layer-&gt;packages.el-&gt;post-init-pkgname()去进行简单的 pkg 参数调教是没问题的,但是如果我对大部分参数都不满意,参数又多达几百个,这种方法不适用.
+</p>
+<ol class="org-ol">
+<li>自己 layer 下,定义 layer.el,用于移除掉一些 layer.</li>
+<li><p>
+比如 Chinese layer 下有个 youdao 字典的包,我不想要.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(configuration-layer/remove-layer 'youdao-dictionary)
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+<div id="org4e809c2" class="outline-3">
+<h3 id="org4e809c2">set all customize settings in one file</h3>
+<div class="outline-text-3" id="text-org4e809c2">
+<p>
+最好通过下面的语句,这样会在 init.el 同层目录生成一个 custom.el 文件,用来存放这些个性化配置
+(setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
+(load custom-file 'no-error 'no-message)
+</p>
+</div>
+</div>
+<div id="org8924a05" class="outline-3">
+<h3 id="org8924a05">where other settings locate</h3>
+<div class="outline-text-3" id="text-org8924a05">
+<p>
+spc f e d 下面 dotspacemacs/user-congfig() 函数里
+</p>
+</div>
+</div>
+<div id="orgea977ee" class="outline-3">
+<h3 id="orgea977ee">install package not included in spacemacs</h3>
+<div class="outline-text-3" id="text-orgea977ee">
+<p>
+spc f e d 下面 dotspacemacs-additional-packages '() 列表中
+</p>
+</div>
+</div>
+<div id="orgccd4f0f" class="outline-3">
+<h3 id="orgccd4f0f">find README of any layer in spacemacs</h3>
+<div class="outline-text-3" id="text-orgccd4f0f">
+<p>
+(通过 SPC h SPC 进入)
+每一个 layer 的配置文件的同层目录中(spc f j) 都存放了一个 readme 文件,详细介绍了这个 layer 中所有包的说明及安装方式/hotkeys
+</p>
+
+<p>
+每一个 layer 都有很多变量, 这些变量都在 readme 里面有介绍.
+每一个 layer 的文件夹内,都存有 config.el, 其中的配置可以在(layer 层配置的 variables 配置),
+当加载这个 layer 的时候,会配置 config.el
+</p>
+
+<p>
+直接在 init.el 文件的 configuration-layer 中的 layer 对应位置:
+</p>
+<pre class="example">
+(better-defaults :variable better-defaults-move-to-end-of-code-first t)
+</pre>
+</div>
+</div>
+<div id="org6287c7e" class="outline-3">
+<h3 id="org6287c7e">exclude some unwanted packages</h3>
+<div class="outline-text-3" id="text-org6287c7e">
+<ul class="org-ul">
+<li>我想查看 SPC fed congfig 下某个 layer 都安装了哪些 package.怎么做?
+在 dotspacemacs-configuration-layers 下面的某个 layer 名字上 SPC-h-SPC
+查询到 package 后, SPC-fed ,配置文件里有个 "dotspacemacs-exclude-packages '()" 名字放到括号里即可然后选择一个进去,可以看到整个 layer 的配置.</li>
+<li>如果 spacemacs 启动的时候某个 pkg 报错,实在找不到原因,也可以通过上面的方法删除之.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="org90a0436" class="outline-2">
+<h2 id="org90a0436">debug</h2>
+<div class="outline-text-2" id="text-org90a0436">
+</div>
+<div id="org91bccdb" class="outline-3">
+<h3 id="org91bccdb">hotkeys for debug</h3>
+<div class="outline-text-3" id="text-org91bccdb">
+</div>
+<div id="orgbb5ef43" class="outline-4">
+<h4 id="orgbb5ef43">emacs is frozen</h4>
+<div class="outline-text-4" id="text-orgbb5ef43">
+<p>
+use a comman in terminal to display the call stack in emacs
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">pkill -SIGUSR2 -i emacs
+=M-x: toggle-debug-on-quit=
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org6dd7454" class="outline-4">
+<h4 id="org6dd7454">emacs is slow</h4>
+<div class="outline-text-4" id="text-org6dd7454">
+<p>
+use the following two commands to profile the CPU
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">profiler-start
+profiler-report
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org0be37a5" class="outline-4">
+<h4 id="org0be37a5">emacs start-up time is long</h4>
+<div class="outline-text-4" id="text-org0be37a5">
+<p>
+use the following command
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">$<span class="org-variable-name">PAHT_TO_EMACS</span>/emacs --timed-requires --profile
+</pre>
+</div>
+<p>
+<code>spc b b</code> to find a buffer called "<b>load time</b>", can you find the threshold package
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="org28045c2" class="outline-2">
+<h2 id="org28045c2">hack tip</h2>
+<div class="outline-text-2" id="text-org28045c2">
+</div>
+<div id="orgf763f28" class="outline-3">
+<h3 id="orgf763f28">I want a feature from other editors, how could i implement it in emacs?</h3>
+<div class="outline-text-3" id="text-orgf763f28">
+<p>
+emacs is a collection of packages, every package is a collection of tools.
+she also gives you the way to re-organize them to fit you well.
+</p>
+
+<ul class="org-ul">
+<li>FIRST RULE, you must know what are the tools in your bag
+read all the doc of packages, get the knowledge of all the core functions.
+these functions are the tools,gears to composite your weapon.</li>
+<li>SECOND RULE, you must know how to combine them in emacs
+emacs is like a traslator to transport information between different packages.
+you need to know the node and tube, the methods how to use them.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yiddishkop (<a href="mailto:yiddishkop@163.com">yiddishkop@163.com</a>)</p>
+<p class="date">Date: </p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 26.1 (<a href="https://orgmode.org">Org</a> mode 9.1.13)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

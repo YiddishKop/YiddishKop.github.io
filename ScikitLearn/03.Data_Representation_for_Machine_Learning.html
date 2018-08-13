@@ -1,0 +1,924 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记02:数据表示与机器学习</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记02:数据表示与机器学习</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org68b9d48">1. Representation and Visualization of Data</a>
+<ul>
+<li><a href="#org78765ea">1.1. Data in scikit-learn</a>
+<ul>
+<li><a href="#org86de4cd">1.1.1. A Simple Example: the Iris Dataset</a></li>
+<li><a href="#orgf73ac7a">1.1.2. Quick Question:</a></li>
+<li><a href="#org9283275">1.1.3. Loading the Iris Data with Scikit-learn</a></li>
+<li><a href="#orgfeda454">1.1.4. background: iris dataset</a></li>
+<li><a href="#orge3d3412">1.1.5. from <code>sklearn.datasets</code> to <code>sklearn.utils.Bunch</code> to <code>np.array</code></a></li>
+<li><a href="#org01cdf2f">1.1.6. An aside: scatterplot matrices</a></li>
+<li><a href="#org23643da">1.1.7. Other Available Data</a></li>
+<li><a href="#org666b464">1.1.8. Loading Digits Data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org0bf1e46">2. Misc tools</a>
+<ul>
+<li><a href="#org37d82aa">2.1. Numpy</a>
+<ul>
+<li><a href="#org86199d8">2.1.1. np.bincount(ndarray)</a></li>
+</ul>
+</li>
+<li><a href="#orgb02ae8b">2.2. Scipy</a></li>
+<li><a href="#org71e5809">2.3. Scikit-learn</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="org68b9d48" class="outline-2">
+<h2 id="org68b9d48"><span class="section-number-2">1</span> Representation and Visualization of Data&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXERCISE">EXERCISE</span></span></h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Machine learning is about <b>fitting models to data</b>; for that reason, we'll
+start by discussing how data can be represented in order to be understood by
+the computer. Along with this, we'll build on our matplotlib examples from the
+previous section and show some examples of how to visualize data.
+</p>
+</div>
+
+<div id="org78765ea" class="outline-3">
+<h3 id="org78765ea"><span class="section-number-3">1.1</span> Data in scikit-learn&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXERCISE">EXERCISE</span></span></h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Data in scikit-learn, with very few exceptions, is assumed to be stored as a
+two-dimensional array, of shape [n_samples, n_features]. Many algorithms also
+accept scipy.sparse matrices of the same shape.
+</p>
+
+<ul class="org-ul">
+<li><code>n_samples</code>: The number of samples: each sample is an item to process (e.g.
+classify). A sample can be a document, a picture, a sound, a video, an
+astronomical object, a row in database or CSV file, or whatever you can
+describe with a fixed set of quantitative traits.</li>
+
+<li><code>n_features</code>: The number of features or distinct traits that can be used to
+describe each item in a quantitative manner. Features are generally
+real-valued, but may be Boolean or discrete-valued in some cases.</li>
+</ul>
+
+<p>
+The number of features must be fixed in advance. However it can be very high
+dimensional (e.g. millions of features) with most of them being "zeros" for a
+given sample. This is a case where <code>scipy.sparse</code> matrices can be useful, in
+that they are <code>much more memory-efficient than NumPy arrays</code>.
+</p>
+
+<p>
+As we recall from the previous section (or Jupyter notebook), we represent
+samples (data points or instances) as rows in the data array, and we store
+the corresponding features, the "dimensions," as columns.
+</p>
+
+<ul class="org-ul">
+<li><code>one sample =&gt; one row</code></li>
+<li><code>one feature =&gt; one column</code></li>
+</ul>
+</div>
+
+<div id="org86de4cd" class="outline-4">
+<h4 id="org86de4cd"><span class="section-number-4">1.1.1</span> A Simple Example: the Iris Dataset</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+As an example of a simple dataset, we're going to take a look at the iris
+data stored by scikit-learn. The data consists of measurements of three
+different iris flower species. There are three different species of iris in
+this particular dataset as illustrated below: Iris Setosa Iris Versicolor
+Iris Virginica
+</p>
+</div>
+</div>
+
+<div id="orgf73ac7a" class="outline-4">
+<h4 id="orgf73ac7a"><span class="section-number-4">1.1.2</span> Quick Question:</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Let's assume that we are interested in categorizing new observations; we
+want to predict whether unknown flowers are <code>Iris-Setosa</code>,
+</p>
+
+<p>
+<code>Iris-Versicolor</code>, or <code>Iris-Virginica</code> flowers, respectively. Based on what
+we've discussed in the previous section, how would we construct such a
+dataset?
+</p>
+
+<p>
+Remember: we need a 2D array of size <code>[n_samples x n_features]</code>.
+</p>
+
+<ul class="org-ul">
+<li>What would the <code>n_samples</code> refer to?</li>
+
+<li>What might the <code>n_features</code> refer to?</li>
+</ul>
+
+<p>
+Remember that there must be a fixed number of features for each sample, and
+feature number j must be a similar kind of quantity for each sample.
+</p>
+</div>
+</div>
+
+<div id="org9283275" class="outline-4">
+<h4 id="org9283275"><span class="section-number-4">1.1.3</span> Loading the Iris Data with Scikit-learn</h4>
+</div>
+
+<div id="orgfeda454" class="outline-4">
+<h4 id="orgfeda454"><span class="section-number-4">1.1.4</span> background: iris dataset</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+For future experiments with machine learning algorithms, we recommend you to
+bookmark the <code>UCI machine learning repository</code>, which hosts many of the
+<code>commonly used datasets</code> that are useful for benchmarking machine learning
+algorithms &#x2013; a very popular resource for machine learning practioners and
+researchers.
+</p>
+
+<p>
+Conveniently, some of these datasets are already included in scikit-learn so
+that we can skip the tedious parts of downloading, reading, parsing, and
+cleaning these text/CSV files. You can find a list of available datasets in
+scikit-learn at: <a href="http://scikit-learn.org/stable/datasets/#toy-datasets">http://scikit-learn.org/stable/datasets/#toy-datasets</a>.
+</p>
+
+<p>
+For example, scikit-learn has a very straightforward set of data on these
+iris species. The data consist of the following:
+</p>
+
+<ol class="org-ol">
+<li>Features in the Iris dataset:
+<ul class="org-ul">
+<li>sepal length in cm</li>
+<li>sepal width in cm</li>
+<li>petal length in cm</li>
+<li>petal width in cm</li>
+</ul></li>
+
+<li>Target classes to predict:
+<ul class="org-ul">
+<li>Iris Setosa</li>
+<li>Iris Versicolour</li>
+<li>Iris Virginica</li>
+</ul></li>
+</ol>
+
+<p>
+(Image: "Petal-sepal". Licensed under CC BY-SA 3.0 via Wikimedia Commons -
+<img src="https://commons.wikimedia.org/wiki/File:Petal-sepal.jpg#/media/File:Petal-sepal.jpg" alt="File:Petal-sepal.jpg" />)
+</p>
+</div>
+</div>
+
+<div id="orge3d3412" class="outline-4">
+<h4 id="orge3d3412"><span class="section-number-4">1.1.5</span> from <code>sklearn.datasets</code> to <code>sklearn.utils.Bunch</code> to <code>np.array</code></h4>
+<div class="outline-text-4" id="text-1-1-5">
+<blockquote>
+<p>
+<code>sklearn.utils.Bunch</code> is essentially a dict:
+</p>
+<ul class="org-ul">
+<li><code>bunch.keys()</code> get all the keys of this dict</li>
+<li><code>bunch.data</code> access the value(ndarray: the data it store) of key <code>data</code></li>
+<li><code>bunch.target</code> access the value(ndarray: the label it store) of key <code>target</code></li>
+</ul>
+</blockquote>
+
+<p>
+scikit-learn embeds a copy of the iris CSV file along with a helper function
+to load it into numpy arrays:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_iris
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">iris</span> = load_iris()
+<span class="org-keyword">print</span> (<span class="org-builtin">type</span>(iris)) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- &lt;class 'sklearn.utils.Bunch'&gt;</span>
+</pre>
+</div>
+
+<p>
+Bunch is some like the dict of python
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">key</th>
+<th scope="col" class="org-left">value</th>
+<th scope="col" class="org-left">discription</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">'data'</td>
+<td class="org-left">array([[5.1, 3.4, 2, 0.2],[],[],&#x2026;])</td>
+<td class="org-left">2D array: (n_samples, n_features)</td>
+</tr>
+
+<tr>
+<td class="org-left">'target'</td>
+<td class="org-left">array([])</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The resulting dataset is a <code>Bunch</code> object: you can see what's available using
+the method <code>keys()</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-builtin">type</span>(iris.data)) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- &lt;class 'numpy.ndarray'&gt;</span>
+iris.keys()
+</pre>
+</div>
+
+<pre class="example">
+dict_keys(['data', 'target', 'target_names', 'DESCR', 'feature_names'])
+
+</pre>
+
+<p>
+The features of each sample flower are stored in the <code>data</code> attribute of the
+dataset:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">n_samples</span>, <span class="org-variable-name">n_features</span> = iris.data.shape
+<span class="org-keyword">print</span>(<span class="org-string">'Number of samples:'</span>, n_samples)
+<span class="org-keyword">print</span>(<span class="org-string">'Number of features:'</span>, n_features)
+<span class="org-comment-delimiter"># </span><span class="org-comment">the sepal length, sepal width, petal length and petal width of the first sample (first flower)</span>
+<span class="org-keyword">print</span>(iris.data[<span class="org-highlight-numbers-number">0</span>])
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">sepal len</th>
+<th scope="col" class="org-right">sepal wid</th>
+<th scope="col" class="org-right">petal len</th>
+<th scope="col" class="org-right">petal wid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">5.1</td>
+<td class="org-right">3.5</td>
+<td class="org-right">1.4</td>
+<td class="org-right">0.2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The information about the class of each sample is stored in the <code>target</code> attribute
+of the dataset:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(iris.data.shape)
+<span class="org-keyword">print</span>(iris.target.shape)
+<span class="org-keyword">print</span>(iris.target) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- all the label of all the data</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+np.bincount(iris.target)
+</pre>
+</div>
+
+<pre class="example">
+array([50, 50, 50])
+
+</pre>
+
+<p>
+Using the NumPy's <code>bincount</code> (<a href="#org86199d8">np.bincount(ndarray)</a>)function, we can see that
+the classes are <b>distributed uniformly</b> in this dataset - there are 50
+flowers from each species, where
+</p>
+
+<ul class="org-ul">
+<li>class 0: Iris-Setosa     =&gt; 50</li>
+<li>class 1: Iris-Versicolor =&gt; 50</li>
+<li>class 2: Iris-Virginica  =&gt; 50</li>
+</ul>
+
+<p>
+These class names are stored in the last attribute, namely <code>target_names</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(iris.target_names)
+</pre>
+</div>
+
+<p>
+This data is four dimensional, but we can <b>visualize one or two of the
+dimensions</b> at a time <b>using a simple histogram or scatter-plot</b>. Again,
+we'll start by enabling matplotlib inline mode:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x_index</span> = <span class="org-highlight-numbers-number">3</span>
+<span class="org-variable-name">colors</span> = [<span class="org-string">'blue'</span>, <span class="org-string">'red'</span>, <span class="org-string">'green'</span>]
+
+<span class="org-keyword">for</span> label, color <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(<span class="org-builtin">range</span>(<span class="org-builtin">len</span>(iris.target_names)), colors):
+    plt.hist(iris.data[iris.target==label, x_index],
+             label=iris.target_names[label],
+             color=color)
+
+plt.xlabel(iris.feature_names[x_index])
+plt.legend(loc=<span class="org-string">'upper right'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/1942P7t.png" alt="1942P7t.png" />
+</p>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">x_index</span> = <span class="org-highlight-numbers-number">3</span>
+<span class="org-variable-name">y_index</span> = <span class="org-highlight-numbers-number">0</span>
+
+<span class="org-variable-name">colors</span> = [<span class="org-string">'blue'</span>, <span class="org-string">'red'</span>, <span class="org-string">'green'</span>]
+
+<span class="org-keyword">for</span> label, color <span class="org-keyword">in</span> <span class="org-builtin">zip</span>(<span class="org-builtin">range</span>(<span class="org-builtin">len</span>(iris.target_names)), colors):
+    plt.scatter(iris.data[iris.target==label, x_index],
+                iris.data[iris.target==label, y_index],
+                label=iris.target_names[label],
+                c=color)
+
+plt.xlabel(iris.feature_names[x_index])
+plt.ylabel(iris.feature_names[y_index])
+plt.legend(loc=<span class="org-string">'upper left'</span>)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/1942Cxn.png" alt="1942Cxn.png" />
+</p>
+</div>
+
+<blockquote>
+<p>
+EXERCISE: <b><b>Change</b></b> `x_index` <b><b>and</b></b> `y_index` <b><b>in the above script and find
+a combination of two parameters which maximally separate the three classes.</b></b>
+This exercise is a preview of <b><b>dimensionality reduction</b></b>, which we'll see
+later.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="org01cdf2f" class="outline-4">
+<h4 id="org01cdf2f"><span class="section-number-4">1.1.6</span> An aside: scatterplot matrices</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<p>
+Instead of looking at the data one plot at a time, a common tool that analysts
+use is called the scatterplot matrix.
+</p>
+
+<p>
+<code>Scatterplot matrices</code> show scatter plots between all features in the data
+set, as well as histograms to show the distribution of each feature.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> pandas <span class="org-keyword">as</span> pd
+
+<span class="org-variable-name">iris_df</span> = pd.DataFrame(iris.data, columns=iris.feature_names)
+pd.plotting.scatter_matrix(iris_df, c=iris.target, figsize=(<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>));
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/1942bLh.png" alt="1942bLh.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org23643da" class="outline-4">
+<h4 id="org23643da"><span class="section-number-4">1.1.7</span> Other Available Data</h4>
+<div class="outline-text-4" id="text-1-1-7">
+<p>
+Scikit-learn makes available a host of datasets for testing learning algorithms.
+They come in three flavors:
+</p>
+
+<ul class="org-ul">
+<li><code>Packaged Data</code>: these small datasets are packaged with the scikit-learn
+installation, and can be downloaded using the tools in
+<code>sklearn.datasets.load_*</code></li>
+<li><code>Downloadable Data</code>: these larger datasets are available for download, and
+scikit-learn includes tools which streamline this process. These tools can be
+found in <code>sklearn.datasets.fetch_*</code></li>
+<li><code>Generated Data</code>: there are several datasets which are generated from
+models based on a random seed. These are available in the
+<code>sklearn.datasets.make_*</code></li>
+</ul>
+
+<p>
+You can explore the available dataset loaders, fetchers, and generators using
+IPython's tab-completion functionality. After importing the datasets submodule
+from sklearn, type
+</p>
+
+<p>
+<code>datasets.load_&lt;TAB&gt;</code>
+</p>
+
+<p>
+or
+</p>
+
+<p>
+<code>datasets.fetch_&lt;TAB&gt;</code>
+</p>
+
+<p>
+or
+</p>
+
+<p>
+<code>datasets.make_&lt;TAB&gt;</code>
+</p>
+
+<p>
+to see a list of available functions.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn <span class="org-keyword">import</span> datasets
+</pre>
+</div>
+
+<p>
+Be warned: many of these datasets are quite large, and can take a long time to
+download!
+</p>
+
+<p>
+If you start a download within the IPython notebook and you want to kill it,
+you can use ipython's "kernel interrupt" feature, available in the menu or
+using the shortcut Ctrl-m i.
+</p>
+
+<p>
+You can press Ctrl-m h for a list of all ipython keyboard shortcuts.
+</p>
+</div>
+</div>
+
+<div id="org666b464" class="outline-4">
+<h4 id="org666b464"><span class="section-number-4">1.1.8</span> Loading Digits Data&#xa0;&#xa0;&#xa0;<span class="tag"><span class="EXERCISE">EXERCISE</span></span></h4>
+<div class="outline-text-4" id="text-1-1-8">
+<p>
+Now we'll take a look at another dataset, one where we have to put a bit
+more thought into how to represent the data. We can explore the data in a
+similar manner as above:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_digits
+<span class="org-variable-name">digits</span> = load_digits() <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- helper function to load data</span>
+digits.keys()          <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- to see what attributes we can call</span>
+<span class="org-variable-name">n_samples</span>, <span class="org-variable-name">n_features</span> = digits.data.shape
+<span class="org-keyword">print</span>((n_samples, n_features))
+<span class="org-keyword">print</span>(digits.data[<span class="org-highlight-numbers-number">0</span>])
+<span class="org-keyword">print</span>(digits.target)
+<span class="org-keyword">print</span>(digits.keys())
+</pre>
+</div>
+
+<p>
+The target here is just the digit represented by the data. The data is an
+array of length 64&#x2026; but what does this data mean?
+</p>
+
+<p>
+There's a clue in the fact that we have two versions of the data array: data
+and images. Let's take a look at them:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(digits.data.shape)
+<span class="org-keyword">print</span>(digits.images.shape)
+</pre>
+</div>
+
+<p>
+We can see that they're related by a simple reshaping:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">print</span>(np.<span class="org-builtin">all</span>(digits.images.reshape((<span class="org-highlight-numbers-number">1797</span>, <span class="org-highlight-numbers-number">64</span>)) == digits.data))
+</pre>
+</div>
+
+<p>
+Let's visualize the data. It's little bit more involved than the simple
+scatter-plot we used above, but we can do it rather quickly.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">set up the figure</span>
+<span class="org-variable-name">fig</span> = plt.figure(figsize=(<span class="org-highlight-numbers-number">6</span>, <span class="org-highlight-numbers-number">6</span>))  <span class="org-comment-delimiter"># </span><span class="org-comment">figure size in inches</span>
+fig.subplots_adjust(left=<span class="org-highlight-numbers-number">0</span>, right=<span class="org-highlight-numbers-number">1</span>, bottom=<span class="org-highlight-numbers-number">0</span>, top=<span class="org-highlight-numbers-number">1</span>, hspace=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, wspace=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>)
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">plot the digits: each image is 8x8 pixels</span>
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">64</span>):
+    <span class="org-variable-name">ax</span> = fig.add_subplot(<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">8</span>, i + <span class="org-highlight-numbers-number">1</span>, xticks=[], yticks=[])
+    ax.imshow(digits.images[i], cmap=plt.cm.binary, interpolation=<span class="org-string">'nearest'</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">label the image with the target value</span>
+    ax.text(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">7</span>, <span class="org-builtin">str</span>(digits.target[i]))
+
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/1942OPD.png" alt="1942OPD.png" />
+</p>
+</div>
+
+<p>
+We see now what the features mean. Each feature is a real-valued quantity
+representing the darkness of a pixel in an 8x8 image of a hand-written
+digit.
+</p>
+
+<p>
+Even though each sample has data that is inherently two-dimensional, the
+data matrix flattens this 2D data into a single vector, which can be
+contained in one row of the data matrix.
+</p>
+
+<blockquote>
+<p>
+EXERCISE: working with the faces dataset: Here we'll take a moment for you
+to explore the datasets yourself. Later on we'll be using the Olivetti faces
+dataset. Take a moment to fetch the data (about 1.4MB), and visualize the
+faces. You can copy the code used to visualize the digits above, and modify
+it for this data.
+</p>
+</blockquote>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> fetch_olivetti_faces
+<span class="org-comment-delimiter"># </span><span class="org-comment">fetch the faces data</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">Use a script like above to plot the faces image data.</span>
+<span class="org-comment-delimiter"># </span><span class="org-comment">hint: plt.cm.bone is a good colormap for this data</span>
+</pre>
+</div>
+
+<p>
+Solution:
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org0bf1e46" class="outline-2">
+<h2 id="org0bf1e46"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org37d82aa" class="outline-3">
+<h3 id="org37d82aa"><span class="section-number-3">2.1</span> Numpy</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="org86199d8" class="outline-4">
+<h4 id="org86199d8"><span class="section-number-4">2.1.1</span> np.bincount(ndarray)</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+<code>np.bincount</code> is some like the <code>groupby(_).count()</code> in scala.
+</p>
+
+<p>
+return number of elements of each bin
+</p>
+
+<p>
+It group the elements of ndarray by their own values, then count number of
+elements in each group.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-variable-name">dataset</span> = np.random.randint(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">3</span>, size=(<span class="org-highlight-numbers-number">15</span>,))
+<span class="org-keyword">print</span> (dataset)
+<span class="org-keyword">print</span> (np.bincount(dataset))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgb02ae8b" class="outline-3">
+<h3 id="orgb02ae8b"><span class="section-number-3">2.2</span> Scipy</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+By now, what I have known modules of Scipy
+</p>
+<ol class="org-ol">
+<li>scipy.sparse</li>
+<li>scipy.optimize</li>
+</ol>
+</div>
+</div>
+<div id="org71e5809" class="outline-3">
+<h3 id="org71e5809"><span class="section-number-3">2.3</span> Scikit-learn</h3>
+<div class="outline-text-3" id="text-2-3">
+<ol class="org-ol">
+<li>sklearn.datasets</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

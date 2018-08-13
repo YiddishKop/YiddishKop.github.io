@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记10:用词袋模型进行文本特征解析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记10:用词袋模型进行文本特征解析</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5976c67">1. Methods - Text Feature Extraction with Bag-of-Words</a>
+<ul>
+<li><a href="#org7a0baa4">1.1. tf-idf Encoding</a></li>
+<li><a href="#org1d4c0cf">1.2. Bigrams and N-Grams: general tokenization</a>
+<ul>
+<li><a href="#org33582ff">1.2.1. what is n-grams</a></li>
+<li><a href="#org00da728">1.2.2. why we need n-grams</a></li>
+</ul>
+</li>
+<li><a href="#org61653c1">1.3. Character n-grams</a></li>
+</ul>
+</li>
+<li><a href="#orgcdc126e">2. Misc tools</a>
+<ul>
+<li><a href="#org163f478">2.1. Scikit-learn</a>
+<ul>
+<li><a href="#orgb9aef4e">2.1.1. ML models by now</a></li>
+<li><a href="#orgce27a9a">2.1.2. ML fn in this notes</a></li>
+<li><a href="#org780c198">2.1.3. CountVectorizer</a>
+<ul>
+<li><a href="#orgd0f89cd">2.1.3.1. Ctor parameters</a></li>
+<li><a href="#org1775e28">2.1.3.2. attributes</a></li>
+<li><a href="#orgd977882">2.1.3.3. Methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+
+</pre>
+</div>
+
+<div id="org5976c67" class="outline-2">
+<h2 id="org5976c67"><span class="section-number-2">1</span> Methods - Text Feature Extraction with Bag-of-Words</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+build vocabulary: fit(means building model):
+</p>
+<hr />
+<ul class="org-ul">
+<li>obj.fit(sentence_data_base)</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-ipython" id="org1412eda"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">vectorizer</span> = CountVectorizer(min_df=<span class="org-highlight-numbers-number">1</span>)
+vectorizer.fit([
+    <span class="org-string">"The cat sat on the mat."</span>,
+    <span class="org-string">"The quick brown fox jumps over the lazy dog."</span>,
+])
+vectorizer.vocabulary_
+
+</pre>
+</div>
+
+<pre class="example">
+{'brown': 0,
+'cat': 1,
+'dog': 2,
+'fox': 3,
+'jumps': 4,
+'lazy': 5,
+'mat': 6,
+'on': 7,
+'over': 8,
+'quick': 9,
+'sat': 10,
+'the': 11}
+</pre>
+
+<p>
+apply vocabulary: after fit(means model built finished):
+</p>
+<hr />
+<ul class="org-ul">
+<li>model.vocabulary_ : a dict with item format <b>'word': num_occurence</b> .</li>
+<li>model.get_feature_names : like the keys of this dict</li>
+<li>model.transform : <b>return the train data point</b>, num_occurence of each word in each sample.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython" id="orgda30b97"><span class="org-variable-name">X</span> = vectorizer.transform([
+    <span class="org-string">"The cat sat on the mat."</span>,
+    <span class="org-string">"This cat is a nice cat."</span>,
+]).toarray()
+<span class="org-keyword">print</span>(<span class="org-builtin">len</span>(vectorizer.vocabulary_))
+<span class="org-keyword">print</span>(vectorizer.get_feature_names())
+<span class="org-keyword">print</span>(X)
+</pre>
+</div>
+
+<p>
+&gt;&gt;&gt; bag_of_words
+</p>
+
+<p>
+In many tasks, like in the classical spam detection, your input data is text.
+Free text with variables length is very far from the fixed length numeric
+representation that we need to do machine learning with scikit-learn.
+</p>
+
+<p>
+However, there is an easy and <b>effective way</b> to go <b>from text data to a numeric
+representation</b> using the so-called <b>bag-of-words model</b>, which provides a data
+structure that is compatible with the machine learning aglorithms in
+scikit-learn.
+</p>
+
+<p>
+&gt;&gt;&gt; steps to build bag_of_words
+<img src="figures/bag_of_words.png" alt="bag_of_words.png" />
+</p>
+
+
+<p>
+Let's assume that <b>each sample</b> in your dataset is represented as <b>one string</b>,
+which could be just <b>a sentence, an email, or a whole news article or book</b>. To
+represent the sample, we :
+</p>
+
+<ol class="org-ol">
+<li>first <b>split the string into a list of tokens</b>, which correspond to (somewhat
+normalized) words. A simple way to do this to just split by whitespace, and
+then lowercase the word.</li>
+
+<li>Then, we build a <b>vocabulary of all tokens</b> (lowercased words) that <b>appear in
+our whole dataset</b>. This is usually a very large vocabulary.</li>
+
+<li>Finally, looking at our single sample, we could show <b>how often each word</b> in
+the vocabulary appears. We represent our string by a <b>vector</b>, where <b>each entry
+is how often a given word in the vocabulary</b> appears in the string.</li>
+</ol>
+
+<p>
+&gt;&gt;&gt; traits of bag_of_words model
+As each sample will only contain very few words, most entries will be zero,
+leading to a very <b>high-dimensional but sparse</b> representation.
+</p>
+
+<p>
+The method is called "bag-of-words," as the order of the words is lost entirely.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span> = [<span class="org-string">"Some say the world will end in fire,"</span>,
+     <span class="org-string">"Some say in ice."</span>]
+
+<span class="org-builtin">len</span>(X)
+</pre>
+</div>
+
+<pre class="example">
+2
+
+</pre>
+
+<p>
+&gt;&gt;&gt; general usage of ML model
+</p>
+<ol class="org-ol">
+<li>class to obj : CountVectorizer()</li>
+<li>obj to model : CountVectorizer().fit(X)</li>
+<li>model attrs and methods: CountVectorizer().fit(X).vocabulary_</li>
+</ol>
+
+<p>
+&gt;&gt;&gt; create obj, and obj to model
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">vectorizer</span> = CountVectorizer()
+vectorizer.fit(X)
+
+</pre>
+</div>
+
+<pre class="example">
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(1, 1), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None)
+</pre>
+
+<p>
+&gt;&gt;&gt; attributes of CountVectorizer model
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">vectorizer.vocabulary_
+</pre>
+</div>
+
+<pre class="example">
+{'end': 0,
+'fire': 1,
+'ice': 2,
+'in': 3,
+'say': 4,
+'some': 5,
+'the': 6,
+'will': 7,
+'world': 8}
+</pre>
+
+<p>
+&gt;&gt;&gt; methods of CountVectorizer model
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X_bag_of_words</span> = vectorizer.transform(X)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X_bag_of_words.shape
+</pre>
+</div>
+
+<pre class="example">
+(2, 9)
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X_bag_of_words
+</pre>
+</div>
+
+<pre class="example">
+&lt;2x9 sparse matrix of type '&lt;class 'numpy.int64'&gt;'
+with 12 stored elements in Compressed Sparse Row format&gt;
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">X_bag_of_words.toarray()
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 1, 0, 1, 1, 1, 1, 1, 1],
+[0, 0, 1, 1, 1, 1, 0, 0, 0]])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">vectorizer.get_feature_names()
+</pre>
+</div>
+
+<pre class="example">
+['end', 'fire', 'ice', 'in', 'say', 'some', 'the', 'will', 'world']
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">vectorizer.inverse_transform(X_bag_of_words)
+</pre>
+</div>
+
+<pre class="example">
+[array(['end', 'fire', 'in', 'say', 'some', 'the', 'will', 'world'],
+dtype='&lt;U5'), array(['ice', 'in', 'say', 'some'],
+dtype='&lt;U5')]
+</pre>
+</div>
+
+<div id="org7a0baa4" class="outline-3">
+<h3 id="org7a0baa4"><span class="section-number-3">1.1</span> tf-idf Encoding</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+A useful transformation that is often applied to the <b>bag-of-word encoding</b> is
+the so-called <b>term-frequency inverse-document-frequency (tf-idf) scaling</b>,
+which is a non-linear transformation of the word counts.
+</p>
+
+<p>
+The <b>tf-idf</b> encoding rescales words that are common to have less weight:
+</p>
+
+<p>
+&gt;&gt;&gt; class to obj, obj to model
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> TfidfVectorizer
+<span class="org-variable-name">tfidf_vectorizer</span> = TfidfVectorizer()
+tfidf_vectorizer.fit(X)
+</pre>
+</div>
+
+<pre class="example">
+TfidfVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(1, 1), norm='l2', preprocessor=None, smooth_idf=True,
+stop_words=None, strip_accents=None, sublinear_tf=False,
+token_pattern='(?u)\\b\\w\\w+\\b', tokenizer=None, use_idf=True,
+vocabulary=None)
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+np.set_printoptions(precision=<span class="org-highlight-numbers-number">2</span>)
+<span class="org-keyword">print</span>(tfidf_vectorizer.transform(X).toarray())
+</pre>
+</div>
+
+<p>
+&gt;&gt;&gt; what is a tfidf
+tf-idfs are a way to represent documents as feature vectors. tf-idfs can be
+understood as a modification of the raw term frequencies (tf); the tf is the
+count of how often a particular word occurs in a given document.
+</p>
+
+<p>
+The concept behind the tf-idf is to <b>downweight</b> terms proportionally to the
+<b>number of documents in which they occur</b>.
+</p>
+
+<p>
+Here, the idea is that terms that occur in many different documents are likely
+<b>unimportant</b> or don't contain any useful information for Natural Language
+Processing tasks such as document classification. If you are interested in the
+mathematical details and equations, see this external IPython Notebook that
+walks you through the computation.
+</p>
+</div>
+</div>
+
+<div id="org1d4c0cf" class="outline-3">
+<h3 id="org1d4c0cf"><span class="section-number-3">1.2</span> Bigrams and N-Grams: general tokenization</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+2-Grams: 2 front words infer the 3rd word
+N-Grasm: N fromt words infer the 3rd word
+</p>
+</div>
+
+<div id="org33582ff" class="outline-4">
+<h4 id="org33582ff"><span class="section-number-4">1.2.1</span> what is n-grams</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+In the example illustrated in the figure at the beginning of this notebook, we
+used the so-called <b>1-gram (unigram)</b> tokenization: Each token represents a
+single element with regard to the splitting criterion.
+</p>
+</div>
+</div>
+
+<div id="org00da728" class="outline-4">
+<h4 id="org00da728"><span class="section-number-4">1.2.2</span> why we need n-grams</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+<b>Entirely discarding word order is not always a good idea</b>, as composite phrases
+often have specific meaning, and modifiers like "not" can invert the meaning of
+words.
+</p>
+
+<p>
+A simple way to <b>include some word order</b> are n-grams, which don't only look at a
+single token, but at all pairs of <b>neighborhing tokens</b>. For example, in 2-gram
+(bigram) tokenization, we would group words together with an overlap of one
+word; in 3-gram (trigram) splits we would create an overlap two words, and so
+forth:
+</p>
+
+<ul class="org-ul">
+<li>original text: "this is how you get ants"</li>
+<li>1-gram: "this", "is", "how", "you", "get", "ants"</li>
+<li>2-gram: "this is", "is how", "how you", "you get", "get ants"</li>
+<li>3-gram: "this is how", "is how you", "how you get", "you get ants"</li>
+</ul>
+
+<p>
+Which "n" we choose for "n-gram" tokenization to obtain the optimal
+performance in our predictive model depends on the learning algorithm,
+dataset, and task. Or in other words, we have consider "n" in "n-grams" as a
+tuning parameters, and in later notebooks, we will see how we deal with these.
+</p>
+
+<p>
+Now, let's create a <b>bag of words model of bigrams</b> using scikit-learn's
+CountVectorizer:
+</p>
+
+<p>
+&gt;&gt;&gt; create obj and conver to model by <code>fit</code>: this will create vocabulary and count the number of occurrence in each 'string'
+&gt;&gt;&gt; compare bigrams(2-grams) with unigrams(1-gram)
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">look at sequences of tokens of minimum length 2 and maximum length 2</span>
+<span class="org-variable-name">bigram_vectorizer</span> = CountVectorizer(ngram_range=(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>))
+
+<span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">vectorizer</span> = CountVectorizer()
+
+vectorizer.fit(X), bigram_vectorizer.fit(X)
+</pre>
+</div>
+
+<pre class="example">
+(CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(1, 1), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None),
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(2, 2), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None))
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">bigram_vectorizer.get_feature_names(), vectorizer.get_feature_names()
+</pre>
+</div>
+
+<p>
+&gt;&gt;&gt; what is the tokenization
+</p>
+<pre class="example">
+(['end in',
+'in fire',
+'in ice',
+'say in',
+'say the',
+'some say',
+'the world',
+'will end',
+'world will'],
+['end', 'fire', 'ice', 'in', 'say', 'some', 'the', 'will', 'world'])
+</pre>
+
+<p>
+&gt;&gt;&gt; representation of samples(here, 1 row 1 sample)
+</p>
+<div class="org-src-container">
+<pre class="src src-ipython">bigram_vectorizer.transform(X).toarray(), X_bag_of_words.toarray()
+</pre>
+</div>
+
+<pre class="example">
+(array([[1, 1, 0, 0, 1, 1, 1, 1, 1],
+[0, 0, 1, 1, 0, 1, 0, 0, 0]]), array([[1, 1, 0, 1, 1, 1, 1, 1, 1],
+[0, 0, 1, 1, 1, 1, 0, 0, 0]]))
+</pre>
+
+
+<p>
+&gt;&gt;&gt; combine unigrams with bigrams
+This will give a lone vector representation for each sample(string).
+</p>
+
+<p>
+Often we want to include unigrams (single tokens) AND bigrams, wich we can do by
+passing the following tuple as an argument to the <code>ngram_range</code> parameter of the
+CountVectorizer function:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">gram_vectorizer</span> = CountVectorizer(ngram_range=(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>))
+gram_vectorizer.fit(X)
+</pre>
+</div>
+
+<pre class="example">
+CountVectorizer(analyzer='word', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(1, 2), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">gram_vectorizer.get_feature_names()
+</pre>
+</div>
+
+<pre class="example">
+['end',
+'end in',
+'fire',
+'ice',
+'in',
+'in fire',
+'in ice',
+'say',
+'say in',
+'say the',
+'some',
+'some say',
+'the',
+'the world',
+'will',
+'will end',
+'world',
+'world will']
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython">gram_vectorizer.transform(X).toarray()
+</pre>
+</div>
+
+<pre class="example">
+array([[1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+[0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0]])
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org61653c1" class="outline-3">
+<h3 id="org61653c1"><span class="section-number-3">1.3</span> Character n-grams</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Sometimes it is also helpful not only to look at words, but to consider single
+characters instead.
+</p>
+
+<p>
+That is particularly useful if we have <b>very noisy data</b> and want to identify
+the language, or if we want to predict something about a single word. We can
+simply look at characters instead of words by setting <code>analyzer="char"</code>. Looking
+at single characters is usually not very informative, but <b>looking at longer
+n-grams of characters</b> could be:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">X
+</pre>
+</div>
+
+<pre class="example">
+['Some say the world will end in fire,', 'Some say in ice.']
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">char_vectorizer</span> = CountVectorizer(ngram_range=(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>), analyzer=<span class="org-string">"char"</span>)
+char_vectorizer.fit(X)
+</pre>
+</div>
+
+<pre class="example">
+CountVectorizer(analyzer='char', binary=False, decode_error='strict',
+dtype=&lt;class 'numpy.int64'&gt;, encoding='utf-8', input='content',
+lowercase=True, max_df=1.0, max_features=None, min_df=1,
+ngram_range=(2, 2), preprocessor=None, stop_words=None,
+strip_accents=None, token_pattern='(?u)\\b\\w\\w+\\b',
+tokenizer=None, vocabulary=None)
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(char_vectorizer.get_feature_names())
+<span class="org-keyword">print</span>(<span class="org-builtin">len</span>(char_vectorizer.get_feature_names())) <span class="org-comment-delimiter"># </span><span class="org-comment">35</span>
+</pre>
+</div>
+
+<p>
+EXERCISE: Compute the bigrams from "zen of python" as given below (or by import
+this), and find the most common trigram. We want to treat each line as a
+separate document. You can achieve this by splitting the string by newlines
+(\n). Compute the Tf-idf encoding of the data. Which words have the highest
+tf-idf score? Why? What changes if you use TfidfVectorizer(norm="none")?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">zen</span> = <span class="org-string">"""Beautiful is better than ugly.</span>
+<span class="org-string">Explicit is better than implicit.</span>
+<span class="org-string">Simple is better than complex.</span>
+<span class="org-string">Complex is better than complicated.</span>
+<span class="org-string">Flat is better than nested.</span>
+<span class="org-string">Sparse is better than dense.</span>
+<span class="org-string">Readability counts.</span>
+<span class="org-string">Special cases aren't special enough to break the rules.</span>
+<span class="org-string">Although practicality beats purity.</span>
+<span class="org-string">Errors should never pass silently.</span>
+<span class="org-string">Unless explicitly silenced.</span>
+<span class="org-string">In the face of ambiguity, refuse the temptation to guess.</span>
+<span class="org-string">There should be one-- and preferably only one --obvious way to do it.</span>
+<span class="org-string">Although that way may not be obvious at first unless you're Dutch.</span>
+<span class="org-string">Now is better than never.</span>
+<span class="org-string">Although never is often better than *right* now.</span>
+<span class="org-string">If the implementation is hard to explain, it's a bad idea.</span>
+<span class="org-string">If the implementation is easy to explain, it may be a good idea.</span>
+<span class="org-string">Namespaces are one honking great idea -- let's do more of those!"""</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orgcdc126e" class="outline-2">
+<h2 id="orgcdc126e"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org163f478" class="outline-3">
+<h3 id="org163f478"><span class="section-number-3">2.1</span> Scikit-learn</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="orgb9aef4e" class="outline-4">
+<h4 id="orgb9aef4e"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer *</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer *</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+</ol>
+</blockquote>
+</div>
+</div>
+
+<div id="orgce27a9a" class="outline-4">
+<h4 id="orgce27a9a"><span class="section-number-4">2.1.2</span> ML fn in this notes</h4>
+</div>
+<div id="org780c198" class="outline-4">
+<h4 id="org780c198"><span class="section-number-4">2.1.3</span> CountVectorizer</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+CountVectorizer implements both <b>tokenization</b> and <b>occurrence counting</b> in
+a single class
+</p>
+</div>
+
+<div id="orgd0f89cd" class="outline-5">
+<h5 id="orgd0f89cd"><span class="section-number-5">2.1.3.1</span> Ctor parameters</h5>
+<div class="outline-text-5" id="text-2-1-3-1">
+<div class="org-src-container">
+<pre class="src src-ipython">CountVectorizer(<span class="org-builtin">input</span>=&#8217;content&#8217;,               <span class="org-comment-delimiter"># </span><span class="org-comment">sequence of 'filepath', 'string'</span>
+                encoding=&#8217;utf-<span class="org-highlight-numbers-number">8</span>&#8217;,
+                decode_error=&#8217;strict&#8217;,
+                strip_accents=<span class="org-constant">None</span>,
+                lowercase=<span class="org-constant">True</span>,
+                preprocessor=<span class="org-constant">None</span>,
+                tokenizer=<span class="org-constant">None</span>,                <span class="org-comment-delimiter"># </span><span class="org-comment">user-defined method to get token</span>
+                stop_words=<span class="org-constant">None</span>,
+                token_pattern=&#8217;(?u)\b\w\w+\b&#8217;, <span class="org-comment-delimiter"># </span><span class="org-comment">regex to filt the 'word' token</span>
+                ngram_range=(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>),            <span class="org-comment-delimiter"># </span><span class="org-comment">the range of n-grams, '(min=2,max=2)' means 2-grams</span>
+                analyzer=&#8217;word&#8217;,               <span class="org-comment-delimiter"># </span><span class="org-comment">string, unit of one gram, can be 'word' or 'char'</span>
+                max_df=<span class="org-highlight-numbers-number">1</span>.<span class="org-highlight-numbers-number">0</span>,                    <span class="org-comment-delimiter"># </span><span class="org-comment">filt out the token frequency &gt; max_df</span>
+                min_df=<span class="org-highlight-numbers-number">1</span>,                      <span class="org-comment-delimiter"># </span><span class="org-comment">filt out the token frequency &lt; min_df</span>
+                max_features=<span class="org-constant">None</span>,             <span class="org-comment-delimiter"># </span><span class="org-comment">only get top {max_features}th frequent token</span>
+                vocabulary=<span class="org-constant">None</span>,               <span class="org-comment-delimiter"># </span><span class="org-comment">specify what are the words you care about</span>
+                binary=<span class="org-constant">False</span>,                  <span class="org-comment-delimiter"># </span><span class="org-comment">frequency will be 0 or 1, binary values</span>
+                dtype=&lt;<span class="org-keyword">class</span> &#8216;numpy.int64&#8217;&gt;)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org1775e28" class="outline-5">
+<h5 id="org1775e28"><span class="section-number-5">2.1.3.2</span> attributes</h5>
+<div class="outline-text-5" id="text-2-1-3-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">attributes</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">vocabulary_</td>
+<td class="org-left">dict, A mapping of terms to feature indices.</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">stop_words_</td>
+<td class="org-left">set, Terms that were ignored because they either:</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">- occurred in too many documents (max_df)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">- occurred in too few documents (min_df)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">- were cut off by feature selection (max_features).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="orgd977882" class="outline-5">
+<h5 id="orgd977882"><span class="section-number-5">2.1.3.3</span> Methods</h5>
+<div class="outline-text-5" id="text-2-1-3-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">method</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">build_analyzer()</td>
+<td class="org-left">Return a callable that handles preprocessing and tokenization</td>
+</tr>
+
+<tr>
+<td class="org-left">build_preprocessor()</td>
+<td class="org-left">Return a function to preprocess the text before tokenization</td>
+</tr>
+
+<tr>
+<td class="org-left">build_tokenizer()</td>
+<td class="org-left">Return a function that splits a string into a sequence of tokens</td>
+</tr>
+
+<tr>
+<td class="org-left">decode(doc)</td>
+<td class="org-left">Decode the input into a string of unicode symbols</td>
+</tr>
+
+<tr>
+<td class="org-left">fit(raw_documents[, y])</td>
+<td class="org-left">Learn a vocabulary dictionary of all tokens in the raw documents.</td>
+</tr>
+
+<tr>
+<td class="org-left">fit_transform(raw_documents[, y])</td>
+<td class="org-left">Learn the vocabulary dictionary and return term-document matrix.</td>
+</tr>
+
+<tr>
+<td class="org-left">get_feature_names()</td>
+<td class="org-left">Array mapping from feature integer indices to feature name</td>
+</tr>
+
+<tr>
+<td class="org-left">get_params([deep])</td>
+<td class="org-left">Get parameters for this estimator.</td>
+</tr>
+
+<tr>
+<td class="org-left">get_stop_words()</td>
+<td class="org-left">Build or fetch the effective stop words list</td>
+</tr>
+
+<tr>
+<td class="org-left">inverse_transform(X)</td>
+<td class="org-left">Return terms per document with nonzero entries in X.</td>
+</tr>
+
+<tr>
+<td class="org-left">set_params(**params)</td>
+<td class="org-left">Set the parameters of this estimator.</td>
+</tr>
+
+<tr>
+<td class="org-left">transform(raw_documents)</td>
+<td class="org-left">Transform documents to document-term sparse matrix(csr_matrix).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

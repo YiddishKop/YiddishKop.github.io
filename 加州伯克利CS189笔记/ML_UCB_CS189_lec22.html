@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:57 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec 22 SPECTRAL GRAPH CLUSTERING</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec 22 SPECTRAL GRAPH CLUSTERING</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf56a97b">lec 22 SPECTRAL GRAPH CLUSTERING</a>
+<ul>
+<li><a href="#org953650f">Vertex Masses</a></li>
+<li><a href="#org2b08366">Vibration Analogy</a></li>
+<li><a href="#org92cfcb3">Greedy Divisive Clustering</a></li>
+<li><a href="#orgdb6d031">The Normalized Cut</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="orgf56a97b" class="outline-2">
+<h2 id="orgf56a97b">lec 22 SPECTRAL GRAPH CLUSTERING</h2>
+<div class="outline-text-2" id="text-orgf56a97b">
+<p>
+<code>=======================</code>
+</p>
+<pre class="example">
+Input:  Weighted, undirected graph G = (V, E).  No self-edges.
+        w_ij = weight of edge (i, j) = (j, i); zero if (i, j) not in E.
+</pre>
+<p>
+[Think of the edge weights as a similarity measure.  A big weight means that
+ the two vertices want to be in the same cluster.  So the circumstances are
+ the opposite of the last lecture on clustering.  Then, we had a distance or
+ dissimilarity function, so small numbers meant that points wanted to stay
+ together.  Today, big numbers mean that vertices want to stay together.]
+</p>
+
+<pre class="example">
+Goal:  Cut G into 2 (or more) pieces G_i of similar sizes,
+       but don't cut too much edge weight.
+       [That's a vague goal.  There are many ways to make this precise.
+        Here's a typical goal, which we'll solve approximately.]
+
+                                       Cut(G_1, G_2)
+       e.g. Minimize the _sparsity_ -------------------, aka _cut_ratio_
+                                    Mass(G_1) Mass(G_2)
+
+       where Cut(G_1, G_2) = total weight of cut edges
+             Mass(G_1) = # of vertices in G_1 OR assign masses to vertices
+</pre>
+
+<p>
+[The denominator "Mass(G_1) Mass(G_2)" penalizes imbalanced cuts.]
+</p>
+
+<pre class="example">
+[Show illustration of four cuts (graph.pdf).  All edges have weight 1.
+ Upper left:  the _minimum_bisection_; a _bisection_ is perfectly balanced.
+ Upper right:  the _minimum_cut_.  Usually very unbalanced; not what we want.
+ Lower left:  the _sparsest_cut_, which is good for many applications.
+ Lower right:  the _maximum_cut_; in this case also the maximum bisection.]
+       Sparsest cut is NP-hard.  [We will look for an approximate solution.]
+
+</pre>
+
+<p>
+[We will turn this combinatorial graph cutting problem into algebra.]
+</p>
+<pre class="example">
+Let n = |V|.  Let y in R^n be an _indicator_vector_:
+        / 1     vertex i in G_1,
+  y  = &lt;
+   i    \ -1    vertex i in G_2.
+
+       w_ij          2    / w       (i, j) is cut,
+  Then ---- (y  - y )  = &lt;   ij
+        4     i    j      \ 0       (i, j) is not cut.
+
+                            w_ij          2
+  Cut(G , G ) =    sum      ---- (y  - y )
+       1   2    (i,j) in E   4     i    j
+
+                1                   2                      2
+              = -    sum      (w   y  - 2 w   y  y  + w   y )
+                4 (i,j) in E    ij  i      ij  i  j    ij  j
+
+                1                                n   2
+              = - (    sum      - 2 w   y  y  + sum y  sum  w   )
+                4   (i,j) in E       ij  i  j   i=1  i k!=i  ik
+                    \_______________________/   \_____________/
+                y^T L y     off-diagonal terms   diagonal terms
+              = -------
+                   4
+                                                   (1)           -            -
+               / - w_ij        i != j,          1 /   \ 3        |  4  -1  -3 |
+  where L   = &lt;                                  /     \     L = | -1   6  -5 |
+         ij    \ sum  w        i = j.          (2)-----(3)       | -3  -5   8 |
+                 k!=i  ik                           5            -            -
+
+L is symmetric, n-by-n _Laplacian_matrix_ for G.
+
+</pre>
+
+<p>
+[L is effectively a matrix representation of G.  For the purpose of
+ partitioning a graph, there is no need to distinguish edges of weight zero
+ from edges that are not in the graph.]
+[We see that minimizing the weight of the cut is equivalent to minimizing the
+ <span class="underline">Laplacian_quadratic_form</span> y^T L y.  This lets us turn graph partitioning into
+ a problem in matrix algebra.]
+[Usually we assume there are no negative weights, in which case Cut(G_1, G_2)
+ can never be negative, so it follows that L is positive semidefinite.]
+</p>
+
+<p>
+If y = <b>1</b> = [ 1  1  ...  1 ]^T, then Cut(G_1, G_2) = 0, so     [*1* = bold 1.]
+<b>1</b> is an eigenvector of L with eigenvalue 0.
+</p>
+
+<p>
+[If G is connected and all the edge weights are positive, then this is the
+ only zero eigenvalue.  But if G is not connected, L has one zero eigenvalue
+ for each connected component of G.  It's easy to prove, but time prevents me.]
+</p>
+
+<p>
+<span class="underline">Bisection</span>:  exactly n/2 vertices in G_1, n/2 in G_2.  Write *1*^T y = 0.
+[So we have reduced graph bisection to this constrained optimization problem.]
+</p>
+
+<pre class="example">
+  --------------------------------------------
+  |                        T                 |
+  | Find y that minimizes y  L y             |
+  |                                          |
+  | subject to  for all i, y  = 1 or y  = -1 | &lt;- _binary_constraint_
+  |                         i         i      |
+  |                T                         |
+  |        and  *1*  y = 0                   | &lt;- _balance_constraint_
+  --------------------------------------------
+
+Also NP-hard.  We _relax_ the binary constraint.  -&gt; fractional vertices!
+
+</pre>
+
+<p>
+[A very common approach in combinatorial optimization algorithms is to relax
+ some of the constraints so a discrete problem becomes a continuous problem.
+ Intuitively, this means that you can put 1/3 of vertex 7 in graph G_1 and
+ the other 2/3 of vertex 7 in graph G_2.  You can even put -1/2 of vertex 7 in
+ graph G_1 and 3/2 of vertex 7 in graph G_2.  This sounds crazy, but the
+ continuous problem is much easier to solve than the combinatorial problem.
+ After we solve it, we will <span class="underline">round</span> the vertex values to +1/-1, and we'll hope
+ that our solution is still close to optimal.]
+[We can't just drop the binary constraint, though.  We still need <b>some</b>
+ constraint to rule out the solution y = 0.]
+</p>
+
+<p>
+New constraint:  y must lie on sphere of radius sqrt(n).
+[Draw figure showing constraint before--y lies at a vertex of the hypercube--
+ and the constraint after--y lies on the sphere through those vertices.]
+</p>
+
+<pre class="example">
+Relaxed problem:
+  --------------------------
+  |           T            |                T
+  | Minimize y  L y        | \             y  L y
+  |              T         |  &gt; = Minimize ------ = Rayleigh quotient of L &amp; y
+  | subject to  y  y = n   | /               T
+  |                        |                y  y
+  |                T       |
+  |        and  *1*  y = 0 |
+  --------------------------
+
+</pre>
+
+<p>
+[Show illustration of isosurfaces of y^T Ly (cylinder.pdf) and
+ illustration restricted to the hyperplane 1^T y = 0 (endview.pdf).]
+</p>
+
+<p>
+[You should remember this Rayleigh quotient from the lecture on PCA.  As I said
+ then, when you see a Rayleigh quotient, you should smell eigenvalues nearby.
+ The y that minimizes this Rayleigh quotient is the eigenvector with the
+ smallest eigenvalue.  We already know what that eigenvector is:  it's <b>1</b>.
+ But that violates our balance constraint.  As you should recall from PCA, when
+ you've used the most extreme eigenvector and you need an orthogonal one, the
+ next-best optimizer of the Rayleigh quotient is the next eigenvector.]
+</p>
+
+<p>
+Let lambda_2 = second-smallest eigenvalue of L.
+Eigenvector v_2 is the <span class="underline">Fiedler_vector</span>.
+[It would be wonderful if every component of the Fiedler vector was 1 or -1,
+ but that happens more or less never.  So we round it.  The simplest way is to
+ round all positive entries to 1 and all negative entries to -1.  But in both
+ theory and practice, it's better to choose the threshold as follows.]
+</p>
+
+<p>
+Spectral partitioning alg.:
+</p>
+<pre class="example">
+- Compute Fiedler vector v_2 of L
+- _Round_ v_2 with a _sweep_cut_:
+  * Sort components of v_2.
+  * Try the n - 1 cuts between successive components.  Choose min-sparsity cut.
+    [If we're clever about it, we can try all these cuts in time linear in the
+     number of edges in G.]
+</pre>
+
+<p>
+[Show example of graph partitioned by the sweep cut (specgraph.pdf).]
+[Show what the un-rounded Fiedler vector looks like (specvector.pdf).]
+[One consequence of relaxing the binary constraint is that the balance
+ constraint no longer forces an exact bisection.  But that's okay; we're cool
+ with a slightly off-balance constraint if it means we cut fewer edges.]
+[Show illustration where an off-balance cut is better (lopsided.pdf).]
+</p>
+
+<pre class="example">
+                                                                 L_ii
+Fact:  Sweep cut finds a cut w/sparsity &lt;= sqrt(2 lambda_2 max_i ----);
+       _Cheeger's_inequality_.                                   M_ii
+       The optimal cut has sparsity &gt;= lambda_2 / 2.
+</pre>
+<p>
+[So the spectral partitioning algorithm is an approximation algorithm, albeit
+ not one with a constant factor of approximation.  Cheeger's inequality is
+ a very famous result in spectral graph theory, because it's one of the
+ most important cases where you can relax a combinatorial optimization problem
+ to a continuous optimization problem, round the solution, and still have
+ a provably decent solution to the original combinatorial problem.]
+</p>
+</div>
+
+<div id="org953650f" class="outline-3">
+<h3 id="org953650f">Vertex Masses</h3>
+<div class="outline-text-3" id="text-org953650f">
+<hr />
+<p>
+[Sometimes you want the notion of balance to accord more prominence to some
+ vertices than others.  We can assign masses to vertices.]
+Let M be diagonal matrix with vertex masses on diagonal.
+New balance constraint:  *1*^T M y = 0.
+[This new balance constraint says that G_1 and G_2 should each have the same
+ total mass.  It turns out that this new balance constraint is easier
+ to satisfy if we also revise the sphere constraint a little bit.]
+New ellipsoid constraint:   y^T M y = Mass(G) = sum M_ii.
+[Instead of a sphere, now we constrain y to lie on an axis-aligned ellipsoid.]
+[Draw the ellipsoid, which passes through points of hypercube.]
+</p>
+
+<p>
+Now we want Fiedler vector of <span class="underline">generalized_eigensystem</span> Lv = lambda Mv.
+[Most algorithms for computing eigenvectors and eigenvalues of symmetric
+ matrices can easily be adapted to compute eigenvectors and eigenvalues of
+ symmetric generalized eigensystems like this too.]
+</p>
+
+<p>
+
+</p>
+</div>
+</div>
+<div id="org2b08366" class="outline-3">
+<h3 id="org2b08366">Vibration Analogy</h3>
+<div class="outline-text-3" id="text-org2b08366">
+<hr />
+<p>
+[Show figure of system of springs and masses (vibrate.pdf).]
+[For intuition about spectral partitioning, think of the eigenvectors as
+ vibrational modes in a physical system of springs and masses.  Each vertex
+ models a point mass that is constrained to move freely along a vertical rod.
+ Each edge models a vertical spring with rest length zero and stiffness
+ proportional to its weight, pulling two point masses together.  The masses are
+ free to oscillate sinusoidally on their rods.  The eigenvectors of the
+ generalized eigensystem Lv = lambda Mv are the vibrational modes of this
+ physical system, and their eigenvalues are proportional to their frequencies.]
+</p>
+
+<p>
+[Show figure of vibrational modes in path graph and grid graph (grids.pdf).]
+[These illustrations show the first four eigenvectors for two simple graphs.
+ On the left, we see that the first eigenvector is the eigenvector of all 1's,
+ which represents a vertical translation of all the masses in unison.  That's
+ not really a vibration, which is why the eigenvalue is zero.  The second
+ eigenvector is the Fiedler vector, which represents the vibrational mode with
+ the lowest frequency.  Each component indicates the amplitude with which the
+ corresponding point mass oscillates.  At any point in time as the masses
+ vibrate, roughly half the mass is moving up while half is moving down.  So it
+ makes sense to cut between the positive components and the negative
+ components.  The third eigenvector also gives us a nice bisection of the grid
+ graph, entirely different from the Fiedler vector.  Some more sophisticated
+ graph clustering algorithms use multiple eigenvectors.]
+</p>
+
+<p>
+[I want to emphasize that spectral partitioning takes a global view of a graph.
+ It looks at the whole gestalt of the graph and finds a good cut.
+ By comparison, the clustering algorithms we saw last lecture were much more
+ local in nature, so they're easier to fool.]
+</p>
+</div>
+</div>
+
+<div id="org92cfcb3" class="outline-3">
+<h3 id="org92cfcb3">Greedy Divisive Clustering</h3>
+<div class="outline-text-3" id="text-org92cfcb3">
+<hr />
+<p>
+Partition G into 2 subgraphs; recursively cluster them.
+[The sparsity is a good criterion for graph clustering.  Use G's sparsest cut
+ to divide it into two subgraphs, then recursively cut them.  You can stop when
+ you have the right number of clusters, or you could keep going until each
+ subgraph is a single vertex and create a dendrogram.]
+Can form a dendrogram, but it may have inversions.
+[There's no reason to expect that the sparsity of a subgraph is smaller than
+ the sparsity of the parent graph, so the dendrogram can have inversions.
+ But it's still useful for getting an arbitrary number of clusters on demand.]
+</p>
+</div>
+</div>
+
+<div id="orgdb6d031" class="outline-3">
+<h3 id="orgdb6d031">The Normalized Cut</h3>
+<div class="outline-text-3" id="text-orgdb6d031">
+<hr />
+<p>
+Set vertex i's mass M_ii = L_ii.  [Sum of edge weights adjoining vertex i.]
+[That is how we define a "normalized cut", which turns out to be a good choice
+ for many different applications.]
+Popular for <span class="underline">image_segmentation</span>.
+[Image segmentation is the problem of looking at a photograph and separating it
+ into different objects.  To do that, we define a graph on the pixels.]
+For pixels with location w_i, brightness b_i, use graph weights
+</p>
+
+<pre class="example">
+                        2                    2
+  w   = exp( - |w  - w |  / alpha - |b  - b |  / beta )
+   ij            i    j               i    j
+
+or zero if |w_i - w_j| large.
+</pre>
+<p>
+[We choose a distance threshold, typically less than 4 to 10 pixels apart.
+ Pixels that are far from each other aren't connected.  alpha and beta are
+ empirically chosen constants.  It often makes sense to choose beta
+ proportional to the variance of the brightness values.]
+</p>
+
+<p>
+[Show segmentation of baseball image (baseballsegment.pdf).  The upper left
+ figure is a photo of a scene during a baseball game.  The other figures show
+ segments of the image extracted by recursive spectral partitioning.]
+[Show eigenvectors 2-9 from the baseball image (baseballvectors.pdf).]
+</p>
+
+<p>
+Invented by [our own] Prof. Jitendra Malik and his student Jianbo Shi.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-06-22 五</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:57</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

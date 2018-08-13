@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记14:Pipeline Estimators</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记14:Pipeline Estimators</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org3c49183">1. Pipelining estimators</a>
+<ul>
+<li><a href="#orgb87af6e">1.1. A simple example: feature extraction and selection before an estimator</a>
+<ul>
+<li><a href="#org01454b1">1.1.1. Feature extraction: vectorizer</a></li>
+<li><a href="#org79704a9">1.1.2. pipeline ENTER!</a></li>
+</ul>
+</li>
+<li><a href="#org01b0838">1.2. benefit of using pipeline</a>
+<ul>
+<li><a href="#org7f85203">1.2.1. 1. make code shorter and clearer</a></li>
+<li><a href="#orga95073b">1.2.2. 2. using pipeline on model selection</a>
+<ul>
+<li><a href="#org980fff6">1.2.2.1. contamination way</a></li>
+<li><a href="#org3ebf8bb">1.2.2.2. why is this wrong</a></li>
+<li><a href="#orgc4c85d3">1.2.2.3. fix it by using <code>pipeline</code></a></li>
+<li><a href="#orga096ace">1.2.2.4. the important symbol <code>__</code></a></li>
+</ul>
+</li>
+<li><a href="#orge85e04b">1.2.3. 3. search over parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org86ce506">2. Misc tools</a>
+<ul>
+<li><a href="#org6762e54">2.1. scikit-learn</a>
+<ul>
+<li><a href="#orgff54043">2.1.1. ML models by now</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython">%matplotlib inline
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+</pre>
+</div>
+
+<div id="org3c49183" class="outline-2">
+<h2 id="org3c49183"><span class="section-number-2">1</span> Pipelining estimators</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In this section we study how different estimators maybe be chained.
+</p>
+</div>
+
+<div id="orgb87af6e" class="outline-3">
+<h3 id="orgb87af6e"><span class="section-number-3">1.1</span> A simple example: feature extraction and selection before an estimator</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="org01454b1" class="outline-4">
+<h4 id="org01454b1"><span class="section-number-4">1.1.1</span> Feature extraction: vectorizer</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+For some types of data, for instance text data, a feature extraction step must
+be applied to convert it to numerical features. To illustrate we load the SMS
+spam dataset we used earlier.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-keyword">with</span> <span class="org-builtin">open</span>(os.path.join(<span class="org-string">"datasets"</span>, <span class="org-string">"smsspam"</span>, <span class="org-string">"SMSSpamCollection"</span>)) <span class="org-keyword">as</span> f:
+    <span class="org-variable-name">lines</span> = [line.strip().split(<span class="org-string">"\t"</span>) <span class="org-keyword">for</span> line <span class="org-keyword">in</span> f.readlines()]
+<span class="org-variable-name">text</span> = [x[<span class="org-highlight-numbers-number">1</span>] <span class="org-keyword">for</span> x <span class="org-keyword">in</span> lines]
+<span class="org-variable-name">y</span> = [x[<span class="org-highlight-numbers-number">0</span>] == <span class="org-string">"ham"</span> <span class="org-keyword">for</span> x <span class="org-keyword">in</span> lines]
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> train_test_split
+<span class="org-variable-name">text_train</span>, <span class="org-variable-name">text_test</span>, <span class="org-variable-name">y_train</span>, <span class="org-variable-name">y_test</span> = train_test_split(text, y)
+</pre>
+</div>
+
+<p>
+Previously, we applied the feature extraction manually, like so:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> TfidfVectorizer
+<span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> LogisticRegression
+<span class="org-variable-name">vectorizer</span> = TfidfVectorizer()
+vectorizer.fit(text_train)
+<span class="org-variable-name">X_train</span> = vectorizer.transform(text_train)
+<span class="org-variable-name">X_test</span> = vectorizer.transform(text_test)
+<span class="org-variable-name">clf</span> = LogisticRegression()
+clf.fit(X_train, y_train)
+clf.score(X_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.96700143472022959
+
+</pre>
+</div>
+</div>
+
+<div id="org79704a9" class="outline-4">
+<h4 id="org79704a9"><span class="section-number-4">1.1.2</span> pipeline ENTER!</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+The situation where we learn a transformation and then apply it to the test data
+is very common in machine learning. Therefore scikit-learn has a shortcut for
+this, called <code>pipelines</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.pipeline <span class="org-keyword">import</span> make_pipeline
+<span class="org-variable-name">pipeline</span> = make_pipeline(TfidfVectorizer(), LogisticRegression())
+pipeline.fit(text_train, y_train)
+pipeline.score(text_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.96700143472022959
+
+</pre>
+
+<p>
+&gt;&gt;&gt; what happend when we call fit/score/predict on pipeline
+</p>
+<ul class="org-ul">
+<li>When calling <code>fit</code> on the pipeline, it will call <code>fit</code> <b>on each step</b> in turn. ​
+After the first step is fit, it will use the <code>transform</code> method of the first
+step to create a <b>new representation</b>. This will then be fed to the <code>fit</code> of
+the next step, and so on. Finally, on the last step, only <code>fit</code> is called. ​</li>
+</ul>
+
+
+<div class="figure">
+<p><img src="figures/pipeline.png" alt="pipeline.png" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>When calling <code>score</code>, only <code>transform</code> will be called <b>on each step</b> - this
+could be the <code>test set</code> after all! Then, on the last step, <code>score</code> is called
+with the <b>new representation</b>.</li>
+
+<li>The same goes for <code>predict</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+<div id="org01b0838" class="outline-3">
+<h3 id="org01b0838"><span class="section-number-3">1.2</span> benefit of using pipeline</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="org7f85203" class="outline-4">
+<h4 id="org7f85203"><span class="section-number-4">1.2.1</span> 1. make code shorter and clearer</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+As you can see, this makes the code much shorter and easier to handle. Behind
+the scenes, exactly the same as above is happening.
+</p>
+</div>
+</div>
+
+
+<div id="orga95073b" class="outline-4">
+<h4 id="orga95073b"><span class="section-number-4">1.2.2</span> 2. using pipeline on model selection</h4>
+<div class="outline-text-4" id="text-1-2-2">
+</div>
+<div id="org980fff6" class="outline-5">
+<h5 id="org980fff6"><span class="section-number-5">1.2.2.1</span> contamination way</h5>
+<div class="outline-text-5" id="text-1-2-2-1">
+<p>
+Building pipelines not only simplifies the code, it is also <b>important for model
+selection</b>. Say we want to <b>grid-search</b> <code>C</code> to tune our Logistic Regression
+above.
+</p>
+
+<p>
+Let's say we do it like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-comment-delimiter"># </span><span class="org-comment">This illustrates a common mistake. Don't use this code!</span>
+<span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> GridSearchCV
+<span class="org-variable-name">vectorizer</span> = TfidfVectorizer()
+vectorizer.fit(text_train)
+<span class="org-variable-name">X_train</span> = vectorizer.transform(text_train)
+<span class="org-variable-name">X_test</span> = vectorizer.transform(text_test)
+<span class="org-variable-name">clf</span> = LogisticRegression()
+<span class="org-variable-name">grid</span> = GridSearchCV(clf, param_grid={<span class="org-string">'C'</span>: [.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>]}, cv=<span class="org-highlight-numbers-number">5</span>)
+grid.fit(X_train, y_train)
+</pre>
+</div>
+
+<pre class="example">
+GridSearchCV(cv=5, error_score='raise',
+estimator=LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,
+penalty='l2', random_state=None, solver='liblinear', tol=0.0001,
+verbose=0, warm_start=False),
+fit_params=None, iid=True, n_jobs=1,
+param_grid={'C': [0.1, 1, 10, 100]}, pre_dispatch='2*n_jobs',
+refit=True, return_train_score=True, scoring=None, verbose=0)
+</pre>
+</div>
+</div>
+
+<div id="org3ebf8bb" class="outline-5">
+<h5 id="org3ebf8bb"><span class="section-number-5">1.2.2.2</span> why is this wrong</h5>
+<div class="outline-text-5" id="text-1-2-2-2">
+<p>
+It see some folds in X_train which will be testing fold in future
+</p>
+
+<p>
+Here, we did grid-search with cross-validation on X_train. However, when
+applying <code>TfidfVectorizer</code>, it <b>saw all of the X_train, not only the training
+folds</b>! So it could use knowledge of the frequency of the words in the
+test-folds. This is called "<b>contamination</b>" of the test set, and leads to too
+optimistic estimates of generalization performance, or badly selected
+parameters.
+</p>
+
+<p>
+for example:
+</p>
+<blockquote>
+<p>
+eg.
+1: 'I have a dream',
+2: 'I love you',
+3: 'I shall do what I can',
+</p>
+</blockquote>
+<p>
+we only take 1-gram and 1/3 testing data propotion:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Training Data[1,2]</th>
+<th scope="col" class="org-right">fold1 training Data[1]</th>
+<th scope="col" class="org-right">fold2 training Data[2]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">I</td>
+<td class="org-right">2</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">have</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">a</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">dream</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">love</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">you</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-left">shall</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">do</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">what</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-left">can</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+   In grid search cv, we don't want all X_train data, we just need a iteration
+of splitting training on dataset to get differernt folds each time,
+</p>
+
+
+<div class="figure">
+<p><img src="figures/cross_validation.png" alt="cross_validation.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="orgc4c85d3" class="outline-5">
+<h5 id="orgc4c85d3"><span class="section-number-5">1.2.2.3</span> fix it by using <code>pipeline</code></h5>
+<div class="outline-text-5" id="text-1-2-2-3">
+<p>
+The training data of TfidfVectorizer should match with the training data on
+classifier, If we do TfidfVectorizer on whole training dataset, it will lead
+word frequency miss-match when it passed to classifier. So we should do:
+</p>
+
+<blockquote>
+<ol class="org-ol">
+<li>for each fold_permutation in training data:
+&#x2026;. do TfidfVectorizer on training part of this fold_permutation to get vect_data
+&#x2026;. compute 'C' and score of classifier on vect_data return from above
+compare and return the best 'C'</li>
+</ol>
+
+<p>
+Note that: we can compose the 2 steps in for-loop by <code>pipeline</code>.
+</p>
+</blockquote>
+
+<p>
+instead of
+</p>
+
+<blockquote>
+<ol class="org-ol">
+<li>do TfidfVectorizer on whole trainning data to get vect_data</li>
+<li>for each fold_permutation in vect_data:
+&#x2026;. compute 'C' and score of classifier on training part of this fold_permutation
+compare and return the best 'C'</li>
+</ol>
+</blockquote>
+
+<p>
+we can use <code>~pipeline</code> to combine TfidfVectorizer and LogisticRegression:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> GridSearchCV
+<span class="org-variable-name">pipeline</span> = make_pipeline(TfidfVectorizer(),
+                         LogisticRegression())
+<span class="org-variable-name">grid</span> = GridSearchCV(pipeline,
+                    param_grid={<span class="org-string">'logisticregression__C'</span>: [.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>]}, cv=<span class="org-highlight-numbers-number">5</span>)
+grid.fit(text_train, y_train)
+grid.score(text_test, y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.98493543758967006
+
+</pre>
+</div>
+</div>
+
+<div id="orga096ace" class="outline-5">
+<h5 id="orga096ace"><span class="section-number-5">1.2.2.4</span> the important symbol <code>__</code></h5>
+<div class="outline-text-5" id="text-1-2-2-4">
+<p>
+Related to <code>'logisticregression__C': [.1, 1, 10, 100]</code>, note that for we need to
+tell the pipeline where at which step we wanted to set the parameter <code>C</code>. We can
+do this using the special '__' syntax.
+</p>
+
+<ul class="org-ul">
+<li>The name before the '__' is simply the <b>name of the class</b>,</li>
+<li>The part after '__' is the <b>parameter</b> we want to set with grid-search.</li>
+</ul>
+
+
+
+<div class="figure">
+<p><img src="figures/pipeline_cross_validation.png" alt="pipeline_cross_validation.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="orge85e04b" class="outline-4">
+<h4 id="orge85e04b"><span class="section-number-4">1.2.3</span> 3. search over parameters</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Another benefit of using pipelines is that we can now also search over
+parameters of the feature extraction with <code>GridSearchCV</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.model_selection <span class="org-keyword">import</span> GridSearchCV
+<span class="org-variable-name">pipeline</span> = make_pipeline(TfidfVectorizer(), LogisticRegression())
+<span class="org-variable-name">params</span> = {<span class="org-string">'logisticregression__C'</span>: [.<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">10</span>, <span class="org-highlight-numbers-number">100</span>],
+          <span class="org-string">"tfidfvectorizer__ngram_range"</span>: [(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>), (<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>), (<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>)]}
+<span class="org-variable-name">grid</span> = GridSearchCV(pipeline, param_grid=params, cv=<span class="org-highlight-numbers-number">5</span>)
+grid.fit(text_train, y_train)
+<span class="org-keyword">print</span>(grid.best_params_)
+grid.score(text_test, y_test)
+
+</pre>
+</div>
+
+<pre class="example">
+0.98565279770444758
+
+</pre>
+
+<p>
+EXERCISE: Create a pipeline out of a StandardScaler and Ridge regression and
+apply it to the Boston housing dataset (load using
+sklearn.datasets.load_boston). Try adding the
+sklearn.preprocessing.PolynomialFeatures transformer as a second preprocessing
+step, and grid-search the degree of the polynomials (try 1, 2 and 3).
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="org86ce506" class="outline-2">
+<h2 id="org86ce506"><span class="section-number-2">2</span> Misc tools</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="org6762e54" class="outline-3">
+<h3 id="org6762e54"><span class="section-number-3">2.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="orgff54043" class="outline-4">
+<h4 id="orgff54043"><span class="section-number-4">2.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make_blobs</li>
+<li>from sklearn.datasets import load_iris</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>from sklearn.model_selection import cross_val_score</li>
+<li>from sklearn.model_selection import KFold</li>
+<li>from sklearn.model_selection import StratifiedKFold</li>
+<li>from sklearn.model_selection import ShuffleSplit</li>
+<li>from sklearn.model_selection import GridSearchCV   *</li>
+<li>from sklearn.linear_model import LogisticRegression</li>
+<li>from sklearn.linear_model import LinearRegression</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.metrics import confusion_matrix, accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.metrics import confusion_matrix</li>
+<li>from sklearn.metrics import accuracy_score</li>
+<li>from sklearn.metrics import adjusted_rand_score</li>
+<li>from sklearn.feature_extraction import DictVectorizer</li>
+<li>from sklearn.feature_extraction.text import CountVectorizer</li>
+<li>from sklearn.feature_extraction.text import TfidfVectorizer</li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make_pipeline  *</li>
+</ol>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

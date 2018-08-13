@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matplotlib 第六课</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddishkop" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">Matplotlib 第六课</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9421ea1">1. part-VI, mpl_toolkits</a>
+<ul>
+<li><a href="#org5f512c2">1.1. mpl_tookits.mplot3d</a></li>
+<li><a href="#org9b2f5f7">1.2. mpl_toolkits.axes_grid1</a>
+<ul>
+<li><a href="#org0a18b02">1.2.1. AxesGrid</a></li>
+<li><a href="#org3f1825c">1.2.2. ImageGrid</a></li>
+<li><a href="#org414e1c8">1.2.3. Parasite Axes</a></li>
+<li><a href="#org92a5475">1.2.4. Floating Axes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+</pre>
+</div>
+
+<div id="org9421ea1" class="outline-2">
+<h2 id="org9421ea1"><span class="section-number-2">1</span> part-VI, mpl_toolkits</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In addition to the core library of Matplotlib, there are a few additional
+utilities that are set apart from Matplotlib proper for some reason or
+another, but are often shipped with Matplotlib.
+</p>
+
+<ul class="org-ul">
+<li><code>Basemap</code> - shipped separately from matplotlib due to size of mapping data that
+are included.</li>
+
+<li><code>mplot3d</code> - shipped with matplotlib to provide very simple, rudimentary 3D plots
+in the same style as matplotlib's 2D plots.</li>
+
+<li><code>axes_grid1</code> - An enhanced SubplotAxes. Very Enhanced!</li>
+</ul>
+</div>
+
+<div id="org5f512c2" class="outline-3">
+<h3 id="org5f512c2"><span class="section-number-3">1.1</span> mpl_tookits.mplot3d</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+By taking advantage of Matplotlib's z-order layering engine, mplot3d emulates
+3D plotting by projecting 3D data into 2D space, layer by layer. While it
+isn't going to replace any of the true 3D plotting libraries anytime soon,
+its goal is to allow for Matplotlib users to produce 3D plots with the same
+amount of simplicity as 2D plots.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> mpl_toolkits.mplot3d <span class="org-keyword">import</span> Axes3D, axes3d
+
+<span class="org-variable-name">fig</span>, <span class="org-variable-name">ax</span> = plt.subplots(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">1</span>, subplot_kw={<span class="org-string">'projection'</span>: <span class="org-string">'3d'</span>})
+<span class="org-variable-name">X</span>, <span class="org-variable-name">Y</span>, <span class="org-variable-name">Z</span> = axes3d.get_test_data(<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>)
+ax.plot_wireframe(X, Y, Z, rstride=<span class="org-highlight-numbers-number">10</span>, cstride=<span class="org-highlight-numbers-number">10</span>)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947QUH.png" alt="4947QUH.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org9b2f5f7" class="outline-3">
+<h3 id="org9b2f5f7"><span class="section-number-3">1.2</span> mpl_toolkits.axes_grid1</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+This module was originally intended as a collection of helper classes to <b>ease
+the displaying of (possibly multiple) images</b> with Matplotlib. Some of the
+functionality has come to be useful for non-image plotting as well. Some classes
+deals with the <b>sizing and positioning of multiple Axes</b> relative to each other
+(<code>ImageGrid</code>, <code>RGB Axes</code>, and <code>AxesDivider</code>). The <code>ParasiteAxes</code> allow for the
+<code>plotting of multiple datasets in the same axes</code>, but <b>with each their own x or y
+scale</b>. Also, there is the <code>AnchoredArtist</code> that can be used to anchor particular
+artist objects in place.
+</p>
+
+<p>
+One can get a sense of the neat things that can be done with this toolkit by
+browsing through its user guide linked above. There is one particular feature
+that is an absolute must-have for me &#x2013; <b>automatic allocation of space for
+colorbars</b>.
+</p>
+
+<p>
+<a href="Matplotlib-3.html#org57be36f">See <code>ImageGrid()</code> here</a>, they are used in similar manner.
+</p>
+</div>
+
+<div id="org0a18b02" class="outline-4">
+<h4 id="org0a18b02"><span class="section-number-4">1.2.1</span> AxesGrid</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> mpl_toolkits.axes_grid1 <span class="org-keyword">import</span> AxesGrid
+<span class="org-keyword">def</span> <span class="org-function-name">get_demo_image</span>():
+    <span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+    <span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+    <span class="org-variable-name">f</span> = get_sample_data(<span class="org-string">"axes_grid/bivariate_normal.npy"</span>, asfileobj=<span class="org-constant">False</span>)
+    <span class="org-variable-name">z</span> = np.load(f)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">z is a numpy array of 15x15</span>
+    <span class="org-keyword">return</span> z, (-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, -<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-variable-name">fig</span> = plt.figure()
+<span class="org-variable-name">grid</span> = AxesGrid(fig, <span class="org-highlight-numbers-number">111</span>, <span class="org-comment-delimiter"># </span><span class="org-comment">similar to subplot(111)</span>
+                nrows_ncols = (<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">2</span>),
+                axes_pad = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">2</span>,
+                share_all=<span class="org-constant">True</span>,
+                label_mode = <span class="org-string">"L"</span>,  <span class="org-comment-delimiter"># </span><span class="org-comment">similar to "label_outer"</span>
+                cbar_location = <span class="org-string">"right"</span>,
+                cbar_mode=<span class="org-string">"single"</span>,
+)
+
+<span class="org-variable-name">Z</span>, <span class="org-variable-name">extent</span> = get_demo_image()  <span class="org-comment-delimiter"># </span><span class="org-comment">demo image</span>
+<span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(<span class="org-highlight-numbers-number">4</span>):
+    <span class="org-variable-name">im</span> = grid[i].imshow(Z, extent=extent, interpolation=<span class="org-string">"nearest"</span>)
+
+grid.cbar_axes[<span class="org-highlight-numbers-number">0</span>].colorbar(im)
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947PMM.png" alt="4947PMM.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org3f1825c" class="outline-4">
+<h4 id="org3f1825c"><span class="section-number-4">1.2.2</span> ImageGrid</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+<a href="Matplotlib-3.html#org57be36f">See <code>ImageGrid()</code> here</a>, more readable introduction.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+<span class="org-keyword">from</span> mpl_toolkits.axes_grid1 <span class="org-keyword">import</span> ImageGrid
+
+<span class="org-keyword">def</span> <span class="org-function-name">get_demo_image</span>():
+    <span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+    <span class="org-keyword">from</span> matplotlib.cbook <span class="org-keyword">import</span> get_sample_data
+    <span class="org-variable-name">f</span> = get_sample_data(<span class="org-string">"axes_grid/bivariate_normal.npy"</span>, asfileobj=<span class="org-constant">False</span>)
+    <span class="org-variable-name">z</span> = np.load(f)
+    <span class="org-comment-delimiter"># </span><span class="org-comment">z is a numpy array of 15x15</span>
+    <span class="org-keyword">return</span> z, (-<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">4</span>, -<span class="org-highlight-numbers-number">4</span>, <span class="org-highlight-numbers-number">3</span>)
+
+<span class="org-variable-name">F</span> = plt.figure(<span class="org-highlight-numbers-number">1</span>, (<span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">4</span>.<span class="org-highlight-numbers-number">5</span>))
+<span class="org-variable-name">grid</span> = ImageGrid(F, <span class="org-highlight-numbers-number">111</span>,  <span class="org-comment-delimiter"># </span><span class="org-comment">similar to subplot(111)</span>
+                 nrows_ncols=(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>),
+                 axes_pad=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,
+                 add_all=<span class="org-constant">True</span>,
+                 label_mode=<span class="org-string">"L"</span>,
+)
+<span class="org-variable-name">Z</span>, <span class="org-variable-name">extent</span> = get_demo_image()  <span class="org-comment-delimiter"># </span><span class="org-comment">demo image</span>
+
+<span class="org-variable-name">im1</span> = Z
+<span class="org-variable-name">im2</span> = Z[:, :<span class="org-highlight-numbers-number">10</span>]
+<span class="org-variable-name">im3</span> = Z[:, <span class="org-highlight-numbers-number">10</span>:]
+<span class="org-variable-name">vmin</span>, <span class="org-variable-name">vmax</span> = Z.<span class="org-builtin">min</span>(), Z.<span class="org-builtin">max</span>()
+<span class="org-keyword">for</span> i, im <span class="org-keyword">in</span> <span class="org-builtin">enumerate</span>([im1, im2, im3]):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">print (i, im)</span>
+    <span class="org-variable-name">ax</span> = grid[i]
+    <span class="org-comment-delimiter"># </span><span class="org-comment">print ( "ax type: ")</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">print (type(ax) )</span>
+    ax.imshow(im, origin=<span class="org-string">"lower"</span>, vmin=vmin,
+              vmax=vmax, interpolation=<span class="org-string">"nearest"</span>)
+
+plt.draw()
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947cWS.png" alt="4947cWS.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org414e1c8" class="outline-4">
+<h4 id="org414e1c8"><span class="section-number-4">1.2.3</span> Parasite Axes</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+寄生 Axes
+</p>
+
+<p>
+This next feature is commonly requested on the mailing lists. The problem is
+that most people who request it don't quite know how to describe it. We call it
+"Parasite Axes".
+</p>
+
+<p>
+The <code>ParasiteAxes</code> allow for the plotting of <b>multiple datasets</b> in the <b>same
+axes</b>, but <b>with each their own x or y scale</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-doc">"""</span>
+<span class="org-doc">Parasite axis demo</span>
+
+<span class="org-doc">The following code is an example of a parasite axis. It aims to show a user how</span>
+<span class="org-doc">to plot multiple different values onto one single plot. Notice how in this</span>
+<span class="org-doc">example, par1 and par2 are both calling twinx meaning both are tied directly to</span>
+<span class="org-doc">the x-axis. From there, each of those two axis can behave separately from the</span>
+<span class="org-doc">each other, meaning they can take on separate values from themselves as well as</span>
+<span class="org-doc">the x-axis.</span>
+<span class="org-doc">"""</span>
+<span class="org-keyword">from</span> mpl_toolkits.axes_grid1 <span class="org-keyword">import</span> host_subplot
+<span class="org-keyword">import</span> mpl_toolkits.axisartist <span class="org-keyword">as</span> AA
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+<span class="org-variable-name">host</span> = host_subplot(<span class="org-highlight-numbers-number">111</span>, axes_class=AA.Axes)
+plt.subplots_adjust(right=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">75</span>)
+
+<span class="org-variable-name">par1</span> = host.twinx()
+<span class="org-variable-name">par2</span> = host.twinx()
+
+<span class="org-variable-name">offset</span> = <span class="org-highlight-numbers-number">60</span>
+<span class="org-variable-name">new_fixed_axis</span> = par2.get_grid_helper().new_fixed_axis
+<span class="org-variable-name">par2.axis</span>[<span class="org-string">"right"</span>] = new_fixed_axis(loc=<span class="org-string">"right"</span>,
+                                    axes=par2,
+                                    offset=(offset, <span class="org-highlight-numbers-number">0</span>))
+
+par2.axis[<span class="org-string">"right"</span>].toggle(<span class="org-builtin">all</span>=<span class="org-constant">True</span>)
+
+host.set_xlim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>)
+host.set_ylim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>)
+
+host.set_xlabel(<span class="org-string">"Distance"</span>)
+host.set_ylabel(<span class="org-string">"Density"</span>)
+par1.set_ylabel(<span class="org-string">"Temperature"</span>)
+par2.set_ylabel(<span class="org-string">"Velocity"</span>)
+
+p1, = host.plot([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>], label=<span class="org-string">"Density"</span>)
+p2, = par1.plot([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">2</span>], label=<span class="org-string">"Temperature"</span>)
+p3, = par2.plot([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>], [<span class="org-highlight-numbers-number">50</span>, <span class="org-highlight-numbers-number">30</span>, <span class="org-highlight-numbers-number">15</span>], label=<span class="org-string">"Velocity"</span>)
+
+par1.set_ylim(<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">4</span>)
+par2.set_ylim(<span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">65</span>)
+
+host.legend()
+
+host.axis[<span class="org-string">"left"</span>].label.set_color(p1.get_color())
+par1.axis[<span class="org-string">"right"</span>].label.set_color(p2.get_color())
+par2.axis[<span class="org-string">"right"</span>].label.set_color(p3.get_color())
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947D8Y.png" alt="4947D8Y.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="org92a5475" class="outline-4">
+<h4 id="org92a5475"><span class="section-number-4">1.2.4</span> Floating Axes</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+And finally, as a nice teaser of what else axes_grid1 can do.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-doc">"""</span>
+<span class="org-doc">Demo of the floating axes.</span>
+
+<span class="org-doc">This demo shows features of functions in floating_axes:</span>
+<span class="org-doc">    * Using scatter function and bar function with changing the</span>
+<span class="org-doc">      shape of the plot.</span>
+<span class="org-doc">    * Using GridHelperCurveLinear to rotate the plot and set the</span>
+<span class="org-doc">      boundary of the plot.</span>
+<span class="org-doc">    * Using FloatingSubplot to create a subplot using the return</span>
+<span class="org-doc">      value from GridHelperCurveLinear.</span>
+<span class="org-doc">    * Making sector plot by adding more features to GridHelperCurveLinear.</span>
+<span class="org-doc">"""</span>
+<span class="org-keyword">from</span> matplotlib.transforms <span class="org-keyword">import</span> Affine2D
+<span class="org-keyword">import</span> mpl_toolkits.axisartist.floating_axes <span class="org-keyword">as</span> floating_axes
+<span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">import</span> mpl_toolkits.axisartist.angle_helper <span class="org-keyword">as</span> angle_helper
+<span class="org-keyword">from</span> matplotlib.projections <span class="org-keyword">import</span> PolarAxes
+<span class="org-keyword">from</span> mpl_toolkits.axisartist.grid_finder <span class="org-keyword">import</span> (FixedLocator, MaxNLocator,
+                                                 DictFormatter)
+<span class="org-keyword">import</span> matplotlib.pyplot <span class="org-keyword">as</span> plt
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">setup_axes1</span>(fig, rect):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    A simple one.</span>
+<span class="org-doc">    """</span>
+    <span class="org-variable-name">tr</span> = Affine2D().scale(<span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>).rotate_deg(<span class="org-highlight-numbers-number">30</span>)
+
+    <span class="org-variable-name">grid_helper</span> = floating_axes.GridHelperCurveLinear(
+        tr, extremes=(-<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">3</span>.<span class="org-highlight-numbers-number">5</span>, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">4</span>))
+
+    <span class="org-variable-name">ax1</span> = floating_axes.FloatingSubplot(fig, rect, grid_helper=grid_helper)
+    fig.add_subplot(ax1)
+
+    <span class="org-variable-name">aux_ax</span> = ax1.get_aux_axes(tr)
+
+    <span class="org-variable-name">grid_helper.grid_finder.grid_locator1._nbins</span> = <span class="org-highlight-numbers-number">4</span>
+    <span class="org-variable-name">grid_helper.grid_finder.grid_locator2._nbins</span> = <span class="org-highlight-numbers-number">4</span>
+
+    <span class="org-keyword">return</span> ax1, aux_ax
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">setup_axes2</span>(fig, rect):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    With custom locator and formatter.</span>
+<span class="org-doc">    Note that the extreme values are swapped.</span>
+<span class="org-doc">    """</span>
+    <span class="org-variable-name">tr</span> = PolarAxes.PolarTransform()
+
+    <span class="org-variable-name">pi</span> = np.pi
+    <span class="org-variable-name">angle_ticks</span> = [(<span class="org-highlight-numbers-number">0</span>, r<span class="org-string">"$0$"</span>),
+                   (.<span class="org-highlight-numbers-number">25</span>*pi, r<span class="org-string">"$\frac{1}{4}\pi$"</span>),
+                   (.<span class="org-highlight-numbers-number">5</span>*pi, r<span class="org-string">"$\frac{1}{2}\pi$"</span>)]
+    <span class="org-variable-name">grid_locator1</span> = FixedLocator([v <span class="org-keyword">for</span> v, s <span class="org-keyword">in</span> angle_ticks])
+    <span class="org-variable-name">tick_formatter1</span> = DictFormatter(<span class="org-builtin">dict</span>(angle_ticks))
+
+    <span class="org-variable-name">grid_locator2</span> = MaxNLocator(<span class="org-highlight-numbers-number">2</span>)
+
+    <span class="org-variable-name">grid_helper</span> = floating_axes.GridHelperCurveLinear(
+        tr, extremes=(.<span class="org-highlight-numbers-number">5</span>*pi, <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>),
+        grid_locator1=grid_locator1,
+        grid_locator2=grid_locator2,
+        tick_formatter1=tick_formatter1,
+        tick_formatter2=<span class="org-constant">None</span>)
+
+    <span class="org-variable-name">ax1</span> = floating_axes.FloatingSubplot(fig, rect, grid_helper=grid_helper)
+    fig.add_subplot(ax1)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">create a parasite axes whose transData in RA, cz</span>
+    <span class="org-variable-name">aux_ax</span> = ax1.get_aux_axes(tr)
+
+    <span class="org-variable-name">aux_ax.patch</span> = ax1.patch  <span class="org-comment-delimiter"># </span><span class="org-comment">for aux_ax to have a clip path as in ax</span>
+    <span class="org-variable-name">ax1.patch.zorder</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">9</span>  <span class="org-comment-delimiter"># </span><span class="org-comment">but this has a side effect that the patch is</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">drawn twice, and possibly over some other</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">artists. So, we decrease the zorder a bit to</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">prevent this.</span>
+
+    <span class="org-keyword">return</span> ax1, aux_ax
+
+
+<span class="org-keyword">def</span> <span class="org-function-name">setup_axes3</span>(fig, rect):
+    <span class="org-doc">"""</span>
+<span class="org-doc">    Sometimes, things like axis_direction need to be adjusted.</span>
+<span class="org-doc">    """</span>
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">rotate a bit for better orientation</span>
+    <span class="org-variable-name">tr_rotate</span> = Affine2D().translate(-<span class="org-highlight-numbers-number">95</span>, <span class="org-highlight-numbers-number">0</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">scale degree to radians</span>
+    <span class="org-variable-name">tr_scale</span> = Affine2D().scale(np.pi/<span class="org-highlight-numbers-number">180</span>., <span class="org-highlight-numbers-number">1</span>.)
+
+    <span class="org-variable-name">tr</span> = tr_rotate + tr_scale + PolarAxes.PolarTransform()
+
+    <span class="org-variable-name">grid_locator1</span> = angle_helper.LocatorHMS(<span class="org-highlight-numbers-number">4</span>)
+    <span class="org-variable-name">tick_formatter1</span> = angle_helper.FormatterHMS()
+
+    <span class="org-variable-name">grid_locator2</span> = MaxNLocator(<span class="org-highlight-numbers-number">3</span>)
+
+    <span class="org-variable-name">ra0</span>, <span class="org-variable-name">ra1</span> = <span class="org-highlight-numbers-number">8</span>.*<span class="org-highlight-numbers-number">15</span>, <span class="org-highlight-numbers-number">14</span>.*<span class="org-highlight-numbers-number">15</span>
+    <span class="org-variable-name">cz0</span>, <span class="org-variable-name">cz1</span> = <span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">14000</span>
+    <span class="org-variable-name">grid_helper</span> = floating_axes.GridHelperCurveLinear(
+        tr, extremes=(ra0, ra1, cz0, cz1),
+        grid_locator1=grid_locator1,
+        grid_locator2=grid_locator2,
+        tick_formatter1=tick_formatter1,
+        tick_formatter2=<span class="org-constant">None</span>)
+
+    <span class="org-variable-name">ax1</span> = floating_axes.FloatingSubplot(fig, rect, grid_helper=grid_helper)
+    fig.add_subplot(ax1)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">adjust axis</span>
+    ax1.axis[<span class="org-string">"left"</span>].set_axis_direction(<span class="org-string">"bottom"</span>)
+    ax1.axis[<span class="org-string">"right"</span>].set_axis_direction(<span class="org-string">"top"</span>)
+
+    ax1.axis[<span class="org-string">"bottom"</span>].set_visible(<span class="org-constant">False</span>)
+    ax1.axis[<span class="org-string">"top"</span>].set_axis_direction(<span class="org-string">"bottom"</span>)
+    ax1.axis[<span class="org-string">"top"</span>].toggle(ticklabels=<span class="org-constant">True</span>, label=<span class="org-constant">True</span>)
+    ax1.axis[<span class="org-string">"top"</span>].major_ticklabels.set_axis_direction(<span class="org-string">"top"</span>)
+    ax1.axis[<span class="org-string">"top"</span>].label.set_axis_direction(<span class="org-string">"top"</span>)
+
+    ax1.axis[<span class="org-string">"left"</span>].label.set_text(r<span class="org-string">"cz [km$^{-1}$]"</span>)
+    ax1.axis[<span class="org-string">"top"</span>].label.set_text(r<span class="org-string">"$\alpha_{1950}$"</span>)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">create a parasite axes whose transData in RA, cz</span>
+    <span class="org-variable-name">aux_ax</span> = ax1.get_aux_axes(tr)
+
+    <span class="org-variable-name">aux_ax.patch</span> = ax1.patch  <span class="org-comment-delimiter"># </span><span class="org-comment">for aux_ax to have a clip path as in ax</span>
+    <span class="org-variable-name">ax1.patch.zorder</span> = <span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">9</span>  <span class="org-comment-delimiter"># </span><span class="org-comment">but this has a side effect that the patch is</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">drawn twice, and possibly over some other</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">artists. So, we decrease the zorder a bit to</span>
+    <span class="org-comment-delimiter"># </span><span class="org-comment">prevent this.</span>
+
+    <span class="org-keyword">return</span> ax1, aux_ax
+
+
+<span class="org-comment-delimiter">##########################################################</span>
+<span class="org-variable-name">fig</span> = plt.figure(figsize=(<span class="org-highlight-numbers-number">8</span>, <span class="org-highlight-numbers-number">4</span>))
+fig.subplots_adjust(wspace=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">3</span>, left=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">05</span>, right=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">95</span>)
+
+<span class="org-variable-name">ax1</span>, <span class="org-variable-name">aux_ax1</span> = setup_axes1(fig, <span class="org-highlight-numbers-number">131</span>)
+aux_ax1.bar([<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">3</span>], [<span class="org-highlight-numbers-number">3</span>, <span class="org-highlight-numbers-number">2</span>, <span class="org-highlight-numbers-number">1</span>, <span class="org-highlight-numbers-number">3</span>])
+
+<span class="org-variable-name">ax2</span>, <span class="org-variable-name">aux_ax2</span> = setup_axes2(fig, <span class="org-highlight-numbers-number">132</span>)
+<span class="org-variable-name">theta</span> = np.random.rand(<span class="org-highlight-numbers-number">10</span>)*.<span class="org-highlight-numbers-number">5</span>*np.pi
+<span class="org-variable-name">radius</span> = np.random.rand(<span class="org-highlight-numbers-number">10</span>) + <span class="org-highlight-numbers-number">1</span>.
+aux_ax2.scatter(theta, radius)
+
+<span class="org-variable-name">ax3</span>, <span class="org-variable-name">aux_ax3</span> = setup_axes3(fig, <span class="org-highlight-numbers-number">133</span>)
+
+<span class="org-variable-name">theta</span> = (<span class="org-highlight-numbers-number">8</span> + np.random.rand(<span class="org-highlight-numbers-number">10</span>)*(<span class="org-highlight-numbers-number">14</span> - <span class="org-highlight-numbers-number">8</span>))*<span class="org-highlight-numbers-number">15</span>.  <span class="org-comment-delimiter"># </span><span class="org-comment">in degrees</span>
+<span class="org-variable-name">radius</span> = np.random.rand(<span class="org-highlight-numbers-number">10</span>)*<span class="org-highlight-numbers-number">14000</span>.
+aux_ax3.scatter(theta, radius)
+
+plt.show()
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="./obipy-resources/4947CCG.png" alt="4947CCG.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

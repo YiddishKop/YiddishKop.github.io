@@ -1,0 +1,1438 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 21:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>scikit-笔记22:超大数据集下的文本分类与情感分析</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">scikit-笔记22:超大数据集下的文本分类与情感分析</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8cbaf99">1. two good post , should read in future</a></li>
+<li><a href="#orgf4fe8ee">2. Scalability Issues</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org0a6336f">2.0.1. how <code>vocabulary_</code> work</a></li>
+<li><a href="#org46d052e">2.0.2. why can't build vocabulary in parallel</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org71ece87">3. Hashing trick</a>
+<ul>
+<li><a href="#org139bf9f">3.1. IMDB dataset intro</a>
+<ul>
+<li><a href="#org6170a10">3.1.1. load dataset from file by <code>sklearn.datasets.load_files()</code></a></li>
+<li><a href="#org8617895">3.1.2. get information of datasets</a></li>
+</ul>
+</li>
+<li><a href="#org1bd9e3a">3.2. The Hashing Trick</a>
+<ul>
+<li><a href="#org5cdc831">3.2.1. hash each word</a></li>
+<li><a href="#org8948a57">3.2.2. why <code>% 2 ** 20</code></a></li>
+<li><a href="#org9357380">3.2.3. compare computational efficiency of HashingVectorizer against CountVectorizer</a></li>
+<li><a href="#orga09616e">3.2.4. train LogisticRegression classifier with <code>HashingVectorizer</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7bd51e4">4. Out-of-Core learning</a>
+<ul>
+<li>
+<ul>
+<li><a href="#org7409020">4.0.1. what if dataset is too large to fit into RAM</a></li>
+</ul>
+</li>
+<li><a href="#orgb7d46bd">4.1. out-of-core learning steps</a>
+<ul>
+<li><a href="#org8977279">4.1.1. save file names as python list</a></li>
+<li><a href="#orga2b0ec2">4.1.2. create target labels array</a></li>
+<li><a href="#org3530366">4.1.3. batch train function implementation</a></li>
+<li><a href="#org409efb5">4.1.4. training model</a></li>
+<li><a href="#org577cd3c">4.1.5. evaluate the performance</a></li>
+</ul>
+</li>
+<li><a href="#orgaa73e78">4.2. Limitations of the Hashing Vectorizer</a>
+<ul>
+<li><a href="#org0c46aec">4.2.1. for drawbacks 1</a></li>
+<li><a href="#orgeed1746">4.2.2. for drawbacks 2</a></li>
+<li><a href="#org52bb49e">4.2.3. for drawbacks 3</a></li>
+<li><a href="#org041365a">4.2.4. EXERCISE</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org306c8b9">5. Misc tools</a>
+<ul>
+<li><a href="#org22bb628">5.1. scikit-learn</a>
+<ul>
+<li><a href="#orgd0432a7">5.1.1. ML models by now</a></li>
+<li><a href="#org7aee643">5.1.2. sklearn.datasets.load<sub>files</sub>()</a>
+<ul>
+<li><a href="#org072a652">5.1.2.1. intro</a></li>
+<li><a href="#org13715cc">5.1.2.2. return</a></li>
+</ul>
+</li>
+<li><a href="#org638b08b">5.1.3. sklearn.base.clone(estimator)</a></li>
+<li><a href="#org238269e">5.1.4. sklearn.random.choice()</a></li>
+<li><a href="#org0b0a16c">5.1.5. sklearn.linear<sub>model.SGDClassifier</sub></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="org8cbaf99" class="outline-2">
+<h2 id="org8cbaf99"><span class="section-number-2">1</span> two good post , should read in future</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://tomaugspurger.github.io/scalable-ml-02.html">https://tomaugspurger.github.io/scalable-ml-02.html</a>
+<a href="https://tomaugspurger.github.io/scalable-ml-01.html">https://tomaugspurger.github.io/scalable-ml-01.html</a>
+</p>
+</div>
+</div>
+
+<div id="orgf4fe8ee" class="outline-2">
+<h2 id="orgf4fe8ee"><span class="section-number-2">2</span> Scalability Issues</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The <code>sklearn.feature_extraction.text.CountVectorizer</code> and
+<code>sklearn.feature_extraction.text.TfidfVectorizer</code> classes suffer from a number
+of <b>scalability issues</b> that all stem from the internal usage of the
+<code>vocabulary_</code> attribute (a Python dictionary) used to map the unicode string
+feature names to the integer feature indices.
+</p>
+
+<p>
+The main scalability issues are:
+</p>
+
+<ul class="org-ul">
+<li><b>Memory usage of the text vectorizer</b>: all the string representations of the
+features are loaded in memory</li>
+<li><b>Parallelization problems for text feature extraction</b>: the <code>vocabulary_</code>
+would be a shared state: complex synchronization and overhead</li>
+<li><b>Impossibility to do online or out-of-core / streaming learning</b>: the
+<code>vocabulary_</code> needs to be learned from the data: its size cannot be known
+before making one pass over the full dataset</li>
+</ul>
+</div>
+
+<div id="org0a6336f" class="outline-4">
+<h4 id="org0a6336f"><span class="section-number-4">2.0.1</span> how <code>vocabulary_</code> work</h4>
+<div class="outline-text-4" id="text-2-0-1">
+<p>
+To better understand the issue let's have a look at how the <code>vocabulary_</code>
+attribute work. At fit time the tokens of the corpus are uniquely indentified
+by a integer index and this mapping stored in the vocabulary:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">vectorizer</span> = CountVectorizer(min_df=<span class="org-highlight-numbers-number">1</span>)
+vectorizer.fit([
+    <span class="org-string">"The cat sat on the mat."</span>,
+])
+vectorizer.vocabulary_
+
+</pre>
+</div>
+
+<pre class="example">
+{'cat': 0, 'mat': 1, 'on': 2, 'sat': 3, 'the': 4}
+
+</pre>
+
+<p>
+The vocabulary is used at <b>transform time</b> to build the occurrence matrix:
+</p>
+
+<p>
+after fit(means model built finished):
+</p>
+<ul class="org-ul">
+<li>model.vocabulary_ : a dict with item format <b>'word': num<sub>occurence</sub></b> .</li>
+<li>model.get<sub>feature</sub><sub>names</sub> : like the keys of this dict</li>
+<li>model.transform : <b>return the train data point</b>, num<sub>occurence</sub> of each word in each sample.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span> = vectorizer.transform([
+    <span class="org-string">"The cat sat on the mat."</span>,
+    <span class="org-string">"This cat is a nice cat."</span>,
+]).toarray()
+<span class="org-keyword">print</span>(<span class="org-builtin">len</span>(vectorizer.vocabulary_))
+<span class="org-keyword">print</span>(vectorizer.vocabulary_)
+<span class="org-keyword">print</span>(vectorizer.get_feature_names())
+<span class="org-keyword">print</span>(X)
+
+</pre>
+</div>
+
+<p>
+Let's refit with a slightly larger corpus:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">vectorizer</span> = CountVectorizer(min_df=<span class="org-highlight-numbers-number">1</span>)
+vectorizer.fit([
+    <span class="org-string">"The cat sat on the mat."</span>,
+    <span class="org-string">"The quick brown fox jumps over the lazy dog."</span>,
+])
+vectorizer.vocabulary_
+
+</pre>
+</div>
+
+<pre class="example">
+{'brown': 0,
+'cat': 1,
+'dog': 2,
+'fox': 3,
+'jumps': 4,
+'lazy': 5,
+'mat': 6,
+'on': 7,
+'over': 8,
+'quick': 9,
+'sat': 10,
+'the': 11}
+</pre>
+</div>
+</div>
+
+<div id="org46d052e" class="outline-4">
+<h4 id="org46d052e"><span class="section-number-4">2.0.2</span> why can't build vocabulary in parallel</h4>
+<div class="outline-text-4" id="text-2-0-2">
+<p>
+The vocabulary_ is the (logarithmically) growing with the size of the training
+corpus. Note that we <b>could not</b> have <b>built the vocabularies in parallel</b> on
+the 2 text documents as <b>they share some words</b> hence would require some kind of
+shared datastructure or <b>synchronization barrier</b> which is complicated to setup,
+especially if we want to distribute the processing on a cluster.
+</p>
+
+<p>
+With this new vocabulary, the dimensionality of the output space is now larger:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">X</span> = vectorizer.transform([
+    <span class="org-string">"The cat sat on the mat."</span>,
+    <span class="org-string">"This cat is a nice cat."</span>,
+]).toarray()
+<span class="org-keyword">print</span>(<span class="org-builtin">len</span>(vectorizer.vocabulary_))
+<span class="org-keyword">print</span>(vectorizer.get_feature_names())
+<span class="org-keyword">print</span>(X)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org71ece87" class="outline-2">
+<h2 id="org71ece87"><span class="section-number-2">3</span> Hashing trick</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="org139bf9f" class="outline-3">
+<h3 id="org139bf9f"><span class="section-number-3">3.1</span> IMDB dataset intro</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+To illustrate <b>the scalability issues</b> of the <b>vocabulary-based vectorizers</b>,
+let's load a more realistic dataset for a classical <b>text classification</b> task:
+<b>sentiment analysis on text documents</b>. The goal is to tell apart negative from
+positive movie reviews from the Internet Movie Database (IMDb).
+</p>
+
+<p>
+In the following sections, with a large subset of movie reviews from the IMDb
+that has been collected by Maas et al.
+</p>
+
+<p>
+A. L. Maas, R. E. Daly, P. T. Pham, D. Huang, A. Y. Ng, and C. Potts. Learning
+Word Vectors for Sentiment Analysis. In the proceedings of the 49th Annual
+Meeting of the Association for Computational Linguistics: Human Language
+Technologies, pages 142–150, Portland, Oregon, USA, June 2011. Association for
+Computational Linguistics.
+</p>
+
+
+<p>
+This dataset contains <b>50,000</b> movie reviews, which were split into <b>25,000</b>
+training samples and <b>25,000</b> test samples. The reviews are <b>labeled</b> as either
+negative (neg) or positive (pos). Moreover, <b>positive</b> means that a movie
+received <b>&gt;6 stars</b> on IMDb; <b>negative</b> means that a movie received <b>&lt;5 stars</b>,
+respectively.
+</p>
+
+<p>
+Assuming that the ../fetch<sub>data.py</sub> script was run successfully the following
+files should be available:
+</p>
+</div>
+
+<div id="org6170a10" class="outline-4">
+<h4 id="org6170a10"><span class="section-number-4">3.1.1</span> load dataset from file by <code>sklearn.datasets.load_files()</code></h4>
+<div class="outline-text-4" id="text-3-1-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> os
+<span class="org-variable-name">train_path</span> = os.path.join(<span class="org-string">'datasets'</span>, <span class="org-string">'IMDb'</span>, <span class="org-string">'aclImdb'</span>, <span class="org-string">'train'</span>)
+<span class="org-variable-name">test_path</span> = os.path.join(<span class="org-string">'datasets'</span>, <span class="org-string">'IMDb'</span>, <span class="org-string">'aclImdb'</span>, <span class="org-string">'test'</span>)
+</pre>
+</div>
+
+<p>
+Now, let's load them into our <b>active session</b> (load into memory by default) via
+scikit-learn's <code>load_files</code> function
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.datasets <span class="org-keyword">import</span> load_files
+<span class="org-variable-name">train</span> = load_files(container_path=(train_path),
+                   categories=[<span class="org-string">'pos'</span>, <span class="org-string">'neg'</span>])
+<span class="org-variable-name">test</span> = load_files(container_path=(test_path),
+                  categories=[<span class="org-string">'pos'</span>, <span class="org-string">'neg'</span>])
+</pre>
+</div>
+
+<p>
+NOTE: Since the movie datasets consists of 50,000 individual text files,
+executing the code snippet above may take ~20 sec or longer. The load<sub>files</sub>
+function loaded the datasets into sklearn.datasets.base.Bunch objects, which are
+Python dictionaries:
+</p>
+</div>
+</div>
+
+<div id="org8617895" class="outline-4">
+<h4 id="org8617895"><span class="section-number-4">3.1.2</span> get information of datasets</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+for more information, see here
+<a href="#org7aee643">sklearn.datasets.load<sub>files</sub>()</a>
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython">train.keys()
+</pre>
+</div>
+
+<pre class="example">
+dict_keys(['data', 'filenames', 'target_names', 'target', 'DESCR'])
+
+</pre>
+
+<p>
+In particular, we are only interested in the data and target arrays.
+</p>
+
+<p>
+These two methods are very useful for get info of 'target'
+<code>np.unique(data['target'])</code>
+<code>np.bincount(data['target'])</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> numpy <span class="org-keyword">as</span> np
+<span class="org-keyword">for</span> label, data <span class="org-keyword">in</span> <span class="org-builtin">zip</span>((<span class="org-string">'TRAINING'</span>, <span class="org-string">'TEST'</span>), (train, test)):
+    <span class="org-keyword">print</span>(<span class="org-string">'\n\n%s'</span> % label)
+    <span class="org-keyword">print</span>(<span class="org-string">'Number of documents:'</span>, <span class="org-builtin">len</span>(data[<span class="org-string">'data'</span>]))
+    <span class="org-keyword">print</span>(<span class="org-string">'\n1st document:\n'</span>, data[<span class="org-string">'data'</span>][<span class="org-highlight-numbers-number">0</span>])
+    <span class="org-keyword">print</span>(<span class="org-string">'\n1st label:'</span>, data[<span class="org-string">'target'</span>][<span class="org-highlight-numbers-number">0</span>])
+    <span class="org-keyword">print</span>(<span class="org-string">'\nClass names:'</span>, data[<span class="org-string">'target_names'</span>])
+    <span class="org-keyword">print</span>(<span class="org-string">'Class count:'</span>,
+          np.unique(data[<span class="org-string">'target'</span>]), <span class="org-string">' -&gt; '</span>,
+          np.bincount(data[<span class="org-string">'target'</span>]))
+
+</pre>
+</div>
+
+<p>
+As we can see above the 'target' array consists of integers 0 and 1, where 0
+stands for negative and 1 stands for positive.
+</p>
+</div>
+</div>
+</div>
+
+<div id="org1bd9e3a" class="outline-3">
+<h3 id="org1bd9e3a"><span class="section-number-3">3.2</span> The Hashing Trick</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Remember the bag of word representation using a vocabulary based vectorizer:
+​
+<img src="figures/bag_of_words.png" alt="bag_of_words.png" />
+</p>
+
+
+<p>
+To workaround the limitations of the vocabulary-based vectorizers, one can use
+the <code>hashing trick</code>. Instead of building and storing an explicit mapping from the
+feature names to the feature indices in a Python dict, we can just use a hash
+function and a modulus operation:
+</p>
+
+
+<div class="figure">
+<p><img src="figures/hashing_vectorizer.png" alt="hashing_vectorizer.png" />
+</p>
+</div>
+
+<p>
+More info and reference for the <b>original papers on the Hashing Trick</b> in the
+following site as well as a description specific to language here.
+</p>
+</div>
+
+<div id="org5cdc831" class="outline-4">
+<h4 id="org5cdc831"><span class="section-number-4">3.2.1</span> hash each word</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.utils.murmurhash <span class="org-keyword">import</span> murmurhash3_bytes_u32
+<span class="org-comment-delimiter"># </span><span class="org-comment">encode for python 3 compatibility</span>
+<span class="org-keyword">for</span> word <span class="org-keyword">in</span> <span class="org-string">"the cat sat on the mat"</span>.encode(<span class="org-string">"utf-8"</span>).split():
+    <span class="org-keyword">print</span>(<span class="org-string">"{0} =&gt; {1}"</span>.<span class="org-builtin">format</span>( word, murmurhash3_bytes_u32(word, <span class="org-highlight-numbers-number">0</span>) ))
+    <span class="org-keyword">print</span>(<span class="org-string">"{0} =&gt; {1}"</span>.<span class="org-builtin">format</span>(
+        word, murmurhash3_bytes_u32(word, <span class="org-highlight-numbers-number">0</span>) % <span class="org-highlight-numbers-number">2</span> ** <span class="org-highlight-numbers-number">20</span>))
+</pre>
+</div>
+
+<p>
+This mapping is completely stateless and the dimensionality of the output space
+is explicitly fixed in advance (here we use a <code>modulo 2 ** 20</code> which means
+roughly <code>1M dimensions</code>). The makes it possible to workaround the limitations
+of the vocabulary based vectorizer both for parallelizability and online /
+out-of-core learning.
+</p>
+
+<p>
+The <code>HashingVectorizer</code> class is an alternative to the <code>CountVectorizer</code> (or
+<code>TfidfVectorizer class with use_idf=False</code>) that <b>internally uses the
+murmurhash</b> hash function:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> HashingVectorizer
+<span class="org-variable-name">h_vectorizer</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+h_vectorizer
+</pre>
+</div>
+
+<pre class="example">
+HashingVectorizer(alternate_sign=True, analyzer='word', binary=False,
+decode_error='strict', dtype=&lt;class 'numpy.float64'&gt;,
+encoding='latin-1', input='content', lowercase=True,
+n_features=1048576, ngram_range=(1, 1), non_negative=False,
+norm='l2', preprocessor=None, stop_words=None, strip_accents=None,
+token_pattern='(?u)\\b\\w\\w+\\b', tokenizer=None)
+</pre>
+
+<p>
+It shares the same "preprocessor", "tokenizer" and "analyzer" infrastructure:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">analyzer</span> = h_vectorizer.build_analyzer()
+analyzer(<span class="org-string">'This is a test sentence.'</span>)
+</pre>
+</div>
+
+<pre class="example">
+['this', 'is', 'test', 'sentence']
+
+</pre>
+
+<p>
+We can vectorize our datasets into a scipy sparse matrix exactly as we would
+have done with the CountVectorizer or TfidfVectorizer, except that we can
+directly call the transform method: there is no need to fit as <code>HashingVectorizer</code>
+is a stateless transformer:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">docs_train</span>, <span class="org-variable-name">y_train</span> = train[<span class="org-string">'data'</span>], train[<span class="org-string">'target'</span>]
+<span class="org-variable-name">docs_valid</span>, <span class="org-variable-name">y_valid</span> = test[<span class="org-string">'data'</span>][:<span class="org-highlight-numbers-number">12500</span>], test[<span class="org-string">'target'</span>][:<span class="org-highlight-numbers-number">12500</span>]
+<span class="org-variable-name">docs_test</span>, <span class="org-variable-name">y_test</span> = test[<span class="org-string">'data'</span>][<span class="org-highlight-numbers-number">12500</span>:], test[<span class="org-string">'target'</span>][<span class="org-highlight-numbers-number">12500</span>:]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org8948a57" class="outline-4">
+<h4 id="org8948a57"><span class="section-number-4">3.2.2</span> why <code>% 2 ** 20</code></h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+The dimension of the output is fixed ahead of time to <code>n_features=2 ** 20</code> by
+default (nearly 1M features) to <b>minimize the rate of collision</b> on most
+classification problem while having reasonably sized linear models (<code>1M</code> weights
+in the <code>coef_</code> attribute):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">h_vectorizer.transform(docs_train)
+
+</pre>
+</div>
+
+<pre class="example">
+&lt;25000x1048576 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
+with 3446628 stored elements in Compressed Sparse Row format&gt;
+</pre>
+</div>
+</div>
+
+<div id="org9357380" class="outline-4">
+<h4 id="org9357380"><span class="section-number-4">3.2.3</span> compare computational efficiency of HashingVectorizer against CountVectorizer</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+Now, let's compare the computational efficiency of the <code>HashingVectorizer</code> to the
+<code>CountVectorizer</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"> <span class="org-variable-name">h_vec</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+ %timeit -n <span class="org-highlight-numbers-number">1</span> -r <span class="org-highlight-numbers-number">3</span> h_vec.fit(docs_train, y_train)
+
+<span class="org-comment-delimiter">#</span><span class="org-comment">The slowest run took 4.42 times longer than the fastest. This could mean that</span>
+<span class="org-comment-delimiter">#</span><span class="org-comment">an intermediate result is being cached.</span>
+
+<span class="org-comment-delimiter"># </span><span class="org-comment">7.53 &#181;s &#177; 5.13 &#181;s per loop (mean &#177; #std. dev. of 3 runs, 1 loop each)</span>
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.feature_extraction.text <span class="org-keyword">import</span> CountVectorizer
+<span class="org-variable-name">count_vec</span> =  CountVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+%timeit -n <span class="org-highlight-numbers-number">1</span> -r <span class="org-highlight-numbers-number">3</span> count_vec.fit(docs_train, y_train)
+<span class="org-comment-delimiter"># </span><span class="org-comment">2.95 s &#177; 6.17 ms per loop (mean &#177; std. dev. of 3 runs, 1 loop each)</span>
+</pre>
+</div>
+
+<p>
+As we can see, the <code>HashingVectorizer</code> is much faster than the
+<code>Countvectorizer</code> in this case.
+</p>
+
+<ul class="org-ul">
+<li>7.53 µs ± 5.13 µs per loop (mean ± #std. dev. of 3 runs, 1 loop each)</li>
+<li>2.95 s ± 6.17 ms per loop (mean ± std. dev. of 3 runs, 1 loop each)</li>
+</ul>
+</div>
+</div>
+
+<div id="orga09616e" class="outline-4">
+<h4 id="orga09616e"><span class="section-number-4">3.2.4</span> train LogisticRegression classifier with <code>HashingVectorizer</code></h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+Finally, let us train a LogisticRegression classifier on the IMDb training
+subset:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> LogisticRegression
+<span class="org-keyword">from</span> sklearn.pipeline <span class="org-keyword">import</span> Pipeline
+<span class="org-variable-name">h_pipeline</span> = Pipeline([
+    (<span class="org-string">'vec'</span>, HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)),
+    (<span class="org-string">'clf'</span>, LogisticRegression(random_state=<span class="org-highlight-numbers-number">1</span>)),
+])
+h_pipeline.fit(docs_train, y_train)
+
+</pre>
+</div>
+
+<pre class="example">
+Pipeline(memory=None,
+steps=[('vec', HashingVectorizer(alternate_sign=True, analyzer='word', binary=False,
+decode_error='strict', dtype=&lt;class 'numpy.float64'&gt;,
+encoding='latin-1', input='content', lowercase=True,
+n_features=1048576, ngram_range=(1, 1), non_negative=False,
+norm='l2', p...nalty='l2', random_state=1, solver='liblinear', tol=0.0001,
+verbose=0, warm_start=False))])
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">print</span>(<span class="org-string">'Train accuracy'</span>, h_pipeline.score(docs_train, y_train))
+<span class="org-keyword">print</span>(<span class="org-string">'Validation accuracy'</span>, h_pipeline.score(docs_valid, y_valid))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">import</span> gc
+<span class="org-keyword">del</span> count_vec
+<span class="org-keyword">del</span> h_pipeline
+gc.collect()
+</pre>
+</div>
+
+<pre class="example">
+101
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org7bd51e4" class="outline-2">
+<h2 id="org7bd51e4"><span class="section-number-2">4</span> Out-of-Core learning</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="org7409020" class="outline-4">
+<h4 id="org7409020"><span class="section-number-4">4.0.1</span> what if dataset is too large to fit into RAM</h4>
+<div class="outline-text-4" id="text-4-0-1">
+<p>
+Out-of-Core learning is the task of training a machine learning model on a
+dataset that does not fit into memory or RAM. This requires the following
+conditions:
+</p>
+
+<ul class="org-ul">
+<li>a feature extraction layer with fixed output dimensionality</li>
+<li>knowing the list of all classes in advance (in this case we only have positive and negative reviews)</li>
+<li>a machine learning algorithm that supports <b>incremental learning</b> (the <code>partial_fit</code> method in scikit-learn).</li>
+</ul>
+
+<p>
+In the following sections, we will set up a simple <code>batch-training</code> function to
+train an <code>SGDClassifier</code> iteratively.
+</p>
+</div>
+</div>
+
+<div id="orgb7d46bd" class="outline-3">
+<h3 id="orgb7d46bd"><span class="section-number-3">4.1</span> out-of-core learning steps</h3>
+<div class="outline-text-3" id="text-4-1">
+</div>
+<div id="org8977279" class="outline-4">
+<h4 id="org8977279"><span class="section-number-4">4.1.1</span> save file names as python list</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+But first, let us load the file names into a Python list:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">train_path</span> = os.path.join(<span class="org-string">'datasets'</span>, <span class="org-string">'IMDb'</span>, <span class="org-string">'aclImdb'</span>, <span class="org-string">'train'</span>)
+<span class="org-variable-name">train_pos</span> = os.path.join(train_path, <span class="org-string">'pos'</span>)
+<span class="org-variable-name">train_neg</span> = os.path.join(train_path, <span class="org-string">'neg'</span>)
+<span class="org-variable-name">fnames</span> = [os.path.join(train_pos, f) <span class="org-keyword">for</span> f <span class="org-keyword">in</span> os.listdir(train_pos)] +\
+         [os.path.join(train_neg, f) <span class="org-keyword">for</span> f <span class="org-keyword">in</span> os.listdir(train_neg)]
+fnames[:<span class="org-highlight-numbers-number">3</span>]
+</pre>
+</div>
+
+<pre class="example">
+['datasets/IMDb/aclImdb/train/pos/5561_8.txt',
+'datasets/IMDb/aclImdb/train/pos/8049_7.txt',
+'datasets/IMDb/aclImdb/train/pos/9072_9.txt']
+</pre>
+
+<p>
+​
+</p>
+</div>
+</div>
+<div id="orga2b0ec2" class="outline-4">
+<h4 id="orga2b0ec2"><span class="section-number-4">4.1.2</span> create target labels array</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+Next, let us create the target label array:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">y_train</span> = np.zeros((<span class="org-builtin">len</span>(fnames), ), dtype=<span class="org-builtin">int</span>)
+<span class="org-variable-name">y_train</span>[:<span class="org-highlight-numbers-number">12500</span>] = <span class="org-highlight-numbers-number">1</span>
+np.bincount(y_train)
+</pre>
+</div>
+
+<pre class="example">
+array([12500, 12500])
+
+</pre>
+</div>
+</div>
+
+<div id="org3530366" class="outline-4">
+<h4 id="org3530366"><span class="section-number-4">4.1.3</span> batch train function implementation</h4>
+<div class="outline-text-4" id="text-4-1-3">
+<p>
+Now, we implement the batch<sub>train</sub> function as follows, which return a
+SGD<sub>classifier</sub> model.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.base <span class="org-keyword">import</span> clone
+<span class="org-keyword">def</span> <span class="org-function-name">batch_train</span>(clf,           <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- classifier model</span>
+                fnames,        <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- array, filenames</span>
+                labels,        <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- array, labels</span>
+                iterations=<span class="org-highlight-numbers-number">25</span>, <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- iteration times</span>
+                batchsize=<span class="org-highlight-numbers-number">1000</span>,<span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- size of each batch</span>
+                random_seed=<span class="org-highlight-numbers-number">1</span>  <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- random seed</span>
+):
+    <span class="org-comment-delimiter"># </span><span class="org-comment">---- do some configuration</span>
+    <span class="org-variable-name">vec</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- initial vectorizer model.</span>
+    <span class="org-variable-name">idx</span> = np.arange(labels.shape[<span class="org-highlight-numbers-number">0</span>])            <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- create label array's index</span>
+    <span class="org-variable-name">c_clf</span> = clone(clf)                          <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;-</span>
+    <span class="org-variable-name">rng</span> = np.random.RandomState(seed=random_seed)
+
+    <span class="org-comment-delimiter"># </span><span class="org-comment">---- how many times you want to do batch learning</span>
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(iterations):
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">each time randomly sample bathsize filenames indices</span>
+        <span class="org-comment-delimiter"># </span><span class="org-comment">later will be used to index file content and related labels</span>
+        <span class="org-variable-name">rnd_idx</span> = rng.choice(idx, size=batchsize)
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">create an empty list, to save smapled file, used as dataset of SGD</span>
+        <span class="org-variable-name">documents</span> = []
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">combine all sample files' content into 'documents'</span>
+        <span class="org-keyword">for</span> i <span class="org-keyword">in</span> rnd_idx:
+            <span class="org-keyword">with</span> <span class="org-builtin">open</span>(fnames[i], <span class="org-string">'r'</span>, encoding=<span class="org-string">'latin-1'</span>) <span class="org-keyword">as</span> f:
+                documents.append(f.read())
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">vectorize the sample files' inside 'documents'</span>
+        <span class="org-variable-name">X_batch</span> = vec.transform(documents)
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">index the related labels by indices array 'rnd_idx'</span>
+        <span class="org-variable-name">batch_labels</span> = labels[rnd_idx]
+
+        <span class="org-comment-delimiter"># </span><span class="org-comment">from classifier obj to classifier model</span>
+        c_clf.partial_fit(X=X_batch,
+                          y=batch_labels,
+                          classes=[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])<span class="org-comment-delimiter"># </span><span class="org-comment">Classes across all calls to</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">partial_fit. Can be obtained by via</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">np.unique(y_all), where y_all is the</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">target vector of the entire dataset.</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">This argument is required for the</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">first call to partial_fit and can be</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">omitted in the subsequent calls.</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">Note that y doesn&#8217;t need to contain</span>
+                                         <span class="org-comment-delimiter"># </span><span class="org-comment">all labels in classes.</span>
+
+    <span class="org-keyword">return</span> c_clf
+</pre>
+</div>
+
+<p>
+Note that we are not using LogisticRegression as in the previous section, but we
+will use a <code>SGDClassifier</code> with a <code>logistic cost function</code> instead. SGD stands
+for stochastic gradient descent, an optimization alrogithm that <b>optimizes the
+weight coefficients iteratively sample by sample</b>, which allows us to <b>feed the
+data to the classifier chunk by chuck</b>.
+</p>
+
+<p>
+And we train the SGDClassifier; using the default settings of the batch<sub>train</sub>
+function, it will train the classifier on 25*1000=25000 documents. (Depending on
+your machine, this may take &gt;2 min)
+</p>
+</div>
+</div>
+
+<div id="org409efb5" class="outline-4">
+<h4 id="org409efb5"><span class="section-number-4">4.1.4</span> training model</h4>
+<div class="outline-text-4" id="text-4-1-4">
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.linear_model <span class="org-keyword">import</span> SGDClassifier
+<span class="org-variable-name">sgd</span> = SGDClassifier(loss=<span class="org-string">'log'</span>, random_state=<span class="org-highlight-numbers-number">1</span>) <span class="org-comment-delimiter"># </span><span class="org-comment">build a SGDClassifier obj and</span>
+                                                <span class="org-comment-delimiter"># </span><span class="org-comment">pass it to batch_train</span>
+<span class="org-variable-name">sgd</span> = batch_train(clf=sgd,
+                  fnames=fnames,
+                  labels=y_train)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org577cd3c" class="outline-4">
+<h4 id="org577cd3c"><span class="section-number-4">4.1.5</span> evaluate the performance</h4>
+<div class="outline-text-4" id="text-4-1-5">
+<p>
+Eventually, let us evaluate its performance:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-variable-name">vec</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+sgd.score(vec.transform(docs_test), y_test)
+</pre>
+</div>
+
+<pre class="example">
+0.83176
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="orgaa73e78" class="outline-3">
+<h3 id="orgaa73e78"><span class="section-number-3">4.2</span> Limitations of the Hashing Vectorizer</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Using the Hashing Vectorizer makes it possible to implement streaming and
+parallel text classification but can also introduce some issues:
+</p>
+
+<ul class="org-ul">
+<li>The collisions can introduce too much noise in the data and degrade
+prediction quality,</li>
+<li>The HashingVectorizer does <b>not provide "Inverse Document Frequency"
+reweighting (lack of a use<sub>idf</sub>=True option)</b>.</li>
+<li>There is no easy way to inverse the mapping and find the feature names from
+the feature index.</li>
+</ul>
+</div>
+
+<div id="org0c46aec" class="outline-4">
+<h4 id="org0c46aec"><span class="section-number-4">4.2.1</span> for drawbacks 1</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+The collision issues can be controlled by increasing the n<sub>features</sub>
+parameters.
+</p>
+</div>
+</div>
+
+<div id="orgeed1746" class="outline-4">
+<h4 id="orgeed1746"><span class="section-number-4">4.2.2</span> for drawbacks 2</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+The IDF weighting might be reintroduced by appending a TfidfTransformer instance
+on the output of the vectorizer. However computing the <code>idf_</code> statistic used for
+the feature reweighting will require to do at least one additional pass over the
+training set before being able to start training the classifier: this breaks the
+online learning scheme.
+</p>
+</div>
+</div>
+
+<div id="org52bb49e" class="outline-4">
+<h4 id="org52bb49e"><span class="section-number-4">4.2.3</span> for drawbacks 3</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+The lack of inverse mapping (the get<sub>feature</sub><sub>names</sub>() method of TfidfVectorizer)
+is even harder to workaround. That would require extending the HashingVectorizer
+class to add a "trace" mode to record the mapping of the most important features
+to provide statistical debugging information.
+</p>
+
+<p>
+In the mean time to debug feature extraction issues, it is recommended to use
+TfidfVectorizer(use<sub>idf</sub>=False) on a small-ish subset of the dataset to simulate
+a HashingVectorizer() instance that have the <code>get_feature_names()</code> method and no
+collision issues.
+</p>
+</div>
+</div>
+
+<div id="org041365a" class="outline-4">
+<h4 id="org041365a"><span class="section-number-4">4.2.4</span> EXERCISE</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<p>
+EXERCISE: In our implementation of the batch<sub>train</sub> function above, we randomly
+draw k training samples as a batch in each iteration, which can be considered as
+a random subsampling with replacement. Can you modify the batch<sub>train</sub> function
+so that it iterates over the documents without replacement, i.e., that it uses
+each document exactly once per iteration?
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="org306c8b9" class="outline-2">
+<h2 id="org306c8b9"><span class="section-number-2">5</span> Misc tools</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="org22bb628" class="outline-3">
+<h3 id="org22bb628"><span class="section-number-3">5.1</span> scikit-learn</h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="orgd0432a7" class="outline-4">
+<h4 id="orgd0432a7"><span class="section-number-4">5.1.1</span> ML models by now</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<blockquote>
+<ol class="org-ol">
+<li>from sklearn.datasets import make<sub>blobs</sub></li>
+<li>from sklearn.datasets import make<sub>moons</sub></li>
+<li>from sklearn.datasets import make<sub>circles</sub></li>
+<li>from sklearn.datasets import make<sub>s</sub><sub>curve</sub></li>
+<li>from sklearn.datasets import make<sub>regression</sub></li>
+<li>from sklearn.datasets import load<sub>files</sub> *</li>
+<li>from sklearn.datasets import load<sub>iris</sub></li>
+<li>from sklearn.datasets import load<sub>digits</sub></li>
+<li>from sklearn.datasets import load<sub>breast</sub><sub>cancer</sub></li>
+</ol>
+<hr />
+
+<p>
+For all <code>Bunch</code> object return by many <code>load_xxx()</code> is a dict-like obj, and you can:
+</p>
+<ul class="org-ul">
+<li>get all keys(attributes) by <code>bunch_obj.keys()</code></li>
+<li>access all attributes by <code>bunch_obj.[the key_name return by keys()]</code></li>
+</ul>
+
+<hr />
+<ol class="org-ol">
+<li>from mpl<sub>toolkits.mplot3d</sub> import Axes3D</li>
+<li>from sklearn.model<sub>selection</sub> import train<sub>test</sub><sub>split</sub></li>
+<li>from sklearn.model<sub>selection</sub> import cross<sub>val</sub><sub>score</sub></li>
+<li>from sklearn.model<sub>selection</sub> import KFold</li>
+<li>from sklearn.model<sub>selection</sub> import StratifiedKFold</li>
+<li>from sklearn.model<sub>selection</sub> import ShuffleSplit</li>
+<li>from sklearn.model<sub>selection</sub> import GridSearchCV</li>
+<li>from sklearn.model<sub>selection</sub> import learning<sub>curve</sub></li>
+<li>from sklearn.feature<sub>extraction</sub> import DictVectorizer</li>
+<li>from sklearn.feature<sub>extraction.text</sub> import CountVectorizer</li>
+<li>from sklearn.feature<sub>extraction.text</sub> import HashingVectorizer *</li>
+<li>from sklearn.feature<sub>extraction.text</sub> import TfidfVectorizer</li>
+<li>from sklearn.feature<sub>selection</sub> import SelectPercentile</li>
+<li>from sklearn.feature<sub>selection</sub> import f<sub>classif</sub></li>
+<li>from sklearn.feature<sub>selection</sub> import f<sub>regression</sub></li>
+<li>from sklearn.feature<sub>selection</sub> import chi2</li>
+<li>from sklearn.feature<sub>selection</sub> import SelectFromModel</li>
+<li>from sklearn.feature<sub>selection</sub> import RFE</li>
+<li>from sklearn.linear<sub>model</sub> import LogisticRegression</li>
+<li>from sklearn.linear<sub>model</sub> import LinearRegression</li>
+<li>from sklearn.linear<sub>model</sub> import Ridge</li>
+<li>from sklearn.linear<sub>model</sub> import Lasso</li>
+<li>from sklearn.linear<sub>model</sub> import ElasticNet</li>
+<li>from sklearn.neighbors import KNeighborsClassifier</li>
+<li>from sklearn.neighbors import KNeighborsRegressor</li>
+<li>from sklearn.neighbors.kde import KernelDensity *</li>
+<li>from sklearn.preprocessing import StandardScaler</li>
+<li>from sklearn.metrics import confusion<sub>matrix</sub>, accuracy<sub>score</sub></li>
+<li>from sklearn.metrics import adjusted<sub>rand</sub><sub>score</sub></li>
+<li>from sklearn.metrics.scorer import SCORERS</li>
+<li>from sklearn.metrics import r2<sub>score</sub></li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import KMeans</li>
+<li>from sklearn.cluster import MeanShift</li>
+<li>from sklearn.cluster import DBSCAN  # &lt;&lt;&lt; this algorithm has related sources in <a href="https://github.com/YiddishKop/org-notes/blob/master/ML/TaiDa_LiHongYi_ML/LiHongYi_ML_lec12_semisuper.org">LIHONGYI's lecture-12</a></li>
+<li>from sklearn.cluster import AffinityPropagation</li>
+<li>from sklearn.cluster import SpectralClustering</li>
+<li>from sklearn.cluster import Ward</li>
+<li>from sklearn.cluster import DBSCAN</li>
+<li>from sklearn.cluster import AgglomerativeClustering</li>
+<li>from scipy.cluster.hierarchy import linkage</li>
+<li>from scipy.cluster.hierarchy import dendrogram</li>
+<li>from scipy.stats.mstats import mquantiles</li>
+<li>from sklearn.metrics import confusion<sub>matrix</sub></li>
+<li>from sklearn.metrics import accuracy<sub>score</sub></li>
+<li>from sklearn.metrics import adjusted<sub>rand</sub><sub>score</sub></li>
+<li>from sklearn.metrics import classification<sub>report</sub></li>
+<li>from sklearn.preprocessing import Imputer</li>
+<li>from sklearn.dummy import DummyClassifier</li>
+<li>from sklearn.pipeline import make<sub>pipeline</sub></li>
+<li>from sklearn.svm import LinearSVC</li>
+<li>from sklearn.svm import SVC</li>
+<li>from sklearn.svm import OneClassSVM *</li>
+<li>from sklearn.tree import DecisionTreeRegressor</li>
+<li>from sklearn.ensemble import RandomForestClassifier</li>
+<li>from sklearn.ensemble import GradientBoostingRegressor</li>
+<li>from sklearn.ensemble import IsolationForest</li>
+<li>from sklearn.decomposition import PCA</li>
+<li>from sklearn.manifold import TSNE</li>
+<li>from sklearn.manifold import Isomap</li>
+<li>from sklearn.utils.murmurhash import murmurhash3<sub>bytes</sub><sub>u32</sub></li>
+<li>from sklearn.base import clone *</li>
+</ol>
+</blockquote>
+</div>
+</div>
+<div id="org7aee643" class="outline-4">
+<h4 id="org7aee643"><span class="section-number-4">5.1.2</span> sklearn.datasets.load<sub>files</sub>()</h4>
+<div class="outline-text-4" id="text-5-1-2">
+</div>
+<div id="org072a652" class="outline-5">
+<h5 id="org072a652"><span class="section-number-5">5.1.2.1</span> intro</h5>
+<div class="outline-text-5" id="text-5-1-2-1">
+<div class="org-src-container">
+<pre class="src src-ipython">sklearn.datasets.load_files(container_path,   <span class="org-comment-delimiter"># </span><span class="org-comment">path of root folder</span>
+                            description=<span class="org-constant">None</span>,
+                            categories=<span class="org-constant">None</span>,  <span class="org-comment-delimiter"># </span><span class="org-comment">list of sub folder names</span>
+                            load_content=<span class="org-constant">True</span>,<span class="org-comment-delimiter"># </span><span class="org-comment">true: load into memory; vice versa</span>
+                            shuffle=<span class="org-constant">True</span>,
+                            encoding=<span class="org-constant">None</span>,    <span class="org-comment-delimiter"># </span><span class="org-comment">if load_content is true, should</span>
+                                              <span class="org-comment-delimiter"># </span><span class="org-comment">specify value</span>
+                            decode_error=&#8217;strict&#8217;,
+                            random_state=<span class="org-highlight-numbers-number">0</span>)
+</pre>
+</div>
+<p>
+Load text files with categories as subfolder names.
+</p>
+
+<p>
+Individual samples are assumed to be files stored a <b>two levels folder</b>
+structure such as the following:
+</p>
+
+<blockquote>
+<p>
+. Train/
+.    neg/
+.       file<sub>1.txt</sub> file<sub>2.txt</sub> … file<sub>42.txt</sub>
+.    pos/
+.       file<sub>43.txt</sub> file<sub>44.txt</sub> …
+</p>
+</blockquote>
+
+
+<p>
+The <b>folder names</b> are used as <b>supervised signal label names</b>. The individual
+<b>file names are not important</b>.
+</p>
+
+<p>
+This function does <b>not try to extract features into a numpy array or scipy
+sparse matrix</b>. In addition, if load<sub>content</sub> is false it does not try to load the
+files in memory.
+</p>
+
+<p>
+To use text files in a <b>scikit-learn classification or clustering</b> algorithm, you
+will need to use the <code>sklearn.feature_extraction.text</code> module to build a feature
+extraction transformer that suits your problem.
+</p>
+
+<p>
+If you set <b>load<sub>content</sub>=True, you should also specify the encoding</b> of the text
+using the ‘encoding’ parameter. For many modern text files, ‘utf-8’ will be the
+correct encoding. If you <b>leave encoding equal to None</b>, then the content will
+be made of <b>bytes instead of Unicode</b>, and you will <b>not be able to use</b> most
+functions in sklearn.feature<sub>extraction.text</sub>.
+</p>
+
+<p>
+Similar feature extractors should be built for other kind of unstructured data
+input such as images, audio, video.
+</p>
+</div>
+</div>
+
+<div id="org13715cc" class="outline-5">
+<h5 id="org13715cc"><span class="section-number-5">5.1.2.2</span> return</h5>
+<div class="outline-text-5" id="text-5-1-2-2">
+<pre class="example">
+dict_keys(['data', 'filenames', 'target_names', 'target', 'DESCR'])
+
+</pre>
+
+<p>
+data : <code>Bunch</code>, Dictionary-like object, the interesting attributes are:
+</p>
+<ul class="org-ul">
+<li>data: array of string, the raw text data to learn,</li>
+<li>filenames: array of string, the files holding it,</li>
+<li>target: array of int, give each subfolder in alphabetic order the integer
+index start from 0. It is <b>classification labels</b> of train dataset</li>
+<li>target<sub>names</sub>: array of string, the meaning of the labels,</li>
+<li>DESCR, the full description of the dataset.</li>
+</ul>
+
+<blockquote>
+<p>
+. Train/
+.    neg/
+.       file<sub>1.txt</sub> file<sub>2.txt</sub> … file<sub>42.txt</sub>
+.    pos/
+.       file<sub>43.txt</sub> file<sub>44.txt</sub> …
+</p>
+
+<ul class="org-ul">
+<li>data: len(data) = 44</li>
+<li>filenames: ['file<sub>1.txt</sub>', &#x2026;, 'file<sub>44.txt</sub>']</li>
+<li>target: [0, 0, 0, &#x2026;.,0, 1, 1]</li>
+<li>target<sub>names</sub>: ['neg', 'pos']</li>
+</ul>
+</blockquote>
+
+<p>
+These two methods are very useful for get info of 'target'
+<code>np.unique(data['target'])</code>
+<code>np.bincount(data['target'])</code>
+</p>
+
+<p>
+For all <code>Bunch</code> object return by many <code>load_xxx()</code> is a dict-like obj, and you can:
+</p>
+<ul class="org-ul">
+<li>get all keys(attributes) by <code>bunch_obj.keys()</code></li>
+<li>access all attributes by <code>bunch_obj.[the key_name return by keys()]</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="org638b08b" class="outline-4">
+<h4 id="org638b08b"><span class="section-number-4">5.1.3</span> sklearn.base.clone(estimator)</h4>
+<div class="outline-text-4" id="text-5-1-3">
+<p>
+Constructs a new estimator with the same parameters.
+</p>
+
+<p>
+Clone does a deep copy of the model in an estimator without actually copying
+attached data. It yields a new estimator with the same parameters that has not
+been fit on any data.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.base <span class="org-keyword">import</span> clone
+<span class="org-keyword">def</span> <span class="org-function-name">batch_train</span>(clf, fnames, labels, iterations=<span class="org-highlight-numbers-number">25</span>, batchsize=<span class="org-highlight-numbers-number">1000</span>, random_seed=<span class="org-highlight-numbers-number">1</span>):
+    <span class="org-variable-name">vec</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+    <span class="org-variable-name">idx</span> = np.arange(labels.shape[<span class="org-highlight-numbers-number">0</span>])
+    <span class="org-variable-name">c_clf</span> = clone(clf) <span class="org-comment-delimiter">#</span><span class="org-comment">&lt;- clone the classifier 'clf' passed to this function</span>
+    <span class="org-variable-name">rng</span> = np.random.RandomState(seed=random_seed)
+
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(iterations):
+        <span class="org-variable-name">rnd_idx</span> = rng.choice(idx, size=batchsize)
+
+
+        <span class="org-variable-name">documents</span> = []
+        <span class="org-keyword">for</span> i <span class="org-keyword">in</span> rnd_idx:
+            <span class="org-keyword">with</span> <span class="org-builtin">open</span>(fnames[i], <span class="org-string">'r'</span>, encoding=<span class="org-string">'latin-1'</span>) <span class="org-keyword">as</span> f:
+                documents.append(f.read())
+
+        <span class="org-comment-delimiter">#</span>
+        <span class="org-variable-name">X_batch</span> = vec.transform(documents)
+        <span class="org-variable-name">batch_labels</span> = labels[rnd_idx]
+        c_clf.partial_fit(X=X_batch,
+                          y=batch_labels,
+                          classes=[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])
+
+    <span class="org-keyword">return</span> c_clf
+</pre>
+</div>
+</div>
+</div>
+<div id="org238269e" class="outline-4">
+<h4 id="org238269e"><span class="section-number-4">5.1.4</span> sklearn.random.choice()</h4>
+<div class="outline-text-4" id="text-5-1-4">
+<p>
+numpy.random.choice(a, size=None, replace=True, p=None)
+Generates a random sample from a given 1-D array
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython"><span class="org-keyword">from</span> sklearn.base <span class="org-keyword">import</span> clone
+<span class="org-keyword">def</span> <span class="org-function-name">batch_train</span>(clf, fnames, labels, iterations=<span class="org-highlight-numbers-number">25</span>, batchsize=<span class="org-highlight-numbers-number">1000</span>, random_seed=<span class="org-highlight-numbers-number">1</span>):
+    <span class="org-variable-name">vec</span> = HashingVectorizer(encoding=<span class="org-string">'latin-1'</span>)
+    <span class="org-variable-name">idx</span> = np.arange(labels.shape[<span class="org-highlight-numbers-number">0</span>])
+    <span class="org-variable-name">c_clf</span> = clone(clf)
+    <span class="org-variable-name">rng</span> = np.random.RandomState(seed=random_seed)
+
+    <span class="org-keyword">for</span> i <span class="org-keyword">in</span> <span class="org-builtin">range</span>(iterations):
+        <span class="org-variable-name">rnd_idx</span> = rng.choice(idx, size=batchsize) <span class="org-comment-delimiter"># </span><span class="org-comment">&lt;- randomly choose</span>
+                                                  <span class="org-comment-delimiter"># </span><span class="org-comment">batch-size samples from idx</span>
+                                                  <span class="org-comment-delimiter"># </span><span class="org-comment">with replacement</span>
+        <span class="org-variable-name">documents</span> = []
+        <span class="org-keyword">for</span> i <span class="org-keyword">in</span> rnd_idx:
+            <span class="org-keyword">with</span> <span class="org-builtin">open</span>(fnames[i], <span class="org-string">'r'</span>, encoding=<span class="org-string">'latin-1'</span>) <span class="org-keyword">as</span> f:
+                documents.append(f.read())
+
+        <span class="org-comment-delimiter">#</span>
+        <span class="org-variable-name">X_batch</span> = vec.transform(documents)
+        <span class="org-variable-name">batch_labels</span> = labels[rnd_idx]
+        c_clf.partial_fit(X=X_batch,
+                          y=batch_labels,
+                          classes=[<span class="org-highlight-numbers-number">0</span>, <span class="org-highlight-numbers-number">1</span>])
+
+    <span class="org-keyword">return</span> c_clf
+</pre>
+</div>
+</div>
+</div>
+
+<div id="org0b0a16c" class="outline-4">
+<h4 id="org0b0a16c"><span class="section-number-4">5.1.5</span> sklearn.linear<sub>model.SGDClassifier</sub></h4>
+<div class="outline-text-4" id="text-5-1-5">
+<div class="org-src-container">
+<pre class="src src-ipython">SGDClassifier(loss=&#8217;hinge&#8217;,
+              penalty=&#8217;l2&#8217;,
+              alpha=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0001</span>,
+              l1_ratio=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">15</span>,
+              fit_intercept=<span class="org-constant">True</span>,
+              max_iter=<span class="org-constant">None</span>,
+              tol=<span class="org-constant">None</span>,
+              shuffle=<span class="org-constant">True</span>,
+              verbose=<span class="org-highlight-numbers-number">0</span>,
+              epsilon=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">1</span>,
+              n_jobs=<span class="org-highlight-numbers-number">1</span>,
+              random_state=<span class="org-constant">None</span>,
+              learning_rate=&#8217;optimal&#8217;,
+              eta0=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">0</span>,
+              power_t=<span class="org-highlight-numbers-number">0</span>.<span class="org-highlight-numbers-number">5</span>,
+              class_weight=<span class="org-constant">None</span>,
+              warm_start=<span class="org-constant">False</span>,
+              average=<span class="org-constant">False</span>,
+              n_iter=<span class="org-constant">None</span>)
+</pre>
+</div>
+
+
+<p>
+The ‘log’ loss gives logistic regression, a probabilistic classifier.
+‘modified<sub>huber</sub>’ is another smooth loss that brings tolerance to outliers as
+well as probability estimates. ‘squared<sub>hinge</sub>’ is like hinge but is
+quadratically penalized. ‘perceptron’ is the linear loss used by the
+perceptron algorithm. The other losses are designed for regression but can
+be useful in classification as well; see SGDRegressor for a description.
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 21:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

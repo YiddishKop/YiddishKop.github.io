@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-08-12 日 14:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>lec-01 Regression case study</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="yiddi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+ <link rel='stylesheet' href='css/site.css' type='text/css'/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="/index.html"> HOME </a>
+</div><div id="content">
+<h1 class="title">lec-01 Regression case study</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd7e47fd">1. Regression case study</a>
+<ul>
+<li>
+<ul>
+<li><a href="#orge6f7072">1.0.1. training</a></li>
+<li><a href="#org9d9a53c">1.0.2. model</a></li>
+<li><a href="#org7f665d1">1.0.3. goodness</a></li>
+<li><a href="#org1ddd823">1.0.4. choose</a></li>
+<li><a href="#org31bb459">1.0.5. optimization</a></li>
+<li><a href="#orgfa4ebf1">1.0.6. model selection</a></li>
+<li><a href="#org84c341c">1.0.7. overfitting</a></li>
+<li><a href="#orgcc9a012">1.0.8. feature engineer</a></li>
+<li><a href="#orgb37137a">1.0.9. handle overfitting</a></li>
+<li><a href="#org3378ae4">1.0.10. regularization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="orgd7e47fd" class="outline-2">
+<h2 id="orgd7e47fd"><span class="section-number-2">1</span> Regression case study</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="orge6f7072" class="outline-4">
+<h4 id="orge6f7072"><span class="section-number-4">1.0.1</span> training</h4>
+<div class="outline-text-4" id="text-1-0-1">
+<p>
+回归分析的应用场景：
+</p>
+<ol class="org-ol">
+<li>股票市场预测</li>
+<li>自动驾驶</li>
+<li>推荐系统</li>
+</ol>
+
+<p>
+进化 pokemon
+找到这样一个function：
+f(pokemon 的属性) = combat power after evolution
+</p>
+
+<p>
+ML的 training 得分三个步骤：
+</p>
+<ol class="org-ol">
+<li>Model 函数集</li>
+<li>goodness 评价函数好坏</li>
+<li>choose 选择最好的</li>
+</ol>
+</div>
+</div>
+
+<div id="org9d9a53c" class="outline-4">
+<h4 id="org9d9a53c"><span class="section-number-4">1.0.2</span> model</h4>
+<div class="outline-text-4" id="text-1-0-2">
+<p>
+ML的test 就一个步骤： test new data on fn from training
+</p>
+
+<p>
+我们就从最简单的开始，假设用一条线来预测他们，
+</p>
+<pre class="example">
+y' = wx + b
+</pre>
+<p>
+这就是model.
+</p>
+</div>
+</div>
+
+<div id="org7f665d1" class="outline-4">
+<h4 id="org7f665d1"><span class="section-number-4">1.0.3</span> goodness</h4>
+<div class="outline-text-4" id="text-1-0-3">
+<p>
+然后通过 <code>Sum(y - y')^2</code> 来看他是不是够好这里 <code>y-y'</code> 叫 <b>residual</b>.
+</p>
+<pre class="example">
+f(residue) = Loss funtion
+</pre>
+<p>
+这就是 goodness of model.
+</p>
+</div>
+</div>
+
+<div id="org1ddd823" class="outline-4">
+<h4 id="org1ddd823"><span class="section-number-4">1.0.4</span> choose</h4>
+<div class="outline-text-4" id="text-1-0-4">
+<p>
+最后我们要在无限多的 wb 中选择最好的两个就用GD(goodness) 来选择最好的wb这就是
+choose
+</p>
+
+<p>
+经过上面的步骤之后，把得到的函数 f(pokemon) = pc evolution
+应用到我们的新的pokemon看看效果。这就是 test
+</p>
+</div>
+</div>
+
+<div id="org31bb459" class="outline-4">
+<h4 id="org31bb459"><span class="section-number-4">1.0.5</span> optimization</h4>
+<div class="outline-text-4" id="text-1-0-5">
+<p>
+test之后发现不够好，那么我就加强model。
+</p>
+<blockquote>
+<p>
+「注意」，这个加强的意思就是让函数向trainingset更靠近。好像这是为 trainingset 专门设置的function,越精确的损失越多。就好像古汉语和现代汉语一样。这就是 model
+improvement
+</p>
+</blockquote>
+
+<p>
+加强model开始可以获得不错的效果，那是因为原来的model确实太松散。一旦加强的太多，就变成专属的，只适用于trainingdata的。那么对未知的部分就越来越不适用。矫枉过正。这就是 overfitting.
+</p>
+
+<pre class="example">
+数据集 focused model:专属于某个数据集，就不属于其他数据集
+特征集 focused model:专注于全体特征，就损失重要特征
+</pre>
+</div>
+</div>
+
+<div id="orgfa4ebf1" class="outline-4">
+<h4 id="orgfa4ebf1"><span class="section-number-4">1.0.6</span> model selection</h4>
+<div class="outline-text-4" id="text-1-0-6">
+<p>
+<b>我如何获得更好的模型函数呢？</b>
+</p>
+
+<p>
+根据 overfitting 的大小，我们可以选择一个「复杂度比较中庸」的模型函数，使他在
+training data 和 test data 上的都还不错。这就是 model selection
+</p>
+</div>
+</div>
+
+<div id="org84c341c" class="outline-4">
+<h4 id="org84c341c"><span class="section-number-4">1.0.7</span> overfitting</h4>
+<div class="outline-text-4" id="text-1-0-7">
+<p>
+还有一种方法，如果我们的trainingdata无穷大，能覆盖所有未知的数据那么，我们对他进行·「专属化」，这是没问题的，因为他完全涵盖了所有未知的情况。这引出了一个优化模型的观点：收集更多数据，让training data变大，·「专属化」就会更普适一些。这就是
+collect more data to training (more x) &#x2013;&gt; 扩大model·「专属化范围」
+</p>
+
+
+<p>
+我们原始考虑的数据仅仅考虑了一部分属性，我们把注意力都集中在这些属性上来做model，如果考虑其他属性，model·「专属化」的方向就会不一样一个人考上清华，但他只是听课，课后不做作业，我们就认为 上课+不做作业 = 考上清华，荒唐！其实他有在边上课边做课后习题。所以我们重新考虑样本的属性，f(上课+作业+课后题) &#x2013;&gt; 清华。重新选择属性。这就是 feature engineer (dive into x) &#x2013;&gt; 改变model·「专属化方向」
+</p>
+</div>
+</div>
+
+<div id="orgcc9a012" class="outline-4">
+<h4 id="orgcc9a012"><span class="section-number-4">1.0.8</span> feature engineer</h4>
+<div class="outline-text-4" id="text-1-0-8">
+<p>
+如果 feature selection 选择的属性是某种离散属性，比如男生女生，比如城市乡村，我们可以用ifelse的形式，分段函数来加强model。但是这种形式不好通过GD去choosewb，可以采用boolean函数的形式统合起来：
+</p>
+<pre class="example">
+y' = [|x男生?|]*(w_m x + b_m) + [|x女生?|]*(w_fm x + b_fm) f(上课+作业+课后题+性别)
+</pre>
+<p>
+&#x2013;&gt; 清华这就是 feature engineer &#x2013;&gt; 分段model 函数
+</p>
+
+<p>
+如果你是教师或者教育学学者，你在选择 feature 时，你会有更深刻的视角，比如加上早恋，加上父母职业，加上周围网吧，甚至加上电视剧等等。所以你是否对于 x 有研究就决定了你是否能选择更好的 feature这就是 domain knowledge &#x2013;&gt; 更好的 feature
+engineer
+</p>
+
+<p>
+如果我不是专业学者，不研究x到底隐含什么条件，怎么办？
+</p>
+
+<p>
+我可以把我能想到或者通过调研得到的属性，全部都考虑进去，这样得到的model的方向就被分散了。这时候我们在加强model，他的效果就会被均分到每一个feature上。一把利剑变成了一个盾牌。他确实考虑了trainingdata上每个点的每个属性，但是某些属性太具有·「独有性」，考虑他们会拉扯model的注意力，让model在其他方向上·「失去原有的力度」。这就是
+</p>
+
+<pre class="example">
+feature engineer
+      |
+      |
+分散model注意力
+      |
+      |
+另一种原因的overfitting
+      |
+      |
+原本不该专注的，却专注了，这也是另一种·「专有化」方向的转移失误
+</pre>
+
+<p>
+<b>model追求更大的数据集和专注普适的属性特征</b>
+</p>
+
+<p>
+所以需要重新理解 overfitting，其实overfitting的本质就是·「在狭隘的方向上过度专有化」这个方向包含两个方面，一个是数据集层面，一个是特征集层面。数据集层面是说训练集是很小的集合，你的model专有化他，就会不适用更多未知的数据。特征集层面是说你把不重要的特征纳入model，他们牵扯了model的注意力，model也必须朝他们的方向专有化。
+overfitting = 在狭隘的数据集和不重要的特征集上专有化。
+</p>
+</div>
+</div>
+
+<div id="orgb37137a" class="outline-4">
+<h4 id="orgb37137a"><span class="section-number-4">1.0.9</span> handle overfitting</h4>
+<div class="outline-text-4" id="text-1-0-9">
+<pre class="example">
+如何解决 overfitting：
+1. 加大数据集
+2. 降低模型次方
+3. 选择好的feature
+
+其实降低模型次方，就是降低input-space的次方。
+选择好的feature，就是降低input-space的维度。
+</pre>
+
+<p>
+不论是降低次方还是降低维度其实都是让model·「不对x太敏感」，而且这两次方和维度都可以通过w进行调整。
+</p>
+
+<pre class="example">
+y' = b + w1·x + w2·x^2 + w3·x^3 ...
+w2 = w3 = 0  OK --&gt; 降次方
+</pre>
+
+<pre class="example">
+.   eg: w1·x
+.                      _  _
+.                     | x1 |
+.    -----------      | x2 |
+.    1 0 1 0 0 1   ·  | x3 |
+.    -----------      | x4 |
+.                     | x5 |
+.                     |_x6_|
+.   w1_2 = w1_4 = w1_5 =0  OK --&gt; 降维度
+</pre>
+
+<p>
+所以总体上看，限制 w 向量的大小，可以在一定程度上解决overfitting的作用。
+</p>
+</div>
+</div>
+
+<div id="org3378ae4" class="outline-4">
+<h4 id="org3378ae4"><span class="section-number-4">1.0.10</span> regularization</h4>
+<div class="outline-text-4" id="text-1-0-10">
+<p>
+所以可以加上 λ|w|<sup>2</sup> 作为限制放进 model 中。
+<code>y' = b + wx + λ|w|^2</code>
+这就是 regularization
+</p>
+
+<p>
+<b>那 regularization 具象化一些是什么呢？</b>
+</p>
+
+<p>
+就是 我限制w的大小，让w不那么大，因为input的变化会被放大w倍体现在 output 上，所以降低w，就是让x轴上较小的变化不会在y轴上产生太大的变化。整体看就不会出现太陡峭的地方，函数图像整体区域平缓平滑。
+</p>
+
+<p>
+这就像是《疯狂动物城》里的树懒，你吼的声音再大他都很·「稳定」。这样让函数变·「懒」的方式，虽然不能精确对治overfitting的两个问题，但是他能近似的保证model不会对x太敏感。
+</p>
+
+<p>
+而且 λ 是一个可以调整的参数，他越大就会让|w|越小，就会让函数越·「懒惰」，让函数越平缓平滑。但是当 λ 太大而导致 |w| 过于小的时候，w的每一个维度以及每一个w都会变得很小，整个model也损失了对于·「重要特征的专有化」。一旦损失了重要特征的专有化，那么不论是 trainingdata 还是未知数据的预测误差都会加大。
+</p>
+
+<p>
+所以 regularization 像是·「普杀」性质的疗法。像是化疗不但杀癌细胞，也杀正常细胞，需要注意调节用量 &#x2014; λ. 所以 λ 是什么，是·「化疗的强度」
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2017-5-20</p>
+<p class="author">Author: yiddi</p>
+<p class="date">Created: 2018-08-12 日 14:55</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
